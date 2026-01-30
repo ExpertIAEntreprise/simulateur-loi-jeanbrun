@@ -97,6 +97,18 @@ function transformToSimulationInput(
  */
 export async function POST(request: NextRequest) {
   try {
+    // CORS: Verify request origin to prevent cross-site abuse
+    const origin = request.headers.get("origin");
+    const allowedOrigins = [process.env.NEXT_PUBLIC_APP_URL];
+    // origin is null for same-origin requests (browser navigation, server-to-server)
+    // Only block if origin is present AND not in allowed list
+    if (origin && !allowedOrigins.includes(origin)) {
+      return NextResponse.json(
+        { success: false, error: "Origin not allowed" },
+        { status: 403 }
+      );
+    }
+
     // Rate limiting: 10 requests per minute per IP
     const ip = getClientIP(request);
     const rateLimitResponse = await checkRateLimit(simulationRateLimiter, ip);

@@ -190,6 +190,24 @@ export function calculerPlusValue(input: PlusValueInput): PlusValueResult {
     dureeDetention,
   } = input;
 
+  // Fix 7.5: Validation des inputs - valeurs negatives invalides
+  if (prixVente < 0 || prixAchat < 0 || dureeDetention < 0) {
+    return {
+      plusValueBrute: 0,
+      abattementIR: 0,
+      abattementPS: 0,
+      pvImposableIR: 0,
+      pvImposablePS: 0,
+      impotIR: 0,
+      impotPS: 0,
+      surtaxe: 0,
+      impotTotal: 0,
+      tauxEffectif: 0,
+      exonere: true,
+      motifExoneration: "Valeurs invalides (negatives)",
+    };
+  }
+
   // 1. Calculer le prix d'acquisition majore
   // Frais d'acquisition: reels ou forfait 7.5%
   const fraisAcquisitionEffectifs =

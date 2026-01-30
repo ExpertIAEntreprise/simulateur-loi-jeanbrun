@@ -51,8 +51,26 @@ export function createRateLimiter(
   requestsPerMinute: number
 ): Ratelimit | NoOpRateLimiter {
   if (!redis) {
-    // Return a no-op rate limiter if Redis is not configured
-    // This allows development without Upstash setup
+    // SECURITY: In production, Redis MUST be configured for rate limiting
+    // Without it, the API is vulnerable to DoS attacks
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "CRITICAL: Redis not configured in production - rate limiting will reject all requests"
+      );
+      return {
+        limit: async (): Promise<RateLimitResult> => ({
+          success: false,
+          limit: 0,
+          reset: Date.now(),
+          remaining: 0,
+        }),
+      };
+    }
+
+    // In development, allow requests without rate limiting (with warning)
+    console.warn(
+      "Rate limiting disabled: Redis not configured (acceptable in development only)"
+    );
     return {
       limit: async (): Promise<RateLimitResult> => ({
         success: true,

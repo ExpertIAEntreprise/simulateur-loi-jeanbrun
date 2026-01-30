@@ -21,13 +21,33 @@ import type { TMIInput, TMIResult } from "./types/tmi";
 export function calculerTMI(input: TMIInput): TMIResult {
   const { revenuNetImposable, nombreParts } = input;
 
+  // Fix 7.4: Guard against division by zero if nombreParts <= 0
+  if (nombreParts <= 0) {
+    const firstTranche = TRANCHES_IR_2026[0];
+    if (!firstTranche) {
+      throw new Error("TRANCHES_IR_2026 must not be empty");
+    }
+    return {
+      tmi: 0,
+      numeroTranche: 1,
+      seuilBas: 0,
+      seuilHaut: firstTranche.max,
+      marge: firstTranche.max,
+    };
+  }
+
   // Gestion des revenus negatifs ou nuls
   const quotientFamilial = revenuNetImposable > 0 ? revenuNetImposable / nombreParts : 0;
 
   // Recherche de la tranche applicable
   let trancheIndex = 0;
+  // Fix 7.3: Guard against undefined with noUncheckedIndexedAccess
+  const firstTranche = TRANCHES_IR_2026[0];
+  if (!firstTranche) {
+    throw new Error("TRANCHES_IR_2026 must not be empty");
+  }
   // Utiliser le type TrancheIR pour permettre la reassignation
-  let trancheTrouvee: TrancheIR = { ...TRANCHES_IR_2026[0] };
+  let trancheTrouvee: TrancheIR = { ...firstTranche };
 
   for (let i = 0; i < TRANCHES_IR_2026.length; i++) {
     const tranche = TRANCHES_IR_2026[i];
