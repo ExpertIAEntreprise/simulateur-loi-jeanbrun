@@ -2,6 +2,7 @@ import { existsSync } from "fs";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { put, del } from "@vercel/blob";
+import { fileTypeFromBuffer } from "file-type";
 
 /**
  * Result from uploading a file to storage
@@ -89,12 +90,12 @@ export function sanitizeFilename(filename: string): string {
 /**
  * Validate file for upload
  */
-export function validateFile(
+export async function validateFile(
   buffer: Buffer,
   filename: string,
   config: StorageConfig = {}
-): { valid: true } | { valid: false; error: string } {
-  const { maxSize } = { ...DEFAULT_CONFIG, ...config };
+): Promise<{ valid: true } | { valid: false; error: string }> {
+  const { maxSize, allowedTypes } = { ...DEFAULT_CONFIG, ...config };
 
   // Check file size
   if (buffer.length > maxSize) {
@@ -113,8 +114,27 @@ export function validateFile(
     };
   }
 
-  // Optionally check MIME type if provided
-  // Note: For full MIME type validation, consider using a library like 'file-type'
+  // Validate actual MIME type from file content (binary validation)
+  const fileType = await fileTypeFromBuffer(buffer);
+
+  // Some text files (txt, csv, json) don't have magic bytes, skip binary check for them
+  const textExtensions = new Set([".txt", ".csv", ".json"]);
+
+  if (fileType) {
+    // File has detectable MIME type - verify it matches allowed types
+    if (!allowedTypes.includes(fileType.mime)) {
+      return {
+        valid: false,
+        error: `Invalid file type. Detected: ${fileType.mime}. Allowed: ${allowedTypes.join(", ")}`,
+      };
+    }
+  } else if (!textExtensions.has(ext)) {
+    // File has no detectable MIME and is not a known text file - reject
+    return {
+      valid: false,
+      error: `Unable to verify file type. Only known file formats are allowed.`,
+    };
+  }
 
   return { valid: true };
 }
@@ -143,8 +163,8 @@ export async function upload(
   // Sanitize filename
   const sanitizedFilename = sanitizeFilename(filename);
 
-  // Validate file
-  const validation = validateFile(buffer, sanitizedFilename, config);
+  // Validate file (now async for MIME type checking)
+  const validation = await validateFile(buffer, sanitizedFilename, config);
   if (!validation.valid) {
     throw new Error(validation.error);
   }

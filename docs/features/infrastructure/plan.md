@@ -512,16 +512,44 @@ export type User = InferSelectModel<typeof user>;
 
 ---
 
-### 5.4 LOW - Nice to Have
+### 5.4 LOW - Nice to Have ✅ COMPLÉTÉ (30/01/2026)
 
-- [ ] Standardiser langue des commentaires (FR pour domaine métier)
-- [ ] Extraire magic numbers vers constants.ts (ex: `0.08` frais notaire)
-- [ ] Ajouter ARIA labels aux formulaires auth
-- [ ] Splitter fichier types.ts (633 lignes) en sous-modules
-- [ ] Utiliser JSON-LD dynamique avec `NEXT_PUBLIC_APP_URL`
-- [ ] Ajouter structured logging (pino) au lieu de console.log
-- [ ] Configurer account lockout après X tentatives échouées
-- [ ] Valider MIME type fichiers avec `file-type` package
+- [x] ~~Standardiser langue des commentaires (FR pour domaine métier)~~ ⏸️ REPORTÉ
+- [x] Extraire magic numbers vers constants.ts (ex: `0.08` frais notaire) ✅
+- [x] Ajouter ARIA labels aux formulaires auth ✅
+- [x] Splitter fichier types.ts (633 lignes) en sous-modules ✅
+- [x] Utiliser JSON-LD dynamique avec `NEXT_PUBLIC_APP_URL` ✅
+- [x] ~~Ajouter structured logging (pino) au lieu de console.log~~ ⏸️ REPORTÉ
+- [x] Configurer account lockout après X tentatives échouées ✅
+- [x] Valider MIME type fichiers avec `file-type` package ✅
+
+**Corrections effectuées:**
+
+| # | Correction | Status | Notes |
+|---|------------|--------|-------|
+| 5.4.1 | Commentaires FR | ⏸️ Reporté | Nécessite refactoring massif |
+| 5.4.2 | Magic numbers | ✅ FAIT | `FRAIS_ACQUISITION.tauxDefaut` dans constants.ts |
+| 5.4.3 | ARIA labels | ✅ FAIT | 28 attributs ARIA ajoutés aux 4 formulaires auth |
+| 5.4.4 | Split types.ts | ✅ FAIT | 11 modules dans `/types/` (633→~75 lignes/fichier) |
+| 5.4.5 | JSON-LD dynamique | ✅ FAIT | `NEXT_PUBLIC_APP_URL` utilisé |
+| 5.4.6 | Pino logging | ⏸️ Reporté | Nécessite refactoring massif |
+| 5.4.7 | Account lockout | ✅ FAIT | 5 tentatives max, 15 min lockout |
+| 5.4.8 | MIME validation | ✅ FAIT | `file-type` package + validation binaire |
+
+**Fichiers créés:**
+- `src/lib/auth-lockout.ts` - Utilitaires de gestion du lockout
+- `src/lib/calculs/types/*.ts` - 11 modules de types refactorisés
+
+**Fichiers modifiés:**
+- `src/lib/calculs/constants.ts` - FRAIS_ACQUISITION constant
+- `src/lib/calculs/orchestrateur.ts` - Import FRAIS_ACQUISITION
+- `src/app/layout.tsx` - JSON-LD dynamique
+- `src/lib/auth.ts` - Rate limiting Better Auth
+- `src/lib/storage.ts` - Validation MIME avec file-type
+- `src/components/auth/*.tsx` - Attributs ARIA
+
+**Packages installés:**
+- `file-type ^19.x`
 
 ---
 
