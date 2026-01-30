@@ -9,15 +9,15 @@
  */
 
 import type { ZoneFiscale } from "./common";
-import type { NiveauLoyerJeanbrun, TypeBien } from "./jeanbrun";
-import type { IRResult } from "./ir";
-import type { TMIResult } from "./tmi";
-import type { JeanbrunNeufResult, JeanbrunAncienResult } from "./jeanbrun";
-import type { EconomieImpot } from "./tmi";
 import type { CreditResult, TauxEndettementResult } from "./credit";
-import type { RendementsResult } from "./rendements";
+import type { IRResult } from "./ir";
+import type { NiveauLoyerJeanbrun, TypeBien } from "./jeanbrun";
+import type { JeanbrunNeufResult, JeanbrunAncienResult } from "./jeanbrun";
 import type { ComparatifJeanbrunLMNP } from "./lmnp";
 import type { PlusValueResult } from "./plus-value";
+import type { RendementsResult } from "./rendements";
+import type { EconomieImpot } from "./tmi";
+import type { TMIResult } from "./tmi";
 
 /**
  * Entrée complète pour l'orchestrateur de simulation

@@ -31,15 +31,15 @@ import { calculerLMNPReel, comparerJeanbrunLMNP } from "./lmnp";
 import { calculerPlusValue } from "./plus-value";
 import { calculerRendements } from "./rendements";
 import { calculerTMI, calculerEconomieImpot } from "./tmi";
+import type { ZoneFiscale } from "./types/common";
+import type { IRResult } from "./types/ir";
+import type { NiveauLoyerJeanbrun, JeanbrunNeufResult, JeanbrunAncienResult } from "./types/jeanbrun";
 import type {
   SimulationCalculInput,
   SimulationCalculResult,
   ProjectionAnnuelle,
 } from "./types/simulation";
-import type { NiveauLoyerJeanbrun, JeanbrunNeufResult, JeanbrunAncienResult } from "./types/jeanbrun";
-import type { ZoneFiscale } from "./types/common";
 import type { EconomieImpot } from "./types/tmi";
-import type { IRResult } from "./types/ir";
 import type { TMIResult } from "./types/tmi";
 
 // ============================================

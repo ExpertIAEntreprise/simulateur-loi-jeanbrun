@@ -4,6 +4,7 @@
  * Gère les requêtes vers EspoCRM avec retry automatique et gestion d'erreurs.
  */
 
+import { espocrmLogger } from "@/lib/logger";
 import type {
   EspoVille,
   EspoProgramme,
@@ -87,8 +88,9 @@ export class EspoCRMClient {
       // Si erreur serveur 5xx, retry
       if (response.status >= 500 && attempt < this.retryConfig.maxRetries) {
         const delay = this.retryConfig.baseDelay * Math.pow(2, attempt - 1);
-        console.warn(
-          `EspoCRM request failed (${response.status}), retrying in ${delay}ms (attempt ${attempt}/${this.retryConfig.maxRetries})`
+        espocrmLogger.warn(
+          { status: response.status, attempt, maxRetries: this.retryConfig.maxRetries, delayMs: delay },
+          "EspoCRM request failed, retrying"
         );
         await this.sleep(delay);
         return this.fetchWithRetry<T>(url, options, attempt + 1);
@@ -113,8 +115,9 @@ export class EspoCRMClient {
           (error instanceof Error && error.message?.includes("fetch")))
       ) {
         const delay = this.retryConfig.baseDelay * Math.pow(2, attempt - 1);
-        console.warn(
-          `Network error, retrying in ${delay}ms (attempt ${attempt}/${this.retryConfig.maxRetries})`
+        espocrmLogger.warn(
+          { attempt, maxRetries: this.retryConfig.maxRetries, delayMs: delay },
+          "Network error, retrying"
         );
         await this.sleep(delay);
         return this.fetchWithRetry<T>(url, options, attempt + 1);
@@ -329,7 +332,7 @@ export class EspoCRMClient {
       await this.fetchWithRetry(url);
       return true;
     } catch (error) {
-      console.error("EspoCRM health check failed:", error);
+      espocrmLogger.error({ err: error }, "EspoCRM health check failed");
       return false;
     }
   }

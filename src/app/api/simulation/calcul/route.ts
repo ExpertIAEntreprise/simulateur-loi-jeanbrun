@@ -12,6 +12,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { orchestrerSimulation, type SimulationCalculInput } from "@/lib/calculs";
+import { simulationLogger } from "@/lib/logger";
 import {
   simulationRateLimiter,
   checkRateLimit,
@@ -149,7 +150,7 @@ export async function POST(request: NextRequest) {
       data: result,
     });
   } catch (error) {
-    console.error("Simulation error:", error);
+    simulationLogger.error({ err: error }, "Simulation calculation error");
 
     if (error instanceof SyntaxError) {
       return NextResponse.json(

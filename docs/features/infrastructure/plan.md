@@ -519,7 +519,7 @@ export type User = InferSelectModel<typeof user>;
 - [x] Ajouter ARIA labels aux formulaires auth ✅
 - [x] Splitter fichier types.ts (633 lignes) en sous-modules ✅
 - [x] Utiliser JSON-LD dynamique avec `NEXT_PUBLIC_APP_URL` ✅
-- [x] ~~Ajouter structured logging (pino) au lieu de console.log~~ ⏸️ REPORTÉ
+- [x] Ajouter structured logging (pino) au lieu de console.log ✅
 - [x] Configurer account lockout après X tentatives échouées ✅
 - [x] Valider MIME type fichiers avec `file-type` package ✅
 
@@ -532,13 +532,15 @@ export type User = InferSelectModel<typeof user>;
 | 5.4.3 | ARIA labels | ✅ FAIT | 28 attributs ARIA ajoutés aux 4 formulaires auth |
 | 5.4.4 | Split types.ts | ✅ FAIT | 11 modules dans `/types/` (633→~75 lignes/fichier) |
 | 5.4.5 | JSON-LD dynamique | ✅ FAIT | `NEXT_PUBLIC_APP_URL` utilisé |
-| 5.4.6 | Pino logging | ⏸️ Reporté | Nécessite refactoring massif |
+| 5.4.6 | Pino logging | ✅ FAIT | `pino` + `pino-pretty` + 15 console.* remplacés |
 | 5.4.7 | Account lockout | ✅ FAIT | 5 tentatives max, 15 min lockout |
 | 5.4.8 | MIME validation | ✅ FAIT | `file-type` package + validation binaire |
 
 **Fichiers créés:**
 - `src/lib/auth-lockout.ts` - Utilitaires de gestion du lockout
 - `src/lib/calculs/types/*.ts` - 11 modules de types refactorisés
+- `src/lib/logger.ts` - Logger Pino structuré (server-side)
+- `src/lib/client-logger.ts` - Logger client (browser-side)
 
 **Fichiers modifiés:**
 - `src/lib/calculs/constants.ts` - FRAIS_ACQUISITION constant
@@ -548,8 +550,21 @@ export type User = InferSelectModel<typeof user>;
 - `src/lib/storage.ts` - Validation MIME avec file-type
 - `src/components/auth/*.tsx` - Attributs ARIA
 
+**Fichiers modifiés (Pino logging):**
+- `src/lib/env.ts` - Remplacé 3 console.* par logger
+- `src/lib/email.ts` - Remplacé 3 console.* par emailLogger
+- `src/lib/espocrm/client.ts` - Remplacé 3 console.* par espocrmLogger
+- `src/app/api/simulation/calcul/route.ts` - Remplacé console.error par simulationLogger
+- `src/app/api/espocrm/test/route.ts` - Remplacé console.error par espocrmLogger
+- `src/app/error.tsx` - Remplacé console.error par clientLogger
+- `src/app/chat/error.tsx` - Remplacé console.error par clientLogger
+- `src/components/ui/github-stars.tsx` - Remplacé console.error par clientLogger
+- `src/components/starter-prompt-modal.tsx` - Remplacé console.error par clientLogger
+
 **Packages installés:**
 - `file-type ^19.x`
+- `pino ^10.3.0`
+- `pino-pretty ^13.1.3`
 
 ---
 
@@ -629,7 +644,7 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 
 ---
 
-*Dernière mise à jour: 30 janvier 2026 (17h30 - Corrections CRITICAL + HIGH terminées)*
+*Dernière mise à jour: 30 janvier 2026 (22h00 - Pino logging implémenté)*
 
 ---
 

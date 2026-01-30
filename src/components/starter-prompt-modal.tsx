@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { clientLogger } from "@/lib/client-logger";
 
 const STARTER_PROMPT = `I'm working with an agentic coding boilerplate project that includes authentication, database integration, and AI capabilities. Here's what's already set up:
 
@@ -129,7 +130,7 @@ export function StarterPromptModal() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy text: ", err);
+      clientLogger.error("Failed to copy text:", err);
     }
   };
 

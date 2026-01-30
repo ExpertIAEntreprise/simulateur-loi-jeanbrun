@@ -7,6 +7,7 @@
 
 import { NextResponse } from "next/server";
 import { getEspoCRMClient, isEspoCRMAvailable } from "@/lib/espocrm";
+import { espocrmLogger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic"; // Désactiver cache pour tester
 
@@ -43,7 +44,7 @@ export async function GET() {
       message: `EspoCRM API is working. Found ${response.total} villes, showing first 5.`,
     });
   } catch (error) {
-    console.error("EspoCRM test endpoint error:", error);
+    espocrmLogger.error({ err: error }, "EspoCRM test endpoint error");
 
     return NextResponse.json(
       {

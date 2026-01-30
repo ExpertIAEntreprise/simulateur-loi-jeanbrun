@@ -1,4 +1,5 @@
 import Mailjet from "node-mailjet";
+import { emailLogger } from "@/lib/logger";
 
 // Type for email sending
 interface SendEmailParams {
@@ -37,11 +38,10 @@ export async function sendEmail({
   // In development without Mailjet config, log instead of sending
   if (!client) {
     if (process.env.NODE_ENV === "development") {
-      // eslint-disable-next-line no-console
-      console.log(`\n📧 [DEV EMAIL - Not sent]\nTo: ${to}\nSubject: ${subject}\n---\n${textContent || htmlContent}\n`);
+      emailLogger.debug({ subject, hasContent: !!htmlContent }, "DEV EMAIL - Not sent (Mailjet not configured)");
       return true;
     }
-    console.error("Mailjet not configured. Set MAILJET_API_KEY and MAILJET_API_SECRET.");
+    emailLogger.error("Mailjet not configured");
     return false;
   }
 
@@ -62,7 +62,7 @@ export async function sendEmail({
     });
     return true;
   } catch (error) {
-    console.error("Failed to send email via Mailjet:", error);
+    emailLogger.error({ err: error }, "Failed to send email via Mailjet");
     return false;
   }
 }
