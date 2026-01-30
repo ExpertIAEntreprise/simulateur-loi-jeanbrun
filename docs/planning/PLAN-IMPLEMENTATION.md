@@ -77,7 +77,7 @@
 | UI | shadcn/ui | Latest |
 | Validation | Zod | 3.x |
 | **Base de données** | **Neon (PostgreSQL) + Drizzle ORM** | Latest |
-| **CRM Sync** | **EspoCRM API** (leads) | 8.x |
+| **CRM Sync** | **EspoCRM API** (entités séparées: `cLeadJeanbrun`, `cSimulationJeanbrun`) | 8.x |
 | Paiement | Stripe | Latest |
 | PDF | @react-pdf/renderer | 3.x |
 | Tests | Jest + Playwright | Latest |
@@ -117,7 +117,7 @@
 - [x] Déploiement preview Vercel fonctionnel ✅ https://simulateur-loi-jeanbrun.vercel.app
 - [x] Connexion Neon PostgreSQL OK ✅ Configurée
 - [x] Schéma Drizzle avec migrations appliquées ✅ (boilerplate)
-- [ ] API EspoCRM accessible (sync leads)
+- [ ] API EspoCRM accessible (sync leads) → **Entités séparées de CardImmo : `cLeadJeanbrun`, `cSimulationJeanbrun`**
 - [ ] 266 communes de test importées (Neon)
 - [ ] REGISTRE-RGPD.md créé et complet
 - [ ] Pages politique confidentialité + CGV
