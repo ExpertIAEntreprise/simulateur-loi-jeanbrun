@@ -39,6 +39,7 @@ pnpm format           # Prettier format all files
 - **Auth:** Better Auth (email/password, email verification)
 - **Payments:** Stripe Checkout
 - **AI Chat:** Vercel AI SDK + OpenRouter
+- **PDF:** @react-pdf/renderer
 - **Hosting:** Vercel
 
 ### Key Directories
@@ -46,21 +47,26 @@ pnpm format           # Prettier format all files
 ```
 src/
 ├── app/                    # Next.js App Router pages
-│   ├── (auth)/            # Auth pages (login, register, forgot-password)
+│   ├── (auth)/            # Auth pages (login, register, forgot-password, reset-password)
 │   ├── api/               # API routes
 │   │   ├── auth/[...all]/ # Better Auth catch-all handler
-│   │   └── chat/          # AI chat endpoint
+│   │   ├── chat/          # AI chat endpoint
+│   │   └── diagnostics/   # Health check endpoint
 │   ├── chat/              # AI chat page
-│   └── dashboard/         # User dashboard
+│   ├── dashboard/         # User dashboard
+│   └── profile/           # User profile page
 ├── components/
 │   ├── auth/              # Auth components (use Better Auth hooks)
 │   └── ui/                # shadcn/ui components
+├── hooks/                 # Custom React hooks
 └── lib/
     ├── auth.ts            # Better Auth server config
-    ├── auth-client.ts     # Better Auth client hooks
+    ├── auth-client.ts     # Better Auth client hooks (signIn, signOut, useSession...)
     ├── db.ts              # Drizzle database connection
     ├── schema.ts          # Drizzle schema (user, session, account, verification)
-    └── storage.ts         # File storage abstraction (local/Vercel Blob)
+    ├── session.ts         # Session utilities
+    ├── storage.ts         # File storage abstraction (local/Vercel Blob)
+    └── env.ts             # Environment variable validation
 ```
 
 ### Authentication Pattern (Better Auth)
@@ -72,7 +78,7 @@ import { auth } from "@/lib/auth"
 
 **Client-side:** Import from `@/lib/auth-client`
 ```typescript
-import { useSession, signIn, signOut } from "@/lib/auth-client"
+import { useSession, signIn, signOut, signUp, requestPasswordReset, resetPassword } from "@/lib/auth-client"
 ```
 
 ### Database Schema
@@ -82,6 +88,16 @@ Better Auth tables use `text` IDs (not UUID). The schema in `src/lib/schema.ts` 
 - `session` - Active sessions
 - `account` - OAuth/password accounts
 - `verification` - Email verification tokens
+
+**Important:** When adding new tables, use UUID for IDs except for Better Auth tables which must use text.
+
+### TypeScript Strictness
+
+This project uses maximum TypeScript strictness (`tsconfig.json`):
+- `strictNullChecks`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`
+- `noImplicitAny`, `noUnusedLocals`, `noUnusedParameters`
+
+Always handle potential `undefined` values when accessing arrays/objects.
 
 ## Environment Variables
 
@@ -97,7 +113,18 @@ Optional:
 OPENROUTER_API_KEY=...                  # For AI chat
 OPENROUTER_MODEL=openai/gpt-5-mini
 BLOB_READ_WRITE_TOKEN=...               # Vercel Blob (empty = local storage)
+STRIPE_SECRET_KEY=...                   # For payments (Sprint 5)
+ESPOCRM_API_KEY=...                     # For leads sync (Sprint 4)
 ```
+
+## Development Workflow
+
+See `docs/WORKFLOW.md` for the complete feature development process:
+1. Simplify existing spec
+2. Create feature folder with requirements.md + plan.md
+3. Implement phase by phase
+
+See `docs/CHECKLIST.md` for sprint progress tracking.
 
 ## Claude Code Commands
 
@@ -106,37 +133,21 @@ Available slash commands in `.claude/commands/`:
 - `/publish-to-github` - Publish feature to GitHub Issues/Projects
 - `/continue-feature` - Implement next task for a feature
 - `/checkpoint` - Create checkpoint commit
+- `/review-pr` - Review a pull request
 
-## Agents Spécialisés (PRIORITAIRE)
+## Project Roadmap
 
-**Toujours utiliser les agents spécialisés** via le Task tool pour les audits et le développement :
-
-| Agent | Usage |
-|-------|-------|
-| `code-reviewer` | **Obligatoire** après écriture/modification de code |
-| `security-reviewer` | Avant commits touchant auth, API, données sensibles |
-| `better-auth-expert` | Toute modification liée à l'authentification |
-| `drizzle-neon-expert` | Schéma DB, migrations, requêtes Drizzle |
-| `stripe-payments-expert` | Intégration Stripe, checkout, webhooks |
-| `tdd-guide` | Nouvelles features (écrire tests d'abord) |
-| `ui-expert` | Composants UI, Tailwind, shadcn |
-| `build-error-resolver` | Quand le build échoue |
-
-**Workflow recommandé :**
-1. Feature complexe → `planner` agent d'abord
-2. Écriture code → `tdd-guide` (tests first)
-3. Code terminé → `code-reviewer` (obligatoire)
-4. Avant commit → `security-reviewer` si données sensibles
-
-## Project-Specific Context
-
-This project is a fiscal simulator that will include:
-- **Sprint 2:** Tax calculation engine (IR, Jeanbrun amortization, LMNP comparison)
-- **Sprint 3:** 6-step simulation wizard
-- **Sprint 4:** SEO pages for 50 French cities
+- **Sprint 1:** Infrastructure (done) - Next.js, Better Auth, Drizzle, Vercel
+- **Sprint 2:** Tax calculation engine - IR 2026, Jeanbrun amortization, LMNP comparison
+- **Sprint 3:** 6-step simulation wizard with Zod validation
+- **Sprint 4:** SEO pages for 50 French cities + EspoCRM sync
 - **Sprint 5:** Stripe payments, PDF export, Calendly integration
-- **Sprint 6:** E2E tests, production deployment
+- **Sprint 6:** E2E tests (Playwright), production deployment
 
-**EspoCRM Integration:** Leads sync to EspoCRM using separate entities (`cLeadJeanbrun`, `cSimulationJeanbrun`) to avoid mixing with other projects.
+**EspoCRM Integration:** Leads sync using separate entities (`cLeadJeanbrun`, `cSimulationJeanbrun`, `cVille`, `cProgramme`).
 
-**Documentation:** See `docs/planning/PLAN-IMPLEMENTATION.md` for detailed sprint plans and `docs/specs/REQUIREMENTS.md` for functional requirements.
+**Documentation:**
+- `docs/planning/PLAN-IMPLEMENTATION.md` - Sprint plans
+- `docs/specs/REQUIREMENTS.md` - Functional requirements
+- `docs/technical/FORMULES.md` - Tax calculation formulas
+- `docs/phases/PHASE-*.md` - Detailed phase specifications
