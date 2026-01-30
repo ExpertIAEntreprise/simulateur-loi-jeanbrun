@@ -3,31 +3,44 @@
 Plateforme de simulation fiscale pour la Loi Jeanbrun (PLF 2026) avec accompagnement personnalisé.
 
 **Version:** 2.0
-**Stack:** Next.js 14 + Vercel + Neon PostgreSQL + Drizzle ORM
+**Stack:** Next.js 16 + React 19 + Vercel + Neon PostgreSQL + Drizzle ORM
+**Domaine:** https://simuler-loi-fiscale-jeanbrun.fr
+
+---
+
+## Déploiement
+
+| Environnement | URL |
+|---------------|-----|
+| Production | https://simuler-loi-fiscale-jeanbrun.fr |
+| Preview | https://simulateur-loi-jeanbrun.vercel.app |
+| Repo | https://github.com/ExpertIAEntreprise/simulateur-loi-jeanbrun |
 
 ---
 
 ## Structure du projet
 
 ```
-simulateur_jeanbrun/
+simulateur-loi-jeanbrun/
 ├── README.md
+├── app/                    # Application Next.js 16
+│   ├── src/
+│   │   ├── app/            # Routes (App Router)
+│   │   ├── components/     # Composants React
+│   │   └── lib/            # Utilitaires (db, auth, etc.)
+│   ├── drizzle/            # Migrations SQL
+│   ├── package.json
+│   └── vercel.json
 ├── docs/
 │   ├── specs/              # Spécifications
-│   │   ├── REQUIREMENTS.md # Requirements v2.0
-│   │   ├── PRD.md          # Product Requirements Document
-│   │   └── WIREFRAMES.md   # Maquettes simulateur
+│   │   ├── REQUIREMENTS.md
+│   │   ├── PRD.md
+│   │   └── WIREFRAMES.md
 │   ├── phases/             # Planning sprints
-│   │   ├── PHASE-1-INFRASTRUCTURE.md
-│   │   ├── PHASE-2-CALCULS.md
-│   │   ├── PHASE-3-INTERFACE.md
-│   │   ├── PHASE-4-SEO.md
-│   │   ├── PHASE-5-MONETISATION.md
-│   │   └── PHASE-6-DEPLOY.md
 │   ├── planning/
 │   │   └── PLAN-IMPLEMENTATION.md
 │   ├── legal/
-│   │   └── REGISTRE-RGPD.md  # Conformité CNIL
+│   │   └── REGISTRE-RGPD.md
 │   └── technical/
 │       ├── FORMULES.md
 │       ├── ESPOCRM-SCHEMA.md
@@ -35,8 +48,7 @@ simulateur_jeanbrun/
 ├── config/                 # Configuration n8n
 ├── data/                   # Données statiques (communes, loyers)
 ├── scripts/                # Scripts d'import
-├── assets/mockups/         # Maquettes visuelles
-└── app/                    # (futur) Code Next.js
+└── assets/mockups/         # Maquettes visuelles
 ```
 
 ---
@@ -45,12 +57,15 @@ simulateur_jeanbrun/
 
 | Composant | Technologie |
 |-----------|-------------|
-| Frontend | Next.js 14 (App Router) |
+| Framework | Next.js 16 + React 19 + TypeScript |
 | Styling | Tailwind CSS v4 + shadcn/ui |
 | Base de données | Neon PostgreSQL + Drizzle ORM |
+| Auth | Better Auth |
 | CRM (leads) | EspoCRM (sync API) |
 | Paiement | Stripe Checkout |
 | RDV | Calendly |
+| PDF | @react-pdf/renderer |
+| Charts | Recharts |
 | Hébergement | Vercel |
 | Analytics | Plausible (RGPD-friendly) |
 
@@ -102,14 +117,29 @@ simulateur_jeanbrun/
 
 ```bash
 # Cloner le repo
-git clone https://github.com/ExpertIAEntreprise/simulateur_jeanbrun.git
-cd simulateur_jeanbrun
+git clone https://github.com/ExpertIAEntreprise/simulateur-loi-jeanbrun.git
+cd simulateur-loi-jeanbrun/app
 
-# (futur) Installer les dépendances
-cd app && npm install
+# Installer les dépendances
+pnpm install
 
-# (futur) Lancer en dev
-npm run dev
+# Configurer l'environnement
+cp .env.local.example .env.local
+# Éditer .env.local avec vos clés
+
+# Lancer en dev
+pnpm dev
+```
+
+## Commandes
+
+```bash
+pnpm dev          # Serveur dev (Turbopack)
+pnpm build        # Build production
+pnpm lint         # ESLint
+pnpm typecheck    # TypeScript
+pnpm db:push      # Push schema vers Neon
+pnpm db:studio    # Drizzle Studio
 ```
 
 ---

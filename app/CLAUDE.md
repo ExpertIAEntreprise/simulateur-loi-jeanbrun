@@ -6,6 +6,8 @@ Plateforme de simulation fiscale pour la Loi Jeanbrun (PLF 2026) avec accompagne
 
 **Responsable:** EXPERT IA ENTREPRISE SOLUTIONS (SASU)
 **Domaine:** https://simuler-loi-fiscale-jeanbrun.fr
+**Repo:** https://github.com/ExpertIAEntreprise/simulateur-loi-jeanbrun
+**Preview:** https://simulateur-loi-jeanbrun.vercel.app
 
 ## Stack Technique
 
