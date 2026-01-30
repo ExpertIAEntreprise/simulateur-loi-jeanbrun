@@ -293,3 +293,20 @@ export const PERIODE_JEANBRUN = {
   debut: new Date("2026-01-01"),
   fin: new Date("2028-12-31"),
 } as const;
+
+// ============================================
+// FRAIS D'ACQUISITION IMMOBILIÈRE
+// ============================================
+
+/**
+ * Frais d'acquisition (frais de notaire)
+ * Environ 8% pour l'ancien, 2-3% pour le neuf
+ */
+export const FRAIS_ACQUISITION = {
+  /** Taux estimé pour bien ancien (~8%) */
+  tauxAncien: 0.08,
+  /** Taux estimé pour bien neuf (~3%) */
+  tauxNeuf: 0.03,
+  /** Taux par défaut utilisé dans les calculs */
+  tauxDefaut: 0.08,
+} as const;

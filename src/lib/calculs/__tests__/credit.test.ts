@@ -12,7 +12,7 @@ import {
   calculerCapaciteEmprunt,
   calculerTauxEndettement,
 } from "../credit";
-import type { CreditInput } from "../types";
+import type { CreditInput } from "../types/credit";
 
 // ============================================
 // TESTS: calculerCredit

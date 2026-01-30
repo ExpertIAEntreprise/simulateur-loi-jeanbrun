@@ -25,7 +25,7 @@ import type {
   JeanbrunAncienInput,
   JeanbrunAncienResult,
   EligibiliteTravauxResult,
-} from "./types";
+} from "./types/jeanbrun";
 
 /**
  * Calcule le montant minimum de travaux requis (30% du prix d'achat)

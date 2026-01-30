@@ -11,7 +11,7 @@
  * @date 30 janvier 2026
  */
 
-import type { RendementsInput, RendementsResult } from "./types";
+import type { RendementsInput, RendementsResult } from "./types/rendements";
 
 /**
  * Arrondit un nombre a 2 decimales

@@ -19,7 +19,7 @@ import type {
   LigneAmortissement,
   CapaciteEmpruntResult,
   TauxEndettementResult,
-} from "./types";
+} from "./types/credit";
 
 /**
  * Calcule la mensualite d'un credit immobilier

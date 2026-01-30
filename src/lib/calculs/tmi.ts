@@ -9,7 +9,8 @@
  */
 
 import { TRANCHES_IR_2026 } from "./constants";
-import type { TMIInput, TMIResult, TrancheIR } from "./types";
+import type { TMIInput, TMIResult } from "./types/tmi";
+import type { TrancheIR } from "./types/ir";
 
 /**
  * Calcule les informations detaillees sur la tranche marginale d'imposition

@@ -19,7 +19,7 @@ import type {
   LMNPResult,
   TypeLocationLMNP,
   ComparatifJeanbrunLMNP,
-} from "./types";
+} from "./types/lmnp";
 
 // ============================================
 // REGIME MICRO-BIC

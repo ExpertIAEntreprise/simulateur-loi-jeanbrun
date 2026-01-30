@@ -22,7 +22,7 @@ import type {
   JeanbrunNeufInput,
   JeanbrunNeufResult,
   LigneAmortissementJeanbrun,
-} from "./types";
+} from "./types/jeanbrun";
 
 /**
  * Calcule l'amortissement Jeanbrun pour un bien NEUF

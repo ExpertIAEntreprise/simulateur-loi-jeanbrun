@@ -15,7 +15,7 @@
  */
 
 import { DEFICIT_FONCIER } from "./constants";
-import type { DeficitFoncierInput, DeficitFoncierResult } from "./types";
+import type { DeficitFoncierInput, DeficitFoncierResult } from "./types/deficit-foncier";
 
 /**
  * Ligne du tableau de report du deficit foncier

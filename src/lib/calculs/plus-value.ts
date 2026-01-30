@@ -21,7 +21,7 @@ import {
   ABATTEMENT_DUREE_DETENTION_PS,
   SURTAXE_PLUS_VALUE,
 } from "./constants";
-import type { PlusValueInput, PlusValueResult } from "./types";
+import type { PlusValueInput, PlusValueResult } from "./types/plus-value";
 
 // ============================================
 // FORFAITS LEGAUX

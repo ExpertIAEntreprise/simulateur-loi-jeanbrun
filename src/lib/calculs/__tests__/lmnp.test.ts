@@ -20,7 +20,7 @@ import {
   calculerLMNP,
   comparerJeanbrunLMNP,
 } from "../lmnp";
-import type { LMNPInput } from "../types";
+import type { LMNPInput } from "../types/lmnp";
 
 // ============================================
 // TESTS MICRO-BIC

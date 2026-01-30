@@ -24,7 +24,7 @@ import { describe, it, expect } from "vitest";
 import { calculerLoyerEstime, orchestrerSimulation } from "../orchestrateur";
 import type {
   SimulationCalculInput,
-} from "../types";
+} from "../types/simulation";
 
 // ============================================
 // TESTS CALCUL LOYER ESTIME

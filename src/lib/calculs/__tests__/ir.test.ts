@@ -15,7 +15,7 @@
 
 import { describe, it, expect } from "vitest";
 import { calculerIR, determinerTMI, calculerImpotSansQF } from "../ir";
-import type { IRInput } from "../types";
+import type { IRInput } from "../types/ir";
 
 describe("calculerImpotSansQF", () => {
   describe("calcul progressif par tranches", () => {

@@ -23,7 +23,7 @@ import {
   calculerTravauxMinimum,
   verifierEligibiliteTravaux,
 } from "../jeanbrun-ancien";
-import type { JeanbrunAncienInput } from "../types";
+import type { JeanbrunAncienInput } from "../types/jeanbrun";
 
 describe("calculerTravauxMinimum", () => {
   it("calcule le seuil minimum de travaux (30% du prix d'achat)", () => {

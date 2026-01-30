@@ -8,12 +8,12 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { DEFICIT_FONCIER } from "../constants";
 import {
   calculerDeficitFoncier,
   tableauReportDeficit,
 } from "../deficit-foncier";
-import { DEFICIT_FONCIER } from "../constants";
-import type { DeficitFoncierInput } from "../types";
+import type { DeficitFoncierInput } from "../types/deficit-foncier";
 
 describe("calculerDeficitFoncier", () => {
   // ============================================

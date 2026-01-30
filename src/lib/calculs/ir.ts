@@ -15,7 +15,7 @@ import {
   PLAFOND_QUOTIENT_FAMILIAL,
   DECOTE_2026,
 } from "./constants";
-import type { IRInput, IRResult } from "./types";
+import type { IRInput, IRResult } from "./types/ir";
 
 /**
  * Calcule l'impot sur le revenu pour 1 part (sans quotient familial)

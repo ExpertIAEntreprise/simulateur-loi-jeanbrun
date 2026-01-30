@@ -60,54 +60,55 @@ export {
 // TYPES
 // ============================================
 
-// Énumérations
+// Re-export all types from the types module
 export type {
-  NiveauLoyerJeanbrun,
+  // Common types
   ZoneFiscale,
-  TypeBien,
   RegimeFiscal,
-  TypeLocationLMNP,
   SituationFamiliale,
-} from "./types";
-
-// Types d'entrée
-export type {
+  // IR types
   IRInput,
-  TMIInput,
-  JeanbrunNeufInput,
-  JeanbrunAncienInput,
-  DeficitFoncierInput,
-  CreditInput,
-  PlusValueInput,
-  LMNPInput,
-  RendementsInput,
-  SimulationCalculInput,
-} from "./types";
-
-// Types de sortie
-export type {
   IRResult,
+  TrancheIR,
+  // TMI types
+  TMIInput,
   TMIResult,
-  JeanbrunNeufResult,
-  JeanbrunAncienResult,
-  DeficitFoncierResult,
-  LigneAmortissement,
-  CreditResult,
-  PlusValueResult,
-  LMNPResult,
-  RendementsResult,
   EconomieImpot,
-  CapaciteEmpruntResult,
-  TauxEndettementResult,
-  ProjectionAnnuelle,
-  ComparatifJeanbrunLMNP,
-  SimulationCalculResult,
+  // Jeanbrun types
+  NiveauLoyerJeanbrun,
+  TypeBien,
+  JeanbrunNeufInput,
+  JeanbrunNeufResult,
+  JeanbrunAncienInput,
+  JeanbrunAncienResult,
+  NiveauJeanbrun,
   LigneAmortissementJeanbrun,
   EligibiliteTravauxResult,
+  // Credit types
+  CreditInput,
+  LigneAmortissement,
+  CreditResult,
+  CapaciteEmpruntResult,
+  TauxEndettementResult,
+  // Plus-value types
+  PlusValueInput,
+  PlusValueResult,
+  // LMNP types
+  TypeLocationLMNP,
+  LMNPInput,
+  LMNPResult,
+  ComparatifJeanbrunLMNP,
+  // Deficit foncier types
+  DeficitFoncierInput,
+  DeficitFoncierResult,
+  // Rendements types
+  RendementsInput,
+  RendementsResult,
+  // Simulation types
+  SimulationCalculInput,
+  ProjectionAnnuelle,
+  SimulationCalculResult,
 } from "./types";
-
-// Types utilitaires
-export type { TrancheIR, NiveauJeanbrun } from "./types";
 
 // Labels
 export {

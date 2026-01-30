@@ -20,7 +20,7 @@ import {
   calculerJeanbrunNeuf,
   tableauAmortissementNeuf,
 } from "../jeanbrun-neuf";
-import type { JeanbrunNeufInput } from "../types";
+import type { JeanbrunNeufInput } from "../types/jeanbrun";
 
 describe("calculerJeanbrunNeuf", () => {
   describe("niveau intermediaire (3.5%, plafond 8 000 EUR)", () => {

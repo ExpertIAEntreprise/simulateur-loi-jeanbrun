@@ -10,7 +10,7 @@
 
 import { describe, it, expect } from "vitest";
 import { calculerTMI, calculerEconomieImpot } from "../tmi";
-import type { TMIInput } from "../types";
+import type { TMIInput } from "../types/tmi";
 
 describe("calculerTMI", () => {
   describe("identification de la tranche", () => {

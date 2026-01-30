@@ -17,31 +17,30 @@
  * @date 30 janvier 2026
  */
 
-import type {
-  SimulationCalculInput,
-  SimulationCalculResult,
-  NiveauLoyerJeanbrun,
-  ZoneFiscale,
-  ProjectionAnnuelle,
-  JeanbrunNeufResult,
-  JeanbrunAncienResult,
-  EconomieImpot,
-  IRResult,
-  TMIResult,
-} from "./types";
 import {
   PLAFONDS_LOYERS_M2,
   COEFFICIENT_SURFACE,
   JEANBRUN_NEUF,
+  FRAIS_ACQUISITION,
 } from "./constants";
-import { calculerIR } from "./ir";
-import { calculerTMI, calculerEconomieImpot } from "./tmi";
-import { calculerJeanbrunNeuf } from "./jeanbrun-neuf";
-import { calculerJeanbrunAncien, verifierEligibiliteTravaux } from "./jeanbrun-ancien";
 import { calculerCredit, calculerTauxEndettement } from "./credit";
-import { calculerPlusValue } from "./plus-value";
+import { calculerIR } from "./ir";
+import { calculerJeanbrunAncien, verifierEligibiliteTravaux } from "./jeanbrun-ancien";
+import { calculerJeanbrunNeuf } from "./jeanbrun-neuf";
 import { calculerLMNPReel, comparerJeanbrunLMNP } from "./lmnp";
+import { calculerPlusValue } from "./plus-value";
 import { calculerRendements } from "./rendements";
+import { calculerTMI, calculerEconomieImpot } from "./tmi";
+import type {
+  SimulationCalculInput,
+  SimulationCalculResult,
+  ProjectionAnnuelle,
+} from "./types/simulation";
+import type { NiveauLoyerJeanbrun, JeanbrunNeufResult, JeanbrunAncienResult } from "./types/jeanbrun";
+import type { ZoneFiscale } from "./types/common";
+import type { EconomieImpot } from "./types/tmi";
+import type { IRResult } from "./types/ir";
+import type { TMIResult } from "./types/tmi";
 
 // ============================================
 // CALCUL DU LOYER ESTIME
@@ -178,7 +177,7 @@ function createIneligibleResult(
     loyerAnnuel: loyer * 12,
     prixAcquisition,
     chargesAnnuelles: chargesAnnuellesTotal,
-    fraisAcquisition: prixAcquisition * 0.08,
+    fraisAcquisition: prixAcquisition * FRAIS_ACQUISITION.tauxDefaut,
   });
 
   // Cash-flow sans économie d'impôt
@@ -323,7 +322,7 @@ export function orchestrerSimulation(
   // 5. Calcul des rendements
   // Prix total pour l'ancien = achat + travaux
   const prixTotal = typeBien === "ancien" ? prixAcquisition + montantTravaux : prixAcquisition;
-  const fraisAcquisition = prixAcquisition * 0.08; // ~8% frais notaire
+  const fraisAcquisition = prixAcquisition * FRAIS_ACQUISITION.tauxDefaut;
 
   // chargesCopropriete et taxeFonciere sont des valeurs ANNUELLES
   const chargesAnnuellesTotal = chargesCopropriete + taxeFonciere;

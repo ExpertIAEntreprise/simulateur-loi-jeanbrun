@@ -15,7 +15,7 @@ import {
   calculerSurtaxe,
   calculerPlusValue,
 } from "../plus-value";
-import type { PlusValueInput } from "../types";
+import type { PlusValueInput } from "../types/plus-value";
 
 // ============================================
 // ABATTEMENT IR (Impot sur le Revenu)

@@ -14,7 +14,7 @@
 
 import { describe, it, expect } from "vitest";
 import { calculerRendements } from "../rendements";
-import type { RendementsInput } from "../types";
+import type { RendementsInput } from "../types/rendements";
 
 describe("calculerRendements", () => {
   describe("rendement brut", () => {
