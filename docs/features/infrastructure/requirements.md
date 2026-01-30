@@ -18,7 +18,7 @@ Compléter l'infrastructure de base du simulateur : schéma DB complet avec Driz
 | Tables Better Auth | ✅ Terminé |
 | Tables métier (villes, programmes, simulations, leads, quotas) | ✅ Terminé |
 | Client EspoCRM | ✅ Terminé |
-| Pages légales | ⬜ À faire |
+| Pages légales | ✅ Terminé |
 
 ## Exigences fonctionnelles
 
@@ -40,10 +40,10 @@ Compléter l'infrastructure de base du simulateur : schéma DB complet avec Driz
 
 ### Pages légales
 
-- [ ] FR-11: Page Mentions légales `/mentions-legales`
-- [ ] FR-12: Page CGV `/cgv`
-- [ ] FR-13: Page Politique de confidentialité `/politique-confidentialite`
-- [ ] FR-14: Registre RGPD (doc interne) `docs/legal/REGISTRE-RGPD.md`
+- [x] FR-11: Page Mentions légales `/mentions-legales` ✓
+- [x] FR-12: Page CGV `/cgv` ✓
+- [x] FR-13: Page Politique de confidentialité `/politique-confidentialite` ✓
+- [x] FR-14: Registre RGPD (doc interne) `docs/legal/REGISTRE-RGPD.md` ✓
 
 ## Exigences non-fonctionnelles
 

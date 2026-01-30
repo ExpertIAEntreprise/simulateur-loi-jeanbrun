@@ -18,36 +18,39 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Agentic Coding Boilerplate",
-    template: "%s | Agentic Coding Boilerplate",
+    default: "Simulateur Loi Jeanbrun - Calcul Avantages Fiscaux Immobilier",
+    template: "%s | Simulateur Loi Jeanbrun",
   },
   description:
-    "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling - perfect for building AI-powered applications and autonomous agents by Leon van Zyl",
+    "Simulez gratuitement vos avantages fiscaux avec la Loi Jeanbrun (PLF 2026). Calculez la réduction d'impôt sur votre investissement immobilier neuf en France.",
   keywords: [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "AI",
-    "OpenRouter",
-    "Boilerplate",
-    "Authentication",
-    "PostgreSQL",
+    "loi jeanbrun",
+    "simulation fiscale",
+    "réduction impôt",
+    "investissement immobilier",
+    "défiscalisation",
+    "PLF 2026",
+    "immobilier neuf",
+    "avantage fiscal",
+    "calculateur impôt",
+    "loi pinel",
   ],
-  authors: [{ name: "Leon van Zyl" }],
-  creator: "Leon van Zyl",
+  authors: [{ name: "Expert IA Entreprise" }],
+  creator: "Expert IA Entreprise",
+  publisher: "Expert IA Entreprise",
   openGraph: {
     type: "website",
-    locale: "en_US",
-    siteName: "Agentic Coding Boilerplate",
-    title: "Agentic Coding Boilerplate",
+    locale: "fr_FR",
+    siteName: "Simulateur Loi Jeanbrun",
+    title: "Simulateur Loi Jeanbrun - Calcul Avantages Fiscaux",
     description:
-      "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling",
+      "Simulez gratuitement vos avantages fiscaux avec la Loi Jeanbrun. Jusqu'à 14% de réduction d'impôt sur 12 ans.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agentic Coding Boilerplate",
+    title: "Simulateur Loi Jeanbrun",
     description:
-      "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling",
+      "Simulez gratuitement vos avantages fiscaux avec la Loi Jeanbrun (PLF 2026).",
   },
   robots: {
     index: true,
@@ -59,19 +62,26 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "Agentic Coding Boilerplate",
+  name: "Simulateur Loi Jeanbrun",
   description:
-    "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling",
-  applicationCategory: "DeveloperApplication",
+    "Simulez gratuitement vos avantages fiscaux avec la Loi Jeanbrun (PLF 2026). Calculez la réduction d'impôt sur votre investissement immobilier neuf.",
+  applicationCategory: "FinanceApplication",
   operatingSystem: "Any",
+  inLanguage: "fr-FR",
   offers: {
     "@type": "Offer",
     price: "0",
-    priceCurrency: "USD",
+    priceCurrency: "EUR",
+    description: "Simulation gratuite",
   },
   author: {
-    "@type": "Person",
-    name: "Leon van Zyl",
+    "@type": "Organization",
+    name: "Expert IA Entreprise",
+    url: "https://expert-ia-entreprise.fr",
+  },
+  potentialAction: {
+    "@type": "UseAction",
+    target: "https://simulateur-loi-jeanbrun.vercel.app",
   },
 };
 
@@ -81,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
