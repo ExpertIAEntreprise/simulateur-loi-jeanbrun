@@ -186,20 +186,20 @@ Créer l'orchestrateur qui coordonne tous les calculs et exposer via API.
 
 ### Tâches
 
-- [ ] **6.1** Créer `orchestrateur.ts` avec :
+- [x] **6.1** Créer `orchestrateur.ts` avec :
   - `orchestrerSimulation(input)` → SimulationResult complet
   - `calculerLoyerEstime(surface, niveau, zone)` → loyer €/mois
-- [ ] **6.2** Créer `__tests__/orchestrateur.test.ts` avec :
-  - Test simulation complète neuf intermédiaire
+- [x] **6.2** Créer `__tests__/orchestrateur.test.ts` avec :
+  - Test simulation complète neuf intermédiaire (66 tests)
   - Test simulation complète ancien avec travaux
   - Test comparatif LMNP activé
-- [ ] **6.3** Créer `src/app/api/simulation/calcul/route.ts` :
+- [x] **6.3** Créer `src/app/api/simulation/calcul/route.ts` :
   - POST endpoint
   - Validation Zod des inputs
   - Retour JSON structuré
-- [ ] **6.4** Créer schéma Zod `src/lib/validations/simulation.ts`
-- [ ] **6.5** Vérifier coverage >= 90%
-- [ ] **6.6** Build final sans erreur
+- [x] **6.4** Créer schéma Zod `src/lib/validations/simulation.ts`
+- [x] **6.5** Vérifier coverage >= 90% ✓ (98.51%)
+- [x] **6.6** Build final sans erreur ✓
 
 ### Validation Phase 6
 ```bash

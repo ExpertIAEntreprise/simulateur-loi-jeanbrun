@@ -156,4 +156,4 @@ export {
 export { calculerRendements } from "./rendements";
 
 // Phase 6: Orchestrateur
-// export { orchestrerSimulation, calculerLoyerEstime } from "./orchestrateur";
+export { orchestrerSimulation, calculerLoyerEstime } from "./orchestrateur";
