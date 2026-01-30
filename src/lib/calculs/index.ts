@@ -102,6 +102,8 @@ export type {
   ProjectionAnnuelle,
   ComparatifJeanbrunLMNP,
   SimulationCalculResult,
+  LigneAmortissementJeanbrun,
+  EligibiliteTravauxResult,
 } from "./types";
 
 // Types utilitaires
@@ -123,8 +125,12 @@ export { calculerIR, determinerTMI, calculerImpotSansQF } from "./ir";
 export { calculerTMI, calculerEconomieImpot } from "./tmi";
 
 // Phase 3: Jeanbrun
-// export { calculerJeanbrunNeuf, tableauAmortissementNeuf } from "./jeanbrun-neuf";
-// export { calculerJeanbrunAncien, verifierEligibiliteTravaux } from "./jeanbrun-ancien";
+export { calculerJeanbrunNeuf, tableauAmortissementNeuf } from "./jeanbrun-neuf";
+export {
+  calculerJeanbrunAncien,
+  calculerTravauxMinimum,
+  verifierEligibiliteTravaux,
+} from "./jeanbrun-ancien";
 
 // Phase 4: Déficit + Crédit
 // export { calculerDeficitFoncier, tableauReportDeficit } from "./deficit-foncier";

@@ -82,23 +82,23 @@ Implémenter les calculs d'amortissement Jeanbrun neuf et ancien.
 
 ### Tâches
 
-- [ ] **3.1** Créer `jeanbrun-neuf.ts` avec :
+- [x] **3.1** Créer `jeanbrun-neuf.ts` avec :
   - `calculerJeanbrunNeuf(prix, niveau)` → amortissement plafonné
   - `tableauAmortissementNeuf(input)` → tableau 9 ans
-- [ ] **3.2** Créer `__tests__/jeanbrun-neuf.test.ts` avec :
+- [x] **3.2** Créer `__tests__/jeanbrun-neuf.test.ts` avec :
   - Test 200k€ intermédiaire → 5 600€
   - Test 300k€ intermédiaire → plafonné 8 000€
   - Test 200k€ social → 7 200€
   - Test 200k€ très social → 8 800€
-- [ ] **3.3** Créer `jeanbrun-ancien.ts` avec :
+- [x] **3.3** Créer `jeanbrun-ancien.ts` avec :
   - `calculerJeanbrunAncien(prix, travaux, niveau)` → amortissement
   - `calculerTravauxMinimum(prix)` → seuil 30%
   - `verifierEligibiliteTravaux(prix, travaux)` → éligible + manquant
-- [ ] **3.4** Créer `__tests__/jeanbrun-ancien.test.ts` avec :
+- [x] **3.4** Créer `__tests__/jeanbrun-ancien.test.ts` avec :
   - Test travaux 25% → inéligible
   - Test travaux 30% → éligible
   - Test 150k€ + 50k€ → amortissement correct
-- [ ] **3.5** Exporter depuis `index.ts`
+- [x] **3.5** Exporter depuis `index.ts`
 
 ### Validation Phase 3
 ```bash

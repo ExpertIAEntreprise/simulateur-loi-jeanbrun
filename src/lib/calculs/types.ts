@@ -606,3 +606,28 @@ export const REGIME_FISCAL_LABELS: Record<RegimeFiscal, string> = {
   location_nue_reel: "Location nue (Réel)",
   location_nue_micro: "Location nue (Micro-foncier)",
 };
+
+/**
+ * Ligne du tableau d'amortissement Jeanbrun
+ * Utilise pour les projections annuelles sur 9 ans
+ */
+export interface LigneAmortissementJeanbrun {
+  /** Annee (1 a 9) */
+  annee: number;
+  /** Amortissement de l'annee en euros */
+  amortissement: number;
+  /** Cumul des amortissements depuis le debut */
+  cumul: number;
+}
+
+/**
+ * Resultat de verification d'eligibilite travaux Jeanbrun Ancien
+ */
+export interface EligibiliteTravauxResult {
+  /** Indique si les travaux sont suffisants (>= 30%) */
+  eligible: boolean;
+  /** Seuil de travaux requis en euros */
+  seuilRequis: number;
+  /** Montant manquant si ineligible */
+  montantManquant?: number;
+}
