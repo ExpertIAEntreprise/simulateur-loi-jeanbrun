@@ -348,21 +348,25 @@ Corriger les issues identifiées par la revue multi-agents (code-reviewer, secur
 
 ### Tâches Long Terme (Maintenance)
 
-- [ ] **7.18** [ARCHITECTURE] Implémenter versioning des constantes par année fiscale
+- [x] **7.18** [ARCHITECTURE] Implémenter versioning des constantes par année fiscale
   - **Objectif:** Supporter plusieurs années fiscales (2025, 2026, 2027...)
   - **Pattern:** `TAX_CONSTANTS[year].TRANCHES_IR`
+  - **Implémenté:** Interface `FiscalYearConstants`, `getConstantsForYear()`, constantes 2025/2026/2027
 
-- [ ] **7.19** [ARCHITECTURE] Ajouter feature flags pour réformes fiscales à venir
+- [x] **7.19** [ARCHITECTURE] Ajouter feature flags pour réformes fiscales à venir
   - **Objectif:** Activer/désactiver fonctionnalités (ex: réforme PV 17 ans)
   - **Pattern:** `TaxFeatureFlags { plusValue17YearsRule: boolean }`
+  - **Implémenté:** 11 flags, runtime config, helpers (`getSeuilExonerationIR`, etc.), 20 tests
 
-- [ ] **7.20** [ARCHITECTURE] Créer interface `CalculationModule<TInput, TResult>`
+- [x] **7.20** [ARCHITECTURE] Créer interface `CalculationModule<TInput, TResult>`
   - **Objectif:** Découpler orchestrateur des modules de calcul
   - **Avantage:** Facilite l'injection de dépendances et les tests
+  - **Implémenté:** Interface générique, types spécifiques par module, `ModuleRegistry`, `ModuleFactory`
 
-- [ ] **7.21** [PERFORMANCE] Ajouter benchmarks de performance
+- [x] **7.21** [PERFORMANCE] Ajouter benchmarks de performance
   - **Objectif:** Détecter régressions de performance
   - **Outil:** Vitest bench ou custom benchmark
+  - **Implémenté:** 19 tests benchmark, vérifie ENF-1 (< 50ms), rapport de performance
 
 ### Validation Phase 7
 ```bash
@@ -463,4 +467,19 @@ feat(calculs): add orchestrator and API endpoint (Phase 6)
 
 ---
 
-*Dernière mise à jour : 30 janvier 2026 (Phase 7 complétée - toutes les tâches terminées)*
+*Dernière mise à jour : 30 janvier 2026 (Phase 7 complétée - TOUTES les tâches terminées, incluant Long Terme)*
+
+## Résumé Final
+
+| Phase | Tâches | Statut |
+|-------|--------|--------|
+| Phase 1 | Setup + Constantes | ✅ Terminée |
+| Phase 2 | IR + TMI | ✅ Terminée |
+| Phase 3 | Jeanbrun Neuf/Ancien | ✅ Terminée |
+| Phase 4 | Déficit Foncier + Crédit | ✅ Terminée |
+| Phase 5 | Plus-Value + LMNP + Rendements | ✅ Terminée |
+| Phase 6 | Orchestrateur + API | ✅ Terminée |
+| Phase 7 | Corrections Post-Revue | ✅ Terminée |
+| Long Terme | Versioning + Flags + Module Interface + Benchmarks | ✅ Terminée |
+
+**Total:** 449 tests passent, coverage 98%+, build OK

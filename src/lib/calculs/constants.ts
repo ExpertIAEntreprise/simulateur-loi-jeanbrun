@@ -444,3 +444,197 @@ export const FORFAIT_TRAVAUX = 0.15;
  * @lastUpdated 30 janvier 2026
  */
 export const SEUIL_DETENTION_FORFAIT_TRAVAUX = 5;
+
+// ============================================
+// VERSIONING PAR ANNÉE FISCALE
+// ============================================
+
+/**
+ * Interface pour les constantes variant selon l'année fiscale
+ *
+ * Permet de supporter plusieurs années fiscales (2025, 2026, 2027...)
+ * pour les comparaisons et les simulations prospectives.
+ */
+export interface FiscalYearConstants {
+  /** Année fiscale concernée */
+  year: number;
+
+  /** Barème IR progressif */
+  TRANCHES_IR: readonly {
+    readonly min: number;
+    readonly max: number;
+    readonly taux: number;
+  }[];
+
+  /** Plafond avantage quotient familial par demi-part */
+  PLAFOND_QUOTIENT_FAMILIAL: number;
+
+  /** Plafond par quart de part */
+  PLAFOND_QUART_PART: number;
+
+  /** Paramètres de la décote */
+  DECOTE: {
+    readonly celibataire: { readonly seuil: number; readonly montantBase: number };
+    readonly couple: { readonly seuil: number; readonly montantBase: number };
+  };
+
+  /** Plafonds micro-BIC LMNP */
+  LMNP_MICRO_BIC: {
+    readonly longue_duree: { readonly plafond: number; readonly abattement: number };
+    readonly tourisme_classe: { readonly plafond: number; readonly abattement: number };
+    readonly tourisme_non_classe: { readonly plafond: number; readonly abattement: number };
+    readonly chambres_hotes: { readonly plafond: number; readonly abattement: number };
+  };
+
+  /** Plafond micro-foncier */
+  MICRO_FONCIER: {
+    readonly plafond: number;
+    readonly abattement: number;
+  };
+}
+
+/**
+ * Constantes fiscales 2025 (revenus 2024)
+ *
+ * @source BOFiP IR 2025
+ */
+const FISCAL_YEAR_2025: FiscalYearConstants = {
+  year: 2025,
+  TRANCHES_IR: [
+    { min: 0, max: 11497, taux: 0 },
+    { min: 11497, max: 29024, taux: 0.11 },
+    { min: 29024, max: 82991, taux: 0.3 },
+    { min: 82991, max: 178513, taux: 0.41 },
+    { min: 178513, max: Infinity, taux: 0.45 },
+  ],
+  PLAFOND_QUOTIENT_FAMILIAL: 1759,
+  PLAFOND_QUART_PART: 880,
+  DECOTE: {
+    celibataire: { seuil: 1929, montantBase: 873 },
+    couple: { seuil: 3191, montantBase: 1444 },
+  },
+  LMNP_MICRO_BIC: {
+    longue_duree: { plafond: 77700, abattement: 0.5 },
+    tourisme_classe: { plafond: 77700, abattement: 0.5 },
+    tourisme_non_classe: { plafond: 15000, abattement: 0.3 },
+    chambres_hotes: { plafond: 77700, abattement: 0.71 },
+  },
+  MICRO_FONCIER: {
+    plafond: 15000,
+    abattement: 0.3,
+  },
+};
+
+/**
+ * Constantes fiscales 2026 (revenus 2025)
+ *
+ * @source PLF 2026, BOFiP IR 2026
+ */
+const FISCAL_YEAR_2026: FiscalYearConstants = {
+  year: 2026,
+  TRANCHES_IR: TRANCHES_IR_2026,
+  PLAFOND_QUOTIENT_FAMILIAL,
+  PLAFOND_QUART_PART,
+  DECOTE: DECOTE_2026,
+  LMNP_MICRO_BIC,
+  MICRO_FONCIER,
+};
+
+/**
+ * Constantes fiscales 2027 (revenus 2026) - ESTIMÉES
+ *
+ * Basées sur une hypothèse de revalorisation de 2% (inflation prévue)
+ *
+ * @source Estimation basée sur PLF 2026 + inflation prévisionnelle
+ * @warning Valeurs estimées, à confirmer avec le PLF 2027
+ */
+const FISCAL_YEAR_2027: FiscalYearConstants = {
+  year: 2027,
+  TRANCHES_IR: [
+    { min: 0, max: 11844, taux: 0 }, // +2%
+    { min: 11844, max: 29901, taux: 0.11 }, // +2%
+    { min: 29901, max: 85499, taux: 0.3 }, // +2%
+    { min: 85499, max: 183900, taux: 0.41 }, // +2%
+    { min: 183900, max: Infinity, taux: 0.45 },
+  ],
+  PLAFOND_QUOTIENT_FAMILIAL: 1827, // +2%
+  PLAFOND_QUART_PART: 914, // +2%
+  DECOTE: {
+    celibataire: { seuil: 2003, montantBase: 907 }, // +2%
+    couple: { seuil: 3314, montantBase: 1499 }, // +2%
+  },
+  LMNP_MICRO_BIC: {
+    longue_duree: { plafond: 77700, abattement: 0.5 },
+    tourisme_classe: { plafond: 77700, abattement: 0.5 },
+    tourisme_non_classe: { plafond: 15000, abattement: 0.3 },
+    chambres_hotes: { plafond: 77700, abattement: 0.71 },
+  },
+  MICRO_FONCIER: {
+    plafond: 15000,
+    abattement: 0.3,
+  },
+};
+
+/**
+ * Constantes fiscales indexées par année
+ *
+ * @example
+ * ```typescript
+ * const constants2026 = TAX_CONSTANTS[2026];
+ * const tmi = constants2026.TRANCHES_IR[2]?.taux; // 0.30
+ * ```
+ */
+export const TAX_CONSTANTS: Record<number, FiscalYearConstants> = {
+  2025: FISCAL_YEAR_2025,
+  2026: FISCAL_YEAR_2026,
+  2027: FISCAL_YEAR_2027,
+};
+
+/**
+ * Années fiscales supportées
+ */
+export const SUPPORTED_FISCAL_YEARS = [2025, 2026, 2027] as const;
+
+/**
+ * Type pour les années fiscales supportées
+ */
+export type SupportedFiscalYear = (typeof SUPPORTED_FISCAL_YEARS)[number];
+
+/**
+ * Année fiscale par défaut (courante)
+ */
+export const DEFAULT_FISCAL_YEAR: SupportedFiscalYear = 2026;
+
+/**
+ * Récupère les constantes pour une année fiscale donnée
+ *
+ * @param year - Année fiscale (2025, 2026, 2027)
+ * @returns Constantes pour l'année spécifiée
+ * @throws Error si l'année n'est pas supportée
+ *
+ * @example
+ * ```typescript
+ * const constants = getConstantsForYear(2027);
+ * console.log(constants.PLAFOND_QUOTIENT_FAMILIAL); // 1827
+ * ```
+ */
+export function getConstantsForYear(year: number): FiscalYearConstants {
+  const constants = TAX_CONSTANTS[year];
+  if (!constants) {
+    const supportedYears = SUPPORTED_FISCAL_YEARS.join(", ");
+    throw new Error(
+      `Année fiscale ${year} non supportée. Années disponibles: ${supportedYears}`
+    );
+  }
+  return constants;
+}
+
+/**
+ * Vérifie si une année fiscale est supportée
+ *
+ * @param year - Année à vérifier
+ * @returns true si l'année est supportée
+ */
+export function isFiscalYearSupported(year: number): year is SupportedFiscalYear {
+  return SUPPORTED_FISCAL_YEARS.includes(year as SupportedFiscalYear);
+}

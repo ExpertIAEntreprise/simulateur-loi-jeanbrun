@@ -115,3 +115,32 @@ export type {
   ProjectionAnnuelle,
   SimulationCalculResult,
 } from "./simulation";
+
+// ============================================
+// TYPES MODULE (Interface générique)
+// ============================================
+
+export type {
+  ValidationResult,
+  CalculationModule,
+  IRModule,
+  TMIModule,
+  JeanbrunNeufModule,
+  JeanbrunAncienModule,
+  CreditModule,
+  CapaciteEmpruntInput,
+  CapaciteEmpruntModule,
+  TauxEndettementInput,
+  TauxEndettementModule,
+  PlusValueModule,
+  LMNPModule,
+  ComparatifLMNPInput,
+  ComparatifLMNPModule,
+  DeficitFoncierModule,
+  RendementsModule,
+  SimulationModule,
+  ModuleInput,
+  ModuleResult,
+  ModuleRegistry,
+  ModuleFactory,
+} from "./module";

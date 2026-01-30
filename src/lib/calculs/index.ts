@@ -54,6 +54,22 @@ export {
   MICRO_FONCIER,
   // Période Jeanbrun
   PERIODE_JEANBRUN,
+  // Frais d'acquisition
+  FRAIS_ACQUISITION,
+  FORFAIT_FRAIS_ACQUISITION,
+  FORFAIT_TRAVAUX,
+  SEUIL_DETENTION_FORFAIT_TRAVAUX,
+  // Versioning par année fiscale
+  TAX_CONSTANTS,
+  SUPPORTED_FISCAL_YEARS,
+  DEFAULT_FISCAL_YEAR,
+  getConstantsForYear,
+  isFiscalYearSupported,
+} from "./constants";
+
+export type {
+  FiscalYearConstants,
+  SupportedFiscalYear,
 } from "./constants";
 
 // ============================================
@@ -108,6 +124,29 @@ export type {
   SimulationCalculInput,
   ProjectionAnnuelle,
   SimulationCalculResult,
+  // Module interface types
+  ValidationResult,
+  CalculationModule,
+  IRModule,
+  TMIModule,
+  JeanbrunNeufModule,
+  JeanbrunAncienModule,
+  CreditModule,
+  CapaciteEmpruntInput,
+  CapaciteEmpruntModule,
+  TauxEndettementInput,
+  TauxEndettementModule,
+  PlusValueModule,
+  LMNPModule,
+  ComparatifLMNPInput,
+  ComparatifLMNPModule,
+  DeficitFoncierModule,
+  RendementsModule,
+  SimulationModule,
+  ModuleInput,
+  ModuleResult,
+  ModuleRegistry,
+  ModuleFactory,
 } from "./types";
 
 // Labels
@@ -158,3 +197,26 @@ export { calculerRendements } from "./rendements";
 
 // Phase 6: Orchestrateur
 export { orchestrerSimulation, calculerLoyerEstime } from "./orchestrateur";
+
+// ============================================
+// FEATURE FLAGS
+// ============================================
+
+export {
+  getFeatureFlags,
+  getFeatureFlag,
+  setRuntimeFlags,
+  resetRuntimeFlags,
+  getRuntimeFlags,
+  getSeuilExonerationIR,
+  getSeuilExonerationPS,
+  getPlafondDeficitFoncier,
+  isJeanbrunApplicable,
+  DEFAULT_FEATURE_FLAGS,
+} from "./feature-flags";
+
+export type {
+  TaxFeatureFlags,
+  TaxFeatureFlagName,
+  PartialTaxFeatureFlags,
+} from "./feature-flags";
