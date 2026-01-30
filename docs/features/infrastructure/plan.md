@@ -30,28 +30,28 @@
 
 ---
 
-## Phase 2: Types TypeScript (0,5j)
+## Phase 2: Types TypeScript (0,5j) ✓
 
 ### Tâches
 
-- [ ] 2.1 Créer `src/types/ville.ts` avec interface CVille
-- [ ] 2.2 Créer `src/types/programme.ts` avec interface CProgramme
-- [ ] 2.3 Créer `src/types/simulation.ts` avec interfaces SimulationInput, SimulationResult
-- [ ] 2.4 Créer `src/types/lead.ts` avec interface Lead + LeadStatut
-- [ ] 2.5 Créer index `src/types/index.ts` qui re-exporte tout
+- [x] 2.1 Créer `src/types/ville.ts` avec interface Ville, VilleMarche, VilleFilters
+- [x] 2.2 Créer `src/types/programme.ts` avec interface Programme, ProgrammeAvecVille, ProgrammeCarte
+- [x] 2.3 Créer `src/types/simulation.ts` avec interfaces SimulationInput, SimulationResultat, SimulationProjection
+- [x] 2.4 Créer `src/types/lead.ts` avec interface Lead, LeadInput, LeadStatut
+- [x] 2.5 Créer index `src/types/index.ts` qui re-exporte tout
 
-### Fichiers à créer
+### Fichiers créés
 
-- `src/types/ville.ts`
-- `src/types/programme.ts`
-- `src/types/simulation.ts`
-- `src/types/lead.ts`
-- `src/types/index.ts`
+- `src/types/ville.ts` ✓
+- `src/types/programme.ts` ✓
+- `src/types/simulation.ts` ✓
+- `src/types/lead.ts` ✓
+- `src/types/index.ts` ✓
 
 ### Validation
 
-- [ ] `pnpm typecheck` passe
-- [ ] Types utilisables dans les composants
+- [x] `pnpm typecheck` passe ✓
+- [x] Types utilisables dans les composants (via `@/types`)
 
 ---
 
