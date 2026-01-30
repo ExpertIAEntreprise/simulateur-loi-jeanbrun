@@ -123,16 +123,15 @@ Sentry.init({
 ## 6. Commandes déploiement
 
 ```bash
-# Build
-cd /root/simulateur_loi_Jeanbrun/app
-docker-compose -f docker/docker-compose.yml build
+# Build local (test)
+cd /root/simulateur_loi_Jeanbrun
+pnpm build
 
-# Deploy
-docker-compose -f docker/docker-compose.yml up -d
+# Deploy (Vercel - automatique via git push)
+git push origin main
 
 # Vérification
-curl -I https://simuler-loi-fiscale-jeanbrun.fr
-docker logs simulateur-jeanbrun --tail 50
+curl -I https://simulateur-loi-jeanbrun.vercel.app
 ```
 
 ---
