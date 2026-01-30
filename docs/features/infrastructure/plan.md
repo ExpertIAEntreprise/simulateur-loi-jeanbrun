@@ -1,0 +1,154 @@
+# Plan: Infrastructure (Sprint 1 - Complétion)
+
+**Effort estimé:** 4 jours
+**Priorité:** CRITIQUE (bloquant pour Sprint 2)
+
+---
+
+## Phase 1: Schéma Drizzle complet (1,5j)
+
+### Tâches
+
+- [x] 1.1 Ajouter les enums Drizzle (zone_fiscale, tension_locative, niveau_loyer, lead_statut)
+- [x] 1.2 Créer table `villes` avec tous les champs marché
+- [x] 1.3 Créer table `programmes` avec relation vers villes
+- [x] 1.4 Créer table `simulations` avec JSONB (inputData, resultats)
+- [x] 1.5 Créer table `leads` avec consentements RGPD
+- [x] 1.6 Créer table `quotas` pour packs payants
+- [x] 1.7 Définir les relations Drizzle (villesRelations, programmesRelations, etc.)
+- [x] 1.8 Appliquer le schéma avec `pnpm db:push` ✓
+
+### Fichiers à créer/modifier
+
+- `src/lib/schema.ts` - Ajouter toutes les tables métier
+
+### Validation
+
+- [x] `pnpm db:push` sans erreur ✓
+- [x] Base affiche 9 tables (4 auth + 5 métier) ✓
+- [x] `pnpm typecheck` passe ✓
+
+---
+
+## Phase 2: Types TypeScript (0,5j)
+
+### Tâches
+
+- [ ] 2.1 Créer `src/types/ville.ts` avec interface CVille
+- [ ] 2.2 Créer `src/types/programme.ts` avec interface CProgramme
+- [ ] 2.3 Créer `src/types/simulation.ts` avec interfaces SimulationInput, SimulationResult
+- [ ] 2.4 Créer `src/types/lead.ts` avec interface Lead + LeadStatut
+- [ ] 2.5 Créer index `src/types/index.ts` qui re-exporte tout
+
+### Fichiers à créer
+
+- `src/types/ville.ts`
+- `src/types/programme.ts`
+- `src/types/simulation.ts`
+- `src/types/lead.ts`
+- `src/types/index.ts`
+
+### Validation
+
+- [ ] `pnpm typecheck` passe
+- [ ] Types utilisables dans les composants
+
+---
+
+## Phase 3: Client API EspoCRM (1j)
+
+### Tâches
+
+- [ ] 3.1 Créer `src/lib/espocrm/client.ts` avec classe EspoCRMClient
+- [ ] 3.2 Implémenter `getVilles()` avec pagination et filtres
+- [ ] 3.3 Implémenter `getVilleBySlug(slug)`
+- [ ] 3.4 Implémenter `getProgrammes(villeId?)` avec filtres
+- [ ] 3.5 Implémenter `createLead(data)` pour sync découverte
+- [ ] 3.6 Ajouter gestion d'erreurs avec retry (3 tentatives)
+- [ ] 3.7 Ajouter variables d'environnement dans `src/lib/env.ts`
+- [ ] 3.8 Créer endpoint test `/api/espocrm/test/route.ts`
+
+### Fichiers à créer
+
+- `src/lib/espocrm/client.ts`
+- `src/lib/espocrm/types.ts`
+- `src/lib/espocrm/index.ts`
+- `src/app/api/espocrm/test/route.ts`
+
+### Validation
+
+- [ ] Endpoint `/api/espocrm/test` retourne les 5 premières villes
+- [ ] `pnpm typecheck` passe
+
+---
+
+## Phase 4: Pages légales + RGPD (1j)
+
+### Tâches
+
+- [ ] 4.1 Créer `docs/legal/REGISTRE-RGPD.md` avec registre des traitements
+- [ ] 4.2 Créer page `/mentions-legales`
+- [ ] 4.3 Créer page `/cgv` (Conditions Générales de Vente)
+- [ ] 4.4 Créer page `/politique-confidentialite`
+- [ ] 4.5 Ajouter liens dans le footer (`src/components/site-footer.tsx`)
+- [ ] 4.6 Vérifier metadata SEO (noindex sur CGV si nécessaire)
+
+### Fichiers à créer
+
+- `docs/legal/REGISTRE-RGPD.md`
+- `src/app/mentions-legales/page.tsx`
+- `src/app/cgv/page.tsx`
+- `src/app/politique-confidentialite/page.tsx`
+
+### Fichiers à modifier
+
+- `src/components/site-footer.tsx` - Ajouter liens légaux
+
+### Validation
+
+- [ ] Registre RGPD complété
+- [ ] 3 pages légales accessibles
+- [ ] Liens dans le footer fonctionnels
+
+---
+
+## Checklist finale Sprint 1
+
+### Technique
+
+- [ ] `pnpm dev` fonctionne
+- [ ] `pnpm build:ci` passe
+- [ ] `pnpm check` (lint + typecheck) passe
+- [ ] Schéma Drizzle complet appliqué
+- [ ] Client EspoCRM fonctionnel
+
+### Fonctionnel
+
+- [ ] 10 tables en base (4 auth + 6 métier)
+- [ ] API EspoCRM accessible (test endpoint)
+- [ ] Pages légales publiées
+- [ ] Registre RGPD documenté
+
+### Documentation
+
+- [ ] CHECKLIST.md mis à jour (Sprint 1 = 100%)
+- [ ] Ce plan mis à jour avec [x] sur tâches terminées
+
+---
+
+## Commit suggéré
+
+```
+feat(db): add complete Drizzle schema for simulator
+
+- Add villes, programmes, simulations, leads, quotas tables
+- Add EspoCRM client with retry logic
+- Add legal pages (mentions, CGV, privacy)
+- Add RGPD register documentation
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+```
+
+---
+
+*Dernière mise à jour: 30 janvier 2026*
