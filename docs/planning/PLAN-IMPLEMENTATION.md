@@ -1,21 +1,23 @@
 # Plan d'Implémentation - Simulateur Loi Jeanbrun
 
-**Version:** 2.1
+**Version:** 2.2
 **Date:** 30 janvier 2026
 **Durée totale:** 12 semaines (6 sprints de 2 semaines)
 **Auteur:** Équipe Claude Code
-**Modifications v2.1:** Infrastructure déployée (GitHub + Vercel + Neon)
+**Modifications v2.2:** Entités EspoCRM Jeanbrun créées (CJeanbrunVille, CJeanbrunProgramme)
 
 ---
 
 ## Statut Actuel
 
-| Élément | Status | URL |
-|---------|--------|-----|
+| Élément | Status | URL/Info |
+|---------|--------|----------|
 | **GitHub** | ✅ Déployé | https://github.com/ExpertIAEntreprise/simulateur-loi-jeanbrun |
 | **Vercel** | ✅ Déployé | https://simulateur-loi-jeanbrun.vercel.app |
 | **Neon DB** | ✅ Connectée | ep-noisy-cell-agxf4bs5-pooler.c-2.eu-central-1.aws.neon.tech |
-| **Better Auth** | ✅ Configuré | Secret + URL configurés |
+| **Better Auth** | ✅ Configuré | Email/password + email verification |
+| **EspoCRM Jeanbrun** | ✅ Créé | CJeanbrunVille (51), CJeanbrunProgramme (0) |
+| **Scraping Moltbot** | 🔄 En cours | Skill transmis à Moltbot |
 
 ### Variables d'environnement Vercel (Production)
 
@@ -23,8 +25,17 @@
 - [x] `BETTER_AUTH_SECRET`
 - [x] `BETTER_AUTH_URL`
 - [x] `NEXT_PUBLIC_APP_URL`
-- [ ] `STRIPE_SECRET_KEY` (à configurer)
-- [ ] `ESPOCRM_API_KEY` (à configurer)
+- [ ] `STRIPE_SECRET_KEY` (Sprint 5)
+- [x] `ESPOCRM_API_KEY` → `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+
+### Entités EspoCRM Jeanbrun (séparées de CardImmo)
+
+| Entité | Records | Description |
+|--------|---------|-------------|
+| `CJeanbrunVille` | 51 | Villes éligibles (A_bis, A, B1) |
+| `CJeanbrunProgramme` | 0 | Programmes neufs (scraping Moltbot) |
+
+> **Note:** Les entités Jeanbrun sont préfixées `CJeanbrun*` pour éviter toute confusion avec CardImmo.
 
 ---
 
@@ -77,7 +88,7 @@
 | UI | shadcn/ui | Latest |
 | Validation | Zod | 3.x |
 | **Base de données** | **Neon (PostgreSQL) + Drizzle ORM** | Latest |
-| **CRM Sync** | **EspoCRM API** (entités séparées: `cLeadJeanbrun`, `cSimulationJeanbrun`) | 8.x |
+| **CRM Sync** | **EspoCRM API** (entités séparées: `CJeanbrunLead`, `CJeanbrunSimulation`) | 8.x |
 | Paiement | Stripe | Latest |
 | PDF | @react-pdf/renderer | 3.x |
 | Tests | Jest + Playwright | Latest |
@@ -112,13 +123,14 @@
 
 ### 2.2 Checklist de fin de sprint
 
-- [x] `npm run dev` démarre sans erreur
-- [x] `npm run build` produit un build de production
+- [x] `pnpm dev` démarre sans erreur
+- [x] `pnpm build` produit un build de production
 - [x] Déploiement preview Vercel fonctionnel ✅ https://simulateur-loi-jeanbrun.vercel.app
 - [x] Connexion Neon PostgreSQL OK ✅ Configurée
-- [x] Schéma Drizzle avec migrations appliquées ✅ (boilerplate)
-- [ ] API EspoCRM accessible (sync leads) → **Entités séparées de CardImmo : `cLeadJeanbrun`, `cSimulationJeanbrun`**
-- [ ] 266 communes de test importées (Neon)
+- [x] Schéma Drizzle avec migrations appliquées ✅ (Better Auth tables)
+- [x] API EspoCRM accessible ✅ → **Entités créées: `CJeanbrunVille`, `CJeanbrunProgramme`**
+- [x] 51 villes prioritaires importées (EspoCRM) ✅ zones A_bis, A, B1
+- [ ] 266 communes complètes importées (Neon) - Sprint 4
 - [ ] REGISTRE-RGPD.md créé et complet
 - [ ] Pages politique confidentialité + CGV
 
