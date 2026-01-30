@@ -115,12 +115,12 @@ export {
 } from "./types";
 
 // ============================================
-// FONCTIONS DE CALCUL (Phase 2+)
-// Les fonctions seront ajoutées dans les phases suivantes
+// FONCTIONS DE CALCUL
 // ============================================
 
 // Phase 2: IR + TMI
-// export { calculerIR, calculerTMI, calculerEconomieImpot } from "./ir";
+export { calculerIR, determinerTMI, calculerImpotSansQF } from "./ir";
+export { calculerTMI, calculerEconomieImpot } from "./tmi";
 
 // Phase 3: Jeanbrun
 // export { calculerJeanbrunNeuf, tableauAmortissementNeuf } from "./jeanbrun-neuf";

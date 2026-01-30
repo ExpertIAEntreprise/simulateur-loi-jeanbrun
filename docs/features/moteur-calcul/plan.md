@@ -52,20 +52,20 @@ Implémenter le calcul de l'impôt sur le revenu et de la TMI.
 
 ### Tâches
 
-- [ ] **2.1** Créer `ir.ts` avec :
+- [x] **2.1** Créer `ir.ts` avec :
   - `calculerIR(revenu, parts)` → impôt brut, net, TMI, taux moyen
   - `calculerImpotSansQF(revenu)` (helper interne)
   - `determinerTMI(revenu, parts)` → taux TMI
-- [ ] **2.2** Créer `tmi.ts` avec :
+- [x] **2.2** Créer `tmi.ts` avec :
   - `calculerTMI(revenu, parts)` → TMI + infos tranche
   - `calculerEconomieImpot(deduction, tmi)` → économie fiscale
-- [ ] **2.3** Créer `__tests__/ir.test.ts` avec :
+- [x] **2.3** Créer `__tests__/ir.test.ts` avec :
   - Test célibataire 30k€ → TMI 11%
   - Test couple 2 parts 60k€ → TMI 11%
   - Test 50k€ → TMI 30%
   - Test 200k€ → TMI 45%
   - Test plafonnement QF
-- [ ] **2.4** Exporter depuis `index.ts`
+- [x] **2.4** Exporter depuis `index.ts`
 
 ### Validation Phase 2
 ```bash
