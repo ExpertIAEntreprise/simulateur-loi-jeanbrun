@@ -38,7 +38,11 @@ export function ForgotPasswordForm() {
 
   if (success) {
     return (
-      <div className="space-y-4 w-full max-w-sm text-center">
+      <div
+        className="space-y-4 w-full max-w-sm text-center"
+        role="status"
+        aria-live="polite"
+      >
         <p className="text-sm text-muted-foreground">
           If an account exists with that email, a password reset link has been sent.
           Check your terminal for the reset URL.
@@ -53,7 +57,7 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm" aria-label="Forgot password form">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
@@ -64,12 +68,26 @@ export function ForgotPasswordForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={isPending}
+          aria-describedby={error ? "forgot-error" : undefined}
+          aria-invalid={!!error}
         />
       </div>
       {error && (
-        <p className="text-sm text-destructive">{error}</p>
+        <p
+          id="forgot-error"
+          className="text-sm text-destructive"
+          role="alert"
+          aria-live="polite"
+        >
+          {error}
+        </p>
       )}
-      <Button type="submit" className="w-full" disabled={isPending}>
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isPending}
+        aria-busy={isPending}
+      >
         {isPending ? "Sending..." : "Send reset link"}
       </Button>
       <div className="text-center text-sm text-muted-foreground">

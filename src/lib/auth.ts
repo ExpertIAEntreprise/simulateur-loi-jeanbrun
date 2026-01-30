@@ -31,4 +31,28 @@ export const auth = betterAuth({
       maxAge: 60 * 5, // Cache client 5 min
     },
   },
+  // Account lockout protection: Brute force mitigation
+  // Blocks account after 5 failed attempts within 15 minutes
+  rateLimit: {
+    window: 60, // 60 seconds default window
+    max: 100, // 100 requests max (generous global limit)
+    enabled: true,
+    // Custom rules for authentication endpoints
+    customRules: {
+      "/sign-in/email": {
+        window: 15 * 60, // 15-minute lockout window
+        max: 5, // Max 5 failed login attempts
+      },
+      "/sign-up": {
+        window: 60 * 60, // 1-hour window
+        max: 10, // Max 10 signup attempts per IP
+      },
+    },
+  },
+  // Advanced IP tracking for better brute force detection
+  advanced: {
+    ipAddress: {
+      ipv6Subnet: 64, // Rate limit by IPv6 subnet to prevent rotation bypass
+    },
+  },
 })

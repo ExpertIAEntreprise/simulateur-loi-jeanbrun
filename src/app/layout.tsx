@@ -59,6 +59,9 @@ export const metadata: Metadata = {
   },
 };
 
+// URL de l'application (utilise variable d'environnement ou fallback)
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
+
 // JSON-LD structured data for SEO
 const jsonLd = {
   "@context": "https://schema.org",
@@ -69,6 +72,7 @@ const jsonLd = {
   applicationCategory: "FinanceApplication",
   operatingSystem: "Any",
   inLanguage: "fr-FR",
+  url: appUrl,
   offers: {
     "@type": "Offer",
     price: "0",
@@ -82,7 +86,7 @@ const jsonLd = {
   },
   potentialAction: {
     "@type": "UseAction",
-    target: "https://simulateur-loi-jeanbrun.vercel.app",
+    target: appUrl,
   },
 };
 

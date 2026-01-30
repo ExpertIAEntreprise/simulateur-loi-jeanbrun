@@ -68,7 +68,7 @@ export function SignUpForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm" aria-label="Sign up form">
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
         <Input
@@ -79,6 +79,8 @@ export function SignUpForm() {
           onChange={(e) => setName(e.target.value)}
           required
           disabled={isPending}
+          aria-describedby={error ? "signup-error" : undefined}
+          aria-invalid={!!error}
         />
       </div>
       <div className="space-y-2">
@@ -91,6 +93,8 @@ export function SignUpForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={isPending}
+          aria-describedby={error ? "signup-error" : undefined}
+          aria-invalid={!!error}
         />
       </div>
       <div className="space-y-2">
@@ -103,7 +107,16 @@ export function SignUpForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           disabled={isPending}
+          aria-describedby={error ? "signup-error" : "password-hint"}
+          aria-invalid={!!error}
         />
+        <p
+          id="password-hint"
+          className="text-xs text-muted-foreground"
+          aria-live="polite"
+        >
+          Password must be at least 8 characters with uppercase, lowercase, and numbers.
+        </p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="confirmPassword">Confirm Password</Label>
@@ -115,12 +128,26 @@ export function SignUpForm() {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
           disabled={isPending}
+          aria-describedby={error ? "signup-error" : undefined}
+          aria-invalid={!!error}
         />
       </div>
       {error && (
-        <p className="text-sm text-destructive">{error}</p>
+        <p
+          id="signup-error"
+          className="text-sm text-destructive"
+          role="alert"
+          aria-live="polite"
+        >
+          {error}
+        </p>
       )}
-      <Button type="submit" className="w-full" disabled={isPending}>
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isPending}
+        aria-busy={isPending}
+      >
         {isPending ? "Creating account..." : "Create account"}
       </Button>
       <div className="text-center text-sm text-muted-foreground">

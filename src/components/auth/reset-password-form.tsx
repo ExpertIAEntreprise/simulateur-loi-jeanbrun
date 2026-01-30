@@ -21,7 +21,11 @@ export function ResetPasswordForm() {
 
   if (error === "invalid_token" || !token) {
     return (
-      <div className="space-y-4 w-full max-w-sm text-center">
+      <div
+        className="space-y-4 w-full max-w-sm text-center"
+        role="alert"
+        aria-live="polite"
+      >
         <p className="text-sm text-destructive">
           {error === "invalid_token"
             ? "This password reset link is invalid or has expired."
@@ -71,7 +75,7 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm" aria-label="Reset password form">
       <div className="space-y-2">
         <Label htmlFor="password">New Password</Label>
         <Input
@@ -82,7 +86,16 @@ export function ResetPasswordForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           disabled={isPending}
+          aria-describedby={formError ? "reset-error" : "password-requirements"}
+          aria-invalid={!!formError}
         />
+        <p
+          id="password-requirements"
+          className="text-xs text-muted-foreground"
+          aria-live="polite"
+        >
+          Password must be at least 8 characters.
+        </p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="confirmPassword">Confirm New Password</Label>
@@ -94,12 +107,26 @@ export function ResetPasswordForm() {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
           disabled={isPending}
+          aria-describedby={formError ? "reset-error" : undefined}
+          aria-invalid={!!formError}
         />
       </div>
       {formError && (
-        <p className="text-sm text-destructive">{formError}</p>
+        <p
+          id="reset-error"
+          className="text-sm text-destructive"
+          role="alert"
+          aria-live="polite"
+        >
+          {formError}
+        </p>
       )}
-      <Button type="submit" className="w-full" disabled={isPending}>
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isPending}
+        aria-busy={isPending}
+      >
         {isPending ? "Resetting..." : "Reset password"}
       </Button>
     </form>
