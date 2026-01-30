@@ -107,6 +107,27 @@ Available slash commands in `.claude/commands/`:
 - `/continue-feature` - Implement next task for a feature
 - `/checkpoint` - Create checkpoint commit
 
+## Agents Spécialisés (PRIORITAIRE)
+
+**Toujours utiliser les agents spécialisés** via le Task tool pour les audits et le développement :
+
+| Agent | Usage |
+|-------|-------|
+| `code-reviewer` | **Obligatoire** après écriture/modification de code |
+| `security-reviewer` | Avant commits touchant auth, API, données sensibles |
+| `better-auth-expert` | Toute modification liée à l'authentification |
+| `drizzle-neon-expert` | Schéma DB, migrations, requêtes Drizzle |
+| `stripe-payments-expert` | Intégration Stripe, checkout, webhooks |
+| `tdd-guide` | Nouvelles features (écrire tests d'abord) |
+| `ui-expert` | Composants UI, Tailwind, shadcn |
+| `build-error-resolver` | Quand le build échoue |
+
+**Workflow recommandé :**
+1. Feature complexe → `planner` agent d'abord
+2. Écriture code → `tdd-guide` (tests first)
+3. Code terminé → `code-reviewer` (obligatoire)
+4. Avant commit → `security-reviewer` si données sensibles
+
 ## Project-Specific Context
 
 This project is a fiscal simulator that will include:
