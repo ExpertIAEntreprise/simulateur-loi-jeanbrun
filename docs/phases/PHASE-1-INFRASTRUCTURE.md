@@ -17,7 +17,7 @@
 | Auth | Better Auth (email/password) | ✅ Fonctionnel |
 | Hébergement | Vercel | ✅ Déployé |
 | CI/CD | GitHub Actions | ✅ Configuré |
-| CRM Sync | EspoCRM API | 🟡 Moltbot scraping en cours |
+| CRM Sync | EspoCRM API | ✅ Client fonctionnel |
 
 > **Note:** Cette stack n'utilise PAS Docker, Redis ou nginx. L'application tourne entièrement sur Vercel avec Neon serverless.
 
@@ -37,14 +37,14 @@
 | Neon | Base de données PostgreSQL | Connexion OK |
 | CI/CD | GitHub Actions | Build automatique sur push |
 
-### À compléter ⬜
+### Complétés ✅ (30 janvier 2026)
 
-| Livrable | Description | Feature |
-|----------|-------------|---------|
-| Schéma DB complet | Tables villes, programmes, simulations, leads, quotas | `features/infrastructure/` |
-| Client EspoCRM | Wrapper API pour sync leads | `features/infrastructure/` |
-| Pages légales | Mentions, CGV, Confidentialité | `features/infrastructure/` |
-| REGISTRE-RGPD.md | Conformité CNIL | `features/infrastructure/` |
+| Livrable | Description | Validation |
+|----------|-------------|------------|
+| Schéma DB complet | Tables villes, programmes, simulations, leads, quotas | `pnpm db:push` OK (9 tables) |
+| Client EspoCRM | Wrapper API pour sync leads | `/api/espocrm/test` fonctionnel |
+| Pages légales | Mentions, CGV, Confidentialité | 3 routes accessibles |
+| REGISTRE-RGPD.md | Conformité CNIL | `docs/legal/REGISTRE-RGPD.md` |
 
 ---
 
@@ -143,14 +143,14 @@ Voir `docs/planning/PLAN-IMPLEMENTATION.md` section 10 pour le schéma complet.
 
 Voir **`docs/features/infrastructure/plan.md`** pour les tâches détaillées.
 
-| Phase | Effort | Tâches principales |
-|-------|--------|-------------------|
-| Phase 1 | 1,5j | Schéma Drizzle complet |
-| Phase 2 | 0,5j | Types TypeScript |
-| Phase 3 | 1j | Client API EspoCRM |
-| Phase 4 | 1j | Pages légales + RGPD |
+| Phase | Effort | Tâches principales | Statut |
+|-------|--------|-------------------|--------|
+| Phase 1 | 1,5j | Schéma Drizzle complet | ✅ |
+| Phase 2 | 0,5j | Types TypeScript | ✅ |
+| Phase 3 | 1j | Client API EspoCRM | ✅ |
+| Phase 4 | 1j | Pages légales + RGPD | ✅ |
 
-**Total restant:** 4 jours
+**Sprint 1 terminé à 100%**
 
 ---
 
@@ -185,19 +185,19 @@ git push origin main  # Auto-deploy Vercel
 - [x] `pnpm check` passe
 - [x] Déploiement Vercel fonctionnel
 - [x] Connexion Neon PostgreSQL OK
-- [ ] Schéma Drizzle complet avec 10 tables
-- [ ] Client EspoCRM fonctionnel
+- [x] Schéma Drizzle complet avec 9 tables (4 auth + 5 métier)
+- [x] Client EspoCRM fonctionnel
 
 ### Fonctionnel
 
 - [x] Better Auth (login, register, forgot, reset password)
-- [ ] API `/api/espocrm/test` répond
-- [ ] Pages légales accessibles
+- [x] API `/api/espocrm/test` répond
+- [x] Pages légales accessibles (/mentions-legales, /cgv, /politique-confidentialite)
 
 ### Documentation
 
-- [ ] REGISTRE-RGPD.md créé
-- [ ] CHECKLIST.md mis à jour
+- [x] REGISTRE-RGPD.md créé (`docs/legal/REGISTRE-RGPD.md`)
+- [x] Plan d'implémentation mis à jour (`docs/features/infrastructure/plan.md`)
 
 ---
 
