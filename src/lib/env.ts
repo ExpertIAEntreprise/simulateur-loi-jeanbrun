@@ -11,7 +11,17 @@ const serverEnvSchema = z.object({
   // Authentication
   BETTER_AUTH_SECRET: z
     .string()
-    .min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
+    .min(32, "BETTER_AUTH_SECRET must be at least 32 characters")
+    .refine(
+      (val) => !val.includes("CHANGE_ME"),
+      "BETTER_AUTH_SECRET contains placeholder value. Generate a secure secret with: openssl rand -base64 32"
+    ),
+
+  // Email (Mailjet)
+  MAILJET_API_KEY: z.string().optional(),
+  MAILJET_API_SECRET: z.string().optional(),
+  MAILJET_FROM_EMAIL: z.string().email().optional(),
+  MAILJET_FROM_NAME: z.string().optional(),
 
   // OAuth
   GOOGLE_CLIENT_ID: z.string().optional(),

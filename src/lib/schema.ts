@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -346,3 +346,29 @@ export const quotasRelations = relations(quotas, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+// ============================================================================
+// INFERRED TYPES (Source of truth - DO NOT duplicate in /src/types)
+// ============================================================================
+
+export type Ville = InferSelectModel<typeof villes>;
+export type NewVille = InferInsertModel<typeof villes>;
+
+export type Programme = InferSelectModel<typeof programmes>;
+export type NewProgramme = InferInsertModel<typeof programmes>;
+
+export type Simulation = InferSelectModel<typeof simulations>;
+export type NewSimulation = InferInsertModel<typeof simulations>;
+
+export type Lead = InferSelectModel<typeof leads>;
+export type NewLead = InferInsertModel<typeof leads>;
+
+export type Quota = InferSelectModel<typeof quotas>;
+export type NewQuota = InferInsertModel<typeof quotas>;
+
+export type User = InferSelectModel<typeof user>;
+export type NewUser = InferInsertModel<typeof user>;
+
+export type Session = InferSelectModel<typeof session>;
+export type Account = InferSelectModel<typeof account>;
+export type Verification = InferSelectModel<typeof verification>;

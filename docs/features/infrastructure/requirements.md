@@ -48,17 +48,52 @@ Compléter l'infrastructure de base du simulateur : schéma DB complet avec Driz
 ## Exigences non-fonctionnelles
 
 - [x] NFR-1: Schéma Drizzle avec types TypeScript stricts ✓
-- [ ] NFR-2: Migrations versionnées dans `/drizzle/`
+- [ ] NFR-2: Migrations versionnées dans `/drizzle/` (CRITICAL - tables métier manquantes)
 - [x] NFR-3: Client EspoCRM avec gestion d'erreurs et retry (3 tentatives, exponential backoff) ✓
 - [x] NFR-4: Variables d'environnement validées avec Zod (`src/lib/env.ts`) ✓
+
+### Nouvelles exigences (Post-Revue 30/01/2026)
+
+**Sécurité (CRITICAL/HIGH):**
+- [ ] NFR-5: Pas de secrets/URLs sensibles dans les logs
+- [ ] NFR-6: BETTER_AUTH_SECRET >= 32 caractères aléatoires
+- [ ] NFR-7: Rate limiting sur toutes les API publiques
+- [ ] NFR-8: Headers CSP et HSTS configurés
+- [ ] NFR-9: Endpoints de test protégés ou désactivés en prod
+
+**Type Safety (CRITICAL):**
+- [ ] NFR-10: Types Drizzle inférés (InferSelectModel) comme source unique
+- [ ] NFR-11: Pas de `z.any()` dans les schémas Zod
+
+**Performance (HIGH):**
+- [ ] NFR-12: Driver `@neondatabase/serverless` pour scale-to-zero
+- [ ] NFR-13: Index composites sur requêtes fréquentes
+
+**Best Practices Next.js 16 (HIGH):**
+- [ ] NFR-14: AuthProvider global avec onSessionChange
+- [ ] NFR-15: Pages protégées en Server Components avec requireAuth()
+- [ ] NFR-16: Proxy matcher avec wildcard pour sous-routes
+
+**Better Auth (MEDIUM):**
+- [ ] NFR-17: autoSignInAfterVerification activé
+- [ ] NFR-18: Configuration session explicite (expiresIn, updateAge)
+- [ ] NFR-19: Intégration email réelle (Mailjet)
 
 ## Critères d'acceptation
 
 - [ ] AC-1: `pnpm db:push` applique le schéma sans erreur
-- [ ] AC-2: `pnpm db:studio` affiche toutes les tables
+- [ ] AC-2: `pnpm db:studio` affiche 9 tables (4 auth + 5 métier)
 - [ ] AC-3: API EspoCRM répond en < 500ms (cache local)
 - [ ] AC-4: Pages légales accessibles et indexables
 - [ ] AC-5: `pnpm check` (lint + typecheck) passe
+
+### Nouveaux critères (Post-Revue)
+
+- [ ] AC-6: Aucun console.log avec URL ou secret dans le code
+- [ ] AC-7: Rate limit retourne 429 après dépassement
+- [ ] AC-8: `/api/diagnostics` retourne 404 en production
+- [ ] AC-9: Login → navigation protégée fonctionne sans refresh manuel
+- [ ] AC-10: Accès route protégée sans auth redirige immédiatement
 
 ## Dépendances
 
