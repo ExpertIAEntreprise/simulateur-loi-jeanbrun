@@ -77,6 +77,39 @@ export function calculerLMNPMicroBIC(
 // REGIME REEL
 // ============================================
 
+// Liste des composants immobiliers (hors terrain et mobilier)
+const COMPOSANTS_IMMOBILIERS = [
+  "gros_oeuvre",
+  "facade",
+  "equipements",
+  "agencements",
+] as const;
+
+type ComposantImmobilier = (typeof COMPOSANTS_IMMOBILIERS)[number];
+
+/**
+ * Calcule l'amortissement d'un composant immobilier
+ * Fix 7.12: Helper extrait pour eviter la duplication
+ *
+ * @param nom - Nom du composant
+ * @param baseImmobiliere - Base de calcul
+ * @param facteur - Facteur multiplicateur (1 ou facteur de normalisation)
+ * @returns Valeur et amortissement du composant
+ */
+function calculerComposant(
+  nom: ComposantImmobilier,
+  baseImmobiliere: number,
+  facteur: number
+): { valeur: number; amortissement: number; amortBrut: number } {
+  const valeur = baseImmobiliere * LMNP_REPARTITION_TYPE[nom] * facteur;
+  const amortBrut = valeur * LMNP_COMPOSANTS[nom].taux;
+  return {
+    valeur: Math.round(valeur),
+    amortissement: Math.round(amortBrut),
+    amortBrut: amortBrut,
+  };
+}
+
 /**
  * Calcule l'amortissement annuel par composants
  *
@@ -92,139 +125,39 @@ function calculerAmortissementParComposants(
   detail: Record<string, { valeur: number; amortissement: number }>;
 } {
   if (prixBase <= 0) {
-    return {
-      total: 0,
-      detail: {},
-    };
+    return { total: 0, detail: {} };
   }
 
   const detail: Record<string, { valeur: number; amortissement: number }> = {};
   let totalAmortissement = 0;
-
-  // Si mobilier specifie, on le retire de la base immobiliere
   const baseImmobiliere = prixBase;
-  let mobilierEffectif = 0;
 
+  // Determine le facteur de normalisation selon si mobilier est specifie
+  const facteur =
+    montantMobilier && montantMobilier > 0
+      ? 1 / (1 - LMNP_REPARTITION_TYPE.mobilier)
+      : 1;
+
+  // Terrain (non amortissable)
+  const valeurTerrain = baseImmobiliere * LMNP_REPARTITION_TYPE.terrain * facteur;
+  detail["terrain"] = { valeur: Math.round(valeurTerrain), amortissement: 0 };
+
+  // Calcul des composants immobiliers (gros_oeuvre, facade, equipements, agencements)
+  for (const nom of COMPOSANTS_IMMOBILIERS) {
+    const composant = calculerComposant(nom, baseImmobiliere, facteur);
+    detail[nom] = { valeur: composant.valeur, amortissement: composant.amortissement };
+    totalAmortissement += composant.amortBrut;
+  }
+
+  // Mobilier: soit specifie separement, soit inclus dans la repartition standard
   if (montantMobilier && montantMobilier > 0) {
-    mobilierEffectif = montantMobilier;
-    // Le mobilier est traite separement, on utilise la repartition sans mobilier
-    // On recalcule les pourcentages sans mobilier (normaliser sur 95%)
-    const facteurNormalisation = 1 / (1 - LMNP_REPARTITION_TYPE.mobilier);
-
-    // Terrain
-    const valeurTerrain =
-      baseImmobiliere * LMNP_REPARTITION_TYPE.terrain * facteurNormalisation;
-    detail["terrain"] = {
-      valeur: Math.round(valeurTerrain),
-      amortissement: 0, // Terrain non amortissable
-    };
-
-    // Gros oeuvre
-    const valeurGrosOeuvre =
-      baseImmobiliere *
-      LMNP_REPARTITION_TYPE.gros_oeuvre *
-      facteurNormalisation;
-    const amortGrosOeuvre = valeurGrosOeuvre * LMNP_COMPOSANTS.gros_oeuvre.taux;
-    detail["gros_oeuvre"] = {
-      valeur: Math.round(valeurGrosOeuvre),
-      amortissement: Math.round(amortGrosOeuvre),
-    };
-    totalAmortissement += amortGrosOeuvre;
-
-    // Facade
-    const valeurFacade =
-      baseImmobiliere * LMNP_REPARTITION_TYPE.facade * facteurNormalisation;
-    const amortFacade = valeurFacade * LMNP_COMPOSANTS.facade.taux;
-    detail["facade"] = {
-      valeur: Math.round(valeurFacade),
-      amortissement: Math.round(amortFacade),
-    };
-    totalAmortissement += amortFacade;
-
-    // Equipements
-    const valeurEquipements =
-      baseImmobiliere *
-      LMNP_REPARTITION_TYPE.equipements *
-      facteurNormalisation;
-    const amortEquipements =
-      valeurEquipements * LMNP_COMPOSANTS.equipements.taux;
-    detail["equipements"] = {
-      valeur: Math.round(valeurEquipements),
-      amortissement: Math.round(amortEquipements),
-    };
-    totalAmortissement += amortEquipements;
-
-    // Agencements
-    const valeurAgencements =
-      baseImmobiliere *
-      LMNP_REPARTITION_TYPE.agencements *
-      facteurNormalisation;
-    const amortAgencements =
-      valeurAgencements * LMNP_COMPOSANTS.agencements.taux;
-    detail["agencements"] = {
-      valeur: Math.round(valeurAgencements),
-      amortissement: Math.round(amortAgencements),
-    };
-    totalAmortissement += amortAgencements;
-
-    // Mobilier (specifie separement)
-    const amortMobilier = mobilierEffectif * LMNP_COMPOSANTS.mobilier.taux;
+    const amortMobilier = montantMobilier * LMNP_COMPOSANTS.mobilier.taux;
     detail["mobilier"] = {
-      valeur: mobilierEffectif,
+      valeur: montantMobilier,
       amortissement: Math.round(amortMobilier),
     };
     totalAmortissement += amortMobilier;
   } else {
-    // Repartition standard incluant mobilier
-    // Terrain (15%)
-    const valeurTerrain = baseImmobiliere * LMNP_REPARTITION_TYPE.terrain;
-    detail["terrain"] = {
-      valeur: Math.round(valeurTerrain),
-      amortissement: 0, // Terrain non amortissable
-    };
-
-    // Gros oeuvre (50%)
-    const valeurGrosOeuvre =
-      baseImmobiliere * LMNP_REPARTITION_TYPE.gros_oeuvre;
-    const amortGrosOeuvre = valeurGrosOeuvre * LMNP_COMPOSANTS.gros_oeuvre.taux;
-    detail["gros_oeuvre"] = {
-      valeur: Math.round(valeurGrosOeuvre),
-      amortissement: Math.round(amortGrosOeuvre),
-    };
-    totalAmortissement += amortGrosOeuvre;
-
-    // Facade (10%)
-    const valeurFacade = baseImmobiliere * LMNP_REPARTITION_TYPE.facade;
-    const amortFacade = valeurFacade * LMNP_COMPOSANTS.facade.taux;
-    detail["facade"] = {
-      valeur: Math.round(valeurFacade),
-      amortissement: Math.round(amortFacade),
-    };
-    totalAmortissement += amortFacade;
-
-    // Equipements (10%)
-    const valeurEquipements =
-      baseImmobiliere * LMNP_REPARTITION_TYPE.equipements;
-    const amortEquipements =
-      valeurEquipements * LMNP_COMPOSANTS.equipements.taux;
-    detail["equipements"] = {
-      valeur: Math.round(valeurEquipements),
-      amortissement: Math.round(amortEquipements),
-    };
-    totalAmortissement += amortEquipements;
-
-    // Agencements (10%)
-    const valeurAgencements =
-      baseImmobiliere * LMNP_REPARTITION_TYPE.agencements;
-    const amortAgencements =
-      valeurAgencements * LMNP_COMPOSANTS.agencements.taux;
-    detail["agencements"] = {
-      valeur: Math.round(valeurAgencements),
-      amortissement: Math.round(amortAgencements),
-    };
-    totalAmortissement += amortAgencements;
-
-    // Mobilier (5%)
     const valeurMobilier = baseImmobiliere * LMNP_REPARTITION_TYPE.mobilier;
     const amortMobilier = valeurMobilier * LMNP_COMPOSANTS.mobilier.taux;
     detail["mobilier"] = {
@@ -234,10 +167,7 @@ function calculerAmortissementParComposants(
     totalAmortissement += amortMobilier;
   }
 
-  return {
-    total: Math.round(totalAmortissement),
-    detail: detail,
-  };
+  return { total: Math.round(totalAmortissement), detail };
 }
 
 /**

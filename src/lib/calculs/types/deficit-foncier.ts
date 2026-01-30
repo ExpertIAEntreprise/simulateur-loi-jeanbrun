@@ -42,3 +42,17 @@ export interface DeficitFoncierResult {
   /** Durée de report en années */
   dureeReport: number;
 }
+
+/**
+ * Ligne du tableau de report du déficit foncier
+ */
+export interface LigneReportDeficit {
+  /** Année (1 à N) */
+  annee: number;
+  /** Déficit reporté de l'année précédente */
+  deficitReporte: number;
+  /** Montant imputé sur les revenus fonciers de l'année */
+  imputation: number;
+  /** Solde de déficit restant après imputation */
+  solde: number;
+}

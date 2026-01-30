@@ -15,21 +15,14 @@
  */
 
 import { DEFICIT_FONCIER } from "./constants";
-import type { DeficitFoncierInput, DeficitFoncierResult } from "./types/deficit-foncier";
+import type {
+  DeficitFoncierInput,
+  DeficitFoncierResult,
+  LigneReportDeficit,
+} from "./types/deficit-foncier";
 
-/**
- * Ligne du tableau de report du deficit foncier
- */
-export interface LigneReportDeficit {
-  /** Annee (1 a N) */
-  annee: number;
-  /** Deficit reporte de l'annee precedente */
-  deficitReporte: number;
-  /** Montant impute sur les revenus fonciers de l'annee */
-  imputation: number;
-  /** Solde de deficit restant apres imputation */
-  solde: number;
-}
+// Re-export du type pour maintenir la compatibilite avec les imports existants
+export type { LigneReportDeficit } from "./types/deficit-foncier";
 
 /**
  * Determine si le plafond bonifie est applicable

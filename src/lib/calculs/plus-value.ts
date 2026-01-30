@@ -16,32 +16,15 @@
  */
 
 import {
+  FORFAIT_FRAIS_ACQUISITION,
+  FORFAIT_TRAVAUX,
+  SEUIL_DETENTION_FORFAIT_TRAVAUX,
   TAUX_PLUS_VALUE,
   ABATTEMENT_DUREE_DETENTION_IR,
   ABATTEMENT_DUREE_DETENTION_PS,
   SURTAXE_PLUS_VALUE,
 } from "./constants";
 import type { PlusValueInput, PlusValueResult } from "./types/plus-value";
-
-// ============================================
-// FORFAITS LEGAUX
-// ============================================
-
-/**
- * Forfait pour frais d'acquisition si non declares (7.5% du prix d'achat)
- * Comprend: frais de notaire, droits d'enregistrement, etc.
- */
-const FORFAIT_FRAIS_ACQUISITION = 0.075;
-
-/**
- * Forfait pour travaux si detention > 5 ans et travaux non declares (15% du prix d'achat)
- */
-const FORFAIT_TRAVAUX = 0.15;
-
-/**
- * Seuil de detention pour appliquer le forfait travaux (5 ans)
- */
-const SEUIL_DETENTION_FORFAIT_TRAVAUX = 5;
 
 // ============================================
 // FONCTIONS D'ABATTEMENT

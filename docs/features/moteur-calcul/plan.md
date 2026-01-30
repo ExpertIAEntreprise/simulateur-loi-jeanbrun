@@ -279,37 +279,37 @@ Corriger les issues identifiées par la revue multi-agents (code-reviewer, secur
 
 ### Tâches Priorité MOYENNE (Should Fix)
 
-- [ ] **7.6** [SECURITY] Sanitizer erreurs Zod en production
+- [x] **7.6** [SECURITY] Sanitizer erreurs Zod en production
   - **Fichier:** `src/app/api/simulation/calcul/route.ts:111-119`
   - **Problème:** Détails d'erreur Zod exposés (aide reconnaissance)
   - **Fix:** En prod, retourner message générique sans `fieldErrors`
 
-- [ ] **7.7** [SECURITY] Ajouter limite taille body explicite
+- [x] **7.7** [SECURITY] Ajouter limite taille body explicite
   - **Fichier:** `src/app/api/simulation/calcul/route.ts:106`
   - **Problème:** Pas de vérification content-length avant parsing JSON
   - **Fix:** Vérifier `content-length < 10KB` avant `request.json()`
 
-- [ ] **7.8** [SECURITY] Préférer `x-real-ip` header (Vercel) au lieu de `x-forwarded-for`
+- [x] **7.8** [SECURITY] Préférer `x-real-ip` header (Vercel) au lieu de `x-forwarded-for`
   - **Fichier:** `src/lib/rate-limit.ts:139-157`
   - **Problème:** `x-forwarded-for` peut être spoofé
   - **Fix:** Utiliser d'abord `x-real-ip` (header Vercel non-spoofable)
 
-- [ ] **7.9** [TYPESCRIPT] Déplacer `LigneReportDeficit` dans types/
+- [x] **7.9** [TYPESCRIPT] Déplacer `LigneReportDeficit` dans types/
   - **Fichier:** `src/lib/calculs/deficit-foncier.ts:23-32`
   - **Problème:** Interface définie dans le fichier d'implémentation
   - **Fix:** Déplacer vers `types/deficit-foncier.ts` et re-exporter
 
-- [ ] **7.10** [CODE] Documenter unités (annuel vs mensuel) dans types
+- [x] **7.10** [CODE] Documenter unités (annuel vs mensuel) dans types
   - **Fichier:** `src/lib/calculs/types/simulation.ts`
   - **Problème:** `chargesCopropriete` et `taxeFonciere` pas clairement annuelles
   - **Fix:** Ajouter JSDoc `@example 1200 pour 100€/mois`
 
-- [ ] **7.11** [CODE] Déplacer constantes locales de `plus-value.ts` vers `constants.ts`
+- [x] **7.11** [CODE] Déplacer constantes locales de `plus-value.ts` vers `constants.ts`
   - **Fichier:** `src/lib/calculs/plus-value.ts:34-44`
   - **Constantes:** `FORFAIT_FRAIS_ACQUISITION`, `FORFAIT_TRAVAUX`, `SEUIL_DETENTION_FORFAIT_TRAVAUX`
   - **Fix:** Centraliser dans `constants.ts` pour cohérence
 
-- [ ] **7.12** [CODE] Factoriser code dupliqué dans LMNP
+- [x] **7.12** [CODE] Factoriser code dupliqué dans LMNP
   - **Fichier:** `src/lib/calculs/lmnp.ts:87-241`
   - **Problème:** Calcul amortissement par composants dupliqué
   - **Fix:** Extraire fonction helper `calculerAmortissementComposant()`

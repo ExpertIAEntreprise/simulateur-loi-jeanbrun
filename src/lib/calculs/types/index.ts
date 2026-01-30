@@ -94,6 +94,7 @@ export type {
 export type {
   DeficitFoncierInput,
   DeficitFoncierResult,
+  LigneReportDeficit,
 } from "./deficit-foncier";
 
 // ============================================

@@ -109,6 +109,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Limit body size to 10KB to prevent DoS
+    const contentLength = request.headers.get("content-length");
+    const MAX_BODY_SIZE = 10 * 1024; // 10KB
+    if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
+      return NextResponse.json(
+        { success: false, error: "Request body too large" },
+        { status: 413 }
+      );
+    }
+
     // Rate limiting: 10 requests per minute per IP
     const ip = getClientIP(request);
     const rateLimitResponse = await checkRateLimit(simulationRateLimiter, ip);
@@ -121,11 +131,13 @@ export async function POST(request: NextRequest) {
     const parsed = simulationCalculInputSchema.safeParse(body);
 
     if (!parsed.success) {
+      const isProduction = process.env.NODE_ENV === "production";
       return NextResponse.json(
         {
           success: false,
           error: "Données de simulation invalides",
-          details: parsed.error.flatten().fieldErrors,
+          // Only expose field details in development
+          ...(isProduction ? {} : { details: parsed.error.flatten().fieldErrors }),
         },
         { status: 400 }
       );

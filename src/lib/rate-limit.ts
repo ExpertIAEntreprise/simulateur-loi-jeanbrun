@@ -145,31 +145,36 @@ export async function checkRateLimit(
 /**
  * Extracts client IP from request headers
  *
- * Checks X-Forwarded-For header first (for proxies/load balancers),
- * falls back to "127.0.0.1" if not available.
+ * Priority order:
+ * 1. x-real-ip: Vercel's trusted header (cannot be spoofed by clients)
+ * 2. x-forwarded-for: May be spoofed, used only as fallback
+ * 3. 127.0.0.1: Fallback for local development
  *
  * @param request - Incoming HTTP request
  * @returns Client IP address string
  *
- * @security Uses first IP from X-Forwarded-For to get real client IP
- * behind proxies (Vercel, Cloudflare, etc.)
+ * @security IMPORTANT: x-real-ip is set by Vercel's edge network and cannot
+ * be spoofed by clients. x-forwarded-for CAN be spoofed, so we only use it
+ * as a fallback when x-real-ip is not available (non-Vercel environments).
  */
 export function getClientIP(request: Request): string {
-  // X-Forwarded-For may contain multiple IPs: "client, proxy1, proxy2"
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const firstIp = forwarded.split(",")[0]?.trim();
+  // 1. x-real-ip: Vercel's trusted header (cannot be spoofed)
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp;
+  }
+
+  // 2. x-forwarded-for: May be spoofed, use only as fallback
+  // This header can contain multiple IPs: "client, proxy1, proxy2"
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    // Take the first IP (client IP)
+    const firstIp = forwardedFor.split(",")[0];
     if (firstIp) {
-      return firstIp;
+      return firstIp.trim();
     }
   }
 
-  // Vercel-specific header
-  const vercelForwarded = request.headers.get("x-real-ip");
-  if (vercelForwarded) {
-    return vercelForwarded;
-  }
-
-  // Fallback for local development
+  // 3. Fallback for local development
   return "127.0.0.1";
 }

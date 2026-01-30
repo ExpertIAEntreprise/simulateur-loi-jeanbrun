@@ -310,3 +310,23 @@ export const FRAIS_ACQUISITION = {
   /** Taux par défaut utilisé dans les calculs */
   tauxDefaut: 0.08,
 } as const;
+
+// ============================================
+// FORFAITS PLUS-VALUE
+// ============================================
+
+/**
+ * Forfait pour frais d'acquisition si non declares (7.5% du prix d'achat)
+ * Comprend: frais de notaire, droits d'enregistrement, etc.
+ */
+export const FORFAIT_FRAIS_ACQUISITION = 0.075;
+
+/**
+ * Forfait pour travaux si detention > 5 ans et travaux non declares (15% du prix d'achat)
+ */
+export const FORFAIT_TRAVAUX = 0.15;
+
+/**
+ * Seuil de detention pour appliquer le forfait travaux (5 ans)
+ */
+export const SEUIL_DETENTION_FORFAIT_TRAVAUX = 5;
