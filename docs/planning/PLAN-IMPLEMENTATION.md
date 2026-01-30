@@ -16,8 +16,8 @@
 | **Vercel** | ✅ Déployé | https://simulateur-loi-jeanbrun.vercel.app |
 | **Neon DB** | ✅ Connectée | ep-noisy-cell-agxf4bs5-pooler.c-2.eu-central-1.aws.neon.tech |
 | **Better Auth** | ✅ Configuré | Email/password + email verification |
-| **EspoCRM Jeanbrun** | ✅ Créé | CJeanbrunVille (51), CJeanbrunProgramme (0) |
-| **Scraping Moltbot** | 🔄 En cours | Skill transmis à Moltbot |
+| **EspoCRM Jeanbrun** | ✅ Créé | CJeanbrunVille (51), CJeanbrunProgramme (1+) |
+| **Scraping Moltbot** | 🟡 En cours | SSH OK, 1er programme inséré (Liberty - Nancy) |
 
 ### Variables d'environnement Vercel (Production)
 
