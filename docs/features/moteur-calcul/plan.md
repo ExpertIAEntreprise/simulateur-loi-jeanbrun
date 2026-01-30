@@ -115,19 +115,22 @@ Implémenter le déficit foncier bonifié et le calcul de crédit immobilier.
 
 ### Tâches
 
-- [ ] **4.1** Créer `deficit-foncier.ts` avec :
+- [x] **4.1** Créer `deficit-foncier.ts` avec :
   - `calculerDeficitFoncier(input)` → déficit imputable + reportable
   - `tableauReportDeficit(deficit, revenus[])` → report 10 ans
-- [ ] **4.2** Créer `credit.ts` avec :
+- [x] **4.2** Créer `credit.ts` avec :
   - `calculerCredit(montant, taux, durée, assurance)` → mensualité + tableau
   - `calculerCapaciteEmprunt(revenu, charges, taux, durée)` → capacité max
   - `calculerTauxEndettement(revenu, mensualité)` → taux %
-- [ ] **4.3** Créer `__tests__/credit.test.ts` avec :
-  - Test mensualité 200k€ à 3.5% sur 20 ans
-  - Test tableau amortissement (somme capital = montant)
-  - Test capacité d'emprunt
-  - Test taux endettement 35%
-- [ ] **4.4** Exporter depuis `index.ts`
+- [x] **4.3** Créer `__tests__/credit.test.ts` et `__tests__/deficit-foncier.test.ts` avec :
+  - Test mensualité 200k€ à 3.5% sur 20 ans ✓
+  - Test tableau amortissement (somme capital = montant) ✓
+  - Test capacité d'emprunt ✓
+  - Test taux endettement 35% ✓
+  - Test déficit < plafond standard ✓
+  - Test plafond bonifié (travaux énergétiques) ✓
+  - Test tableau report sur 10 ans ✓
+- [x] **4.4** Exporter depuis `index.ts`
 
 ### Validation Phase 4
 ```bash

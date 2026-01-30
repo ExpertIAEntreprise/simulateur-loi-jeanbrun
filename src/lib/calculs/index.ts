@@ -133,8 +133,12 @@ export {
 } from "./jeanbrun-ancien";
 
 // Phase 4: Déficit + Crédit
-// export { calculerDeficitFoncier, tableauReportDeficit } from "./deficit-foncier";
-// export { calculerCredit, calculerCapaciteEmprunt, calculerTauxEndettement } from "./credit";
+export { calculerDeficitFoncier, tableauReportDeficit } from "./deficit-foncier";
+export {
+  calculerCredit,
+  calculerCapaciteEmprunt,
+  calculerTauxEndettement,
+} from "./credit";
 
 // Phase 5: Plus-Value + LMNP + Rendements
 // export { calculerPlusValue, calculerAbattementIR, calculerAbattementPS } from "./plus-value";
