@@ -141,9 +141,19 @@ export {
 } from "./credit";
 
 // Phase 5: Plus-Value + LMNP + Rendements
-// export { calculerPlusValue, calculerAbattementIR, calculerAbattementPS } from "./plus-value";
-// export { calculerLMNP, comparerJeanbrunLMNP } from "./lmnp";
-// export { calculerRendements } from "./rendements";
+export {
+  calculerPlusValue,
+  calculerAbattementIR,
+  calculerAbattementPS,
+  calculerSurtaxe,
+} from "./plus-value";
+export {
+  calculerLMNP,
+  calculerLMNPMicroBIC,
+  calculerLMNPReel,
+  comparerJeanbrunLMNP,
+} from "./lmnp";
+export { calculerRendements } from "./rendements";
 
 // Phase 6: Orchestrateur
 // export { orchestrerSimulation, calculerLoyerEstime } from "./orchestrateur";

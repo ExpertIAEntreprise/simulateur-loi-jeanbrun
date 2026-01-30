@@ -148,21 +148,26 @@ Implémenter les calculs de plus-value, comparatif LMNP et rendements.
 
 ### Tâches
 
-- [ ] **5.1** Créer `plus-value.ts` avec :
+- [x] **5.1** Créer `plus-value.ts` avec :
   - `calculerPlusValue(vente, achat, durée)` → PV nette + impôts
   - `calculerAbattementIR(années)` → % abattement
   - `calculerAbattementPS(années)` → % abattement
   - `calculerSurtaxe(pvImposable)` → surtaxe
-- [ ] **5.2** Créer `__tests__/plus-value.test.ts` avec :
-  - Test abattement IR après 22 ans = 100%
-  - Test abattement PS après 30 ans = 100%
-  - Test surtaxe > 50k€
-- [ ] **5.3** Créer `lmnp.ts` avec :
+- [x] **5.2** Créer `__tests__/plus-value.test.ts` avec :
+  - Test abattement IR après 22 ans = 100% ✓
+  - Test abattement PS après 30 ans = 100% ✓
+  - Test surtaxe > 50k€ ✓
+  - 45 tests, 98%+ coverage
+- [x] **5.3** Créer `lmnp.ts` avec :
   - `calculerLMNP(input)` → résultat fiscal + cash-flow
+  - `calculerLMNPMicroBIC(recettes, type)` → micro-BIC
+  - `calculerLMNPReel(input)` → régime réel avec amortissements
   - `comparerJeanbrunLMNP(jeanbrun, lmnp)` → recommandation
-- [ ] **5.4** Créer `rendements.ts` avec :
+  - 39 tests complets
+- [x] **5.4** Créer `rendements.ts` avec :
   - `calculerRendements(input)` → brut, net, net-net
-- [ ] **5.5** Exporter depuis `index.ts`
+  - 23 tests, 100% coverage
+- [x] **5.5** Exporter depuis `index.ts`
 
 ### Validation Phase 5
 ```bash
