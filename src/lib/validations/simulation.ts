@@ -279,9 +279,56 @@ export type SimulationCalculInputValidated = z.infer<
  * Schéma de validation pour la réponse API de simulation
  * Utilisé pour documenter et valider les réponses du serveur
  */
+/**
+ * Schéma pour le résultat de simulation (structure typée)
+ */
+export const simulationResultSchema = z.object({
+  // IR et TMI
+  impotAvantJeanbrun: z.number(),
+  impotApresJeanbrun: z.number(),
+  economieImpot: z.number(),
+  tmi: z.number(),
+
+  // Détails amortissement Jeanbrun
+  amortissementJeanbrun: z.object({
+    annee1: z.number(),
+    annee2a10: z.number(),
+    annee11a12: z.number().optional(),
+    total: z.number(),
+  }),
+
+  // Cashflow
+  cashflowMensuel: z.number().optional(),
+  cashflowAnnuel: z.number().optional(),
+
+  // Comparaison LMNP (optionnel)
+  comparaisonLMNP: z.object({
+    economieJeanbrun: z.number(),
+    economieLMNP: z.number(),
+    difference: z.number(),
+    recommendation: z.string(),
+  }).optional(),
+
+  // Plus-value (optionnel)
+  plusValue: z.object({
+    plusValueBrute: z.number(),
+    abattement: z.number(),
+    plusValueNette: z.number(),
+    impotPlusValue: z.number(),
+  }).optional(),
+
+  // Projection annuelle
+  projection: z.array(z.object({
+    annee: z.number(),
+    reductionImpot: z.number(),
+    cumulReduction: z.number(),
+    cashflowNet: z.number().optional(),
+  })).optional(),
+});
+
 export const simulationApiResponseSchema = z.object({
   success: z.boolean(),
-  data: z.any().optional(), // SimulationCalculResult (typage complexe)
+  data: simulationResultSchema.optional(),
   error: z.string().optional(),
   details: z.record(z.string(), z.array(z.string())).optional(), // Erreurs de validation
 });

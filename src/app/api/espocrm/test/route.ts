@@ -11,6 +11,11 @@ import { getEspoCRMClient, isEspoCRMAvailable } from "@/lib/espocrm";
 export const dynamic = "force-dynamic"; // Désactiver cache pour tester
 
 export async function GET() {
+  // Block access in production - test endpoint only for development
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   try {
     // Vérifier si EspoCRM est configuré
     if (!isEspoCRMAvailable()) {

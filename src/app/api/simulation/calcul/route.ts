@@ -4,13 +4,20 @@
  * Endpoint POST: Exécute une simulation complète avec validation Zod
  * Endpoint GET: Documentation de l'API
  *
- * @version 1.0
+ * @version 1.1
  * @date 30 janvier 2026
+ *
+ * @security Rate limited to 10 requests/minute per IP
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { simulationCalculInputSchema } from "@/lib/validations/simulation";
 import { orchestrerSimulation, type SimulationCalculInput } from "@/lib/calculs";
+import {
+  simulationRateLimiter,
+  checkRateLimit,
+  getClientIP,
+} from "@/lib/rate-limit";
+import { simulationCalculInputSchema } from "@/lib/validations/simulation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -89,6 +96,11 @@ function transformToSimulationInput(
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 10 requests per minute per IP
+    const ip = getClientIP(request);
+    const rateLimitResponse = await checkRateLimit(simulationRateLimiter, ip);
+    if (rateLimitResponse) return rateLimitResponse;
+
     // Parse JSON body
     const body: unknown = await request.json();
 

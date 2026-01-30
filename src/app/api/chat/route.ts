@@ -1,8 +1,22 @@
+/**
+ * AI Chat API Route
+ *
+ * Provides streaming AI responses using OpenRouter.
+ *
+ * @version 1.1
+ * @date 30 janvier 2026
+ *
+ * @security
+ * - Requires authentication
+ * - Rate limited to 5 requests/minute per IP
+ */
+
 import { headers } from "next/headers";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { chatRateLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 // Zod schema for message validation
 const messagePartSchema = z.object({
@@ -22,6 +36,11 @@ const chatRequestSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  // Rate limiting: 5 requests per minute per IP
+  const ip = getClientIP(req);
+  const rateLimitResponse = await checkRateLimit(chatRateLimiter, ip);
+  if (rateLimitResponse) return rateLimitResponse;
+
   // Verify user is authenticated
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {

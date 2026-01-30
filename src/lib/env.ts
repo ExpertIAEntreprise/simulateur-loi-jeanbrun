@@ -45,6 +45,10 @@ const serverEnvSchema = z.object({
     .string()
     .url()
     .default("https://espocrm.expert-ia-entreprise.fr/api/v1"),
+
+  // Upstash Redis (for rate limiting)
+  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
 });
 
 /**
