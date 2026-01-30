@@ -172,12 +172,8 @@ function genererTableauAmortissement(
       capital: capitalRembourse,
       interets,
       capitalRestant: nouveauCapitalRestant,
+      ...(assuranceMensuelle !== undefined && { assurance: assuranceMensuelle }),
     };
-
-    // Ajouter assurance si fournie
-    if (assuranceMensuelle !== undefined) {
-      ligne.assurance = assuranceMensuelle;
-    }
 
     tableau.push(ligne);
     capitalRestant = nouveauCapitalRestant;

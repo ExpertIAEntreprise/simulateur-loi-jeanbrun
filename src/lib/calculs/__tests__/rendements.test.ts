@@ -370,3 +370,85 @@ describe("calculerRendements", () => {
     });
   });
 });
+
+// ============================================
+// VALIDATION ERRORS
+// ============================================
+
+describe("validation errors", () => {
+  describe("calculerRendements", () => {
+    it("devrait propager NaN pour loyer NaN", () => {
+      const input: RendementsInput = {
+        loyerAnnuel: NaN,
+        prixAcquisition: 200000,
+      };
+
+      const result = calculerRendements(input);
+      // Note: L'implementation actuelle propage NaN - comportement documente
+      expect(Number.isNaN(result.rendementBrut)).toBe(true);
+    });
+
+    it("devrait propager NaN pour prix acquisition NaN", () => {
+      const input: RendementsInput = {
+        loyerAnnuel: 10000,
+        prixAcquisition: NaN,
+      };
+
+      const result = calculerRendements(input);
+      // Division par NaN = NaN - comportement documente
+      expect(Number.isNaN(result.rendementBrut)).toBe(true);
+    });
+
+    it("devrait propager Infinity pour loyer Infinity", () => {
+      const input: RendementsInput = {
+        loyerAnnuel: Infinity,
+        prixAcquisition: 200000,
+      };
+
+      const result = calculerRendements(input);
+      // Infinity / 200000 = Infinity - comportement documente
+      expect(result.rendementBrut).toBe(Infinity);
+    });
+
+    it("devrait gerer charges negatives (cas aberrant)", () => {
+      const input: RendementsInput = {
+        loyerAnnuel: 10000,
+        prixAcquisition: 200000,
+        chargesAnnuelles: -5000, // Charges negatives = loyer net augmente
+      };
+
+      const result = calculerRendements(input);
+      // loyerNet = 10000 - (-5000) = 15000
+      // rendementNet = 15000 / 200000 = 7.5%
+      expect(result.rendementNet).toBe(7.5);
+    });
+
+    it("devrait gerer impots negatifs (cas aberrant)", () => {
+      const input: RendementsInput = {
+        loyerAnnuel: 10000,
+        prixAcquisition: 200000,
+        impotsAnnuels: -1000, // Impots negatifs = remboursement?
+      };
+
+      const result = calculerRendements(input);
+      // Devrait calculer sans erreur
+      expect(result).toBeDefined();
+    });
+
+    it("devrait gerer tous les parametres a zero", () => {
+      const input: RendementsInput = {
+        loyerAnnuel: 0,
+        prixAcquisition: 0,
+        chargesAnnuelles: 0,
+        fraisAcquisition: 0,
+        impotsAnnuels: 0,
+        prelevementsSociaux: 0,
+      };
+
+      const result = calculerRendements(input);
+      expect(result.rendementBrut).toBe(0);
+      expect(result.rendementNet).toBe(0);
+      expect(result.rendementNetNet).toBe(0);
+    });
+  });
+});

@@ -48,6 +48,8 @@ export type {
   JeanbrunNeufResult,
   JeanbrunAncienInput,
   JeanbrunAncienResult,
+  JeanbrunAncienEligible,
+  JeanbrunAncienIneligible,
   NiveauJeanbrun,
   LigneAmortissementJeanbrun,
   EligibiliteTravauxResult,
@@ -56,6 +58,7 @@ export type {
 export {
   NIVEAU_LOYER_JEANBRUN_LABELS,
   TYPE_BIEN_LABELS,
+  isJeanbrunEligible,
 } from "./jeanbrun";
 
 // ============================================

@@ -421,3 +421,115 @@ describe("tableauReportDeficit", () => {
     });
   });
 });
+
+// ============================================
+// VALIDATION ERRORS
+// ============================================
+
+describe("validation errors", () => {
+  describe("calculerDeficitFoncier", () => {
+    it("devrait gerer loyers negatifs (cas aberrant)", () => {
+      const input: DeficitFoncierInput = {
+        loyersPercus: -5000,
+        chargesDeductibles: 3000,
+        interetsEmprunt: 2000,
+      };
+
+      const result = calculerDeficitFoncier(input);
+      // Loyers negatifs = deficit plus important
+      expect(result.deficitTotal).toBeGreaterThan(0);
+    });
+
+    it("devrait gerer charges negatives (cas aberrant)", () => {
+      const input: DeficitFoncierInput = {
+        loyersPercus: 12000,
+        chargesDeductibles: -3000, // Charges negatives = remboursement?
+        interetsEmprunt: 2000,
+      };
+
+      const result = calculerDeficitFoncier(input);
+      // Resultat = 12000 - (-3000) - 2000 = 13000 (positif)
+      expect(result.revenuFoncierNet).toBeGreaterThan(0);
+    });
+
+    it("devrait gerer interets negatifs (cas aberrant)", () => {
+      const input: DeficitFoncierInput = {
+        loyersPercus: 12000,
+        chargesDeductibles: 3000,
+        interetsEmprunt: -2000,
+      };
+
+      const result = calculerDeficitFoncier(input);
+      expect(result).toBeDefined();
+    });
+
+    it("devrait gerer NaN pour loyers", () => {
+      const input: DeficitFoncierInput = {
+        loyersPercus: NaN,
+        chargesDeductibles: 3000,
+        interetsEmprunt: 2000,
+      };
+
+      const result = calculerDeficitFoncier(input);
+      // Note: L'implementation retourne 0 pour revenuFoncierNet en cas de deficit
+      // NaN >= 0 retourne false, donc traite comme deficit
+      expect(result.revenuFoncierNet).toBe(0);
+      // Le deficitTotal sera NaN car Math.abs(NaN) = NaN
+      expect(Number.isNaN(result.deficitTotal)).toBe(true);
+    });
+
+    it("devrait gerer date invalide pour travaux energetiques", () => {
+      const input: DeficitFoncierInput = {
+        loyersPercus: 5000,
+        chargesDeductibles: 20000,
+        interetsEmprunt: 3000,
+        travauxEnergetiques: true,
+        dateApplication: new Date("invalid-date"),
+      };
+
+      const result = calculerDeficitFoncier(input);
+      // Date invalide = isNaN pour comparaison, donc plafond standard
+      expect(result.plafondApplicable).toBe(DEFICIT_FONCIER.plafondStandard);
+    });
+
+    it("devrait gerer travauxEnergetiques undefined", () => {
+      const input: DeficitFoncierInput = {
+        loyersPercus: 5000,
+        chargesDeductibles: 20000,
+        interetsEmprunt: 3000,
+        // travauxEnergetiques non specifie
+      };
+
+      const result = calculerDeficitFoncier(input);
+      expect(result.plafondApplicable).toBe(DEFICIT_FONCIER.plafondStandard);
+    });
+  });
+
+  describe("tableauReportDeficit", () => {
+    it("devrait gerer deficit initial negatif (cas aberrant)", () => {
+      const deficitInitial = -5000; // Deficit negatif = excedent?
+      const revenusFonciersAnnuels = [3000, 3000];
+
+      const tableau = tableauReportDeficit(deficitInitial, revenusFonciersAnnuels);
+      // Le comportement depend de l'implementation
+      expect(tableau).toBeDefined();
+    });
+
+    it("devrait gerer revenus NaN dans le tableau", () => {
+      const deficitInitial = 10000;
+      const revenusFonciersAnnuels = [3000, NaN, 2000];
+
+      const tableau = tableauReportDeficit(deficitInitial, revenusFonciersAnnuels);
+      expect(tableau).toHaveLength(3);
+      // La ligne avec NaN aura des valeurs NaN
+    });
+
+    it("devrait gerer deficit initial NaN", () => {
+      const deficitInitial = NaN;
+      const revenusFonciersAnnuels = [5000, 5000];
+
+      const tableau = tableauReportDeficit(deficitInitial, revenusFonciersAnnuels);
+      expect(tableau).toHaveLength(2);
+    });
+  });
+});

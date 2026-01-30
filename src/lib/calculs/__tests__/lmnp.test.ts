@@ -535,3 +535,113 @@ describe("comparerJeanbrunLMNP", () => {
     });
   });
 });
+
+// ============================================
+// VALIDATION ERRORS
+// ============================================
+
+describe("validation errors", () => {
+  describe("calculerLMNPMicroBIC", () => {
+    it("devrait gerer recettes NaN", () => {
+      const result = calculerLMNPMicroBIC(NaN, "longue_duree");
+      expect(result.regime).toBe("micro");
+      // Note: L'implementation actuelle ne valide pas NaN explicitement
+      // NaN est traite comme une valeur normale (propagation)
+      expect(result).toBeDefined();
+    });
+
+    it("devrait gerer recettes Infinity", () => {
+      const result = calculerLMNPMicroBIC(Infinity, "longue_duree");
+      // Infinity > plafond 77700, donc ineligible
+      expect(result.beneficeImposable).toBe(0);
+    });
+  });
+
+  describe("calculerLMNPReel", () => {
+    it("devrait gerer recettes negatives", () => {
+      const input: LMNPInput = {
+        recettesAnnuelles: -5000,
+        chargesAnnuelles: 1000,
+        prixAcquisition: 100000,
+        typeLocation: "longue_duree",
+      };
+
+      const result = calculerLMNPReel(input);
+      // Resultat avant amortissement negatif = deficit
+      expect(result.deficitReportable).toBeDefined();
+    });
+
+    it("devrait gerer charges negatives", () => {
+      const input: LMNPInput = {
+        recettesAnnuelles: 10000,
+        chargesAnnuelles: -2000, // Charges negatives = aberrant
+        prixAcquisition: 100000,
+        typeLocation: "longue_duree",
+      };
+
+      const result = calculerLMNPReel(input);
+      // Resultat = 10000 - (-2000) = 12000
+      expect(result).toBeDefined();
+    });
+
+    it("devrait gerer prix acquisition NaN", () => {
+      const input: LMNPInput = {
+        recettesAnnuelles: 10000,
+        chargesAnnuelles: 2000,
+        prixAcquisition: NaN,
+        typeLocation: "longue_duree",
+      };
+
+      const result = calculerLMNPReel(input);
+      // Amortissement sera NaN
+      expect(Number.isNaN(result.amortissementAnnuel)).toBe(true);
+    });
+
+    it("devrait gerer frais notaire negatifs", () => {
+      const input: LMNPInput = {
+        recettesAnnuelles: 10000,
+        chargesAnnuelles: 1000,
+        prixAcquisition: 100000,
+        fraisNotaire: -5000, // Frais negatifs
+        typeLocation: "longue_duree",
+      };
+
+      const result = calculerLMNPReel(input);
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe("calculerLMNP", () => {
+    it("devrait gerer valeurs limites sans planter", () => {
+      const input: LMNPInput = {
+        recettesAnnuelles: 0,
+        chargesAnnuelles: 0,
+        prixAcquisition: 0,
+        typeLocation: "longue_duree",
+      };
+
+      const result = calculerLMNP(input);
+      expect(result).toBeDefined();
+      expect(result.beneficeImposable).toBe(0);
+    });
+  });
+
+  describe("comparerJeanbrunLMNP", () => {
+    it("devrait gerer economies NaN", () => {
+      const result = comparerJeanbrunLMNP(NaN, 3000, 0.3);
+      expect(Number.isNaN(result.difference)).toBe(true);
+    });
+
+    it("devrait gerer TMI negative", () => {
+      const result = comparerJeanbrunLMNP(5000, 3000, -0.1);
+      // TMI negative = calcul aberrant mais pas d'erreur
+      expect(result).toBeDefined();
+    });
+
+    it("devrait gerer TMI > 1", () => {
+      const result = comparerJeanbrunLMNP(5000, 3000, 1.5);
+      // TMI > 100% = aberrant
+      expect(result).toBeDefined();
+    });
+  });
+});

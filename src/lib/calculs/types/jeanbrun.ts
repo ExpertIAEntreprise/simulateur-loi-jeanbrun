@@ -60,28 +60,44 @@ export interface JeanbrunAncienInput {
 }
 
 /**
- * Résultat du calcul Jeanbrun Ancien
+ * Résultat du calcul Jeanbrun Ancien - Cas éligible
+ * Tous les champs de calcul sont requis
  */
-export interface JeanbrunAncienResult {
-  /** Indique si le bien est éligible */
-  eligible: boolean;
-  /** Message si inéligible */
-  message?: string;
-  /** Seuil de travaux requis */
-  seuilTravauxRequis?: number;
-  /** Montant manquant si inéligible */
-  montantManquant?: number;
+export interface JeanbrunAncienEligible {
+  /** Indique que le bien est éligible */
+  eligible: true;
   /** Prix total (achat + travaux) */
-  prixTotal?: number;
+  prixTotal: number;
   /** Base d'amortissement */
-  baseAmortissement?: number;
+  baseAmortissement: number;
   /** Amortissement brut */
-  amortissementBrut?: number;
+  amortissementBrut: number;
   /** Amortissement net */
-  amortissementNet?: number;
+  amortissementNet: number;
   /** Indique si le plafond est appliqué */
-  plafondApplique?: boolean;
+  plafondApplique: boolean;
 }
+
+/**
+ * Résultat du calcul Jeanbrun Ancien - Cas inéligible
+ * Seuls les champs d'erreur sont présents
+ */
+export interface JeanbrunAncienIneligible {
+  /** Indique que le bien n'est pas éligible */
+  eligible: false;
+  /** Message explicatif de l'inéligibilité */
+  message: string;
+  /** Seuil de travaux requis (30% du prix d'achat) */
+  seuilTravauxRequis: number;
+  /** Montant manquant pour atteindre le seuil */
+  montantManquant: number;
+}
+
+/**
+ * Résultat du calcul Jeanbrun Ancien (Discriminated Union)
+ * Utiliser isJeanbrunEligible() pour le type narrowing
+ */
+export type JeanbrunAncienResult = JeanbrunAncienEligible | JeanbrunAncienIneligible;
 
 /**
  * Type pour les niveaux Jeanbrun
@@ -132,3 +148,34 @@ export const TYPE_BIEN_LABELS: Record<TypeBien, string> = {
   neuf: "Neuf",
   ancien: "Ancien avec travaux",
 };
+
+// ============================================
+// TYPE GUARDS
+// ============================================
+
+/**
+ * Type guard pour vérifier l'éligibilité Jeanbrun
+ *
+ * Permet le type narrowing :
+ * - JeanbrunNeufResult est toujours éligible (pas de champ eligible)
+ * - JeanbrunAncienResult est éligible si eligible === true
+ *
+ * @example
+ * ```typescript
+ * const result = calculerJeanbrun(input);
+ * if (isJeanbrunEligible(result)) {
+ *   // TypeScript sait que result.amortissementNet existe
+ *   console.log(result.amortissementNet);
+ * }
+ * ```
+ *
+ * @param result - Résultat d'un calcul Jeanbrun (neuf ou ancien)
+ * @returns true si le résultat représente un calcul éligible
+ */
+export function isJeanbrunEligible(
+  result: JeanbrunNeufResult | JeanbrunAncienResult
+): result is JeanbrunNeufResult | JeanbrunAncienEligible {
+  // JeanbrunNeufResult n'a pas de champ 'eligible' (toujours éligible)
+  // JeanbrunAncienResult a un champ 'eligible' discriminant
+  return !("eligible" in result) || result.eligible;
+}

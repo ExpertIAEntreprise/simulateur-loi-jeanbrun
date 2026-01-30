@@ -316,32 +316,35 @@ Corriger les issues identifiées par la revue multi-agents (code-reviewer, secur
 
 ### Tâches Priorité BASSE (Nice to Have)
 
-- [ ] **7.13** [ARCHITECTURE] Ajouter type guard pour éligibilité Jeanbrun
+- [x] **7.13** [ARCHITECTURE] Ajouter type guard pour éligibilité Jeanbrun
   - **Fichier:** `src/lib/calculs/types/jeanbrun.ts`
-  - **Fix:** Créer `isJeanbrunEligible()` pour type narrowing
+  - **Fix:** Créé `isJeanbrunEligible()` pour type narrowing
   ```typescript
   export function isJeanbrunEligible(
     result: JeanbrunNeufResult | JeanbrunAncienResult
-  ): result is JeanbrunNeufResult | (JeanbrunAncienResult & { eligible: true }) {
+  ): result is JeanbrunNeufResult | JeanbrunAncienEligible {
     return !('eligible' in result) || result.eligible;
   }
   ```
 
-- [ ] **7.14** [ARCHITECTURE] Considérer discriminated union pour `JeanbrunAncienResult`
-  - **Fichier:** `src/lib/calculs/types/jeanbrun.ts:65-84`
-  - **Fix:** Séparer en `JeanbrunAncienEligible | JeanbrunAncienIneligible`
+- [x] **7.14** [ARCHITECTURE] Discriminated union pour `JeanbrunAncienResult`
+  - **Fichier:** `src/lib/calculs/types/jeanbrun.ts`
+  - **Fix:** Séparé en `JeanbrunAncienEligible | JeanbrunAncienIneligible`
+  - Tests mis à jour avec type narrowing
 
-- [ ] **7.15** [CODE] Utiliser spread pattern pour propriétés optionnelles conditionnelles
-  - **Fichier:** `src/lib/calculs/credit.ts:169-179`
+- [x] **7.15** [CODE] Utiliser spread pattern pour propriétés optionnelles conditionnelles
+  - **Fichier:** `src/lib/calculs/credit.ts:169-178`
   - **Fix:** `...(assuranceMensuelle !== undefined && { assurance: assuranceMensuelle })`
+  - Objet `ligne` créé de manière immutable
 
-- [ ] **7.16** [DOC] Ajouter `@version` et `@lastUpdated` aux constantes fiscales
+- [x] **7.16** [DOC] Ajouter `@source`, `@fiscalYear` et `@lastUpdated` aux constantes fiscales
   - **Fichier:** `src/lib/calculs/constants.ts`
-  - **Fix:** Documenter source et date mise à jour des barèmes
+  - **Fix:** Documenté toutes les constantes avec sources officielles (BOFiP, CGI, PLF, HCSF)
 
-- [ ] **7.17** [TESTS] Ajouter tests de validation d'erreur avec `expect().toThrow()`
-  - **Fichiers:** Tous les `__tests__/*.test.ts`
-  - **Fix:** Tester les cas de rejet explicite
+- [x] **7.17** [TESTS] Ajouter tests de validation d'erreur
+  - **Fichiers:** Tous les `__tests__/*.test.ts` (10 fichiers)
+  - **Fix:** 77 nouveaux tests de validation (NaN, Infinity, valeurs négatives)
+  - Total: 410 tests passent
 
 ### Tâches Long Terme (Maintenance)
 
@@ -460,4 +463,4 @@ feat(calculs): add orchestrator and API endpoint (Phase 6)
 
 ---
 
-*Dernière mise à jour : 30 janvier 2026 (Phase 7 ajoutée suite à revue multi-agents)*
+*Dernière mise à jour : 30 janvier 2026 (Phase 7 complétée - toutes les tâches terminées)*

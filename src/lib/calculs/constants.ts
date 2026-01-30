@@ -11,12 +11,16 @@
  */
 
 // ============================================
-// BARÈME IMPÔT SUR LE REVENU 2026
+// BAREME IMPOT SUR LE REVENU 2026
 // ============================================
 
 /**
- * Tranches du barème progressif IR 2026
- * Note: Seule la 1ère tranche est revalorisée de 1% en 2026 (gel partiel)
+ * Tranches du bareme progressif IR 2026
+ * Note: Seule la 1ere tranche est revalorisee de 1% en 2026 (gel partiel)
+ *
+ * @source BOFiP IR - Bareme progressif (BOI-IR-LIQ-20-20-10)
+ * @fiscalYear 2026 (revenus 2025)
+ * @lastUpdated 30 janvier 2026
  */
 export const TRANCHES_IR_2026 = [
   { min: 0, max: 11612, taux: 0 },
@@ -27,17 +31,29 @@ export const TRANCHES_IR_2026 = [
 ] as const;
 
 /**
- * Plafond de l'avantage en impôt par demi-part supplémentaire
+ * Plafond de l'avantage en impot par demi-part supplementaire
+ *
+ * @source BOFiP IR - Quotient familial (BOI-IR-LIQ-20-20-20)
+ * @fiscalYear 2026 (revenus 2025)
+ * @lastUpdated 30 janvier 2026
  */
 export const PLAFOND_QUOTIENT_FAMILIAL = 1791;
 
 /**
  * Plafond par quart de part
+ *
+ * @source BOFiP IR - Quotient familial (BOI-IR-LIQ-20-20-20)
+ * @fiscalYear 2026 (revenus 2025)
+ * @lastUpdated 30 janvier 2026
  */
 export const PLAFOND_QUART_PART = 896;
 
 /**
- * Paramètres de la décote 2026
+ * Parametres de la decote 2026
+ *
+ * @source BOFiP IR - Decote (BOI-IR-LIQ-20-30)
+ * @fiscalYear 2026 (revenus 2025)
+ * @lastUpdated 30 janvier 2026
  */
 export const DECOTE_2026 = {
   celibataire: { seuil: 1964, montantBase: 889 },
@@ -49,8 +65,12 @@ export const DECOTE_2026 = {
 // ============================================
 
 /**
- * Paramètres Jeanbrun pour l'immobilier NEUF
+ * Parametres Jeanbrun pour l'immobilier NEUF
  * Base d'amortissement = 80% du prix d'acquisition
+ *
+ * @source PLF 2026 - Dispositif Jeanbrun Article 199 novovicies bis CGI
+ * @fiscalYear 2026-2028 (periode d'application)
+ * @lastUpdated 30 janvier 2026
  */
 export const JEANBRUN_NEUF = {
   /** Pourcentage du prix excluant le terrain */
@@ -70,9 +90,13 @@ export const JEANBRUN_NEUF = {
 // ============================================
 
 /**
- * Paramètres Jeanbrun pour l'immobilier ANCIEN
+ * Parametres Jeanbrun pour l'immobilier ANCIEN
  * Condition: travaux >= 30% du prix d'achat
  * Base = 80% du prix total (achat + travaux)
+ *
+ * @source PLF 2026 - Dispositif Jeanbrun Article 199 novovicies bis CGI
+ * @fiscalYear 2026-2028 (periode d'application)
+ * @lastUpdated 30 janvier 2026
  */
 export const JEANBRUN_ANCIEN = {
   /** Pourcentage du prix excluant le terrain */
@@ -92,11 +116,16 @@ export const JEANBRUN_ANCIEN = {
 } as const;
 
 // ============================================
-// DÉFICIT FONCIER
+// DEFICIT FONCIER
 // ============================================
 
 /**
- * Plafonds du déficit foncier imputable sur le revenu global
+ * Plafonds du deficit foncier imputable sur le revenu global
+ *
+ * @source BOFiP RF - Deficit foncier (BOI-RFPI-BASE-30-20)
+ * @source LF 2023 art. 5 pour le plafond bonifie (travaux energetiques)
+ * @fiscalYear 2026 (application jusqu'au 31/12/2027 pour bonifie)
+ * @lastUpdated 30 janvier 2026
  */
 export const DEFICIT_FONCIER = {
   /** Plafond standard de droit commun */
@@ -114,8 +143,13 @@ export const DEFICIT_FONCIER = {
 // ============================================
 
 /**
- * Plafonds de loyer en €/m²/mois selon zone et niveau
- * Basé sur les plafonds Loc'Avantages (indicatifs, à confirmer par décret)
+ * Plafonds de loyer en EUR/m2/mois selon zone et niveau
+ * Base sur les plafonds Loc'Avantages (indicatifs, a confirmer par decret)
+ *
+ * @source Loc'Avantages - Plafonds de loyer 2024 (base indicative)
+ * @source Arrete du 1er aout 2014 modifie (zonage A/B/C)
+ * @fiscalYear 2026 (a confirmer par decret d'application Jeanbrun)
+ * @lastUpdated 30 janvier 2026
  */
 export const PLAFONDS_LOYERS_M2 = {
   A_BIS: { intermediaire: 18.89, social: 15.11, tres_social: 12.09 },
@@ -126,8 +160,12 @@ export const PLAFONDS_LOYERS_M2 = {
 } as const;
 
 /**
- * Coefficient de surface pour pondérer les petites surfaces
+ * Coefficient de surface pour ponderer les petites surfaces
  * Formule Loc'Avantages: coef = min(0.7 + 19/surface, 1.2)
+ *
+ * @source Loc'Avantages - Formule coefficient surface (art. 2 terdecies D CGI Annexe III)
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const COEFFICIENT_SURFACE = {
   constante: 0.7,
@@ -136,11 +174,16 @@ export const COEFFICIENT_SURFACE = {
 } as const;
 
 // ============================================
-// PLUS-VALUE IMMOBILIÈRE
+// PLUS-VALUE IMMOBILIERE
 // ============================================
 
 /**
- * Taux d'imposition sur la plus-value immobilière
+ * Taux d'imposition sur la plus-value immobiliere
+ *
+ * @source CGI Article 200 B (taux IR 19%)
+ * @source BOFiP RFPI-PVI-20-20 (prelevements sociaux)
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const TAUX_PLUS_VALUE = {
   /** Taux IR sur plus-value */
@@ -150,8 +193,13 @@ export const TAUX_PLUS_VALUE = {
 } as const;
 
 /**
- * Abattement pour durée de détention - IR
- * Exonération totale après 22 ans
+ * Abattement pour duree de detention - IR
+ * Exoneration totale apres 22 ans
+ *
+ * @source CGI Article 150 VC II (abattement duree de detention)
+ * @source BOFiP RFPI-PVI-20-20-20
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const ABATTEMENT_DUREE_DETENTION_IR = {
   /** Années avant tout abattement */
@@ -165,8 +213,13 @@ export const ABATTEMENT_DUREE_DETENTION_IR = {
 } as const;
 
 /**
- * Abattement pour durée de détention - Prélèvements Sociaux
- * Exonération totale après 30 ans
+ * Abattement pour duree de detention - Prelevements Sociaux
+ * Exoneration totale apres 30 ans
+ *
+ * @source CGI Article 150 VC III (abattement PS)
+ * @source BOFiP RFPI-PVI-20-20-20
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const ABATTEMENT_DUREE_DETENTION_PS = {
   /** Années avant tout abattement */
@@ -182,7 +235,12 @@ export const ABATTEMENT_DUREE_DETENTION_PS = {
 } as const;
 
 /**
- * Seuils de surtaxe sur les plus-values élevées
+ * Seuils de surtaxe sur les plus-values elevees
+ *
+ * @source CGI Article 1609 nonies G (surtaxe PV > 50 000 EUR)
+ * @source BOFiP RFPI-PVI-30
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const SURTAXE_PLUS_VALUE = [
   { min: 50000, max: 60000, calcul: (pv: number) => (pv - 50000) * 0.02 },
@@ -198,11 +256,16 @@ export const SURTAXE_PLUS_VALUE = [
 ] as const;
 
 // ============================================
-// PRÉLÈVEMENTS SOCIAUX
+// PRELEVEMENTS SOCIAUX
 // ============================================
 
 /**
- * Détail des prélèvements sociaux 2026
+ * Detail des prelevements sociaux 2026
+ *
+ * @source CSS L136-7 (CSG), Ordonnance 96-50 (CRDS)
+ * @source BOFiP IR-DOMIC-10-20-20-60
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const PRELEVEMENTS_SOCIAUX = {
   csg: 0.092,
@@ -216,11 +279,17 @@ export const PRELEVEMENTS_SOCIAUX = {
 } as const;
 
 // ============================================
-// LMNP (Location Meublée Non Professionnelle)
+// LMNP (Location Meublee Non Professionnelle)
 // ============================================
 
 /**
- * Régime Micro-BIC LMNP
+ * Regime Micro-BIC LMNP
+ *
+ * @source CGI Article 50-0 (micro-BIC)
+ * @source LF 2024 art. 45 (modification plafonds meuble tourisme)
+ * @source BOFiP BIC-DECLA-10-10-20
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const LMNP_MICRO_BIC = {
   longue_duree: { plafond: 77700, abattement: 0.5 },
@@ -230,7 +299,13 @@ export const LMNP_MICRO_BIC = {
 } as const;
 
 /**
- * Amortissement par composants LMNP (régime réel)
+ * Amortissement par composants LMNP (regime reel)
+ *
+ * @source CGI Article 39 C (amortissement lineaire)
+ * @source BOFiP BIC-AMT-10-40 (composants)
+ * @source Jurisprudence CE (durees d'usage)
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const LMNP_COMPOSANTS = {
   terrain: { taux: 0, duree: null },
@@ -243,7 +318,12 @@ export const LMNP_COMPOSANTS = {
 } as const;
 
 /**
- * Répartition type d'un bien immobilier LMNP
+ * Repartition type d'un bien immobilier LMNP
+ *
+ * @source Pratique comptable - Repartition indicative
+ * @source BOFiP BIC-AMT-10-40 (principes de decomposition)
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const LMNP_REPARTITION_TYPE = {
   terrain: 0.15,
@@ -255,11 +335,16 @@ export const LMNP_REPARTITION_TYPE = {
 } as const;
 
 // ============================================
-// CRÉDIT IMMOBILIER
+// CREDIT IMMOBILIER
 // ============================================
 
 /**
- * Seuils d'endettement recommandés
+ * Seuils d'endettement recommandes
+ *
+ * @source HCSF Decision D-HCSF-2021-7 du 29 septembre 2021
+ * @source HCSF Decision D-HCSF-2022-1 (juridiquement contraignante)
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const SEUILS_ENDETTEMENT = {
   /** Seuil recommandé (33%) */
@@ -273,7 +358,12 @@ export const SEUILS_ENDETTEMENT = {
 // ============================================
 
 /**
- * Régime micro-foncier (location nue)
+ * Regime micro-foncier (location nue)
+ *
+ * @source CGI Article 32 (micro-foncier)
+ * @source BOFiP RFPI-DECLA-10
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const MICRO_FONCIER = {
   /** Plafond de loyers bruts annuels */
@@ -283,11 +373,15 @@ export const MICRO_FONCIER = {
 } as const;
 
 // ============================================
-// PÉRIODE D'APPLICATION JEANBRUN
+// PERIODE D'APPLICATION JEANBRUN
 // ============================================
 
 /**
- * Période d'application du dispositif Jeanbrun
+ * Periode d'application du dispositif Jeanbrun
+ *
+ * @source PLF 2026 - Dispositif Jeanbrun Article 199 novovicies bis CGI
+ * @fiscalYear 2026-2028 (periode d'application)
+ * @lastUpdated 30 janvier 2026
  */
 export const PERIODE_JEANBRUN = {
   debut: new Date("2026-01-01"),
@@ -295,12 +389,17 @@ export const PERIODE_JEANBRUN = {
 } as const;
 
 // ============================================
-// FRAIS D'ACQUISITION IMMOBILIÈRE
+// FRAIS D'ACQUISITION IMMOBILIERE
 // ============================================
 
 /**
  * Frais d'acquisition (frais de notaire)
  * Environ 8% pour l'ancien, 2-3% pour le neuf
+ *
+ * @source CGI Article 683 et suivants (droits de mutation)
+ * @source Tarif des notaires (arrete du 26 fevrier 2016 modifie)
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const FRAIS_ACQUISITION = {
   /** Taux estimé pour bien ancien (~8%) */
@@ -318,15 +417,30 @@ export const FRAIS_ACQUISITION = {
 /**
  * Forfait pour frais d'acquisition si non declares (7.5% du prix d'achat)
  * Comprend: frais de notaire, droits d'enregistrement, etc.
+ *
+ * @source CGI Article 150 VB II 4 (forfait frais acquisition 7.5%)
+ * @source BOFiP RFPI-PVI-20-10-20-20
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const FORFAIT_FRAIS_ACQUISITION = 0.075;
 
 /**
  * Forfait pour travaux si detention > 5 ans et travaux non declares (15% du prix d'achat)
+ *
+ * @source CGI Article 150 VB II 4 (forfait travaux 15%)
+ * @source BOFiP RFPI-PVI-20-10-20-30
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const FORFAIT_TRAVAUX = 0.15;
 
 /**
  * Seuil de detention pour appliquer le forfait travaux (5 ans)
+ *
+ * @source CGI Article 150 VB II 4 (condition 5 ans)
+ * @source BOFiP RFPI-PVI-20-10-20-30
+ * @fiscalYear 2026
+ * @lastUpdated 30 janvier 2026
  */
 export const SEUIL_DETENTION_FORFAIT_TRAVAUX = 5;

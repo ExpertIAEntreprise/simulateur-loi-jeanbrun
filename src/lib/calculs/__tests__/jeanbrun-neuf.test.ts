@@ -312,3 +312,71 @@ describe("tableauAmortissementNeuf", () => {
     expect(derniereLigne!.cumul).toBe(8800 * 9); // 79 200 EUR
   });
 });
+
+describe("validation errors", () => {
+  describe("calculerJeanbrunNeuf", () => {
+    it("devrait gerer NaN pour prix d'acquisition", () => {
+      const input: JeanbrunNeufInput = {
+        prixAcquisition: NaN,
+        niveauLoyer: "intermediaire",
+      };
+
+      // NaN <= 0 est false, donc le calcul se fait avec NaN
+      const result = calculerJeanbrunNeuf(input);
+      expect(Number.isNaN(result.baseAmortissement)).toBe(true);
+    });
+
+    it("devrait gerer Infinity pour prix d'acquisition", () => {
+      const input: JeanbrunNeufInput = {
+        prixAcquisition: Infinity,
+        niveauLoyer: "intermediaire",
+      };
+
+      const result = calculerJeanbrunNeuf(input);
+      expect(result.baseAmortissement).toBe(Infinity);
+      // Le plafond est applique, donc amortissementNet = plafond
+      expect(result.amortissementNet).toBe(8000);
+      expect(result.plafondApplique).toBe(true);
+    });
+
+    it("devrait retourner des valeurs coherentes pour prix negatif", () => {
+      const input: JeanbrunNeufInput = {
+        prixAcquisition: -100000,
+        niveauLoyer: "intermediaire",
+      };
+
+      const result = calculerJeanbrunNeuf(input);
+      // Prix negatif traite comme 0
+      expect(result.baseAmortissement).toBe(0);
+      expect(result.amortissementNet).toBe(0);
+    });
+  });
+
+  describe("tableauAmortissementNeuf", () => {
+    it("devrait gerer prix NaN sans planter", () => {
+      const input: JeanbrunNeufInput = {
+        prixAcquisition: NaN,
+        niveauLoyer: "social",
+      };
+
+      // Le tableau est genere meme avec NaN
+      const tableau = tableauAmortissementNeuf(input);
+      expect(tableau).toHaveLength(9);
+      // Les valeurs seront NaN
+      expect(Number.isNaN(tableau[0]!.amortissement)).toBe(true);
+    });
+
+    it("devrait gerer prix negatif comme 0", () => {
+      const input: JeanbrunNeufInput = {
+        prixAcquisition: -50000,
+        niveauLoyer: "intermediaire",
+      };
+
+      const tableau = tableauAmortissementNeuf(input);
+      expect(tableau).toHaveLength(9);
+      for (const ligne of tableau) {
+        expect(ligne.amortissement).toBe(0);
+      }
+    });
+  });
+});

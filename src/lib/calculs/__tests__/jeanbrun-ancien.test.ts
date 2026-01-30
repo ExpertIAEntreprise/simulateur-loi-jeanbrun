@@ -145,15 +145,18 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(false);
-      expect(result.message).toBeDefined();
-      expect(result.seuilTravauxRequis).toBe(45000);
-      expect(result.montantManquant).toBe(7500);
+      // Type narrowing: apres la verification ci-dessus, TypeScript sait que c'est JeanbrunAncienIneligible
+      if (!result.eligible) {
+        expect(result.message).toBeDefined();
+        expect(result.seuilTravauxRequis).toBe(45000);
+        expect(result.montantManquant).toBe(7500);
+      }
 
-      // Les champs de calcul ne doivent pas etre remplis
-      expect(result.prixTotal).toBeUndefined();
-      expect(result.baseAmortissement).toBeUndefined();
-      expect(result.amortissementBrut).toBeUndefined();
-      expect(result.amortissementNet).toBeUndefined();
+      // Les champs de calcul ne doivent pas exister sur JeanbrunAncienIneligible
+      expect("prixTotal" in result).toBe(false);
+      expect("baseAmortissement" in result).toBe(false);
+      expect("amortissementBrut" in result).toBe(false);
+      expect("amortissementNet" in result).toBe(false);
     });
 
     it("retourne ineligible pour travaux 20%", () => {
@@ -168,8 +171,10 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(false);
-      expect(result.seuilTravauxRequis).toBe(30000);
-      expect(result.montantManquant).toBe(10000);
+      if (!result.eligible) {
+        expect(result.seuilTravauxRequis).toBe(30000);
+        expect(result.montantManquant).toBe(10000);
+      }
     });
   });
 
@@ -190,11 +195,13 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(true);
-      expect(result.prixTotal).toBe(195000);
-      expect(result.baseAmortissement).toBe(156000);
-      expect(result.amortissementBrut).toBe(4680);
-      expect(result.amortissementNet).toBe(4680);
-      expect(result.plafondApplique).toBe(false);
+      if (result.eligible) {
+        expect(result.prixTotal).toBe(195000);
+        expect(result.baseAmortissement).toBe(156000);
+        expect(result.amortissementBrut).toBe(4680);
+        expect(result.amortissementNet).toBe(4680);
+        expect(result.plafondApplique).toBe(false);
+      }
     });
 
     it("calcule correctement pour 33% de travaux (150k + 50k)", () => {
@@ -212,11 +219,13 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(true);
-      expect(result.prixTotal).toBe(200000);
-      expect(result.baseAmortissement).toBe(160000);
-      expect(result.amortissementBrut).toBe(4800);
-      expect(result.amortissementNet).toBe(4800);
-      expect(result.plafondApplique).toBe(false);
+      if (result.eligible) {
+        expect(result.prixTotal).toBe(200000);
+        expect(result.baseAmortissement).toBe(160000);
+        expect(result.amortissementBrut).toBe(4800);
+        expect(result.amortissementNet).toBe(4800);
+        expect(result.plafondApplique).toBe(false);
+      }
     });
   });
 
@@ -236,9 +245,11 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(true);
-      expect(result.amortissementBrut).toBe(5600);
-      expect(result.amortissementNet).toBe(5600);
-      expect(result.plafondApplique).toBe(false);
+      if (result.eligible) {
+        expect(result.amortissementBrut).toBe(5600);
+        expect(result.amortissementNet).toBe(5600);
+        expect(result.plafondApplique).toBe(false);
+      }
     });
   });
 
@@ -258,9 +269,11 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(true);
-      expect(result.amortissementBrut).toBe(6400);
-      expect(result.amortissementNet).toBe(6400);
-      expect(result.plafondApplique).toBe(false);
+      if (result.eligible) {
+        expect(result.amortissementBrut).toBe(6400);
+        expect(result.amortissementNet).toBe(6400);
+        expect(result.plafondApplique).toBe(false);
+      }
     });
   });
 
@@ -281,11 +294,13 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(true);
-      expect(result.prixTotal).toBe(550000);
-      expect(result.baseAmortissement).toBe(440000);
-      expect(result.amortissementBrut).toBe(13200);
-      expect(result.amortissementNet).toBe(10700);
-      expect(result.plafondApplique).toBe(true);
+      if (result.eligible) {
+        expect(result.prixTotal).toBe(550000);
+        expect(result.baseAmortissement).toBe(440000);
+        expect(result.amortissementBrut).toBe(13200);
+        expect(result.amortissementNet).toBe(10700);
+        expect(result.plafondApplique).toBe(true);
+      }
     });
 
     it("applique le plafond pour niveau tres social", () => {
@@ -304,9 +319,11 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(true);
-      expect(result.amortissementBrut).toBe(12800);
-      expect(result.amortissementNet).toBe(10700);
-      expect(result.plafondApplique).toBe(true);
+      if (result.eligible) {
+        expect(result.amortissementBrut).toBe(12800);
+        expect(result.amortissementNet).toBe(10700);
+        expect(result.plafondApplique).toBe(true);
+      }
     });
 
     it("n'applique pas le plafond si en dessous", () => {
@@ -324,9 +341,11 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(true);
-      expect(result.amortissementBrut).toBe(7280);
-      expect(result.amortissementNet).toBe(7280);
-      expect(result.plafondApplique).toBe(false);
+      if (result.eligible) {
+        expect(result.amortissementBrut).toBe(7280);
+        expect(result.amortissementNet).toBe(7280);
+        expect(result.plafondApplique).toBe(false);
+      }
     });
   });
 
@@ -343,7 +362,9 @@ describe("calculerJeanbrunAncien", () => {
       // Avec 0 EUR d'achat, techniquement eligible (seuil = 0)
       // mais le calcul donne des resultats a 0
       expect(result.eligible).toBe(true);
-      expect(result.prixTotal).toBe(10000);
+      if (result.eligible) {
+        expect(result.prixTotal).toBe(10000);
+      }
     });
 
     it("gere des valeurs negatives", () => {
@@ -359,9 +380,11 @@ describe("calculerJeanbrunAncien", () => {
       // Base = 50000 * 0.8 = 40000
       // Amortissement = 40000 * 0.03 = 1200
       expect(result.eligible).toBe(true);
-      expect(result.prixTotal).toBe(50000);
-      expect(result.baseAmortissement).toBe(40000);
-      expect(result.amortissementNet).toBe(1200);
+      if (result.eligible) {
+        expect(result.prixTotal).toBe(50000);
+        expect(result.baseAmortissement).toBe(40000);
+        expect(result.amortissementNet).toBe(1200);
+      }
     });
 
     it("arrondit les montants a l'euro", () => {
@@ -393,9 +416,83 @@ describe("calculerJeanbrunAncien", () => {
       const result = calculerJeanbrunAncien(input);
 
       expect(result.eligible).toBe(false);
-      expect(result.message).toBeDefined();
-      expect(typeof result.message).toBe("string");
-      expect(result.message!.length).toBeGreaterThan(0);
+      if (!result.eligible) {
+        expect(result.message).toBeDefined();
+        expect(typeof result.message).toBe("string");
+        expect(result.message.length).toBeGreaterThan(0);
+      }
+    });
+  });
+});
+
+describe("validation errors", () => {
+  describe("calculerTravauxMinimum", () => {
+    it("devrait retourner NaN pour prix NaN", () => {
+      const result = calculerTravauxMinimum(NaN);
+      expect(Number.isNaN(result)).toBe(true);
+    });
+
+    it("devrait retourner Infinity pour prix Infinity", () => {
+      const result = calculerTravauxMinimum(Infinity);
+      expect(result).toBe(Infinity);
+    });
+  });
+
+  describe("verifierEligibiliteTravaux", () => {
+    it("devrait gerer prixAchat NaN", () => {
+      const result = verifierEligibiliteTravaux(NaN, 50000);
+      // seuilRequis sera NaN, la comparaison montantTravaux >= NaN est false
+      expect(result.eligible).toBe(false);
+    });
+
+    it("devrait gerer montantTravaux NaN", () => {
+      const result = verifierEligibiliteTravaux(150000, NaN);
+      // NaN >= 45000 est false
+      expect(result.eligible).toBe(false);
+    });
+
+    it("devrait gerer montantTravaux negatif", () => {
+      const result = verifierEligibiliteTravaux(150000, -10000);
+      // -10000 < 45000 donc ineligible
+      expect(result.eligible).toBe(false);
+      expect(result.montantManquant).toBe(55000); // 45000 - (-10000)
+    });
+  });
+
+  describe("calculerJeanbrunAncien", () => {
+    it("devrait gerer prixAchat NaN", () => {
+      const input: JeanbrunAncienInput = {
+        prixAchat: NaN,
+        montantTravaux: 50000,
+        niveauLoyer: "intermediaire",
+      };
+
+      const result = calculerJeanbrunAncien(input);
+      // seuilTravaux sera NaN, donc ineligible
+      expect(result.eligible).toBe(false);
+    });
+
+    it("devrait gerer montantTravaux NaN", () => {
+      const input: JeanbrunAncienInput = {
+        prixAchat: 150000,
+        montantTravaux: NaN,
+        niveauLoyer: "social",
+      };
+
+      const result = calculerJeanbrunAncien(input);
+      expect(result.eligible).toBe(false);
+    });
+
+    it("devrait gerer les deux valeurs negatives", () => {
+      const input: JeanbrunAncienInput = {
+        prixAchat: -100000,
+        montantTravaux: -50000,
+        niveauLoyer: "tres_social",
+      };
+
+      const result = calculerJeanbrunAncien(input);
+      // prixAchat negatif -> seuil = 0 -> -50000 < 0 -> ineligible
+      expect(result.eligible).toBe(false);
     });
   });
 });
