@@ -1,6 +1,19 @@
+/**
+ * Globals CSS - Simulateur Loi Jeanbrun
+ * Design System: Dark mode avec accent doré
+ *
+ * @version 1.0
+ * @date 30 janvier 2026
+ */
+
 @import "tailwindcss";
 
+/* ==========================================================================
+   1. TAILWIND CSS v4 @theme INTEGRATION
+   ========================================================================== */
+
 @theme inline {
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -16,14 +29,32 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Semantic colors */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Gauge colors */
+  --color-gauge-safe: var(--gauge-safe);
+  --color-gauge-warning: var(--gauge-warning);
+  --color-gauge-danger: var(--gauge-danger);
+
+  /* Chart colors */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -32,86 +63,467 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Border radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ==========================================================================
+   2. ROOT TOKENS - DARK MODE PAR DÉFAUT (Design Jeanbrun)
+   ========================================================================== */
+
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.21 0.006 285.885);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
+  /* -------------------------------------------------------------------------
+     2.1 BASE TOKENS
+     ------------------------------------------------------------------------- */
+  --radius: 0.5rem;
+
+  /* -------------------------------------------------------------------------
+     2.2 COULEURS DE BASE (Dark Mode)
+     ------------------------------------------------------------------------- */
+
+  /* Background */
+  --background: oklch(0.07 0 0);                /* #0A0A0B */
+  --background-secondary: oklch(0.10 0.005 285); /* #111113 */
+
+  /* Cards */
+  --card: oklch(0.14 0.005 285);                /* #18181B */
+  --card-foreground: oklch(0.98 0 0);           /* #FAFAFA */
+
+  /* Popover */
+  --popover: oklch(0.14 0.005 285);
+  --popover-foreground: oklch(0.98 0 0);
+
+  /* Foreground */
+  --foreground: oklch(0.98 0 0);                /* #FAFAFA */
+  --foreground-secondary: oklch(0.70 0.015 285); /* #A1A1AA */
+  --muted-foreground: oklch(0.55 0.015 285);    /* #71717A */
+
+  /* Primary = Accent (Or/Jaune) */
+  --primary: oklch(0.78 0.18 75);               /* #F5A623 */
+  --primary-foreground: oklch(0.10 0.005 285);  /* Dark text on gold */
+
+  /* Accent (Or/Jaune) */
+  --accent: oklch(0.78 0.18 75);                /* #F5A623 */
+  --accent-hover: oklch(0.82 0.16 80);          /* #FFB940 */
+  --accent-foreground: oklch(0.10 0.005 285);
+
+  /* Secondary */
+  --secondary: oklch(0.22 0.005 285);           /* #27272A */
+  --secondary-foreground: oklch(0.98 0 0);
+
+  /* Muted */
+  --muted: oklch(0.18 0.005 285);               /* #1F1F23 */
+
+  /* Borders */
+  --border: oklch(0.22 0.005 285);              /* #27272A */
+  --border-dashed: oklch(0.78 0.18 75 / 0.4);   /* Gold dashed */
+
+  /* Input */
+  --input: oklch(0.22 0.005 285);
+
+  /* Ring (focus) */
+  --ring: oklch(0.78 0.18 75);                  /* Gold */
+
+  /* -------------------------------------------------------------------------
+     2.3 COULEURS SÉMANTIQUES
+     ------------------------------------------------------------------------- */
+
+  /* Destructive (Rouge) */
+  --destructive: oklch(0.63 0.24 25);           /* #EF4444 */
+  --destructive-foreground: oklch(0.98 0 0);
+
+  /* Success (Vert) */
+  --success: oklch(0.72 0.20 145);              /* #22C55E */
+  --success-background: oklch(0.20 0.08 145);   /* Dark green bg */
+  --success-foreground: oklch(0.87 0.15 150);   /* #86EFAC */
+
+  /* Warning (Orange) */
+  --warning: oklch(0.70 0.20 45);               /* #F97316 */
+  --warning-background: oklch(0.25 0.10 40);    /* Dark orange bg */
+  --warning-foreground: oklch(0.82 0.14 55);    /* #FDBA74 */
+
+  /* Info (Bleu) */
+  --info: oklch(0.62 0.22 260);                 /* #3B82F6 */
+  --info-background: oklch(0.15 0.05 250);      /* Dark blue bg */
+  --info-foreground: oklch(0.82 0.12 255);      /* #93C5FD */
+
+  /* -------------------------------------------------------------------------
+     2.4 COULEURS JAUGE ENDETTEMENT
+     ------------------------------------------------------------------------- */
+
+  --gauge-safe: oklch(0.72 0.20 145);           /* Vert < 30% */
+  --gauge-warning: oklch(0.70 0.20 45);         /* Orange 30-35% */
+  --gauge-danger: oklch(0.63 0.24 25);          /* Rouge > 35% */
+
+  /* -------------------------------------------------------------------------
+     2.5 COULEURS GRAPHIQUES (Charts)
+     ------------------------------------------------------------------------- */
+
+  --chart-1: oklch(0.78 0.18 75);               /* Or (accent) */
+  --chart-2: oklch(0.62 0.22 260);              /* Bleu */
+  --chart-3: oklch(0.72 0.20 145);              /* Vert */
+  --chart-4: oklch(0.70 0.20 45);               /* Orange */
+  --chart-5: oklch(0.68 0.20 300);              /* Violet */
+
+  /* -------------------------------------------------------------------------
+     2.6 SIDEBAR
+     ------------------------------------------------------------------------- */
+
+  --sidebar: oklch(0.10 0.005 285);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.78 0.18 75);
+  --sidebar-primary-foreground: oklch(0.10 0.005 285);
+  --sidebar-accent: oklch(0.18 0.005 285);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.22 0.005 285);
+  --sidebar-ring: oklch(0.78 0.18 75);
+
+  /* -------------------------------------------------------------------------
+     2.7 SHADOWS
+     ------------------------------------------------------------------------- */
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 20px oklch(0.78 0.18 75 / 0.3);
+  --shadow-glow-lg: 0 0 30px oklch(0.78 0.18 75 / 0.5);
+
+  /* -------------------------------------------------------------------------
+     2.8 TYPOGRAPHY
+     ------------------------------------------------------------------------- */
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* -------------------------------------------------------------------------
+     2.9 TRANSITIONS
+     ------------------------------------------------------------------------- */
+
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark {
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.552 0.016 285.938);
+/* ==========================================================================
+   3. MODE CLAIR (optionnel - activé avec classe .light)
+   ========================================================================== */
+
+.light {
+  --background: oklch(0.99 0 0);                /* #FAFAFA */
+  --background-secondary: oklch(0.97 0.001 285);
+
+  --card: oklch(1 0 0);                         /* #FFFFFF */
+  --card-foreground: oklch(0.14 0.005 285);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.14 0.005 285);
+
+  --foreground: oklch(0.14 0.005 285);          /* #18181B */
+  --foreground-secondary: oklch(0.45 0.015 285);
+  --muted-foreground: oklch(0.55 0.015 285);
+
+  --primary: oklch(0.70 0.18 75);               /* Or plus foncé */
+  --primary-foreground: oklch(0.98 0 0);
+
+  --accent: oklch(0.70 0.18 75);
+  --accent-foreground: oklch(0.98 0 0);
+
+  --secondary: oklch(0.96 0.001 285);
+  --secondary-foreground: oklch(0.14 0.005 285);
+
+  --muted: oklch(0.96 0.001 285);
+
+  --border: oklch(0.90 0.004 285);
+  --border-dashed: oklch(0.70 0.18 75 / 0.5);
+
+  --input: oklch(0.90 0.004 285);
+  --ring: oklch(0.70 0.18 75);
+
+  /* Shadows pour mode clair */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 20px oklch(0.70 0.18 75 / 0.2);
 }
+
+/* ==========================================================================
+   4. BASE STYLES
+   ========================================================================== */
 
 @layer base {
   * {
     @apply border-border;
   }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Focus visible accessible */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: oklch(0.78 0.18 75 / 0.3);
+    color: var(--foreground);
+  }
+
+  /* Scrollbar dark mode */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+  }
+}
+
+/* ==========================================================================
+   5. UTILITY CLASSES PERSONNALISÉES
+   ========================================================================== */
+
+@layer utilities {
+  /* Bordure dashed dorée signature */
+  .border-dashed-gold {
+    border-style: dashed;
+    border-color: var(--border-dashed);
+  }
+
+  /* Effet glow pour CTAs */
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .shadow-glow-lg {
+    box-shadow: var(--shadow-glow-lg);
+  }
+
+  /* Hover glow */
+  .hover\:shadow-glow:hover {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .hover\:shadow-glow-lg:hover {
+    box-shadow: var(--shadow-glow-lg);
+  }
+
+  /* Background grid (style wireframe) */
+  .bg-grid {
+    background-image:
+      linear-gradient(oklch(0.78 0.18 75 / 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.78 0.18 75 / 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Titre uppercase avec letter-spacing */
+  .title-uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Numbers tabular */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Text gradient gold */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, oklch(0.78 0.18 75) 0%, oklch(0.85 0.15 85) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Semantic background utilities */
+  .bg-success-subtle {
+    background-color: var(--success-background);
+  }
+
+  .bg-warning-subtle {
+    background-color: var(--warning-background);
+  }
+
+  .bg-info-subtle {
+    background-color: var(--info-background);
+  }
+
+  /* Border semantic utilities */
+  .border-success {
+    border-color: var(--success);
+  }
+
+  .border-warning {
+    border-color: var(--warning);
+  }
+
+  .border-info {
+    border-color: var(--info);
+  }
+
+  /* Text semantic utilities */
+  .text-success {
+    color: var(--success);
+  }
+
+  .text-warning {
+    color: var(--warning);
+  }
+
+  .text-info {
+    color: var(--info);
+  }
+
+  .text-success-foreground {
+    color: var(--success-foreground);
+  }
+
+  .text-warning-foreground {
+    color: var(--warning-foreground);
+  }
+
+  .text-info-foreground {
+    color: var(--info-foreground);
+  }
+
+  /* Gauge utilities */
+  .bg-gauge-safe {
+    background-color: var(--gauge-safe);
+  }
+
+  .bg-gauge-warning {
+    background-color: var(--gauge-warning);
+  }
+
+  .bg-gauge-danger {
+    background-color: var(--gauge-danger);
+  }
+}
+
+/* ==========================================================================
+   6. ANIMATIONS
+   ========================================================================== */
+
+@layer utilities {
+  /* Animation du glow pulsant */
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  /* Animation fade in */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  /* Animation slide up */
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 15px oklch(0.78 0.18 75 / 0.3);
+  }
+  to {
+    box-shadow: 0 0 25px oklch(0.78 0.18 75 / 0.5);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   7. COMPONENT OVERRIDES (shadcn/ui)
+   ========================================================================== */
+
+@layer components {
+  /* Button primary avec glow au hover */
+  .btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    transition: all var(--duration-normal) var(--ease-default);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Card avec bordure dashed gold */
+  .card-wireframe {
+    border-style: dashed;
+    border-color: var(--border-dashed);
+    background-color: var(--card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  /* Input focus gold */
+  .input-gold:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  /* Progress bar gold */
+  .progress-gold {
+    background-color: var(--muted);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-gold > div {
+    background-color: var(--primary);
+    height: 100%;
+    transition: all 300ms;
+  }
+
+  /* Badge selected */
+  .badge-selected {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
   }
 }
