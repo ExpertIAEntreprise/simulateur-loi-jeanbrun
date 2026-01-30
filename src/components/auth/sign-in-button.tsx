@@ -39,8 +39,8 @@ export function SignInButton() {
       if (result.error) {
         setError(result.error.message || "Failed to sign in")
       } else {
+        // AuthProvider handles session sync automatically
         router.push("/dashboard")
-        router.refresh()
       }
     } catch {
       setError("An unexpected error occurred")

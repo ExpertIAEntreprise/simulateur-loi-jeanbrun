@@ -22,12 +22,25 @@ export function SignUpForm() {
     setError("")
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
+      setError("Les mots de passe ne correspondent pas")
       return
     }
 
+    // Strong password policy: 8+ chars, uppercase, lowercase, number
     if (password.length < 8) {
-      setError("Password must be at least 8 characters")
+      setError("Le mot de passe doit contenir au moins 8 caractères")
+      return
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError("Le mot de passe doit contenir au moins une majuscule")
+      return
+    }
+    if (!/[a-z]/.test(password)) {
+      setError("Le mot de passe doit contenir au moins une minuscule")
+      return
+    }
+    if (!/[0-9]/.test(password)) {
+      setError("Le mot de passe doit contenir au moins un chiffre")
       return
     }
 
@@ -44,8 +57,8 @@ export function SignUpForm() {
       if (result.error) {
         setError(result.error.message || "Failed to create account")
       } else {
+        // AuthProvider handles session sync automatically
         router.push("/dashboard")
-        router.refresh()
       }
     } catch {
       setError("An unexpected error occurred")

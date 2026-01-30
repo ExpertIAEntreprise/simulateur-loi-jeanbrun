@@ -1,12 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { signOut, useSession } from "@/lib/auth-client";
+import { useSignOut } from "@/hooks/use-sign-out";
+import { useSession } from "@/lib/auth-client";
 
 export function SignOutButton() {
   const { data: session, isPending } = useSession();
-  const router = useRouter();
+  const { signOut } = useSignOut();
 
   if (isPending) {
     return <Button disabled>Loading...</Button>;
@@ -17,14 +17,7 @@ export function SignOutButton() {
   }
 
   return (
-    <Button
-      variant="outline"
-      onClick={async () => {
-        await signOut();
-        router.replace("/");
-        router.refresh();
-      }}
-    >
+    <Button variant="outline" onClick={signOut}>
       Sign out
     </Button>
   );

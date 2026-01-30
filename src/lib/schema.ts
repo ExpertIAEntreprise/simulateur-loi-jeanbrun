@@ -161,6 +161,8 @@ export const villes = pgTable(
   (table) => [
     index("villes_code_insee_idx").on(table.codeInsee),
     index("villes_slug_idx").on(table.slug),
+    index("villes_zone_tension_idx").on(table.zoneFiscale, table.tensionLocative),
+    index("villes_departement_idx").on(table.departement),
   ]
 );
 
@@ -194,6 +196,7 @@ export const programmes = pgTable(
   (table) => [
     index("programmes_ville_id_idx").on(table.villeId),
     index("programmes_actif_idx").on(table.actif),
+    index("programmes_ville_actif_idx").on(table.villeId, table.actif),
   ]
 );
 
@@ -222,6 +225,8 @@ export const simulations = pgTable(
   (table) => [
     index("simulations_user_id_idx").on(table.userId),
     index("simulations_ville_id_idx").on(table.villeId),
+    index("simulations_user_complet_idx").on(table.userId, table.estComplet),
+    index("simulations_programme_id_idx").on(table.programmeId),
   ]
 );
 
@@ -253,6 +258,9 @@ export const leads = pgTable(
   (table) => [
     index("leads_email_idx").on(table.email),
     index("leads_statut_idx").on(table.statut),
+    index("leads_user_id_idx").on(table.userId),
+    index("leads_simulation_id_idx").on(table.simulationId),
+    index("leads_created_at_idx").on(table.createdAt),
   ]
 );
 

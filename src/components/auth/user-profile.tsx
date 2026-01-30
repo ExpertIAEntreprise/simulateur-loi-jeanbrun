@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { User, LogOut } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -13,11 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSession, signOut } from "@/lib/auth-client";
+import { useSignOut } from "@/hooks/use-sign-out";
+import { useSession } from "@/lib/auth-client";
 
 export function UserProfile() {
   const { data: session, isPending } = useSession();
-  const router = useRouter();
+  const { signOut: handleSignOut } = useSignOut();
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -37,12 +37,6 @@ export function UserProfile() {
       </div>
     );
   }
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.replace("/");
-    router.refresh();
-  };
 
   return (
     <DropdownMenu>

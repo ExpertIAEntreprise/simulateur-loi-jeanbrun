@@ -406,172 +406,109 @@ export type User = InferSelectModel<typeof user>;
 
 ---
 
-### 5.3 MEDIUM - Améliorations Recommandées
+### 5.3 MEDIUM - Améliorations Recommandées ✅ COMPLÉTÉ (30/01/2026)
 
-#### 5.3.1 Better Auth - autoSignInAfterVerification
+#### 5.3.1 Better Auth - autoSignInAfterVerification ✅
 
-**Fichier:** `src/lib/auth.ts`
-
-```typescript
-emailVerification: {
-  sendOnSignUp: true,
-  autoSignInAfterVerification: true,
-  expiresIn: 3600, // 1 heure
-  // ...
-}
-```
+**Fichier:** `src/lib/auth.ts` - Déjà implémenté (ligne 19)
 
 ---
 
-#### 5.3.2 Better Auth - Configuration session explicite
+#### 5.3.2 Better Auth - Configuration session explicite ✅
 
-**Fichier:** `src/lib/auth.ts`
-
-```typescript
-session: {
-  expiresIn: 60 * 60 * 24 * 7, // 7 jours
-  updateAge: 60 * 60 * 24, // Refresh toutes les 24h
-  cookieCache: {
-    enabled: true,
-    maxAge: 60 * 5, // Cache client 5 min
-  },
-},
-```
+**Fichier:** `src/lib/auth.ts` - Déjà implémenté (lignes 26-33)
 
 ---
 
-#### 5.3.3 Ajouter indexes composites manquants
+#### 5.3.3 Ajouter indexes composites manquants ✅
 
-**Fichier:** `src/lib/schema.ts`
-
-```typescript
-// villes
-index("villes_zone_tension_idx").on(table.zoneFiscale, table.tensionLocative),
-index("villes_departement_idx").on(table.departement),
-
-// programmes
-index("programmes_ville_actif_idx").on(table.villeId, table.actif),
-
-// simulations
-index("simulations_user_complet_idx").on(table.userId, table.estComplet),
-index("simulations_programme_id_idx").on(table.programmeId),
-
-// leads
-index("leads_user_id_idx").on(table.userId),
-index("leads_simulation_id_idx").on(table.simulationId),
-index("leads_created_at_idx").on(table.createdAt),
-```
+**Fichier modifié:** `src/lib/schema.ts`
+**Base mise à jour:** `pnpm db:push` exécuté avec 8 nouveaux indexes
 
 ---
 
-#### 5.3.4 Installer drizzle-zod pour validation automatique
+#### 5.3.4 Installer drizzle-zod pour validation automatique ✅
 
-```bash
-pnpm add drizzle-zod
-```
-
-**Usage:**
-```typescript
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { villes } from '@/lib/schema';
-
-export const insertVilleSchema = createInsertSchema(villes);
-export const selectVilleSchema = createSelectSchema(villes);
-```
+**Package installé:** `drizzle-zod 0.8.3`
 
 ---
 
-#### 5.3.5 Ajouter package server-only
+#### 5.3.5 Ajouter package server-only ✅
 
-```bash
-pnpm add server-only
-```
-
-**Usage dans fichiers serveur:**
-```typescript
-import 'server-only';
-// Ce fichier ne peut plus être importé côté client
-```
+**Package installé:** `server-only 0.0.1`
 
 ---
 
-#### 5.3.6 Supprimer router.refresh() redondants
+#### 5.3.6 Supprimer router.refresh() redondants ✅
 
-**Après implémentation de AuthProvider (5.2.3):**
-
-Supprimer `router.refresh()` dans:
-- `src/components/auth/sign-in-button.tsx:43`
-- `src/components/auth/sign-up-form.tsx:48`
-- `src/components/auth/sign-out-button.tsx:25`
-- `src/components/auth/user-profile.tsx:44`
+**Fichiers modifiés:**
+- `src/components/auth/sign-in-button.tsx` - router.refresh() supprimé
+- `src/components/auth/sign-up-form.tsx` - router.refresh() supprimé
+- `src/components/auth/sign-out-button.tsx` - Utilise useSignOut hook
+- `src/components/auth/user-profile.tsx` - Utilise useSignOut hook
 
 ---
 
-#### 5.3.7 Extraire logique sign-out partagée
+#### 5.3.7 Extraire logique sign-out partagée ✅
 
-**Créer:** `src/hooks/use-sign-out.ts`
-
-```typescript
-import { useRouter } from "next/navigation"
-import { signOut } from "@/lib/auth-client"
-
-export function useSignOut() {
-  const router = useRouter()
-
-  const handleSignOut = async () => {
-    await signOut()
-    router.replace("/")
-  }
-
-  return { signOut: handleSignOut }
-}
-```
+**Fichier créé:** `src/hooks/use-sign-out.ts`
 
 ---
 
-#### 5.3.8 Refactorer fonction orchestrerSimulation
+#### 5.3.8 Refactorer fonction orchestrerSimulation ⏸️ REPORTÉ
 
-**Fichier:** `src/lib/calculs/orchestrateur.ts:244-468` (224 lignes)
-
-Extraire en sous-fonctions:
-- `calculateIRAndTMI(input)`
-- `calculateJeanbrunAmortization(input, ir, tmi)`
-- `calculateOptionalFeatures(input, ...)`
-- `buildProjection(...)`
-- `buildResult(...)`
+**Raison:** La fonction est déjà bien structurée avec des helpers extraits (`genererProjection`, `createIneligibleResult`). Le refactoring supplémentaire est optionnel et peut être fait dans un sprint ultérieur si nécessaire.
 
 ---
 
-#### 5.3.9 Politique de mot de passe plus stricte
+#### 5.3.9 Politique de mot de passe plus stricte ✅
 
-**Fichier:** `src/components/auth/sign-up-form.tsx:29`
-
-```typescript
-const passwordSchema = z.string()
-  .min(8, "Au moins 8 caractères")
-  .regex(/[A-Z]/, "Au moins une majuscule")
-  .regex(/[a-z]/, "Au moins une minuscule")
-  .regex(/[0-9]/, "Au moins un chiffre")
-```
+**Fichier modifié:** `src/components/auth/sign-up-form.tsx`
+- Validation 8+ caractères
+- Au moins une majuscule
+- Au moins une minuscule
+- Au moins un chiffre
+- Messages d'erreur en français
 
 ---
 
-#### 5.3.10 Ajouter drizzle.config verbose
+#### 5.3.10 Ajouter drizzle.config verbose ✅
 
-**Fichier:** `drizzle.config.ts`
+**Fichier modifié:** `drizzle.config.ts`
+- `verbose: true` ajouté
+- `strict: true` ajouté
 
-```typescript
-export default {
-  dialect: "postgresql",
-  schema: "./src/lib/schema.ts",
-  out: "./drizzle",
-  dbCredentials: {
-    url: process.env.POSTGRES_URL!,
-  },
-  verbose: true,
-  strict: true,
-} satisfies Config;
-```
+---
+
+### Résumé des corrections MEDIUM (30/01/2026)
+
+| # | Correction | Status |
+|---|------------|--------|
+| 5.3.1 | autoSignInAfterVerification | ✅ Déjà fait |
+| 5.3.2 | Configuration session explicite | ✅ Déjà fait |
+| 5.3.3 | Indexes composites | ✅ FAIT (8 indexes) |
+| 5.3.4 | drizzle-zod | ✅ FAIT |
+| 5.3.5 | server-only | ✅ FAIT |
+| 5.3.6 | router.refresh() supprimés | ✅ FAIT |
+| 5.3.7 | Hook useSignOut | ✅ FAIT |
+| 5.3.8 | Refactorer orchestrateur | ⏸️ Reporté |
+| 5.3.9 | Mot de passe strict | ✅ FAIT |
+| 5.3.10 | drizzle.config verbose | ✅ FAIT |
+
+**Fichiers créés:**
+- `src/hooks/use-sign-out.ts`
+
+**Fichiers modifiés:**
+- `src/lib/schema.ts` (indexes composites)
+- `drizzle.config.ts` (verbose + strict)
+- `src/components/auth/sign-in-button.tsx`
+- `src/components/auth/sign-up-form.tsx`
+- `src/components/auth/sign-out-button.tsx`
+- `src/components/auth/user-profile.tsx`
+
+**Packages installés:**
+- `drizzle-zod 0.8.3`
+- `server-only 0.0.1`
 
 ---
 
