@@ -1,0 +1,4004 @@
+[
+  {
+    "code": "69001",
+    "nom": "Affoux",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 398,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8448,
+    "longitude": 4.4116,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.410Z"
+  },
+  {
+    "code": "69002",
+    "nom": "Aigueperse",
+    "codes_postaux": [
+      "69790"
+    ],
+    "population": 235,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2822,
+    "longitude": 4.4268,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69003",
+    "nom": "Albigny-sur-Saône",
+    "codes_postaux": [
+      "69250"
+    ],
+    "population": 3057,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8666,
+    "longitude": 4.8284,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69004",
+    "nom": "Alix",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 777,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9162,
+    "longitude": 4.6534,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69005",
+    "nom": "Ambérieux",
+    "codes_postaux": [
+      "69480"
+    ],
+    "population": 651,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9264,
+    "longitude": 4.7427,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69006",
+    "nom": "Amplepuis",
+    "codes_postaux": [
+      "69550"
+    ],
+    "population": 4876,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.966,
+    "longitude": 4.317,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69007",
+    "nom": "Ampuis",
+    "codes_postaux": [
+      "69420"
+    ],
+    "population": 2769,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5034,
+    "longitude": 4.8079,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69008",
+    "nom": "Ancy",
+    "codes_postaux": [
+      "69490"
+    ],
+    "population": 671,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8362,
+    "longitude": 4.5098,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69009",
+    "nom": "Anse",
+    "codes_postaux": [
+      "69480"
+    ],
+    "population": 8206,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9451,
+    "longitude": 4.7049,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69010",
+    "nom": "L'Arbresle",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 6537,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8347,
+    "longitude": 4.6102,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69012",
+    "nom": "Les Ardillats",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 628,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1885,
+    "longitude": 4.5293,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69013",
+    "nom": "Arnas",
+    "codes_postaux": [
+      "69400"
+    ],
+    "population": 4601,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0194,
+    "longitude": 4.7102,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69014",
+    "nom": "Aveize",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 1110,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6799,
+    "longitude": 4.4744,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69016",
+    "nom": "Azolette",
+    "codes_postaux": [
+      "69790"
+    ],
+    "population": 120,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1917,
+    "longitude": 4.4146,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69017",
+    "nom": "Bagnols",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 765,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9104,
+    "longitude": 4.6205,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69018",
+    "nom": "Beaujeu",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 2082,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1585,
+    "longitude": 4.5802,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69019",
+    "nom": "Belleville-en-Beaujolais",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 14016,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1145,
+    "longitude": 4.7291,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69020",
+    "nom": "Belmont-d'Azergues",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 720,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8673,
+    "longitude": 4.6685,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69021",
+    "nom": "Bessenay",
+    "codes_postaux": [
+      "69690"
+    ],
+    "population": 2331,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7712,
+    "longitude": 4.5484,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69022",
+    "nom": "Bibost",
+    "codes_postaux": [
+      "69690"
+    ],
+    "population": 538,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7976,
+    "longitude": 4.5494,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69023",
+    "nom": "Blacé",
+    "codes_postaux": [
+      "69460"
+    ],
+    "population": 1715,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0364,
+    "longitude": 4.6308,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69024",
+    "nom": "Val d'Oingt",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 4117,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9386,
+    "longitude": 4.5668,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69026",
+    "nom": "Le Breuil",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 533,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8909,
+    "longitude": 4.5889,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69027",
+    "nom": "Brignais",
+    "codes_postaux": [
+      "69530"
+    ],
+    "population": 12503,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6751,
+    "longitude": 4.7527,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69028",
+    "nom": "Brindas",
+    "codes_postaux": [
+      "69126"
+    ],
+    "population": 6775,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7183,
+    "longitude": 4.703,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69029",
+    "nom": "Bron",
+    "codes_postaux": [
+      "69500"
+    ],
+    "population": 42982,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7355,
+    "longitude": 4.9116,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69030",
+    "nom": "Brullioles",
+    "codes_postaux": [
+      "69690"
+    ],
+    "population": 821,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7617,
+    "longitude": 4.49,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69031",
+    "nom": "Brussieu",
+    "codes_postaux": [
+      "69690"
+    ],
+    "population": 1382,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.745,
+    "longitude": 4.5201,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69032",
+    "nom": "Bully",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 2213,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8595,
+    "longitude": 4.5786,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69033",
+    "nom": "Cailloux-sur-Fontaines",
+    "codes_postaux": [
+      "69270"
+    ],
+    "population": 2989,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8592,
+    "longitude": 4.8817,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69034",
+    "nom": "Caluire-et-Cuire",
+    "codes_postaux": [
+      "69300"
+    ],
+    "population": 43597,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7986,
+    "longitude": 4.8494,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69035",
+    "nom": "Cenves",
+    "codes_postaux": [
+      "69840"
+    ],
+    "population": 409,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2801,
+    "longitude": 4.6632,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69036",
+    "nom": "Cercié",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 1131,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1251,
+    "longitude": 4.6702,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69037",
+    "nom": "Chambost-Allières",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 816,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.017,
+    "longitude": 4.509,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69038",
+    "nom": "Chambost-Longessaigne",
+    "codes_postaux": [
+      "69770"
+    ],
+    "population": 930,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.778,
+    "longitude": 4.3784,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69039",
+    "nom": "Chamelet",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 706,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9829,
+    "longitude": 4.4973,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69040",
+    "nom": "Champagne-au-Mont-d'Or",
+    "codes_postaux": [
+      "69410"
+    ],
+    "population": 6311,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8006,
+    "longitude": 4.7864,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69042",
+    "nom": "La Chapelle-sur-Coise",
+    "codes_postaux": [
+      "69590"
+    ],
+    "population": 565,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6513,
+    "longitude": 4.4959,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69043",
+    "nom": "Chaponost",
+    "codes_postaux": [
+      "69630"
+    ],
+    "population": 9382,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7089,
+    "longitude": 4.7452,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69044",
+    "nom": "Charbonnières-les-Bains",
+    "codes_postaux": [
+      "69260"
+    ],
+    "population": 5383,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7792,
+    "longitude": 4.743,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69045",
+    "nom": "Charentay",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 1273,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0814,
+    "longitude": 4.6926,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69046",
+    "nom": "Charly",
+    "codes_postaux": [
+      "69390"
+    ],
+    "population": 4811,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6527,
+    "longitude": 4.7871,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69047",
+    "nom": "Charnay",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 1023,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8876,
+    "longitude": 4.6602,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69049",
+    "nom": "Chasselay",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 2973,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8733,
+    "longitude": 4.7699,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69050",
+    "nom": "Châtillon",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 2252,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.872,
+    "longitude": 4.6487,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69051",
+    "nom": "Chaussan",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 1218,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6387,
+    "longitude": 4.6332,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69052",
+    "nom": "Chazay-d'Azergues",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 4410,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8743,
+    "longitude": 4.71,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69053",
+    "nom": "Chénas",
+    "codes_postaux": [
+      "69840"
+    ],
+    "population": 533,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2142,
+    "longitude": 4.7069,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69054",
+    "nom": "Chénelette",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 369,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1707,
+    "longitude": 4.4895,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69055",
+    "nom": "Les Chères",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 1503,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8948,
+    "longitude": 4.7454,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69056",
+    "nom": "Chessy",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 2055,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8914,
+    "longitude": 4.6168,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69057",
+    "nom": "Chevinay",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 580,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7767,
+    "longitude": 4.5988,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69058",
+    "nom": "Chiroubles",
+    "codes_postaux": [
+      "69115"
+    ],
+    "population": 434,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1853,
+    "longitude": 4.6495,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69059",
+    "nom": "Civrieux-d'Azergues",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 1675,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8573,
+    "longitude": 4.7121,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69060",
+    "nom": "Claveisolles",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 577,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0966,
+    "longitude": 4.5095,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69061",
+    "nom": "Cogny",
+    "codes_postaux": [
+      "69640"
+    ],
+    "population": 1211,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9885,
+    "longitude": 4.6012,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69062",
+    "nom": "Coise",
+    "codes_postaux": [
+      "69590"
+    ],
+    "population": 800,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6133,
+    "longitude": 4.4665,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69063",
+    "nom": "Collonges-au-Mont-d'Or",
+    "codes_postaux": [
+      "69660"
+    ],
+    "population": 4669,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8188,
+    "longitude": 4.8425,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69064",
+    "nom": "Condrieu",
+    "codes_postaux": [
+      "69420"
+    ],
+    "population": 3957,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.4748,
+    "longitude": 4.7516,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69065",
+    "nom": "Corcelles-en-Beaujolais",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 1001,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1538,
+    "longitude": 4.7254,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69066",
+    "nom": "Cours",
+    "codes_postaux": [
+      "69470"
+    ],
+    "population": 4306,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0968,
+    "longitude": 4.3445,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69067",
+    "nom": "Courzieu",
+    "codes_postaux": [
+      "69690"
+    ],
+    "population": 1183,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7451,
+    "longitude": 4.5695,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69068",
+    "nom": "Couzon-au-Mont-d'Or",
+    "codes_postaux": [
+      "69270"
+    ],
+    "population": 2619,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8479,
+    "longitude": 4.8214,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69069",
+    "nom": "Craponne",
+    "codes_postaux": [
+      "69290"
+    ],
+    "population": 12084,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7456,
+    "longitude": 4.7294,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69070",
+    "nom": "Cublize",
+    "codes_postaux": [
+      "69550"
+    ],
+    "population": 1360,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0244,
+    "longitude": 4.3921,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69071",
+    "nom": "Curis-au-Mont-d'Or",
+    "codes_postaux": [
+      "69250"
+    ],
+    "population": 1195,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8682,
+    "longitude": 4.8201,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69072",
+    "nom": "Dardilly",
+    "codes_postaux": [
+      "69570"
+    ],
+    "population": 9221,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8133,
+    "longitude": 4.7466,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69074",
+    "nom": "Denicé",
+    "codes_postaux": [
+      "69640"
+    ],
+    "population": 1571,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0051,
+    "longitude": 4.6503,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69075",
+    "nom": "Dième",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 199,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9615,
+    "longitude": 4.4584,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69076",
+    "nom": "Dommartin",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 2687,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8372,
+    "longitude": 4.7122,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69077",
+    "nom": "Dracé",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 1212,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.154,
+    "longitude": 4.773,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69078",
+    "nom": "Duerne",
+    "codes_postaux": [
+      "69850"
+    ],
+    "population": 841,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.677,
+    "longitude": 4.5273,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69080",
+    "nom": "Échalas",
+    "codes_postaux": [
+      "69700"
+    ],
+    "population": 1994,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5501,
+    "longitude": 4.7294,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69081",
+    "nom": "Écully",
+    "codes_postaux": [
+      "69130"
+    ],
+    "population": 17944,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7822,
+    "longitude": 4.7737,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69082",
+    "nom": "Émeringes",
+    "codes_postaux": [
+      "69840"
+    ],
+    "population": 275,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.224,
+    "longitude": 4.6754,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69083",
+    "nom": "Éveux",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 1160,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8256,
+    "longitude": 4.6223,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69084",
+    "nom": "Fleurie",
+    "codes_postaux": [
+      "69820"
+    ],
+    "population": 1382,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1953,
+    "longitude": 4.6942,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69085",
+    "nom": "Fleurieu-sur-Saône",
+    "codes_postaux": [
+      "69250"
+    ],
+    "population": 1597,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8582,
+    "longitude": 4.8566,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69086",
+    "nom": "Fleurieux-sur-l'Arbresle",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 2361,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8406,
+    "longitude": 4.6484,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69087",
+    "nom": "Fontaines-Saint-Martin",
+    "codes_postaux": [
+      "69270"
+    ],
+    "population": 3098,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8445,
+    "longitude": 4.8521,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69088",
+    "nom": "Fontaines-sur-Saône",
+    "codes_postaux": [
+      "69270"
+    ],
+    "population": 6957,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8268,
+    "longitude": 4.8537,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69089",
+    "nom": "Francheville",
+    "codes_postaux": [
+      "69340"
+    ],
+    "population": 15604,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7386,
+    "longitude": 4.7537,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69090",
+    "nom": "Frontenas",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 915,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9186,
+    "longitude": 4.632,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69091",
+    "nom": "Givors",
+    "codes_postaux": [
+      "69700"
+    ],
+    "population": 21379,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5845,
+    "longitude": 4.7561,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69092",
+    "nom": "Gleizé",
+    "codes_postaux": [
+      "69400"
+    ],
+    "population": 8035,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9915,
+    "longitude": 4.6883,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69093",
+    "nom": "Grandris",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 1226,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.034,
+    "longitude": 4.4599,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69094",
+    "nom": "Grézieu-la-Varenne",
+    "codes_postaux": [
+      "69290"
+    ],
+    "population": 6472,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7469,
+    "longitude": 4.6799,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69095",
+    "nom": "Grézieu-le-Marché",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 834,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.661,
+    "longitude": 4.4243,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69096",
+    "nom": "Grigny-sur-Rhône",
+    "codes_postaux": [
+      "69520"
+    ],
+    "population": 10030,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6104,
+    "longitude": 4.7858,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69097",
+    "nom": "Les Haies",
+    "codes_postaux": [
+      "69420"
+    ],
+    "population": 723,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5122,
+    "longitude": 4.7401,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69098",
+    "nom": "Les Halles",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 472,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7175,
+    "longitude": 4.4345,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69099",
+    "nom": "Haute-Rivoire",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 1430,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7172,
+    "longitude": 4.4053,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69100",
+    "nom": "Irigny",
+    "codes_postaux": [
+      "69540"
+    ],
+    "population": 9034,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6747,
+    "longitude": 4.8143,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69102",
+    "nom": "Joux",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 752,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8895,
+    "longitude": 4.368,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69103",
+    "nom": "Juliénas",
+    "codes_postaux": [
+      "69840"
+    ],
+    "population": 880,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2473,
+    "longitude": 4.7052,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69104",
+    "nom": "Jullié",
+    "codes_postaux": [
+      "69840"
+    ],
+    "population": 492,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.244,
+    "longitude": 4.6632,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69105",
+    "nom": "Lacenas",
+    "codes_postaux": [
+      "69640"
+    ],
+    "population": 1076,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9867,
+    "longitude": 4.6447,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69106",
+    "nom": "Lachassagne",
+    "codes_postaux": [
+      "69480"
+    ],
+    "population": 1332,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9264,
+    "longitude": 4.6779,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69107",
+    "nom": "Lamure-sur-Azergues",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 1048,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.053,
+    "longitude": 4.5088,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69108",
+    "nom": "Lancié",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 1101,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1739,
+    "longitude": 4.7295,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69109",
+    "nom": "Lantignié",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 849,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1584,
+    "longitude": 4.6174,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69110",
+    "nom": "Larajasse",
+    "codes_postaux": [
+      "69590"
+    ],
+    "population": 1804,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6073,
+    "longitude": 4.5128,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69111",
+    "nom": "Légny",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 685,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.905,
+    "longitude": 4.5742,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69112",
+    "nom": "Lentilly",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 6623,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8166,
+    "longitude": 4.6691,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69113",
+    "nom": "Létra",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 901,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9767,
+    "longitude": 4.518,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69114",
+    "nom": "Porte des Pierres Dorées",
+    "codes_postaux": [
+      "69400",
+      "69640"
+    ],
+    "population": 4185,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9628,
+    "longitude": 4.6509,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69115",
+    "nom": "Limas",
+    "codes_postaux": [
+      "69400"
+    ],
+    "population": 4750,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9717,
+    "longitude": 4.7196,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69116",
+    "nom": "Limonest",
+    "codes_postaux": [
+      "69760"
+    ],
+    "population": 4012,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8267,
+    "longitude": 4.7682,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69117",
+    "nom": "Lissieu",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 3181,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8582,
+    "longitude": 4.7496,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69118",
+    "nom": "Loire-sur-Rhône",
+    "codes_postaux": [
+      "69700"
+    ],
+    "population": 2746,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5482,
+    "longitude": 4.7847,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69119",
+    "nom": "Longes",
+    "codes_postaux": [
+      "69420"
+    ],
+    "population": 938,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5083,
+    "longitude": 4.6861,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69120",
+    "nom": "Longessaigne",
+    "codes_postaux": [
+      "69770"
+    ],
+    "population": 589,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7833,
+    "longitude": 4.4277,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69121",
+    "nom": "Lozanne",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 3182,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.853,
+    "longitude": 4.6846,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69122",
+    "nom": "Lucenay",
+    "codes_postaux": [
+      "69480"
+    ],
+    "population": 2070,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9138,
+    "longitude": 4.7095,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69123",
+    "nom": "Lyon",
+    "codes_postaux": [
+      "69001",
+      "69002",
+      "69003",
+      "69004",
+      "69005",
+      "69006",
+      "69007",
+      "69008",
+      "69009"
+    ],
+    "population": 519127,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.758,
+    "longitude": 4.8351,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69124",
+    "nom": "Marchampt",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 450,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1086,
+    "longitude": 4.5614,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69125",
+    "nom": "Marcilly-d'Azergues",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 1066,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8685,
+    "longitude": 4.7301,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69126",
+    "nom": "Marcy",
+    "codes_postaux": [
+      "69480"
+    ],
+    "population": 916,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9141,
+    "longitude": 4.6755,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69127",
+    "nom": "Marcy-l'Étoile",
+    "codes_postaux": [
+      "69280"
+    ],
+    "population": 3778,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7855,
+    "longitude": 4.7129,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69130",
+    "nom": "Meaux-la-Montagne",
+    "codes_postaux": [
+      "69550"
+    ],
+    "population": 223,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0444,
+    "longitude": 4.4219,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69131",
+    "nom": "Messimy",
+    "codes_postaux": [
+      "69510"
+    ],
+    "population": 3546,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6978,
+    "longitude": 4.6748,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69132",
+    "nom": "Meys",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 861,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6813,
+    "longitude": 4.4071,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69133",
+    "nom": "Millery",
+    "codes_postaux": [
+      "69390"
+    ],
+    "population": 4299,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6307,
+    "longitude": 4.781,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69134",
+    "nom": "Moiré",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 240,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9262,
+    "longitude": 4.6034,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69135",
+    "nom": "Deux-Grosnes",
+    "codes_postaux": [
+      "69430",
+      "69860"
+    ],
+    "population": 1946,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2379,
+    "longitude": 4.5631,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69136",
+    "nom": "Montagny",
+    "codes_postaux": [
+      "69700"
+    ],
+    "population": 3218,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6296,
+    "longitude": 4.752,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69137",
+    "nom": "Montmelas-Saint-Sorlin",
+    "codes_postaux": [
+      "69640"
+    ],
+    "population": 528,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0201,
+    "longitude": 4.6035,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69138",
+    "nom": "Montromant",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 456,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7111,
+    "longitude": 4.541,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69139",
+    "nom": "Montrottier",
+    "codes_postaux": [
+      "69770"
+    ],
+    "population": 1400,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8014,
+    "longitude": 4.4654,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69140",
+    "nom": "Morancé",
+    "codes_postaux": [
+      "69480"
+    ],
+    "population": 2261,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8938,
+    "longitude": 4.7016,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69141",
+    "nom": "Mornant",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 6282,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6162,
+    "longitude": 4.6747,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69142",
+    "nom": "La Mulatière",
+    "codes_postaux": [
+      "69350"
+    ],
+    "population": 6534,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7338,
+    "longitude": 4.8118,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69143",
+    "nom": "Neuville-sur-Saône",
+    "codes_postaux": [
+      "69250"
+    ],
+    "population": 7812,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8821,
+    "longitude": 4.8404,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69145",
+    "nom": "Odenas",
+    "codes_postaux": [
+      "69460"
+    ],
+    "population": 938,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0935,
+    "longitude": 4.6417,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69148",
+    "nom": "Orliénas",
+    "codes_postaux": [
+      "69530"
+    ],
+    "population": 2675,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6609,
+    "longitude": 4.7207,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69149",
+    "nom": "Oullins-Pierre-Bénite",
+    "codes_postaux": [
+      "69310",
+      "69600"
+    ],
+    "population": 38168,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.708,
+    "longitude": 4.8112,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69151",
+    "nom": "Le Perréon",
+    "codes_postaux": [
+      "69460"
+    ],
+    "population": 1500,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0691,
+    "longitude": 4.587,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69153",
+    "nom": "Poleymieux-au-Mont-d'Or",
+    "codes_postaux": [
+      "69250"
+    ],
+    "population": 1412,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.856,
+    "longitude": 4.7927,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69154",
+    "nom": "Pollionnay",
+    "codes_postaux": [
+      "69290"
+    ],
+    "population": 2958,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7707,
+    "longitude": 4.6585,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69155",
+    "nom": "Pomeys",
+    "codes_postaux": [
+      "69590"
+    ],
+    "population": 1126,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6466,
+    "longitude": 4.4452,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69156",
+    "nom": "Pommiers",
+    "codes_postaux": [
+      "69480"
+    ],
+    "population": 2618,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9581,
+    "longitude": 4.6928,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69157",
+    "nom": "Vindry-sur-Turdine",
+    "codes_postaux": [
+      "69490"
+    ],
+    "population": 5305,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8886,
+    "longitude": 4.4948,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69160",
+    "nom": "Poule-les-Écharmeaux",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 1023,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1458,
+    "longitude": 4.4698,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69161",
+    "nom": "Propières",
+    "codes_postaux": [
+      "69790"
+    ],
+    "population": 484,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1909,
+    "longitude": 4.4503,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69162",
+    "nom": "Quincié-en-Beaujolais",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 1408,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1118,
+    "longitude": 4.614,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69163",
+    "nom": "Quincieux",
+    "codes_postaux": [
+      "69650"
+    ],
+    "population": 3679,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9168,
+    "longitude": 4.7724,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69164",
+    "nom": "Ranchal",
+    "codes_postaux": [
+      "69470"
+    ],
+    "population": 304,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.125,
+    "longitude": 4.3974,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69165",
+    "nom": "Régnié-Durette",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 1151,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1531,
+    "longitude": 4.6449,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69166",
+    "nom": "Riverie",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 293,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5985,
+    "longitude": 4.5883,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69167",
+    "nom": "Rivolet",
+    "codes_postaux": [
+      "69640"
+    ],
+    "population": 585,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0084,
+    "longitude": 4.5829,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69168",
+    "nom": "Rochetaillée-sur-Saône",
+    "codes_postaux": [
+      "69270"
+    ],
+    "population": 1551,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8427,
+    "longitude": 4.8396,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69169",
+    "nom": "Ronno",
+    "codes_postaux": [
+      "69550"
+    ],
+    "population": 658,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9845,
+    "longitude": 4.3902,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69170",
+    "nom": "Rontalon",
+    "codes_postaux": [
+      "69510"
+    ],
+    "population": 1170,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6554,
+    "longitude": 4.6204,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69171",
+    "nom": "Sain-Bel",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 2566,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8115,
+    "longitude": 4.6017,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69172",
+    "nom": "Salles-Arbuissonnas-en-Beaujolais",
+    "codes_postaux": [
+      "69460"
+    ],
+    "population": 815,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0449,
+    "longitude": 4.6317,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69173",
+    "nom": "Sarcey",
+    "codes_postaux": [
+      "69490"
+    ],
+    "population": 980,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8839,
+    "longitude": 4.5572,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69174",
+    "nom": "Les Sauvages",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 626,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9245,
+    "longitude": 4.3695,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69175",
+    "nom": "Savigny",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 1995,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8174,
+    "longitude": 4.5599,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69176",
+    "nom": "Soucieu-en-Jarrest",
+    "codes_postaux": [
+      "69510"
+    ],
+    "population": 4660,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.677,
+    "longitude": 4.6907,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69177",
+    "nom": "Sourcieux-les-Mines",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 2100,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7979,
+    "longitude": 4.6311,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69178",
+    "nom": "Souzy",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 763,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7027,
+    "longitude": 4.4505,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69179",
+    "nom": "Beauvallon",
+    "codes_postaux": [
+      "69700"
+    ],
+    "population": 4260,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5898,
+    "longitude": 4.7041,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69180",
+    "nom": "Saint-André-la-Côte",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 269,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6313,
+    "longitude": 4.5935,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69181",
+    "nom": "Saint-Appolinaire",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 236,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9772,
+    "longitude": 4.4275,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69182",
+    "nom": "Saint-Bonnet-des-Bruyères",
+    "codes_postaux": [
+      "69790"
+    ],
+    "population": 368,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2669,
+    "longitude": 4.4721,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69183",
+    "nom": "Saint-Bonnet-le-Troncy",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 307,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0781,
+    "longitude": 4.4172,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69184",
+    "nom": "Sainte-Catherine",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 969,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6036,
+    "longitude": 4.5734,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69186",
+    "nom": "Saint-Clément-de-Vers",
+    "codes_postaux": [
+      "69790"
+    ],
+    "population": 206,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2272,
+    "longitude": 4.4157,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69187",
+    "nom": "Saint-Clément-les-Places",
+    "codes_postaux": [
+      "69930"
+    ],
+    "population": 684,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7561,
+    "longitude": 4.4207,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69188",
+    "nom": "Saint-Clément-sur-Valsonne",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 900,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.926,
+    "longitude": 4.4585,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69189",
+    "nom": "Sainte-Colombe",
+    "codes_postaux": [
+      "69560"
+    ],
+    "population": 2036,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5247,
+    "longitude": 4.8582,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69190",
+    "nom": "Sainte-Consorce",
+    "codes_postaux": [
+      "69280"
+    ],
+    "population": 2154,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7765,
+    "longitude": 4.6959,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69191",
+    "nom": "Saint-Cyr-au-Mont-d'Or",
+    "codes_postaux": [
+      "69450"
+    ],
+    "population": 6327,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8216,
+    "longitude": 4.8162,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69192",
+    "nom": "Saint-Cyr-le-Chatoux",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 154,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0335,
+    "longitude": 4.5382,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69193",
+    "nom": "Saint-Cyr-sur-le-Rhône",
+    "codes_postaux": [
+      "69560"
+    ],
+    "population": 1286,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5154,
+    "longitude": 4.8242,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69194",
+    "nom": "Saint-Didier-au-Mont-d'Or",
+    "codes_postaux": [
+      "69370"
+    ],
+    "population": 7435,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8159,
+    "longitude": 4.8003,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69196",
+    "nom": "Saint-Didier-sur-Beaujeu",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 603,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1453,
+    "longitude": 4.5341,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69197",
+    "nom": "Saint-Étienne-des-Oullières",
+    "codes_postaux": [
+      "69460"
+    ],
+    "population": 2264,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0645,
+    "longitude": 4.6557,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69198",
+    "nom": "Saint-Étienne-la-Varenne",
+    "codes_postaux": [
+      "69460"
+    ],
+    "population": 784,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0765,
+    "longitude": 4.6188,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69199",
+    "nom": "Saint-Fons",
+    "codes_postaux": [
+      "69190"
+    ],
+    "population": 19285,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6997,
+    "longitude": 4.8514,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69200",
+    "nom": "Saint-Forgeux",
+    "codes_postaux": [
+      "69490"
+    ],
+    "population": 1544,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8522,
+    "longitude": 4.4583,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69201",
+    "nom": "Sainte-Foy-l'Argentière",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 1312,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7044,
+    "longitude": 4.4705,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69202",
+    "nom": "Sainte-Foy-lès-Lyon",
+    "codes_postaux": [
+      "69110"
+    ],
+    "population": 21692,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7362,
+    "longitude": 4.7926,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69203",
+    "nom": "Saint-Genis-l'Argentière",
+    "codes_postaux": [
+      "69610"
+    ],
+    "population": 986,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7145,
+    "longitude": 4.4926,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69204",
+    "nom": "Saint-Genis-Laval",
+    "codes_postaux": [
+      "69230"
+    ],
+    "population": 21212,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6922,
+    "longitude": 4.7929,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69205",
+    "nom": "Saint-Genis-les-Ollières",
+    "codes_postaux": [
+      "69290"
+    ],
+    "population": 5439,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7614,
+    "longitude": 4.7248,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69206",
+    "nom": "Saint-Georges-de-Reneins",
+    "codes_postaux": [
+      "69830"
+    ],
+    "population": 4677,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0587,
+    "longitude": 4.7164,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69207",
+    "nom": "Saint-Germain-au-Mont-d'Or",
+    "codes_postaux": [
+      "69650"
+    ],
+    "population": 3124,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8842,
+    "longitude": 4.8036,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69208",
+    "nom": "Saint-Germain-Nuelles",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 2246,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8604,
+    "longitude": 4.6167,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69209",
+    "nom": "Saint-Igny-de-Vers",
+    "codes_postaux": [
+      "69790"
+    ],
+    "population": 593,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2368,
+    "longitude": 4.4381,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69212",
+    "nom": "Saint-Jean-des-Vignes",
+    "codes_postaux": [
+      "69380"
+    ],
+    "population": 486,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8746,
+    "longitude": 4.683,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69214",
+    "nom": "Saint-Jean-la-Bussière",
+    "codes_postaux": [
+      "69550"
+    ],
+    "population": 1163,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0038,
+    "longitude": 4.3341,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69215",
+    "nom": "Saint-Julien",
+    "codes_postaux": [
+      "69640"
+    ],
+    "population": 969,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0252,
+    "longitude": 4.648,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69216",
+    "nom": "Saint-Julien-sur-Bibost",
+    "codes_postaux": [
+      "69690"
+    ],
+    "population": 622,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7984,
+    "longitude": 4.5087,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69217",
+    "nom": "Saint-Just-d'Avray",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 741,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9994,
+    "longitude": 4.4576,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69218",
+    "nom": "Saint-Lager",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 1056,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1129,
+    "longitude": 4.6728,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69219",
+    "nom": "Saint-Laurent-d'Agny",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 2111,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6406,
+    "longitude": 4.6828,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69220",
+    "nom": "Saint-Laurent-de-Chamousset",
+    "codes_postaux": [
+      "69930"
+    ],
+    "population": 2017,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7402,
+    "longitude": 4.4688,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69225",
+    "nom": "Saint-Marcel-l'Éclairé",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 575,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8712,
+    "longitude": 4.4279,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69227",
+    "nom": "Saint-Martin-en-Haut",
+    "codes_postaux": [
+      "69850"
+    ],
+    "population": 3942,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6583,
+    "longitude": 4.5561,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69228",
+    "nom": "Chabanière",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 4323,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5853,
+    "longitude": 4.6187,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69229",
+    "nom": "Saint-Nizier-d'Azergues",
+    "codes_postaux": [
+      "69870"
+    ],
+    "population": 774,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.083,
+    "longitude": 4.4613,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69230",
+    "nom": "Sainte-Paule",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 338,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9722,
+    "longitude": 4.5634,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69231",
+    "nom": "Saint-Pierre-la-Palud",
+    "codes_postaux": [
+      "69210"
+    ],
+    "population": 2616,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7833,
+    "longitude": 4.6163,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69233",
+    "nom": "Saint-Romain-au-Mont-d'Or",
+    "codes_postaux": [
+      "69270"
+    ],
+    "population": 1247,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8355,
+    "longitude": 4.8224,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69234",
+    "nom": "Saint-Romain-de-Popey",
+    "codes_postaux": [
+      "69490"
+    ],
+    "population": 1725,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.855,
+    "longitude": 4.5291,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69235",
+    "nom": "Saint-Romain-en-Gal",
+    "codes_postaux": [
+      "69560"
+    ],
+    "population": 2001,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5402,
+    "longitude": 4.8307,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69236",
+    "nom": "Saint-Romain-en-Gier",
+    "codes_postaux": [
+      "69700"
+    ],
+    "population": 600,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5637,
+    "longitude": 4.7065,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69238",
+    "nom": "Saint-Symphorien-sur-Coise",
+    "codes_postaux": [
+      "69590"
+    ],
+    "population": 3785,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6314,
+    "longitude": 4.4456,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69239",
+    "nom": "Saint-Vérand",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 1164,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9234,
+    "longitude": 4.5208,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69240",
+    "nom": "Saint-Vincent-de-Reins",
+    "codes_postaux": [
+      "69240"
+    ],
+    "population": 635,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0715,
+    "longitude": 4.3937,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69241",
+    "nom": "Taluyers",
+    "codes_postaux": [
+      "69440"
+    ],
+    "population": 2686,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6343,
+    "longitude": 4.7265,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69242",
+    "nom": "Taponas",
+    "codes_postaux": [
+      "69220"
+    ],
+    "population": 914,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1238,
+    "longitude": 4.7648,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69243",
+    "nom": "Tarare",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 10893,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9071,
+    "longitude": 4.4302,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69244",
+    "nom": "Tassin-la-Demi-Lune",
+    "codes_postaux": [
+      "69160"
+    ],
+    "population": 23200,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7637,
+    "longitude": 4.7521,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69245",
+    "nom": "Ternand",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 762,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9508,
+    "longitude": 4.5181,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69246",
+    "nom": "Theizé",
+    "codes_postaux": [
+      "69620"
+    ],
+    "population": 1278,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9418,
+    "longitude": 4.6277,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69248",
+    "nom": "Thizy-les-Bourgs",
+    "codes_postaux": [
+      "69240"
+    ],
+    "population": 5771,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0505,
+    "longitude": 4.3109,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69249",
+    "nom": "Thurins",
+    "codes_postaux": [
+      "69510"
+    ],
+    "population": 3404,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6809,
+    "longitude": 4.6252,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69250",
+    "nom": "La Tour-de-Salvagny",
+    "codes_postaux": [
+      "69890"
+    ],
+    "population": 4649,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8086,
+    "longitude": 4.7129,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69252",
+    "nom": "Trèves",
+    "codes_postaux": [
+      "69420"
+    ],
+    "population": 712,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5358,
+    "longitude": 4.6918,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69253",
+    "nom": "Tupin-et-Semons",
+    "codes_postaux": [
+      "69420"
+    ],
+    "population": 653,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.4941,
+    "longitude": 4.7776,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69254",
+    "nom": "Valsonne",
+    "codes_postaux": [
+      "69170"
+    ],
+    "population": 1005,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9463,
+    "longitude": 4.4264,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69255",
+    "nom": "Vaugneray",
+    "codes_postaux": [
+      "69670"
+    ],
+    "population": 6304,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.73,
+    "longitude": 4.6502,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69256",
+    "nom": "Vaulx-en-Velin",
+    "codes_postaux": [
+      "69120"
+    ],
+    "population": 53069,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7776,
+    "longitude": 4.925,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69257",
+    "nom": "Vaux-en-Beaujolais",
+    "codes_postaux": [
+      "69460"
+    ],
+    "population": 1169,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.0459,
+    "longitude": 4.5801,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69258",
+    "nom": "Vauxrenard",
+    "codes_postaux": [
+      "69820"
+    ],
+    "population": 311,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.2207,
+    "longitude": 4.6415,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69259",
+    "nom": "Vénissieux",
+    "codes_postaux": [
+      "69200"
+    ],
+    "population": 65502,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7012,
+    "longitude": 4.8805,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69260",
+    "nom": "Vernaison",
+    "codes_postaux": [
+      "69390"
+    ],
+    "population": 5210,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6464,
+    "longitude": 4.8121,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69261",
+    "nom": "Vernay",
+    "codes_postaux": [
+      "69430"
+    ],
+    "population": 124,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1639,
+    "longitude": 4.5279,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69263",
+    "nom": "Villechenève",
+    "codes_postaux": [
+      "69770"
+    ],
+    "population": 922,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8144,
+    "longitude": 4.4082,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69264",
+    "nom": "Villefranche-sur-Saône",
+    "codes_postaux": [
+      "69400"
+    ],
+    "population": 36172,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9837,
+    "longitude": 4.726,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69265",
+    "nom": "Ville-sur-Jarnioux",
+    "codes_postaux": [
+      "69640"
+    ],
+    "population": 828,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.9693,
+    "longitude": 4.5942,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69266",
+    "nom": "Villeurbanne",
+    "codes_postaux": [
+      "69100"
+    ],
+    "population": 163684,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7719,
+    "longitude": 4.8898,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69267",
+    "nom": "Villié-Morgon",
+    "codes_postaux": [
+      "69910"
+    ],
+    "population": 2148,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 46.1612,
+    "longitude": 4.6621,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69268",
+    "nom": "Vourles",
+    "codes_postaux": [
+      "69390"
+    ],
+    "population": 3332,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6569,
+    "longitude": 4.7691,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69269",
+    "nom": "Yzeron",
+    "codes_postaux": [
+      "69510"
+    ],
+    "population": 995,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7115,
+    "longitude": 4.6038,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69270",
+    "nom": "Chaponnay",
+    "codes_postaux": [
+      "69970"
+    ],
+    "population": 4548,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6315,
+    "longitude": 4.9584,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69271",
+    "nom": "Chassieu",
+    "codes_postaux": [
+      "69680"
+    ],
+    "population": 11208,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7366,
+    "longitude": 4.9638,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69272",
+    "nom": "Communay",
+    "codes_postaux": [
+      "69360"
+    ],
+    "population": 4540,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.5977,
+    "longitude": 4.8359,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69273",
+    "nom": "Corbas",
+    "codes_postaux": [
+      "69960"
+    ],
+    "population": 11315,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6654,
+    "longitude": 4.9104,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69275",
+    "nom": "Décines-Charpieu",
+    "codes_postaux": [
+      "69150"
+    ],
+    "population": 29877,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7759,
+    "longitude": 4.9589,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69276",
+    "nom": "Feyzin",
+    "codes_postaux": [
+      "69320"
+    ],
+    "population": 10304,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6736,
+    "longitude": 4.8589,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69277",
+    "nom": "Genas",
+    "codes_postaux": [
+      "69740"
+    ],
+    "population": 13421,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7286,
+    "longitude": 5.0172,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69278",
+    "nom": "Genay",
+    "codes_postaux": [
+      "69730"
+    ],
+    "population": 5585,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8989,
+    "longitude": 4.8389,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69279",
+    "nom": "Jonage",
+    "codes_postaux": [
+      "69330"
+    ],
+    "population": 6144,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7886,
+    "longitude": 5.0377,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69280",
+    "nom": "Jons",
+    "codes_postaux": [
+      "69330"
+    ],
+    "population": 1647,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7978,
+    "longitude": 5.0798,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69281",
+    "nom": "Marennes",
+    "codes_postaux": [
+      "69970"
+    ],
+    "population": 1992,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6248,
+    "longitude": 4.9097,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69282",
+    "nom": "Meyzieu",
+    "codes_postaux": [
+      "69330"
+    ],
+    "population": 36687,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7785,
+    "longitude": 5.0114,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69283",
+    "nom": "Mions",
+    "codes_postaux": [
+      "69780"
+    ],
+    "population": 13843,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6628,
+    "longitude": 4.9467,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69284",
+    "nom": "Montanay",
+    "codes_postaux": [
+      "69250"
+    ],
+    "population": 3308,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8793,
+    "longitude": 4.8657,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69285",
+    "nom": "Pusignan",
+    "codes_postaux": [
+      "69330"
+    ],
+    "population": 4119,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7571,
+    "longitude": 5.0659,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69286",
+    "nom": "Rillieux-la-Pape",
+    "codes_postaux": [
+      "69140"
+    ],
+    "population": 31389,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8265,
+    "longitude": 4.895,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69287",
+    "nom": "Saint-Bonnet-de-Mure",
+    "codes_postaux": [
+      "69720"
+    ],
+    "population": 6984,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6975,
+    "longitude": 5.0241,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69288",
+    "nom": "Saint-Laurent-de-Mure",
+    "codes_postaux": [
+      "69720"
+    ],
+    "population": 5791,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6842,
+    "longitude": 5.0597,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69289",
+    "nom": "Saint-Pierre-de-Chandieu",
+    "codes_postaux": [
+      "69780"
+    ],
+    "population": 4616,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6471,
+    "longitude": 5.0085,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69290",
+    "nom": "Saint-Priest",
+    "codes_postaux": [
+      "69800"
+    ],
+    "population": 49229,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7014,
+    "longitude": 4.9474,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69291",
+    "nom": "Saint-Symphorien-d'Ozon",
+    "codes_postaux": [
+      "69360"
+    ],
+    "population": 6186,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6386,
+    "longitude": 4.8666,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69292",
+    "nom": "Sathonay-Camp",
+    "codes_postaux": [
+      "69580"
+    ],
+    "population": 7019,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8255,
+    "longitude": 4.8792,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69293",
+    "nom": "Sathonay-Village",
+    "codes_postaux": [
+      "69580"
+    ],
+    "population": 2412,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.8394,
+    "longitude": 4.8858,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69294",
+    "nom": "Sérézin-du-Rhône",
+    "codes_postaux": [
+      "69360"
+    ],
+    "population": 3133,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6285,
+    "longitude": 4.8248,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69295",
+    "nom": "Simandres",
+    "codes_postaux": [
+      "69360"
+    ],
+    "population": 1918,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6111,
+    "longitude": 4.8718,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69296",
+    "nom": "Solaize",
+    "codes_postaux": [
+      "69360"
+    ],
+    "population": 3144,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6462,
+    "longitude": 4.8331,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69297",
+    "nom": "Ternay",
+    "codes_postaux": [
+      "69360"
+    ],
+    "population": 5596,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6083,
+    "longitude": 4.803,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69298",
+    "nom": "Toussieu",
+    "codes_postaux": [
+      "69780"
+    ],
+    "population": 3177,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.6585,
+    "longitude": 4.9819,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  },
+  {
+    "code": "69299",
+    "nom": "Colombier-Saugnieu",
+    "codes_postaux": [
+      "69124",
+      "69125"
+    ],
+    "population": 2874,
+    "departement": "69",
+    "departement_nom": "Rhône",
+    "region": "84",
+    "latitude": 45.7174,
+    "longitude": 5.1084,
+    "zone_fiscale": "A",
+    "date_maj": "2026-01-30T06:34:26.411Z"
+  }
+]

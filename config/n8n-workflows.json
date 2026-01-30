@@ -1,0 +1,157 @@
+{
+  "workflows": [
+    {
+      "name": "Import DVF Mensuel",
+      "description": "Telecharge et traite les donnees DVF de data.gouv.fr",
+      "trigger": {
+        "type": "cron",
+        "expression": "0 2 1 * *",
+        "timezone": "Europe/Paris"
+      },
+      "nodes": [
+        {
+          "name": "Execute DVF Script",
+          "type": "n8n-nodes-base.executeCommand",
+          "parameters": {
+            "command": "cd /root/simulateur_loi_Jeanbrun && bash scripts/import-dvf.sh 2024"
+          }
+        },
+        {
+          "name": "Notify Success",
+          "type": "n8n-nodes-base.httpRequest",
+          "parameters": {
+            "url": "https://hooks.slack.com/services/YOUR_WEBHOOK",
+            "method": "POST",
+            "body": {
+              "text": "DVF import completed successfully"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Import Loyers Annuel",
+      "description": "Met a jour les donnees de loyers depuis MTE",
+      "trigger": {
+        "type": "cron",
+        "expression": "0 2 15 1 *",
+        "timezone": "Europe/Paris"
+      },
+      "nodes": [
+        {
+          "name": "Execute Loyers Script",
+          "type": "n8n-nodes-base.executeCommand",
+          "parameters": {
+            "command": "cd /root/simulateur_loi_Jeanbrun && node scripts/import-loyers.js --year 2025"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sync Communes Trimestriel",
+      "description": "Met a jour les donnees communes depuis API Geo",
+      "trigger": {
+        "type": "cron",
+        "expression": "0 3 1 1,4,7,10 *",
+        "timezone": "Europe/Paris"
+      },
+      "nodes": [
+        {
+          "name": "Execute Communes Script",
+          "type": "n8n-nodes-base.executeCommand",
+          "parameters": {
+            "command": "cd /root/simulateur_loi_Jeanbrun && node scripts/import-communes.js"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Scraping Agences Hebdomadaire",
+      "description": "Scrape les agences immobilieres des 50 grandes villes",
+      "trigger": {
+        "type": "cron",
+        "expression": "0 3 * * 0",
+        "timezone": "Europe/Paris"
+      },
+      "nodes": [
+        {
+          "name": "Check Firecrawl",
+          "type": "n8n-nodes-base.httpRequest",
+          "parameters": {
+            "url": "http://127.0.0.1:3003/health",
+            "method": "GET"
+          }
+        },
+        {
+          "name": "Execute Scraping Script",
+          "type": "n8n-nodes-base.executeCommand",
+          "parameters": {
+            "command": "cd /root/simulateur_loi_Jeanbrun && node scripts/scrape-agences.js --limit 20"
+          },
+          "onError": "continueRegularOutput"
+        },
+        {
+          "name": "Count Results",
+          "type": "n8n-nodes-base.executeCommand",
+          "parameters": {
+            "command": "cat /root/simulateur_loi_Jeanbrun/data/agences.json | jq 'length'"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Healthcheck Pipeline",
+      "description": "Verifie l'etat du pipeline de donnees",
+      "trigger": {
+        "type": "cron",
+        "expression": "0 8 * * *",
+        "timezone": "Europe/Paris"
+      },
+      "nodes": [
+        {
+          "name": "Check Firecrawl",
+          "type": "n8n-nodes-base.httpRequest",
+          "parameters": {
+            "url": "http://127.0.0.1:3003/health",
+            "method": "GET"
+          }
+        },
+        {
+          "name": "Check Proxy",
+          "type": "n8n-nodes-base.executeCommand",
+          "parameters": {
+            "command": "curl -s --proxy http://lwvlrigg-rotate:mpn0iyk96ehv@p.webshare.io:80 https://httpbin.org/ip | jq -r '.origin'"
+          }
+        },
+        {
+          "name": "Check Data Freshness",
+          "type": "n8n-nodes-base.executeCommand",
+          "parameters": {
+            "command": "find /root/simulateur_loi_Jeanbrun/data -name '*.json' -mtime +30 | wc -l"
+          }
+        }
+      ]
+    }
+  ],
+  "notes": {
+    "import_order": [
+      "1. Communes (base de reference)",
+      "2. DVF (prix m2)",
+      "3. Loyers",
+      "4. Agences (scraping)"
+    ],
+    "dependencies": {
+      "firecrawl": "http://127.0.0.1:3003",
+      "proxy": "p.webshare.io:80"
+    },
+    "moltbot": {
+      "description": "Pour les taches de scraping longues ou 24/7",
+      "use_cases": [
+        "Scraping complet 35000 communes",
+        "Monitoring prix temps reel",
+        "Enrichissement LinkedIn agents"
+      ],
+      "vps": "Autre serveur dedie"
+    }
+  }
+}
