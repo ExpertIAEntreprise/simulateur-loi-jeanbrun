@@ -16,8 +16,8 @@ Compléter l'infrastructure de base du simulateur : schéma DB complet avec Driz
 | Vercel déployé | ✅ Terminé |
 | Neon connecté | ✅ Terminé |
 | Tables Better Auth | ✅ Terminé |
-| Tables métier (villes, programmes, simulations, leads, quotas) | ⬜ À faire |
-| Client EspoCRM | ⬜ À faire |
+| Tables métier (villes, programmes, simulations, leads, quotas) | ✅ Terminé |
+| Client EspoCRM | ✅ Terminé |
 | Pages légales | ⬜ À faire |
 
 ## Exigences fonctionnelles
@@ -33,10 +33,10 @@ Compléter l'infrastructure de base du simulateur : schéma DB complet avec Driz
 
 ### Client API EspoCRM
 
-- [ ] FR-7: Wrapper API EspoCRM avec authentification X-Api-Key
-- [ ] FR-8: Méthodes CRUD pour CJeanbrunVille
-- [ ] FR-9: Méthodes CRUD pour CJeanbrunProgramme
-- [ ] FR-10: Sync leads vers EspoCRM après soumission formulaire découverte
+- [x] FR-7: Wrapper API EspoCRM avec authentification X-Api-Key ✓
+- [x] FR-8: Méthodes CRUD pour CJeanbrunVille ✓
+- [x] FR-9: Méthodes CRUD pour CJeanbrunProgramme ✓
+- [x] FR-10: Sync leads vers EspoCRM après soumission formulaire découverte ✓
 
 ### Pages légales
 
@@ -47,10 +47,10 @@ Compléter l'infrastructure de base du simulateur : schéma DB complet avec Driz
 
 ## Exigences non-fonctionnelles
 
-- [x] NFR-1: Schéma Drizzle avec types TypeScript stricts
+- [x] NFR-1: Schéma Drizzle avec types TypeScript stricts ✓
 - [ ] NFR-2: Migrations versionnées dans `/drizzle/`
-- [ ] NFR-3: Client EspoCRM avec gestion d'erreurs et retry
-- [ ] NFR-4: Variables d'environnement validées avec Zod (`src/lib/env.ts`)
+- [x] NFR-3: Client EspoCRM avec gestion d'erreurs et retry (3 tentatives, exponential backoff) ✓
+- [x] NFR-4: Variables d'environnement validées avec Zod (`src/lib/env.ts`) ✓
 
 ## Critères d'acceptation
 

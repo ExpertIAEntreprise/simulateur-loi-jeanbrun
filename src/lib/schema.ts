@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -12,7 +13,6 @@ import {
   pgEnum,
   uniqueIndex
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
 
 // IMPORTANT! ID fields should ALWAYS use UUID types, EXCEPT the BetterAuth tables.
 

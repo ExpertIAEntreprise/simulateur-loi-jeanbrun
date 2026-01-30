@@ -28,6 +28,13 @@ const serverEnvSchema = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
+
+  // EspoCRM
+  ESPOCRM_API_KEY: z.string().optional(),
+  ESPOCRM_BASE_URL: z
+    .string()
+    .url()
+    .default("https://espocrm.expert-ia-entreprise.fr/api/v1"),
 });
 
 /**
@@ -106,6 +113,10 @@ export function checkEnv(): void {
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     warnings.push("BLOB_READ_WRITE_TOKEN is not set. Using local storage for file uploads.");
+  }
+
+  if (!process.env.ESPOCRM_API_KEY) {
+    warnings.push("ESPOCRM_API_KEY is not set. Leads sync to EspoCRM will be disabled.");
   }
 
   // Log warnings in development

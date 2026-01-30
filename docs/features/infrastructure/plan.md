@@ -55,30 +55,42 @@
 
 ---
 
-## Phase 3: Client API EspoCRM (1j)
+## Phase 3: Client API EspoCRM (1j) ✓
 
 ### Tâches
 
-- [ ] 3.1 Créer `src/lib/espocrm/client.ts` avec classe EspoCRMClient
-- [ ] 3.2 Implémenter `getVilles()` avec pagination et filtres
-- [ ] 3.3 Implémenter `getVilleBySlug(slug)`
-- [ ] 3.4 Implémenter `getProgrammes(villeId?)` avec filtres
-- [ ] 3.5 Implémenter `createLead(data)` pour sync découverte
-- [ ] 3.6 Ajouter gestion d'erreurs avec retry (3 tentatives)
-- [ ] 3.7 Ajouter variables d'environnement dans `src/lib/env.ts`
-- [ ] 3.8 Créer endpoint test `/api/espocrm/test/route.ts`
+- [x] 3.1 Créer `src/lib/espocrm/client.ts` avec classe EspoCRMClient ✓
+- [x] 3.2 Implémenter `getVilles()` avec pagination et filtres ✓
+- [x] 3.3 Implémenter `getVilleBySlug(slug)` ✓
+- [x] 3.4 Implémenter `getProgrammes(villeId?)` avec filtres ✓
+- [x] 3.5 Implémenter `createLead(data)` pour sync découverte ✓
+- [x] 3.6 Ajouter gestion d'erreurs avec retry (3 tentatives, exponential backoff) ✓
+- [x] 3.7 Ajouter variables d'environnement dans `src/lib/env.ts` ✓
+- [x] 3.8 Créer endpoint test `/api/espocrm/test/route.ts` ✓
 
-### Fichiers à créer
+### Fichiers créés
 
-- `src/lib/espocrm/client.ts`
-- `src/lib/espocrm/types.ts`
-- `src/lib/espocrm/index.ts`
-- `src/app/api/espocrm/test/route.ts`
+- `src/lib/espocrm/client.ts` (336 lignes) - Classe EspoCRMClient ✓
+- `src/lib/espocrm/types.ts` (191 lignes) - Types + helpers conversion ✓
+- `src/lib/espocrm/index.ts` (53 lignes) - Export singleton ✓
+- `src/app/api/espocrm/test/route.ts` (53 lignes) - Endpoint test ✓
+
+### Fonctionnalités implémentées
+
+- `getVilles(filters?, pagination?)` - Liste avec filtres departement/zoneFiscale/search
+- `getVilleBySlug(slug)` - Recherche unique par slug
+- `getProgrammes(filters?, pagination?)` - Liste avec filtres villeId/promoteur/prix
+- `getProgrammeById(id)` - Récupération par ID
+- `createLead(lead)` - Création Contact avec cSource="simulateur-jeanbrun"
+- `findLeadByEmail(email)` - Déduplication leads
+- `healthCheck()` - Vérification connexion
+- Helpers: `toEspoLead()`, `fromEspoVille()`, `fromEspoProgramme()`
 
 ### Validation
 
-- [ ] Endpoint `/api/espocrm/test` retourne les 5 premières villes
-- [ ] `pnpm typecheck` passe
+- [x] Endpoint `/api/espocrm/test` retourne les 5 premières villes ✓
+- [x] `pnpm typecheck` passe ✓
+- [x] `pnpm build:ci` passe ✓
 
 ---
 
