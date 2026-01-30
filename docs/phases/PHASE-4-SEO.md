@@ -1,87 +1,1301 @@
-# Phase 4 - Pages SEO
+# Phase 4 - Pages SEO + Enrichissement Données
 
 **Sprint:** 4
 **Semaines:** S7-S8 (17-28 Mars 2026)
-**Effort estimé:** 13,75 jours
-**Objectif:** 50 pages villes SEO-ready indexables
+**Effort estimé:** 18 jours (augmenté pour intégrer enrichissement)
+**Objectif:** 50+ pages villes SEO-ready avec données hyper-locales + Baromètre mensuel
 
 ---
 
-## 1. Objectifs du sprint
+## 1. Vue d'ensemble enrichie
 
-### 1.1 Livrables attendus
+### 1.1 Changements vs version initiale
+
+| Élément | Version initiale | Version enrichie |
+|---------|------------------|------------------|
+| Pages villes | 50 basiques | 50+ avec quartiers, POI, historique prix |
+| Données marché | Statique | DVF API + INSEE (temps réel) |
+| Contenu | 400-600 mots/ville | + Baromètre mensuel auto-généré |
+| Sources | EspoCRM seul | DVF + INSEE + geo.api + scraping promoteurs |
+| Programmes | Nexity seul | Multi-promoteurs (Bouygues, Kaufman, Icade...) |
+
+### 1.2 APIs Gratuites Confirmées
+
+| API | URL | Données | Limite |
+|-----|-----|---------|--------|
+| [DVF (CEREMA)](https://api.gouv.fr/les-api/api-donnees-foncieres) | api-datafoncier.cerema.fr | Transactions immo depuis 2010 | Gratuit, illimité |
+| [INSEE Données Locales](https://api.gouv.fr/les-api/api_donnees_locales) | api.insee.fr | Population, revenus, emploi | Gratuit, 30 req/min |
+| [geo.api.gouv.fr](https://geo.api.gouv.fr/) | geo.api.gouv.fr | Géocodage, communes | Gratuit, illimité |
+
+### 1.3 Livrables attendus
 
 | Livrable | Description | Critère de validation |
 |----------|-------------|----------------------|
-| Template page ville | Page dynamique SSG | Build OK 50 pages |
-| Données marché | Prix, loyers, tension | Affichage correct |
-| Plafonds Jeanbrun | 3 niveaux par zone | Calculs exacts |
-| Programmes intégrés | Top 3 par ville | Liens fonctionnels |
-| Simulateur pré-rempli | Ville injectée | Navigation fluide |
-| Contenu éditorial | 400-600 mots uniques | 50 textes validés |
-| JSON-LD | Données structurées | Rich Results Test OK |
-| Sitemap.xml | Dynamique | Toutes URLs listées |
-| Maillage interne | Villes proches | Liens automatiques |
-| Index villes | Page /villes | Filtres fonctionnels |
-
-### 1.2 Dépendances
-
-- Sprint 3 terminé (simulateur OK)
-- Entités cVille remplies dans EspoCRM
-- Données marché disponibles (DVF, loyers)
+| Template page ville | Page dynamique SSG | Build OK 50+ pages |
+| Données DVF | Historique prix 12 mois | API fonctionnelle |
+| Données INSEE | Population, revenus | Enrichissement OK |
+| Programmes multi-promoteurs | Scraping 5+ promoteurs | 200+ programmes |
+| Baromètre Jeanbrun | Page mensuelle auto-générée | 51 baromètres/mois |
+| Contenu IA | Paragraphes uniques quartiers | 50 textes validés |
+| JSON-LD enrichi | Place + LocalBusiness | Rich Results Test OK |
+| Sitemap.xml | Dynamique (villes + baromètres) | Toutes URLs listées |
+| Maillage interne | Villes proches + quartiers | Liens automatiques |
 
 ---
 
-## 2. Liste des 50 villes MVP
+## 2. Architecture des données enrichies
 
-### 2.1 Répartition par zone fiscale
+### 2.1 Nouvelles entités EspoCRM
 
-| Zone | Nombre | Exemples |
-|------|--------|----------|
-| A bis | 5 | Paris, Neuilly, Levallois, Boulogne, Vincennes |
-| A | 15 | Lyon, Marseille, Nice, Montpellier, Bordeaux... |
-| B1 | 20 | Nantes, Toulouse, Rennes, Grenoble, Strasbourg... |
-| B2 | 10 | Orléans, Tours, Limoges, Amiens, Metz... |
+#### CJeanbrunRegion (13 records)
+```
+id, name, slug, code
+```
 
-### 2.2 Liste complète
+#### CJeanbrunDepartement (101 records)
+```
+id, name, slug, code, regionId (link)
+```
+
+#### CJeanbrunVille enrichie (51+ records)
+```
+// Champs existants
+id, name, slug, zoneFiscale, population
+
+// Nouveaux champs géo
+departementId (link), regionId (link)
+latitude, longitude, codeInsee
+
+// Nouveaux champs marché (DVF)
+prixM2Moyen, prixM2Median
+prixM2Q1, prixM2Q3  // Quartiles pour range
+evolutionPrix1An, evolutionPrix3Ans, evolutionPrix5Ans
+nbTransactions12Mois
+
+// Nouveaux champs INSEE
+populationCommune, populationAireUrbaine
+revenuMedian, tauxChomage, tauxProprio
+
+// Nouveaux champs qualité vie
+scoreVieQuotidienne (0-100)
+scoreTransport (0-100)
+scoreEducation (0-100)
+
+// Contenu
+description, contenuEditorial
+metaTitle, metaDescription
+```
+
+#### CJeanbrunQuartier (nouveau - ~200 records)
+```
+id, name, slug, villeId (link)
+prixM2Moyen, evolutionPrix1An
+scoreAttractivite (0-100)
+description  // Généré IA
+```
+
+#### CJeanbrunBarometre (nouveau - 51/mois)
+```
+id, villeId (link), mois (date YYYY-MM-01)
+scoreAttractivite (0-100)
+prixM2, evolutionPrixMois
+loyerM2, rendementBrut
+nbProgrammesActifs
+meilleureOpportuniteId (link programme)
+analyseIA (text ~300 mots)
+createdAt
+```
+
+#### CJeanbrunProgramme enrichi
+```
+// Champs existants
+id, name, slug, villeId, promoteur, urlExterne
+
+// Nouveaux champs (scraping)
+adresseComplete, latitude, longitude
+prixMin, prixMax, prixM2Moyen
+nbLotsTotal, nbLotsDisponibles
+typesLots[]  // T1, T2, T3, T4+
+dateLivraison (date)
+images[]  // URLs
+description
+
+// Source
+sourcePromoteur  // nexity, bouygues, kaufman, icade, vinci, cogedim
+dateScrap
+```
+
+### 2.2 Schéma de flux de données
 
 ```
-Zone A bis (5):
-Paris, Neuilly-sur-Seine, Levallois-Perret, Boulogne-Billancourt, Vincennes
-
-Zone A (15):
-Lyon, Marseille, Nice, Montpellier, Bordeaux, Lille, Strasbourg,
-Aix-en-Provence, Toulouse, Nantes, Villeurbanne, Saint-Denis,
-Montreuil, Argenteuil, Nanterre
-
-Zone B1 (20):
-Rennes, Grenoble, Rouen, Toulon, Angers, Le Mans, Dijon, Clermont-Ferrand,
-Caen, Nancy, Metz, Brest, Reims, Perpignan, Besançon, Orléans, Mulhouse,
-Dunkerque, Poitiers, Avignon
-
-Zone B2/C (10):
-Le Havre, Saint-Étienne, Amiens, Limoges, Tours, Nîmes, Créteil,
-Vitry-sur-Seine, Colombes, Asnières-sur-Seine
+┌─────────────────────────────────────────────────────────────────┐
+│                    SOURCES DE DONNÉES                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  DVF API (CEREMA)      INSEE API         geo.api.gouv.fr       │
+│  - Prix m² par commune  - Population      - Géocodage          │
+│  - Historique 5 ans     - Revenus         - Coordonnées        │
+│  - Nb transactions      - Emploi          - Code INSEE         │
+│                                                                 │
+│  Scraping Promoteurs (Firecrawl)                               │
+│  - Nexity (existant)                                           │
+│  - Bouygues Immobilier (nouveau)                               │
+│  - Kaufman & Broad (nouveau)                                   │
+│  - Icade (nouveau)                                             │
+│  - Vinci Immobilier (nouveau)                                  │
+│  - Cogedim (nouveau - Cloudflare)                              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    SCRIPTS D'ENRICHISSEMENT                     │
+│                    /root/scripts/jeanbrun/                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  enrich_villes_geo.py       # Phase 1: Géocodage + liens       │
+│  import_dvf_historique.py   # Phase 2: Prix DVF 12 mois        │
+│  import_insee_data.py       # Phase 3: Population, revenus     │
+│  scrape_promoteurs.py       # Phase 4: Multi-promoteurs        │
+│  generate_barometre.py      # Phase 5: Baromètre mensuel       │
+│  generate_contenu_ia.py     # Phase 6: Contenu IA quartiers    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         EspoCRM                                 │
+│                    (stockage centralisé)                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  CJeanbrunVille (51+)     CJeanbrunProgramme (200+)            │
+│  CJeanbrunQuartier (200+) CJeanbrunBarometre (51/mois)         │
+│  CJeanbrunRegion (13)     CJeanbrunDepartement (101)           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    APPLICATION NEXT.JS                          │
+│                    (simulateur-loi-jeanbrun)                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  /villes/[slug]           → Page ville enrichie                │
+│  /villes/[slug]/[quartier]→ Page quartier (optionnel)          │
+│  /barometre/[ville]/[mois]→ Baromètre mensuel                  │
+│  /programmes/[slug]       → Fiche programme détaillée          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 3. Tâches détaillées
+## 3. Phases d'enrichissement
 
-### 3.1 Template page ville (2j)
+### Phase 3.1 : Données Géographiques (2h)
 
-**ID:** 4.1
+**Objectif:** Enrichir les 51 villes avec coordonnées et liens département/région
+
+**Script:** `/root/scripts/jeanbrun/enrich_villes_geo.py`
+
+```python
+#!/usr/bin/env python3
+"""
+Enrichissement géographique des villes Jeanbrun
+- Géocodage via geo.api.gouv.fr (gratuit, illimité)
+- Liaison département/région
+"""
+
+import requests
+import time
+from typing import Optional, Dict, Any
+
+ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
+ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+GEO_API_URL = "https://geo.api.gouv.fr"
+
+def geocode_ville(nom_ville: str) -> Optional[Dict[str, Any]]:
+    """Récupère coordonnées et code INSEE via geo.api.gouv.fr"""
+    try:
+        response = requests.get(
+            f"{GEO_API_URL}/communes",
+            params={"nom": nom_ville, "fields": "nom,code,codesPostaux,centre,departement,region", "limit": 1},
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        if data:
+            commune = data[0]
+            return {
+                "codeInsee": commune.get("code"),
+                "latitude": commune.get("centre", {}).get("coordinates", [None, None])[1],
+                "longitude": commune.get("centre", {}).get("coordinates", [None, None])[0],
+                "departementCode": commune.get("departement", {}).get("code"),
+                "departementNom": commune.get("departement", {}).get("nom"),
+                "regionNom": commune.get("region", {}).get("nom"),
+            }
+        return None
+    except Exception as e:
+        print(f"Erreur géocodage {nom_ville}: {e}")
+        return None
+
+def update_ville_espocrm(ville_id: str, data: Dict[str, Any]) -> bool:
+    """Met à jour une ville dans EspoCRM"""
+    try:
+        response = requests.put(
+            f"{ESPOCRM_URL}/CJeanbrunVille/{ville_id}",
+            headers={"X-Api-Key": ESPOCRM_API_KEY, "Content-Type": "application/json"},
+            json=data,
+            timeout=10
+        )
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Erreur update {ville_id}: {e}")
+        return False
+
+def get_all_villes() -> list:
+    """Récupère toutes les villes Jeanbrun"""
+    response = requests.get(
+        f"{ESPOCRM_URL}/CJeanbrunVille",
+        headers={"X-Api-Key": ESPOCRM_API_KEY},
+        params={"maxSize": 100},
+        timeout=10
+    )
+    return response.json().get("list", [])
+
+def main():
+    villes = get_all_villes()
+    print(f"Enrichissement de {len(villes)} villes...")
+
+    success = 0
+    for ville in villes:
+        geo_data = geocode_ville(ville["name"])
+        if geo_data:
+            if update_ville_espocrm(ville["id"], geo_data):
+                print(f"✓ {ville['name']}: {geo_data['latitude']}, {geo_data['longitude']}")
+                success += 1
+            else:
+                print(f"✗ {ville['name']}: Erreur update")
+        else:
+            print(f"✗ {ville['name']}: Non trouvée")
+
+        time.sleep(0.1)  # Rate limiting doux
+
+    print(f"\nTerminé: {success}/{len(villes)} villes enrichies")
+
+if __name__ == "__main__":
+    main()
+```
+
+**Exécution:** `python3 /root/scripts/jeanbrun/enrich_villes_geo.py`
+**Durée estimée:** ~2 minutes (51 villes × 0.1s)
+
+---
+
+### Phase 3.2 : Import DVF Historique (4h)
+
+**Objectif:** Importer 12 mois d'historique prix via DVF API CEREMA
+
+**Script:** `/root/scripts/jeanbrun/import_dvf_historique.py`
+
+```python
+#!/usr/bin/env python3
+"""
+Import historique DVF (Demandes de Valeurs Foncières)
+Source: API CEREMA (gratuit, illimité)
+Documentation: https://api-datafoncier.cerema.fr/
+"""
+
+import requests
+import time
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional
+from statistics import median, mean
+
+ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
+ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+
+# API DVF CEREMA (flux ouvert, pas de clé requise)
+DVF_API_URL = "https://api-datafoncier.cerema.fr/dvf_opendata/geomutations"
+
+def get_dvf_data(code_insee: str, date_debut: str, date_fin: str) -> List[Dict]:
+    """
+    Récupère les mutations DVF pour une commune
+    Filtré sur les appartements et maisons
+    """
+    try:
+        params = {
+            "code_commune": code_insee,
+            "date_mutation_min": date_debut,
+            "date_mutation_max": date_fin,
+            "nature_mutation": "Vente",
+            "type_local": ["Appartement", "Maison"],
+            "page_size": 500,
+        }
+
+        response = requests.get(
+            DVF_API_URL,
+            params=params,
+            timeout=30
+        )
+        response.raise_for_status()
+        return response.json().get("results", [])
+    except Exception as e:
+        print(f"Erreur DVF {code_insee}: {e}")
+        return []
+
+def calculate_prix_m2(mutations: List[Dict]) -> Dict[str, Optional[float]]:
+    """Calcule les statistiques de prix au m² depuis les mutations"""
+    prix_m2_list = []
+
+    for mutation in mutations:
+        valeur = mutation.get("valeur_fonciere")
+        surface = mutation.get("surface_reelle_bati")
+
+        if valeur and surface and surface > 10:  # Filtrer aberrations
+            prix_m2 = valeur / surface
+            if 500 < prix_m2 < 20000:  # Plage réaliste
+                prix_m2_list.append(prix_m2)
+
+    if not prix_m2_list:
+        return {"prixM2Moyen": None, "prixM2Median": None, "nbTransactions": 0}
+
+    prix_m2_list.sort()
+    n = len(prix_m2_list)
+
+    return {
+        "prixM2Moyen": round(mean(prix_m2_list)),
+        "prixM2Median": round(median(prix_m2_list)),
+        "prixM2Q1": round(prix_m2_list[n // 4]) if n >= 4 else None,
+        "prixM2Q3": round(prix_m2_list[3 * n // 4]) if n >= 4 else None,
+        "nbTransactions12Mois": n,
+    }
+
+def calculate_evolution(prix_actuel: float, prix_ancien: float) -> Optional[float]:
+    """Calcule l'évolution en pourcentage"""
+    if prix_ancien and prix_ancien > 0:
+        return round(((prix_actuel - prix_ancien) / prix_ancien) * 100, 1)
+    return None
+
+def enrich_ville_dvf(ville: Dict) -> Dict:
+    """Enrichit une ville avec les données DVF"""
+    code_insee = ville.get("codeInsee")
+    if not code_insee:
+        return {}
+
+    now = datetime.now()
+
+    # Période actuelle (12 derniers mois)
+    date_fin = now.strftime("%Y-%m-%d")
+    date_debut_12m = (now - timedelta(days=365)).strftime("%Y-%m-%d")
+
+    # Période N-1 (12 mois précédents)
+    date_fin_n1 = date_debut_12m
+    date_debut_n1 = (now - timedelta(days=730)).strftime("%Y-%m-%d")
+
+    # Période N-3 (3 ans)
+    date_debut_3ans = (now - timedelta(days=1095)).strftime("%Y-%m-%d")
+
+    # Récupération données actuelles
+    mutations_12m = get_dvf_data(code_insee, date_debut_12m, date_fin)
+    stats_12m = calculate_prix_m2(mutations_12m)
+
+    # Récupération données N-1 pour évolution
+    mutations_n1 = get_dvf_data(code_insee, date_debut_n1, date_fin_n1)
+    stats_n1 = calculate_prix_m2(mutations_n1)
+
+    # Récupération données N-3 pour évolution longue
+    mutations_3ans = get_dvf_data(code_insee, date_debut_3ans, date_fin)
+
+    # Calcul évolutions
+    evolution_1an = None
+    if stats_12m["prixM2Moyen"] and stats_n1["prixM2Moyen"]:
+        evolution_1an = calculate_evolution(stats_12m["prixM2Moyen"], stats_n1["prixM2Moyen"])
+
+    return {
+        **stats_12m,
+        "evolutionPrix1An": evolution_1an,
+        "dateMajDVF": now.strftime("%Y-%m-%d"),
+    }
+
+def update_ville_espocrm(ville_id: str, data: Dict) -> bool:
+    """Met à jour une ville dans EspoCRM"""
+    try:
+        response = requests.put(
+            f"{ESPOCRM_URL}/CJeanbrunVille/{ville_id}",
+            headers={"X-Api-Key": ESPOCRM_API_KEY, "Content-Type": "application/json"},
+            json=data,
+            timeout=10
+        )
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Erreur update {ville_id}: {e}")
+        return False
+
+def get_all_villes() -> List[Dict]:
+    """Récupère toutes les villes avec code INSEE"""
+    response = requests.get(
+        f"{ESPOCRM_URL}/CJeanbrunVille",
+        headers={"X-Api-Key": ESPOCRM_API_KEY},
+        params={"maxSize": 100, "where[0][type]": "isNotNull", "where[0][attribute]": "codeInsee"},
+        timeout=10
+    )
+    return response.json().get("list", [])
+
+def main():
+    villes = get_all_villes()
+    print(f"Import DVF pour {len(villes)} villes...")
+
+    success = 0
+    for i, ville in enumerate(villes):
+        print(f"[{i+1}/{len(villes)}] {ville['name']}...", end=" ")
+
+        dvf_data = enrich_ville_dvf(ville)
+        if dvf_data.get("prixM2Moyen"):
+            if update_ville_espocrm(ville["id"], dvf_data):
+                print(f"✓ {dvf_data['prixM2Moyen']}€/m² ({dvf_data['nbTransactions12Mois']} transactions)")
+                success += 1
+            else:
+                print("✗ Erreur update")
+        else:
+            print("✗ Pas de données")
+
+        time.sleep(1)  # Rate limiting DVF API
+
+    print(f"\nTerminé: {success}/{len(villes)} villes enrichies DVF")
+
+if __name__ == "__main__":
+    main()
+```
+
+**Exécution:** `python3 /root/scripts/jeanbrun/import_dvf_historique.py`
+**Durée estimée:** ~2 minutes (51 villes × 2 requêtes × 1s)
+
+---
+
+### Phase 3.3 : Import INSEE (2h)
+
+**Objectif:** Enrichir avec population, revenus, emploi
+
+**Script:** `/root/scripts/jeanbrun/import_insee_data.py`
+
+```python
+#!/usr/bin/env python3
+"""
+Import données INSEE (population, revenus, emploi)
+Source: API INSEE Données Locales (gratuit, 30 req/min)
+Documentation: https://api.insee.fr/catalogue/
+"""
+
+import requests
+import time
+from typing import Dict, Optional
+
+ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
+ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+
+# API INSEE (pas de clé pour données ouvertes)
+INSEE_GEO_URL = "https://geo.api.gouv.fr/communes"
+
+def get_insee_data(code_insee: str) -> Optional[Dict]:
+    """
+    Récupère données INSEE via geo.api.gouv.fr
+    (proxy simplifié vers données INSEE)
+    """
+    try:
+        response = requests.get(
+            f"{INSEE_GEO_URL}/{code_insee}",
+            params={"fields": "nom,population,surface,codesPostaux,siren"},
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        return {
+            "populationCommune": data.get("population"),
+            "surface": data.get("surface"),  # en hectares
+        }
+    except Exception as e:
+        print(f"Erreur INSEE {code_insee}: {e}")
+        return None
+
+def update_ville_espocrm(ville_id: str, data: Dict) -> bool:
+    """Met à jour une ville dans EspoCRM"""
+    try:
+        response = requests.put(
+            f"{ESPOCRM_URL}/CJeanbrunVille/{ville_id}",
+            headers={"X-Api-Key": ESPOCRM_API_KEY, "Content-Type": "application/json"},
+            json=data,
+            timeout=10
+        )
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Erreur update {ville_id}: {e}")
+        return False
+
+def get_all_villes() -> list:
+    """Récupère toutes les villes avec code INSEE"""
+    response = requests.get(
+        f"{ESPOCRM_URL}/CJeanbrunVille",
+        headers={"X-Api-Key": ESPOCRM_API_KEY},
+        params={"maxSize": 100},
+        timeout=10
+    )
+    return response.json().get("list", [])
+
+def main():
+    villes = get_all_villes()
+    print(f"Import INSEE pour {len(villes)} villes...")
+
+    success = 0
+    for i, ville in enumerate(villes):
+        code_insee = ville.get("codeInsee")
+        if not code_insee:
+            print(f"[{i+1}/{len(villes)}] {ville['name']}: ✗ Pas de code INSEE")
+            continue
+
+        print(f"[{i+1}/{len(villes)}] {ville['name']}...", end=" ")
+
+        insee_data = get_insee_data(code_insee)
+        if insee_data and insee_data.get("populationCommune"):
+            if update_ville_espocrm(ville["id"], insee_data):
+                print(f"✓ Pop: {insee_data['populationCommune']:,}")
+                success += 1
+            else:
+                print("✗ Erreur update")
+        else:
+            print("✗ Pas de données")
+
+        time.sleep(2)  # Rate limiting INSEE (30 req/min)
+
+    print(f"\nTerminé: {success}/{len(villes)} villes enrichies INSEE")
+
+if __name__ == "__main__":
+    main()
+```
+
+**Exécution:** `python3 /root/scripts/jeanbrun/import_insee_data.py`
+**Durée estimée:** ~2 minutes (51 villes × 2s)
+
+---
+
+### Phase 3.4 : Scraping Multi-Promoteurs (8h)
+
+**Objectif:** Scraper 5+ promoteurs pour atteindre 200+ programmes
+
+**Promoteurs cibles:**
+
+| Promoteur | URL Pattern | Difficulté | Protection |
+|-----------|-------------|------------|------------|
+| Nexity | nexity.fr/immobilier-neuf | ✅ Fait | Aucune |
+| Bouygues Immobilier | bouygues-immobilier.com | Moyenne | Rate limiting |
+| Kaufman & Broad | kaufmanbroad.fr | Moyenne | Aucune |
+| Icade | icade-immobilier.com | Facile | Aucune |
+| Vinci Immobilier | vinci-immobilier.com | Moyenne | Rate limiting |
+| Cogedim | cogedim.com | Difficile | Cloudflare |
+
+**Script:** `/root/scripts/jeanbrun/scrape_promoteurs.py`
+
+```python
+#!/usr/bin/env python3
+"""
+Scraping multi-promoteurs via Firecrawl
+- Nexity (existant, à adapter)
+- Bouygues Immobilier
+- Kaufman & Broad
+- Icade
+- Vinci Immobilier
+- Cogedim (Cloudflare - mode stealth)
+
+Points de vigilance:
+- Rate limiting: 5 secondes entre requêtes par promoteur
+- Retry avec backoff exponentiel
+- Rotation user-agent
+- Logging complet pour debug
+"""
+
+import requests
+import time
+import json
+import hashlib
+from datetime import datetime
+from typing import Dict, List, Optional
+import logging
+
+# Configuration logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('/var/log/jeanbrun-scraping.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Configuration
+FIRECRAWL_URL = "http://127.0.0.1:3003/v1"
+ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
+ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+
+# Délai entre requêtes par promoteur (secondes)
+RATE_LIMIT_DELAY = 5
+
+# Configuration par promoteur
+PROMOTEURS_CONFIG = {
+    "bouygues": {
+        "name": "Bouygues Immobilier",
+        "base_url": "https://www.bouygues-immobilier.com",
+        "search_url": "https://www.bouygues-immobilier.com/recherche?type=neuf",
+        "selectors": {
+            "programme_list": ".property-card",
+            "name": ".property-card__title",
+            "price": ".property-card__price",
+            "location": ".property-card__location",
+            "link": ".property-card__link",
+        },
+        "cloudflare": False,
+    },
+    "kaufman": {
+        "name": "Kaufman & Broad",
+        "base_url": "https://www.kaufmanbroad.fr",
+        "search_url": "https://www.kaufmanbroad.fr/programmes-neufs",
+        "selectors": {
+            "programme_list": ".program-card",
+            "name": ".program-card__title",
+            "price": ".program-card__price",
+            "location": ".program-card__city",
+            "link": "a.program-card__link",
+        },
+        "cloudflare": False,
+    },
+    "icade": {
+        "name": "Icade",
+        "base_url": "https://www.icade-immobilier.com",
+        "search_url": "https://www.icade-immobilier.com/programmes-immobiliers-neufs",
+        "selectors": {
+            "programme_list": ".program-item",
+            "name": ".program-item__name",
+            "price": ".program-item__price",
+            "location": ".program-item__location",
+            "link": "a.program-item__link",
+        },
+        "cloudflare": False,
+    },
+    "vinci": {
+        "name": "Vinci Immobilier",
+        "base_url": "https://www.vinci-immobilier.com",
+        "search_url": "https://www.vinci-immobilier.com/programmes-immobiliers-neufs",
+        "selectors": {
+            "programme_list": ".program-card",
+            "name": ".program-card__title",
+            "price": ".program-card__price",
+            "location": ".program-card__city",
+            "link": "a.program-card__cta",
+        },
+        "cloudflare": False,
+    },
+    "cogedim": {
+        "name": "Cogedim",
+        "base_url": "https://www.cogedim.com",
+        "search_url": "https://www.cogedim.com/programmes-immobiliers-neufs",
+        "selectors": {
+            "programme_list": ".residence-card",
+            "name": ".residence-card__title",
+            "price": ".residence-card__price",
+            "location": ".residence-card__city",
+            "link": "a.residence-card__link",
+        },
+        "cloudflare": True,  # Nécessite mode stealth
+    },
+}
+
+def scrape_with_firecrawl(url: str, use_stealth: bool = False) -> Optional[Dict]:
+    """
+    Scrape une page via Firecrawl
+    use_stealth=True pour sites avec Cloudflare
+    """
+    try:
+        payload = {
+            "url": url,
+            "formats": ["markdown", "html"],
+            "onlyMainContent": True,
+            "waitFor": 3000,  # Attendre le JS
+        }
+
+        if use_stealth:
+            payload["headers"] = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                "Accept-Language": "fr-FR,fr;q=0.9",
+            }
+
+        response = requests.post(
+            f"{FIRECRAWL_URL}/scrape",
+            json=payload,
+            timeout=60
+        )
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        logger.error(f"Erreur Firecrawl {url}: {e}")
+        return None
+
+def extract_programmes_from_html(html: str, selectors: Dict, promoteur: str) -> List[Dict]:
+    """
+    Extrait les programmes depuis le HTML
+    Utilise BeautifulSoup pour parsing
+    """
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html, 'html.parser')
+    programmes = []
+
+    cards = soup.select(selectors["programme_list"])
+    logger.info(f"Trouvé {len(cards)} cartes programmes pour {promoteur}")
+
+    for card in cards:
+        try:
+            name_el = card.select_one(selectors["name"])
+            price_el = card.select_one(selectors["price"])
+            location_el = card.select_one(selectors["location"])
+            link_el = card.select_one(selectors["link"])
+
+            if name_el and location_el:
+                programmes.append({
+                    "name": name_el.get_text(strip=True),
+                    "price_text": price_el.get_text(strip=True) if price_el else None,
+                    "location": location_el.get_text(strip=True),
+                    "url": link_el.get("href") if link_el else None,
+                    "promoteur": promoteur,
+                })
+        except Exception as e:
+            logger.warning(f"Erreur extraction carte: {e}")
+            continue
+
+    return programmes
+
+def parse_price(price_text: str) -> Optional[int]:
+    """Parse un prix depuis texte (ex: 'À partir de 250 000 €')"""
+    if not price_text:
+        return None
+
+    import re
+    # Extraire les chiffres
+    numbers = re.findall(r'[\d\s]+', price_text.replace(' ', ''))
+    if numbers:
+        try:
+            return int(numbers[0].replace(' ', ''))
+        except:
+            pass
+    return None
+
+def generate_slug(name: str, ville: str) -> str:
+    """Génère un slug unique pour le programme"""
+    import unicodedata
+    import re
+
+    text = f"{name}-{ville}".lower()
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
+    text = re.sub(r'[^a-z0-9]+', '-', text)
+    text = text.strip('-')
+
+    # Ajouter hash court pour unicité
+    hash_short = hashlib.md5(f"{name}{ville}".encode()).hexdigest()[:6]
+    return f"{text}-{hash_short}"
+
+def find_ville_id(ville_name: str) -> Optional[str]:
+    """Trouve l'ID de la ville dans EspoCRM"""
+    try:
+        response = requests.get(
+            f"{ESPOCRM_URL}/CJeanbrunVille",
+            headers={"X-Api-Key": ESPOCRM_API_KEY},
+            params={
+                "where[0][type]": "contains",
+                "where[0][attribute]": "name",
+                "where[0][value]": ville_name,
+                "maxSize": 1,
+            },
+            timeout=10
+        )
+        data = response.json()
+        if data.get("list"):
+            return data["list"][0]["id"]
+        return None
+    except Exception as e:
+        logger.error(f"Erreur recherche ville {ville_name}: {e}")
+        return None
+
+def save_programme_espocrm(programme: Dict) -> bool:
+    """Sauvegarde un programme dans EspoCRM"""
+    try:
+        # Vérifier si existe déjà (par URL)
+        check_response = requests.get(
+            f"{ESPOCRM_URL}/CJeanbrunProgramme",
+            headers={"X-Api-Key": ESPOCRM_API_KEY},
+            params={
+                "where[0][type]": "equals",
+                "where[0][attribute]": "urlExterne",
+                "where[0][value]": programme.get("urlExterne"),
+                "maxSize": 1,
+            },
+            timeout=10
+        )
+
+        existing = check_response.json().get("list", [])
+
+        if existing:
+            # Update
+            response = requests.put(
+                f"{ESPOCRM_URL}/CJeanbrunProgramme/{existing[0]['id']}",
+                headers={"X-Api-Key": ESPOCRM_API_KEY, "Content-Type": "application/json"},
+                json=programme,
+                timeout=10
+            )
+        else:
+            # Create
+            response = requests.post(
+                f"{ESPOCRM_URL}/CJeanbrunProgramme",
+                headers={"X-Api-Key": ESPOCRM_API_KEY, "Content-Type": "application/json"},
+                json=programme,
+                timeout=10
+            )
+
+        return response.status_code in [200, 201]
+    except Exception as e:
+        logger.error(f"Erreur save programme: {e}")
+        return False
+
+def scrape_promoteur(promoteur_key: str) -> int:
+    """Scrape un promoteur et retourne le nombre de programmes trouvés"""
+    config = PROMOTEURS_CONFIG.get(promoteur_key)
+    if not config:
+        logger.error(f"Promoteur inconnu: {promoteur_key}")
+        return 0
+
+    logger.info(f"=== Scraping {config['name']} ===")
+
+    # Scrape page liste
+    result = scrape_with_firecrawl(
+        config["search_url"],
+        use_stealth=config.get("cloudflare", False)
+    )
+
+    if not result or not result.get("data", {}).get("html"):
+        logger.error(f"Échec scraping {config['name']}")
+        return 0
+
+    # Extraire programmes
+    programmes_raw = extract_programmes_from_html(
+        result["data"]["html"],
+        config["selectors"],
+        config["name"]
+    )
+
+    logger.info(f"Trouvé {len(programmes_raw)} programmes bruts")
+
+    # Traiter chaque programme
+    saved = 0
+    for prog in programmes_raw:
+        # Trouver ville
+        ville_id = find_ville_id(prog["location"])
+
+        # Construire objet programme
+        programme = {
+            "name": prog["name"],
+            "slug": generate_slug(prog["name"], prog["location"]),
+            "promoteur": prog["promoteur"],
+            "urlExterne": prog["url"],
+            "prixMin": parse_price(prog["price_text"]),
+            "villeId": ville_id,
+            "sourcePromoteur": promoteur_key,
+            "dateScrap": datetime.now().isoformat(),
+        }
+
+        if save_programme_espocrm(programme):
+            logger.info(f"  ✓ {prog['name']} ({prog['location']})")
+            saved += 1
+        else:
+            logger.warning(f"  ✗ {prog['name']}")
+
+        time.sleep(0.5)  # Rate limiting interne
+
+    return saved
+
+def main():
+    logger.info("=== DÉBUT SCRAPING MULTI-PROMOTEURS ===")
+
+    total_saved = 0
+
+    for promoteur_key in PROMOTEURS_CONFIG.keys():
+        try:
+            saved = scrape_promoteur(promoteur_key)
+            total_saved += saved
+            logger.info(f"{PROMOTEURS_CONFIG[promoteur_key]['name']}: {saved} programmes sauvegardés")
+        except Exception as e:
+            logger.error(f"Erreur promoteur {promoteur_key}: {e}")
+
+        # Rate limiting entre promoteurs
+        time.sleep(RATE_LIMIT_DELAY)
+
+    logger.info(f"=== TERMINÉ: {total_saved} programmes au total ===")
+
+if __name__ == "__main__":
+    main()
+```
+
+**Dépendances:** `pip install beautifulsoup4`
+**Exécution:** `python3 /root/scripts/jeanbrun/scrape_promoteurs.py`
+**Durée estimée:** ~30 minutes (6 promoteurs × 5s delay)
+
+---
+
+### Phase 3.5 : Baromètre Jeanbrun Mensuel (4h)
+
+**Objectif:** Générer automatiquement un "Baromètre Jeanbrun" mensuel pour chaque ville
+
+**Concept:**
+- Page auto-générée chaque 1er du mois
+- Contenu frais = Google adore
+- Partageable = backlinks naturels
+- Score d'attractivité calculé
+
+**Script:** `/root/scripts/jeanbrun/generate_barometre.py`
+
+```python
+#!/usr/bin/env python3
+"""
+Génération du Baromètre Jeanbrun mensuel
+- Score d'attractivité calculé
+- Analyse IA générée
+- Meilleure opportunité du mois
+
+Cron: 0 8 1 * * (1er du mois à 8h)
+"""
+
+import requests
+import time
+from datetime import datetime
+from typing import Dict, List, Optional
+import os
+
+ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
+ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+
+# OpenRouter pour génération IA
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+OPENROUTER_MODEL = "anthropic/claude-3-haiku-20240307"
+
+def calculate_score_attractivite(ville: Dict) -> int:
+    """
+    Calcule le score d'attractivité Jeanbrun (0-100)
+
+    Critères:
+    - Prix m² vs moyenne nationale (30 points)
+    - Évolution prix (20 points)
+    - Tension locative (20 points)
+    - Rendement estimé (20 points)
+    - Nb programmes disponibles (10 points)
+    """
+    score = 0
+
+    # 1. Prix m² (moins cher = mieux pour investissement)
+    prix_m2 = ville.get("prixM2Moyen", 5000)
+    if prix_m2 < 3000:
+        score += 30
+    elif prix_m2 < 4000:
+        score += 25
+    elif prix_m2 < 5000:
+        score += 20
+    elif prix_m2 < 6000:
+        score += 15
+    elif prix_m2 < 8000:
+        score += 10
+    else:
+        score += 5
+
+    # 2. Évolution prix (hausse modérée = bien)
+    evolution = ville.get("evolutionPrix1An", 0)
+    if 2 <= evolution <= 5:
+        score += 20  # Hausse saine
+    elif 0 <= evolution < 2:
+        score += 15  # Stable
+    elif 5 < evolution <= 10:
+        score += 10  # Hausse forte
+    elif -5 <= evolution < 0:
+        score += 12  # Légère baisse (opportunité)
+    else:
+        score += 5
+
+    # 3. Tension locative
+    tension = ville.get("tensionLocative", "moyenne")
+    tension_scores = {"tres_forte": 20, "forte": 18, "moyenne": 12, "faible": 5}
+    score += tension_scores.get(tension, 10)
+
+    # 4. Rendement estimé
+    prix = ville.get("prixM2Moyen", 5000)
+    loyer = ville.get("loyerM2Moyen", 12)
+    if prix > 0 and loyer > 0:
+        rendement = (loyer * 12) / prix * 100
+        if rendement >= 6:
+            score += 20
+        elif rendement >= 5:
+            score += 16
+        elif rendement >= 4:
+            score += 12
+        elif rendement >= 3:
+            score += 8
+        else:
+            score += 4
+
+    # 5. Programmes disponibles
+    nb_prog = ville.get("nbProgrammesActifs", 0)
+    if nb_prog >= 10:
+        score += 10
+    elif nb_prog >= 5:
+        score += 8
+    elif nb_prog >= 2:
+        score += 5
+    elif nb_prog >= 1:
+        score += 3
+
+    return min(100, max(0, score))
+
+def get_best_programme(ville_id: str) -> Optional[Dict]:
+    """Trouve le programme avec le meilleur rapport qualité/prix"""
+    try:
+        response = requests.get(
+            f"{ESPOCRM_URL}/CJeanbrunProgramme",
+            headers={"X-Api-Key": ESPOCRM_API_KEY},
+            params={
+                "where[0][type]": "equals",
+                "where[0][attribute]": "villeId",
+                "where[0][value]": ville_id,
+                "orderBy": "prixMin",
+                "order": "asc",
+                "maxSize": 1,
+            },
+            timeout=10
+        )
+        data = response.json()
+        if data.get("list"):
+            return data["list"][0]
+        return None
+    except Exception as e:
+        return None
+
+def generate_analyse_ia(ville: Dict, score: int) -> str:
+    """Génère l'analyse IA du baromètre (300 mots)"""
+    if not OPENROUTER_API_KEY:
+        return f"Analyse automatique pour {ville['name']} - Score: {score}/100"
+
+    prompt = f"""Génère une analyse immobilière de 250-300 mots pour le Baromètre Jeanbrun de {ville['name']}.
+
+Données:
+- Ville: {ville['name']} ({ville.get('departement', 'N/A')})
+- Zone fiscale: {ville.get('zoneFiscale', 'N/A')}
+- Prix m² moyen: {ville.get('prixM2Moyen', 'N/A')}€
+- Évolution 1 an: {ville.get('evolutionPrix1An', 'N/A')}%
+- Loyer m² moyen: {ville.get('loyerM2Moyen', 'N/A')}€
+- Tension locative: {ville.get('tensionLocative', 'N/A')}
+- Score attractivité: {score}/100
+- Nb programmes actifs: {ville.get('nbProgrammesActifs', 0)}
+
+Structure:
+1. Contexte du marché local (2-3 phrases)
+2. Analyse des prix et tendances (2-3 phrases)
+3. Opportunité Jeanbrun spécifique (2-3 phrases)
+4. Recommandation investisseur (1-2 phrases)
+
+Ton: professionnel, factuel, engageant.
+Ne pas inventer de données non fournies.
+"""
+
+    try:
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": OPENROUTER_MODEL,
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": 500,
+            },
+            timeout=30
+        )
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        print(f"Erreur génération IA: {e}")
+        return f"Le marché immobilier de {ville['name']} présente un score d'attractivité de {score}/100 ce mois-ci."
+
+def create_barometre(ville: Dict) -> Dict:
+    """Crée un baromètre pour une ville"""
+    mois = datetime.now().replace(day=1).strftime("%Y-%m-%d")
+
+    # Calculer score
+    score = calculate_score_attractivite(ville)
+
+    # Trouver meilleure opportunité
+    best_prog = get_best_programme(ville["id"])
+
+    # Générer analyse IA
+    analyse = generate_analyse_ia(ville, score)
+
+    # Calculer rendement
+    prix = ville.get("prixM2Moyen", 5000)
+    loyer = ville.get("loyerM2Moyen", 12)
+    rendement = round((loyer * 12) / prix * 100, 2) if prix > 0 else 0
+
+    return {
+        "villeId": ville["id"],
+        "mois": mois,
+        "scoreAttractivite": score,
+        "prixM2": ville.get("prixM2Moyen"),
+        "evolutionPrixMois": ville.get("evolutionPrix1An"),  # Approximation
+        "loyerM2": ville.get("loyerM2Moyen"),
+        "rendementBrut": rendement,
+        "nbProgrammesActifs": ville.get("nbProgrammesActifs", 0),
+        "meilleureOpportuniteId": best_prog["id"] if best_prog else None,
+        "analyseIA": analyse,
+    }
+
+def save_barometre(barometre: Dict) -> bool:
+    """Sauvegarde le baromètre dans EspoCRM"""
+    try:
+        # Vérifier si existe déjà pour ce mois
+        check_response = requests.get(
+            f"{ESPOCRM_URL}/CJeanbrunBarometre",
+            headers={"X-Api-Key": ESPOCRM_API_KEY},
+            params={
+                "where[0][type]": "equals",
+                "where[0][attribute]": "villeId",
+                "where[0][value]": barometre["villeId"],
+                "where[1][type]": "equals",
+                "where[1][attribute]": "mois",
+                "where[1][value]": barometre["mois"],
+                "maxSize": 1,
+            },
+            timeout=10
+        )
+
+        existing = check_response.json().get("list", [])
+
+        if existing:
+            response = requests.put(
+                f"{ESPOCRM_URL}/CJeanbrunBarometre/{existing[0]['id']}",
+                headers={"X-Api-Key": ESPOCRM_API_KEY, "Content-Type": "application/json"},
+                json=barometre,
+                timeout=10
+            )
+        else:
+            response = requests.post(
+                f"{ESPOCRM_URL}/CJeanbrunBarometre",
+                headers={"X-Api-Key": ESPOCRM_API_KEY, "Content-Type": "application/json"},
+                json=barometre,
+                timeout=10
+            )
+
+        return response.status_code in [200, 201]
+    except Exception as e:
+        print(f"Erreur save baromètre: {e}")
+        return False
+
+def get_all_villes() -> List[Dict]:
+    """Récupère toutes les villes"""
+    response = requests.get(
+        f"{ESPOCRM_URL}/CJeanbrunVille",
+        headers={"X-Api-Key": ESPOCRM_API_KEY},
+        params={"maxSize": 100},
+        timeout=10
+    )
+    return response.json().get("list", [])
+
+def main():
+    print(f"=== GÉNÉRATION BAROMÈTRE JEANBRUN - {datetime.now().strftime('%B %Y')} ===")
+
+    villes = get_all_villes()
+    print(f"Génération pour {len(villes)} villes...")
+
+    success = 0
+    for i, ville in enumerate(villes):
+        print(f"[{i+1}/{len(villes)}] {ville['name']}...", end=" ")
+
+        barometre = create_barometre(ville)
+        if save_barometre(barometre):
+            print(f"✓ Score: {barometre['scoreAttractivite']}/100")
+            success += 1
+        else:
+            print("✗ Erreur")
+
+        time.sleep(2)  # Rate limiting pour IA
+
+    print(f"\n=== TERMINÉ: {success}/{len(villes)} baromètres générés ===")
+
+if __name__ == "__main__":
+    main()
+```
+
+**Cron à ajouter:**
+```bash
+# Génération Baromètre Jeanbrun (1er du mois à 8h)
+0 8 1 * * /usr/bin/python3 /root/scripts/jeanbrun/generate_barometre.py >> /var/log/jeanbrun-barometre.log 2>&1
+```
+
+---
+
+## 4. Tâches détaillées Sprint 4
+
+### 4.1 Récapitulatif des tâches
+
+| ID | Tâche | Effort | Dépendances | Livrable |
+|----|-------|--------|-------------|----------|
+| 4.1 | Créer entités EspoCRM (Region, Dept, Quartier, Barometre) | 1j | - | Entités créées |
+| 4.2 | Script enrichissement géo | 0,5j | 4.1 | 51 villes géocodées |
+| 4.3 | Script import DVF | 0,5j | 4.2 | Historique prix 12 mois |
+| 4.4 | Script import INSEE | 0,5j | 4.2 | Population, revenus |
+| 4.5 | Script scraping multi-promoteurs | 1j | 4.1 | 200+ programmes |
+| 4.6 | Script génération Baromètre | 0,5j | 4.3, 4.4 | 51 baromètres |
+| 4.7 | Template page ville enrichie | 2j | 4.3, 4.4 | /villes/[slug] |
+| 4.8 | Template page Baromètre | 1j | 4.6 | /barometre/[ville]/[mois] |
+| 4.9 | Composant DonneesMarche enrichi | 1j | 4.7 | DVF + INSEE |
+| 4.10 | Composant PlafondsJeanbrun | 0,5j | 4.7 | 3 niveaux |
+| 4.11 | Composant ProgrammesList | 1j | 4.5, 4.7 | Multi-promoteurs |
+| 4.12 | Composant SimulateurPreRempli | 1j | 4.7 | Ville injectée |
+| 4.13 | Contenu éditorial 50 villes (IA) | 2j | 4.7 | 400-600 mots uniques |
+| 4.14 | JSON-LD enrichi | 1j | 4.7 | Place + LocalBusiness |
+| 4.15 | Sitemap.xml dynamique | 0,5j | 4.7, 4.8 | Villes + Baromètres |
+| 4.16 | Maillage interne automatique | 1j | 4.7 | Villes proches |
+| 4.17 | Page index villes avec filtres | 1j | 4.7 | /villes |
+| 4.18 | SSG build toutes pages | 1j | 4.7-4.17 | Static generation |
+| 4.19 | Crons automatisation | 0,5j | 4.2-4.6 | Refresh données |
+
+**Total Sprint 4:** 18 jours
+
+---
+
+## 5. Composants Next.js enrichis
+
+### 5.1 Page ville enrichie
+
 **Fichier:** `src/app/villes/[slug]/page.tsx`
 
 ```tsx
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { espocrm } from '@/lib/api/espocrm'
+
+// Composants
 import { DonneesMarche } from '@/components/villes/DonneesMarche'
+import { HistoriquePrix } from '@/components/villes/HistoriquePrix'
+import { DonneesInsee } from '@/components/villes/DonneesInsee'
 import { PlafondsJeanbrun } from '@/components/villes/PlafondsJeanbrun'
 import { ProgrammesList } from '@/components/villes/ProgrammesList'
 import { SimulateurPreRempli } from '@/components/villes/SimulateurPreRempli'
 import { VillesProches } from '@/components/villes/VillesProches'
+import { BarometreResume } from '@/components/villes/BarometreResume'
 import { ContenuEditorial } from '@/components/villes/ContenuEditorial'
 import { JsonLdVille } from '@/components/common/JsonLd'
 
@@ -89,27 +1303,33 @@ interface PageProps {
   params: { slug: string }
 }
 
-// Génération statique des 50 villes
+// Génération statique
 export async function generateStaticParams() {
-  const { list } = await espocrm.getVilles({ maxSize: 50 })
+  const { list } = await espocrm.getJeanbrunVilles({ maxSize: 100 })
   return list.map((ville) => ({ slug: ville.slug }))
 }
 
 // Métadonnées dynamiques
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const ville = await espocrm.getVilleBySlug(params.slug)
+  const ville = await espocrm.getJeanbrunVilleBySlug(params.slug)
 
   if (!ville) {
     return { title: 'Ville non trouvée' }
   }
 
+  const title = `Loi Jeanbrun à ${ville.name} - Simulation défiscalisation ${new Date().getFullYear()}`
+  const description = `Investissez avec la loi Jeanbrun à ${ville.name} (Zone ${ville.zoneFiscale}). ` +
+    `Prix m²: ${ville.prixM2Moyen?.toLocaleString()}€. ` +
+    `${ville.nbProgrammesActifs || 0} programmes neufs éligibles.`
+
   return {
-    title: ville.metaTitle || `Loi Jeanbrun à ${ville.name} - Simulation défiscalisation`,
-    description: ville.metaDescription ||
-      `Simulez votre investissement Jeanbrun à ${ville.name}. Prix m²: ${ville.prixM2Moyen}€, Zone ${ville.zoneFiscale}.`,
+    title,
+    description,
     openGraph: {
-      title: `Investir avec la loi Jeanbrun à ${ville.name}`,
-      description: `Découvrez les plafonds de loyer et l'économie fiscale possible à ${ville.name}.`,
+      title,
+      description,
+      type: 'website',
+      locale: 'fr_FR',
       images: [`/og/ville/${params.slug}.png`],
     },
     alternates: {
@@ -119,59 +1339,94 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function VillePage({ params }: PageProps) {
-  const ville = await espocrm.getVilleBySlug(params.slug)
+  const ville = await espocrm.getJeanbrunVilleBySlug(params.slug)
 
   if (!ville) {
     notFound()
   }
 
-  // Récupération des programmes de la ville
-  const { list: programmes } = await espocrm.getProgrammes({
-    villeId: ville.id,
-    eligible: true,
-    maxSize: 3,
-  })
-
-  // Villes proches (même département ou région)
-  const { list: villesProches } = await espocrm.getVilles({
-    where: [
-      { type: 'equals', attribute: 'region', value: ville.region },
-      { type: 'notEquals', attribute: 'id', value: ville.id },
-    ],
-    maxSize: 5,
-  })
+  // Récupérations parallèles
+  const [
+    { list: programmes },
+    { list: villesProches },
+    barometre,
+  ] = await Promise.all([
+    espocrm.getJeanbrunProgrammes({
+      villeId: ville.id,
+      maxSize: 6,
+    }),
+    espocrm.getJeanbrunVilles({
+      where: [
+        { type: 'equals', attribute: 'region', value: ville.region },
+        { type: 'notEquals', attribute: 'id', value: ville.id },
+      ],
+      maxSize: 5,
+    }),
+    espocrm.getLatestBarometre(ville.id),
+  ])
 
   return (
     <>
-      {/* JSON-LD */}
       <JsonLdVille ville={ville} programmes={programmes} />
 
       <main className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <nav className="mb-4 text-sm text-muted-foreground">
+          <a href="/villes" className="hover:underline">Villes</a>
+          <span className="mx-2">/</span>
+          <span>{ville.departement}</span>
+          <span className="mx-2">/</span>
+          <span className="text-foreground">{ville.name}</span>
+        </nav>
+
         {/* Header */}
         <header className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <a href="/villes" className="hover:underline">Villes</a>
-            <span>/</span>
-            <span>{ville.departement}</span>
+          <div className="flex items-center gap-4 mb-2">
+            <h1 className="text-4xl font-bold">
+              Loi Jeanbrun à {ville.name}
+            </h1>
+            {barometre && (
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary">
+                <span className="text-2xl font-bold">{barometre.scoreAttractivite}</span>
+                <span className="text-sm">/100</span>
+              </div>
+            )}
           </div>
-          <h1 className="mt-2 text-4xl font-bold">
-            Loi Jeanbrun à {ville.name}
-          </h1>
-          <p className="mt-2 text-lg text-muted-foreground">
-            Simulation défiscalisation immobilière - Zone {ville.zoneFiscale}
+          <p className="text-lg text-muted-foreground">
+            Zone {ville.zoneFiscale} • {ville.departement} • {ville.region}
           </p>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Colonne principale */}
           <div className="space-y-8 lg:col-span-2">
-            {/* Données marché */}
+            {/* Données marché DVF */}
             <section>
               <h2 className="mb-4 text-2xl font-semibold">
                 Marché immobilier à {ville.name}
               </h2>
               <DonneesMarche ville={ville} />
             </section>
+
+            {/* Historique prix */}
+            {ville.prixM2Moyen && (
+              <section>
+                <h2 className="mb-4 text-2xl font-semibold">
+                  Évolution des prix
+                </h2>
+                <HistoriquePrix ville={ville} />
+              </section>
+            )}
+
+            {/* Données INSEE */}
+            {ville.populationCommune && (
+              <section>
+                <h2 className="mb-4 text-2xl font-semibold">
+                  Portrait de la ville
+                </h2>
+                <DonneesInsee ville={ville} />
+              </section>
+            )}
 
             {/* Plafonds Jeanbrun */}
             <section>
@@ -189,9 +1444,14 @@ export default async function VillePage({ params }: PageProps) {
             {/* Programmes */}
             {programmes.length > 0 && (
               <section>
-                <h2 className="mb-4 text-2xl font-semibold">
-                  Programmes neufs éligibles
-                </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-semibold">
+                    Programmes neufs éligibles
+                  </h2>
+                  <a href={`/programmes?ville=${ville.slug}`} className="text-primary hover:underline">
+                    Voir tous →
+                  </a>
+                </div>
                 <ProgrammesList programmes={programmes} />
               </section>
             )}
@@ -199,6 +1459,11 @@ export default async function VillePage({ params }: PageProps) {
 
           {/* Sidebar */}
           <aside className="space-y-6">
+            {/* Baromètre résumé */}
+            {barometre && (
+              <BarometreResume barometre={barometre} ville={ville} />
+            )}
+
             {/* Simulateur */}
             <div className="sticky top-4">
               <h2 className="mb-4 text-xl font-semibold">
@@ -223,1079 +1488,244 @@ export default async function VillePage({ params }: PageProps) {
   )
 }
 
-// Revalidation ISR toutes les 24h
+export const revalidate = 86400 // 24h
+```
+
+### 5.2 Page Baromètre
+
+**Fichier:** `src/app/barometre/[ville]/[mois]/page.tsx`
+
+```tsx
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { espocrm } from '@/lib/api/espocrm'
+
+// Composants
+import { ScoreAttractivite } from '@/components/barometre/ScoreAttractivite'
+import { AnalyseIA } from '@/components/barometre/AnalyseIA'
+import { MeilleureOpportunite } from '@/components/barometre/MeilleureOpportunite'
+import { IndicateursMarche } from '@/components/barometre/IndicateursMarche'
+import { BarometreHistorique } from '@/components/barometre/BarometreHistorique'
+
+interface PageProps {
+  params: { ville: string; mois: string }
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const ville = await espocrm.getJeanbrunVilleBySlug(params.ville)
+  const moisFormate = formatMois(params.mois)
+
+  if (!ville) {
+    return { title: 'Baromètre non trouvé' }
+  }
+
+  return {
+    title: `Baromètre Jeanbrun ${ville.name} - ${moisFormate}`,
+    description: `Analyse mensuelle du marché immobilier Jeanbrun à ${ville.name}. Score d'attractivité, prix, opportunités.`,
+  }
+}
+
+export default async function BarometrePage({ params }: PageProps) {
+  const ville = await espocrm.getJeanbrunVilleBySlug(params.ville)
+
+  if (!ville) {
+    notFound()
+  }
+
+  const barometre = await espocrm.getBarometre(ville.id, params.mois)
+
+  if (!barometre) {
+    notFound()
+  }
+
+  const [meilleureOpp, historique] = await Promise.all([
+    barometre.meilleureOpportuniteId
+      ? espocrm.getJeanbrunProgramme(barometre.meilleureOpportuniteId)
+      : null,
+    espocrm.getBarometreHistorique(ville.id, 6), // 6 derniers mois
+  ])
+
+  return (
+    <main className="container mx-auto px-4 py-8">
+      <header className="mb-8">
+        <p className="text-sm text-muted-foreground mb-2">
+          Baromètre Jeanbrun • {formatMois(params.mois)}
+        </p>
+        <h1 className="text-4xl font-bold">
+          {ville.name} - Analyse du marché
+        </h1>
+      </header>
+
+      <div className="grid gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-8">
+          {/* Score principal */}
+          <ScoreAttractivite score={barometre.scoreAttractivite} />
+
+          {/* Indicateurs */}
+          <IndicateursMarche barometre={barometre} />
+
+          {/* Analyse IA */}
+          <AnalyseIA analyse={barometre.analyseIA} />
+
+          {/* Historique */}
+          <BarometreHistorique historique={historique} />
+        </div>
+
+        <aside className="space-y-6">
+          {/* Meilleure opportunité */}
+          {meilleureOpp && (
+            <MeilleureOpportunite programme={meilleureOpp} />
+          )}
+
+          {/* CTA simulation */}
+          <div className="p-6 bg-primary text-primary-foreground rounded-lg">
+            <h3 className="font-semibold mb-2">Simulez votre investissement</h3>
+            <p className="text-sm mb-4 opacity-90">
+              Calculez votre économie fiscale Jeanbrun à {ville.name}
+            </p>
+            <a
+              href={`/simulateur?ville=${ville.slug}`}
+              className="block w-full text-center py-2 bg-white text-primary rounded font-medium"
+            >
+              Lancer la simulation
+            </a>
+          </div>
+        </aside>
+      </div>
+    </main>
+  )
+}
+
+function formatMois(mois: string): string {
+  const date = new Date(mois + '-01')
+  return date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+}
+
 export const revalidate = 86400
 ```
 
 ---
 
-### 3.2 Composant données marché (1j)
+## 6. Stratégie Backlinks Locaux
 
-**ID:** 4.2
-**Fichier:** `src/components/villes/DonneesMarche.tsx`
+### 6.1 Actions recommandées
 
-```tsx
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { formatEuros, formatPercent } from '@/lib/utils/format'
-import { TrendingUp, TrendingDown, Home, Building, MapPin } from 'lucide-react'
-import type { CVille } from '@/types/espocrm'
+| Cible | Action | Priorité |
+|-------|--------|----------|
+| **Presse locale** | Communiqué "Baromètre immobilier [ville]" avec données DVF | Haute |
+| **CCI** | Inscription annuaire entreprises + partenariat info logement | Moyenne |
+| **Blogs immo locaux** | Guest posts avec données exclusives (extraits Baromètre) | Haute |
+| **Mairies** | Proposition widget "Prix immobilier commune" | Basse |
+| **Notaires** | Partenariat données (eux ont DVF brut, nous l'analyse) | Moyenne |
 
-interface DonnesMarcheProps {
-  ville: CVille
-}
-
-export function DonneesMarche({ ville }: DonnesMarcheProps) {
-  const tendance = ville.evolutionPrix1An >= 0 ? 'hausse' : 'baisse'
-
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {/* Prix m² moyen */}
-      <Card className="p-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">Prix m² moyen</p>
-            <p className="mt-1 text-2xl font-bold">
-              {formatEuros(ville.prixM2Moyen)}
-            </p>
-          </div>
-          <div className="rounded-full bg-blue-100 p-2">
-            <Home className="h-4 w-4 text-blue-600" />
-          </div>
-        </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Médian: {formatEuros(ville.prixM2Median)}/m²
-        </p>
-      </Card>
-
-      {/* Évolution prix */}
-      <Card className="p-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">Évolution 1 an</p>
-            <p
-              className={`mt-1 text-2xl font-bold ${
-                tendance === 'hausse' ? 'text-green-600' : 'text-red-600'
-              }`}
-            >
-              {formatPercent(ville.evolutionPrix1An, true)}
-            </p>
-          </div>
-          <div
-            className={`rounded-full p-2 ${
-              tendance === 'hausse' ? 'bg-green-100' : 'bg-red-100'
-            }`}
-          >
-            {tendance === 'hausse' ? (
-              <TrendingUp className="h-4 w-4 text-green-600" />
-            ) : (
-              <TrendingDown className="h-4 w-4 text-red-600" />
-            )}
-          </div>
-        </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Tendance: {tendance === 'hausse' ? 'Marché haussier' : 'Marché baissier'}
-        </p>
-      </Card>
-
-      {/* Loyer m² */}
-      <Card className="p-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">Loyer m² moyen</p>
-            <p className="mt-1 text-2xl font-bold">
-              {formatEuros(ville.loyerM2Moyen)}
-            </p>
-          </div>
-          <div className="rounded-full bg-purple-100 p-2">
-            <Building className="h-4 w-4 text-purple-600" />
-          </div>
-        </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Rendement brut estimé: {((ville.loyerM2Moyen * 12) / ville.prixM2Moyen * 100).toFixed(1)}%
-        </p>
-      </Card>
-
-      {/* Tension locative */}
-      <Card className="p-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">Tension locative</p>
-            <Badge
-              className="mt-1"
-              variant={
-                ville.tensionLocative === 'tres_forte'
-                  ? 'destructive'
-                  : ville.tensionLocative === 'forte'
-                    ? 'default'
-                    : 'secondary'
-              }
-            >
-              {formatTension(ville.tensionLocative)}
-            </Badge>
-          </div>
-          <div className="rounded-full bg-amber-100 p-2">
-            <MapPin className="h-4 w-4 text-amber-600" />
-          </div>
-        </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Zone fiscale: {ville.zoneFiscale.replace('_', ' ')}
-        </p>
-      </Card>
-    </div>
-  )
-}
-
-function formatTension(tension: string): string {
-  return {
-    faible: 'Faible',
-    moyenne: 'Moyenne',
-    forte: 'Forte',
-    tres_forte: 'Très forte',
-  }[tension] || tension
-}
-```
-
----
-
-### 3.3 Composant plafonds Jeanbrun (0,5j)
-
-**ID:** 4.3
-**Fichier:** `src/components/villes/PlafondsJeanbrun.tsx`
-
-```tsx
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { formatEuros } from '@/lib/utils/format'
-import { Info } from 'lucide-react'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import type { CVille } from '@/types/espocrm'
-
-interface PlafondsJeanbrunProps {
-  ville: CVille
-}
-
-export function PlafondsJeanbrun({ ville }: PlafondsJeanbrunProps) {
-  const niveaux = [
-    {
-      id: 'intermediaire',
-      label: 'Intermédiaire',
-      plafond: ville.plafondIntermediaire,
-      description: 'Loyer libre avec plafond',
-      tauxNeuf: '3.5%',
-      tauxAncien: '3.0%',
-      plafondDeduction: 8000,
-    },
-    {
-      id: 'social',
-      label: 'Social',
-      plafond: ville.plafondSocial,
-      description: 'Loyer conventionné social',
-      tauxNeuf: '4.5%',
-      tauxAncien: '3.5%',
-      plafondDeduction: 10000,
-    },
-    {
-      id: 'tres_social',
-      label: 'Très Social',
-      plafond: ville.plafondTresSocial,
-      description: 'Loyer très social (PLS)',
-      tauxNeuf: '5.5%',
-      tauxAncien: '4.0%',
-      plafondDeduction: 12000,
-    },
-  ]
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <Badge variant="outline">Zone {ville.zoneFiscale}</Badge>
-        <Tooltip>
-          <TooltipTrigger>
-            <Info className="h-4 w-4 text-muted-foreground" />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className="max-w-xs">
-              Les plafonds de loyer Jeanbrun varient selon la zone géographique
-              et le niveau de loyer choisi. Un coefficient de surface s'applique.
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        {niveaux.map((niveau) => (
-          <Card key={niveau.id} className="p-4">
-            <div className="space-y-3">
-              <div>
-                <h3 className="font-semibold">{niveau.label}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {niveau.description}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Plafond loyer:</span>
-                  <span className="font-medium">
-                    {formatEuros(niveau.plafond)}/m²
-                  </span>
-                </div>
-
-                <div className="border-t pt-2">
-                  <p className="text-xs font-medium text-muted-foreground">
-                    Amortissement Jeanbrun
-                  </p>
-                  <div className="mt-1 flex justify-between text-sm">
-                    <span>Neuf:</span>
-                    <span className="font-medium text-primary">
-                      {niveau.tauxNeuf}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Ancien:</span>
-                    <span className="font-medium">{niveau.tauxAncien}</span>
-                  </div>
-                </div>
-
-                <div className="border-t pt-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Plafond déduction:</span>
-                    <span className="font-medium text-green-600">
-                      {formatEuros(niveau.plafondDeduction)}/an
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      <p className="text-sm text-muted-foreground">
-        * Un coefficient de surface s'applique: 0.7 + (19 / surface), plafonné à 1.2.
-        Pour un T2 de 45m², le coefficient est de 1.12.
-      </p>
-    </div>
-  )
-}
-```
-
----
-
-### 3.4 Liste programmes intégrée (1j)
-
-**ID:** 4.4
-**Fichier:** `src/components/villes/ProgrammesList.tsx`
-
-```tsx
-import Link from 'next/link'
-import Image from 'next/image'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { formatEuros } from '@/lib/utils/format'
-import { Building2, MapPin, Calendar, ArrowRight } from 'lucide-react'
-import type { CProgramme } from '@/types/espocrm'
-
-interface ProgrammesListProps {
-  programmes: CProgramme[]
-}
-
-export function ProgrammesList({ programmes }: ProgrammesListProps) {
-  if (programmes.length === 0) {
-    return (
-      <Card className="p-6 text-center">
-        <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
-        <p className="mt-4 text-muted-foreground">
-          Aucun programme neuf éligible Jeanbrun pour le moment.
-        </p>
-      </Card>
-    )
-  }
-
-  return (
-    <div className="grid gap-4 md:grid-cols-3">
-      {programmes.map((programme) => (
-        <Card key={programme.id} className="overflow-hidden">
-          {/* Image */}
-          <div className="relative aspect-video bg-muted">
-            {programme.images[0] ? (
-              <Image
-                src={programme.images[0]}
-                alt={programme.name}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center">
-                <Building2 className="h-12 w-12 text-muted-foreground" />
-              </div>
-            )}
-            <Badge className="absolute left-2 top-2" variant="default">
-              Éligible Jeanbrun
-            </Badge>
-          </div>
-
-          {/* Contenu */}
-          <div className="p-4 space-y-3">
-            <div>
-              <h3 className="font-semibold line-clamp-1">{programme.name}</h3>
-              <p className="text-sm text-muted-foreground">{programme.promoteur}</p>
-            </div>
-
-            <div className="space-y-1 text-sm">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span className="line-clamp-1">{programme.adresse}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>Livraison: {formatDate(programme.dateLivraison)}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground">À partir de</p>
-                <p className="text-lg font-bold text-primary">
-                  {formatEuros(programme.prixMin)}
-                </p>
-              </div>
-              <Badge variant="outline">
-                {programme.nbLotsDisponibles} lots
-              </Badge>
-            </div>
-
-            <Link href={`/programmes/${programme.slug}`}>
-              <Button variant="outline" className="w-full gap-2">
-                Voir le programme
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </Card>
-      ))}
-    </div>
-  )
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  const trimestre = Math.ceil((date.getMonth() + 1) / 3)
-  return `T${trimestre} ${date.getFullYear()}`
-}
-```
-
----
-
-### 3.5 Simulateur pré-rempli (1j)
-
-**ID:** 4.5
-**Fichier:** `src/components/villes/SimulateurPreRempli.tsx`
-
-```tsx
-'use client'
-
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Slider } from '@/components/ui/slider'
-import { formatEuros } from '@/lib/utils/format'
-import { Calculator, ArrowRight } from 'lucide-react'
-import type { CVille } from '@/types/espocrm'
-
-interface SimulateurPreRempliProps {
-  ville: CVille
-}
-
-export function SimulateurPreRempli({ ville }: SimulateurPreRempliProps) {
-  const router = useRouter()
-  const [budget, setBudget] = useState(200000)
-  const [revenus, setRevenus] = useState('30000-50000')
-  const [niveauLoyer, setNiveauLoyer] = useState('intermediaire')
-  const [isLoading, setIsLoading] = useState(false)
-  const [result, setResult] = useState<{
-    economieAnnuelle: number
-    loyerEstime: number
-  } | null>(null)
-
-  const handleSimulation = async () => {
-    setIsLoading(true)
-
-    try {
-      const response = await fetch('/api/simulation/rapide', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          villeSlug: ville.slug,
-          budget,
-          revenus,
-          niveauLoyer,
-        }),
-      })
-
-      const data = await response.json()
-      setResult({
-        economieAnnuelle: data.economieAnnuelle,
-        loyerEstime: data.loyerEstime,
-      })
-    } catch (error) {
-      console.error('Erreur simulation:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const goToSimulateurComplet = () => {
-    const params = new URLSearchParams({
-      ville: ville.slug,
-      budget: String(budget),
-      revenus,
-      niveau: niveauLoyer,
-    })
-    router.push(`/simulateur/avance?${params}`)
-  }
-
-  return (
-    <Card className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Calculator className="h-5 w-5 text-primary" />
-        <h3 className="font-semibold">Simulation rapide</h3>
-      </div>
-
-      <div className="space-y-4">
-        {/* Ville (pré-remplie) */}
-        <div className="rounded-md bg-muted p-3">
-          <p className="text-sm text-muted-foreground">Ville sélectionnée</p>
-          <p className="font-medium">
-            {ville.name} (Zone {ville.zoneFiscale})
-          </p>
-        </div>
-
-        {/* Budget */}
-        <div className="space-y-2">
-          <Label>Budget d'investissement</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[budget]}
-              onValueChange={(v) => setBudget(v[0])}
-              min={100000}
-              max={500000}
-              step={10000}
-              className="flex-1"
-            />
-            <span className="w-24 text-right font-medium">
-              {formatEuros(budget)}
-            </span>
-          </div>
-        </div>
-
-        {/* Revenus */}
-        <div className="space-y-2">
-          <Label>Revenus annuels du foyer</Label>
-          <Select value={revenus} onValueChange={setRevenus}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0-30000">Moins de 30 000€</SelectItem>
-              <SelectItem value="30000-50000">30 000€ - 50 000€</SelectItem>
-              <SelectItem value="50000-80000">50 000€ - 80 000€</SelectItem>
-              <SelectItem value="80000-120000">80 000€ - 120 000€</SelectItem>
-              <SelectItem value="120000+">Plus de 120 000€</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Niveau loyer */}
-        <div className="space-y-2">
-          <Label>Niveau de loyer</Label>
-          <Select value={niveauLoyer} onValueChange={setNiveauLoyer}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="intermediaire">
-                Intermédiaire ({formatEuros(ville.plafondIntermediaire)}/m²)
-              </SelectItem>
-              <SelectItem value="social">
-                Social ({formatEuros(ville.plafondSocial)}/m²)
-              </SelectItem>
-              <SelectItem value="tres_social">
-                Très social ({formatEuros(ville.plafondTresSocial)}/m²)
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Bouton simulation */}
-        <Button
-          onClick={handleSimulation}
-          disabled={isLoading}
-          className="w-full"
-        >
-          {isLoading ? 'Calcul en cours...' : 'Calculer mon économie'}
-        </Button>
-
-        {/* Résultats */}
-        {result && (
-          <div className="mt-4 space-y-3 rounded-md border bg-green-50 p-4">
-            <div className="flex justify-between">
-              <span>Économie fiscale annuelle:</span>
-              <span className="font-bold text-green-600">
-                {formatEuros(result.economieAnnuelle)}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Loyer mensuel estimé:</span>
-              <span className="font-medium">
-                {formatEuros(result.loyerEstime)}
-              </span>
-            </div>
-            <div className="border-t pt-3">
-              <p className="text-sm text-green-700">
-                Sur 9 ans: <strong>{formatEuros(result.economieAnnuelle * 9)}</strong> d'économie totale
-              </p>
-            </div>
-            <Button
-              onClick={goToSimulateurComplet}
-              variant="outline"
-              className="w-full gap-2"
-            >
-              Simulation détaillée
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-      </div>
-    </Card>
-  )
-}
-```
-
----
-
-### 3.6 Contenu éditorial 50 villes (3j)
-
-**ID:** 4.6
-
-**Structure du contenu par ville:**
-
-1. **Introduction** (100 mots): Contexte marché local
-2. **Marché immobilier** (150 mots): Analyse prix, évolution, quartiers
-3. **Intérêt Jeanbrun** (150 mots): Pourquoi investir ici
-4. **Conseils pratiques** (100 mots): Recommandations locales
-
-**Template contenu:**
+### 6.2 Template communiqué presse
 
 ```markdown
-## Investir avec la loi Jeanbrun à [VILLE]
+# Baromètre Jeanbrun [VILLE] - [MOIS] [ANNÉE]
 
-[VILLE], située dans le département de [DEPARTEMENT] en région [REGION],
-offre des opportunités intéressantes pour les investisseurs en loi Jeanbrun.
-Avec un prix moyen de [PRIX_M2]€/m² et une tension locative [TENSION],
-le marché immobilier local présente un potentiel de [POTENTIEL].
+## Le marché immobilier [VILLE] en chiffres
 
-### Le marché immobilier à [VILLE]
+- **Prix m² moyen:** [X] € (+[Y]% sur 1 an)
+- **Score attractivité Jeanbrun:** [Z]/100
+- **Programmes neufs éligibles:** [N]
 
-[CONTENU_MARCHE - 150 mots sur l'analyse du marché local, quartiers à privilégier,
-évolution des prix, profil des locataires]
+## Analyse du mois
 
-### Pourquoi investir en Jeanbrun à [VILLE] ?
+[Extrait analyseIA - 100 mots]
 
-[CONTENU_JEANBRUN - 150 mots sur les avantages spécifiques de cette ville pour
-le dispositif Jeanbrun, zone fiscale, plafonds de loyer, économie potentielle]
+## Méthodologie
 
-### Nos conseils pour investir à [VILLE]
+Les données proviennent des sources officielles DVF (Direction Générale des Finances Publiques)
+et INSEE, analysées par l'algorithme du Simulateur Loi Jeanbrun.
 
-[CONSEILS - 100 mots de recommandations pratiques: types de biens à privilégier,
-quartiers émergents, erreurs à éviter]
-```
+---
 
-**Automatisation avec IA (optionnel):**
-
-```typescript
-// scripts/generate-contenu-ville.ts
-import { generateContent } from '@/lib/ai/content-generator'
-
-async function generateVilleContent(ville: CVille): Promise<string> {
-  const prompt = `
-    Génère un contenu SEO de 400-600 mots pour la ville de ${ville.name}.
-
-    Données:
-    - Département: ${ville.departement}
-    - Région: ${ville.region}
-    - Zone fiscale: ${ville.zoneFiscale}
-    - Prix m²: ${ville.prixM2Moyen}€
-    - Loyer m²: ${ville.loyerM2Moyen}€
-    - Tension locative: ${ville.tensionLocative}
-
-    Structure:
-    1. Introduction (100 mots)
-    2. Marché immobilier local (150 mots)
-    3. Intérêt Jeanbrun (150 mots)
-    4. Conseils pratiques (100 mots)
-
-    Ton: professionnel, informatif, engageant.
-    Cible: investisseurs 35-55 ans cherchant à défiscaliser.
-  `
-
-  return generateContent(prompt)
-}
+Contact presse: [email]
+Plus d'infos: https://simuler-loi-fiscale-jeanbrun.fr/barometre/[ville]/[mois]
 ```
 
 ---
 
-### 3.7 JSON-LD pages villes (1j)
+## 7. Crons et automatisation
 
-**ID:** 4.7
-**Fichier:** `src/components/common/JsonLd.tsx`
-
-```tsx
-import type { CVille, CProgramme } from '@/types/espocrm'
-
-interface JsonLdVilleProps {
-  ville: CVille
-  programmes?: CProgramme[]
-}
-
-export function JsonLdVille({ ville, programmes = [] }: JsonLdVilleProps) {
-  const placeSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Place',
-    name: ville.name,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: ville.name,
-      addressRegion: ville.region,
-      addressCountry: 'FR',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      // Coordonnées à ajouter si disponibles
-    },
-  }
-
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Accueil',
-        item: 'https://simuler-loi-fiscale-jeanbrun.fr',
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Villes',
-        item: 'https://simuler-loi-fiscale-jeanbrun.fr/villes',
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: ville.name,
-        item: `https://simuler-loi-fiscale-jeanbrun.fr/villes/${ville.slug}`,
-      },
-    ],
-  }
-
-  const programmesSchema = programmes.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    itemListElement: programmes.map((p, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: {
-        '@type': 'RealEstateListing',
-        name: p.name,
-        url: `https://simuler-loi-fiscale-jeanbrun.fr/programmes/${p.slug}`,
-        offers: {
-          '@type': 'Offer',
-          priceCurrency: 'EUR',
-          price: p.prixMin,
-          priceValidUntil: p.dateLivraison,
-        },
-      },
-    })),
-  } : null
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(placeSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      {programmesSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(programmesSchema) }}
-        />
-      )}
-    </>
-  )
-}
-```
-
----
-
-### 3.8 Sitemap.xml dynamique (0,5j)
-
-**ID:** 4.8
-**Fichier:** `src/app/sitemap.ts`
-
-```typescript
-import { MetadataRoute } from 'next'
-import { espocrm } from '@/lib/api/espocrm'
-
-const BASE_URL = 'https://simuler-loi-fiscale-jeanbrun.fr'
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Pages statiques
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: BASE_URL,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/simulateur`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/villes`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/programmes`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/guide`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-  ]
-
-  // Pages villes dynamiques
-  const { list: villes } = await espocrm.getVilles({ maxSize: 100 })
-  const villePages: MetadataRoute.Sitemap = villes.map((ville) => ({
-    url: `${BASE_URL}/villes/${ville.slug}`,
-    lastModified: new Date(ville.dateMaj),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }))
-
-  // Pages programmes dynamiques
-  const { list: programmes } = await espocrm.getProgrammes({
-    eligible: true,
-    maxSize: 200,
-  })
-  const programmePages: MetadataRoute.Sitemap = programmes.map((prog) => ({
-    url: `${BASE_URL}/programmes/${prog.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 0.6,
-  }))
-
-  return [...staticPages, ...villePages, ...programmePages]
-}
-```
-
----
-
-### 3.9 robots.txt (0,25j)
-
-**ID:** 4.9
-**Fichier:** `src/app/robots.ts`
-
-```typescript
-import { MetadataRoute } from 'next'
-
-export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: [
-          '/api/',
-          '/compte/',
-          '/simulateur/resultat/',
-        ],
-      },
-      {
-        userAgent: 'GPTBot',
-        disallow: '/',
-      },
-    ],
-    sitemap: 'https://simuler-loi-fiscale-jeanbrun.fr/sitemap.xml',
-  }
-}
-```
-
----
-
-### 3.10 Metadata SEO dynamiques (0,5j)
-
-**ID:** 4.10
-
-Déjà inclus dans le template page ville (section 3.1).
-
-**Checklist metadata par page:**
-
-| Page | Title | Description | OG Image |
-|------|-------|-------------|----------|
-| Accueil | Simulateur Loi Jeanbrun - Défiscalisation immobilière 2026 | Simulez... | /og/home.png |
-| Simulateur | Simulation Loi Jeanbrun gratuite - Calculez votre économie | Calculez... | /og/simulateur.png |
-| Ville | Loi Jeanbrun à [Ville] - Simulation défiscalisation | Simulez... | /og/ville/[slug].png |
-| Programme | [Nom] - Programme neuf éligible Jeanbrun | Découvrez... | /og/programme/[slug].png |
-
----
-
-### 3.11 Maillage interne automatique (1j)
-
-**ID:** 4.11
-**Fichier:** `src/components/villes/VillesProches.tsx`
-
-```tsx
-import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { MapPin, ArrowRight } from 'lucide-react'
-import type { CVille } from '@/types/espocrm'
-
-interface VillesProchesProps {
-  villes: CVille[]
-}
-
-export function VillesProches({ villes }: VillesProchesProps) {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-      {villes.map((ville) => (
-        <Link key={ville.id} href={`/villes/${ville.slug}`}>
-          <Card className="p-4 transition-all hover:shadow-md hover:border-primary">
-            <div className="flex items-start gap-3">
-              <div className="rounded-full bg-muted p-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium truncate">{ville.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {ville.departement}
-                </p>
-                <Badge variant="outline" className="mt-2">
-                  Zone {ville.zoneFiscale}
-                </Badge>
-              </div>
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
-            </div>
-          </Card>
-        </Link>
-      ))}
-    </div>
-  )
-}
-```
-
----
-
-### 3.12 Page index villes (1j)
-
-**ID:** 4.12
-**Fichier:** `src/app/villes/page.tsx`
-
-```tsx
-import { Metadata } from 'next'
-import { espocrm } from '@/lib/api/espocrm'
-import { VilleCard } from '@/components/villes/VilleCard'
-import { VillesFilters } from '@/components/villes/VillesFilters'
-
-export const metadata: Metadata = {
-  title: 'Villes éligibles Loi Jeanbrun - Guide par zone fiscale',
-  description:
-    'Explorez les villes éligibles au dispositif Jeanbrun. Filtrez par zone fiscale (A, B1, B2) et découvrez les plafonds de loyer.',
-}
-
-interface PageProps {
-  searchParams: {
-    zone?: string
-    region?: string
-    q?: string
-  }
-}
-
-export default async function VillesPage({ searchParams }: PageProps) {
-  const where: object[] = []
-
-  if (searchParams.zone) {
-    where.push({
-      type: 'equals',
-      attribute: 'zoneFiscale',
-      value: searchParams.zone,
-    })
-  }
-
-  if (searchParams.region) {
-    where.push({
-      type: 'equals',
-      attribute: 'region',
-      value: searchParams.region,
-    })
-  }
-
-  if (searchParams.q) {
-    where.push({
-      type: 'contains',
-      attribute: 'name',
-      value: searchParams.q,
-    })
-  }
-
-  const { list: villes, total } = await espocrm.getVilles({
-    where: where.length > 0 ? where : undefined,
-    maxSize: 50,
-    orderBy: 'name',
-  })
-
-  // Liste des régions pour le filtre
-  const regions = [...new Set(villes.map((v) => v.region))].sort()
-
-  return (
-    <main className="container mx-auto px-4 py-8">
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold">
-          Villes éligibles Loi Jeanbrun
-        </h1>
-        <p className="mt-2 text-lg text-muted-foreground">
-          {total} villes disponibles pour votre investissement défiscalisé
-        </p>
-      </header>
-
-      {/* Filtres */}
-      <VillesFilters
-        currentZone={searchParams.zone}
-        currentRegion={searchParams.region}
-        currentQuery={searchParams.q}
-        regions={regions}
-      />
-
-      {/* Grille de villes */}
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {villes.map((ville) => (
-          <VilleCard key={ville.id} ville={ville} />
-        ))}
-      </div>
-
-      {villes.length === 0 && (
-        <div className="py-12 text-center">
-          <p className="text-muted-foreground">
-            Aucune ville trouvée avec ces critères.
-          </p>
-        </div>
-      )}
-    </main>
-  )
-}
-
-export const revalidate = 86400 // 24h
-```
-
----
-
-### 3.13 SSG build 50 villes (1j)
-
-**ID:** 4.13
-
-**Configuration Next.js:**
-
-```typescript
-// next.config.ts
-const nextConfig = {
-  // ...
-  experimental: {
-    // Augmenter le timeout de build pour SSG
-    staticPageGenerationTimeout: 120,
-  },
-}
-```
-
-**Commandes de build:**
+### 7.1 Planning des crons
 
 ```bash
-# Build avec vérification des pages statiques
-npm run build
+# Crontab VPS CardImmo - Scripts Jeanbrun
 
-# Vérifier le nombre de pages générées
-find .next/server/app/villes -name "*.html" | wc -l
-# Doit afficher: 50
+# Enrichissement géo (hebdomadaire, dimanche 2h) - Nouvelles villes uniquement
+0 2 * * 0 /usr/bin/python3 /root/scripts/jeanbrun/enrich_villes_geo.py >> /var/log/jeanbrun-geo.log 2>&1
 
-# Vérifier la taille du build
-du -sh .next/
+# Import DVF (hebdomadaire, dimanche 3h)
+0 3 * * 0 /usr/bin/python3 /root/scripts/jeanbrun/import_dvf_historique.py >> /var/log/jeanbrun-dvf.log 2>&1
+
+# Import INSEE (mensuel, 1er du mois 2h)
+0 2 1 * * /usr/bin/python3 /root/scripts/jeanbrun/import_insee_data.py >> /var/log/jeanbrun-insee.log 2>&1
+
+# Scraping promoteurs (quotidien 4h)
+0 4 * * * /usr/bin/python3 /root/scripts/jeanbrun/scrape_promoteurs.py >> /var/log/jeanbrun-scraping.log 2>&1
+
+# Génération Baromètre (mensuel, 1er du mois 8h)
+0 8 1 * * /usr/bin/python3 /root/scripts/jeanbrun/generate_barometre.py >> /var/log/jeanbrun-barometre.log 2>&1
 ```
 
-**Vérification des performances:**
+### 7.2 Monitoring
 
 ```bash
-# Lighthouse CI
-npx lighthouse https://simuler-loi-fiscale-jeanbrun.fr/villes/lyon \
-  --output=html \
-  --output-path=./lighthouse-report.html
+# Vérification santé scripts
+/root/scripts/jeanbrun/health_check.py
+
+# Alertes si:
+# - DVF n'a pas tourné depuis 8 jours
+# - Scraping < 50 programmes trouvés
+# - Baromètre pas généré ce mois
 ```
 
 ---
 
-## 4. Checklist de fin de sprint
+## 8. Checklist de fin de sprint
 
-### 4.1 Validations SEO
+### 8.1 Données
 
-- [ ] 50 pages villes générées statiquement
-- [ ] Données marché affichées correctement
-- [ ] Plafonds Jeanbrun par zone calculés
-- [ ] Simulateur pré-rempli fonctionnel
-- [ ] Contenu unique par ville (400-600 mots)
+- [ ] 51+ villes géocodées (lat, lon, codeInsee)
+- [ ] Historique DVF 12 mois importé
+- [ ] Données INSEE (population, revenus)
+- [ ] 200+ programmes multi-promoteurs
+- [ ] 51 baromètres mensuels générés
+- [ ] Entités EspoCRM créées (Region, Dept, Quartier, Barometre)
+
+### 8.2 SEO
+
+- [ ] 50+ pages villes générées statiquement
+- [ ] Pages Baromètre générées
+- [ ] Contenu éditorial unique par ville (400-600 mots)
 - [ ] JSON-LD valide (Rich Results Test)
-- [ ] Sitemap.xml complet (toutes URLs)
+- [ ] Sitemap.xml complet (villes + baromètres + programmes)
 - [ ] robots.txt correct
+- [ ] Maillage interne automatique
 
-### 4.2 Validations performance
+### 8.3 Performance
 
 - [ ] Core Web Vitals >= 90 mobile
 - [ ] TTFB < 200ms (pages SSG)
-- [ ] LCP < 2.5s
-- [ ] CLS < 0.1
-
-### 4.3 Validations techniques
-
-- [ ] Build production OK en < 5 minutes
+- [ ] Build production < 5 minutes
 - [ ] ISR revalidation 24h configurée
-- [ ] Maillage interne fonctionnel
-- [ ] Index villes avec filtres
+
+### 8.4 Automatisation
+
+- [ ] Crons configurés (DVF, INSEE, scraping, baromètre)
+- [ ] Logs centralisés
+- [ ] Alertes monitoring
 
 ---
 
-## 5. Ressources
+## 9. Ressources
 
 | Ressource | URL |
 |-----------|-----|
+| DVF API CEREMA | https://api-datafoncier.cerema.fr/ |
+| INSEE API | https://api.insee.fr/catalogue/ |
+| geo.api.gouv.fr | https://geo.api.gouv.fr/ |
 | Google Rich Results Test | https://search.google.com/test/rich-results |
 | PageSpeed Insights | https://pagespeed.web.dev |
 | Schema.org Place | https://schema.org/Place |
@@ -1303,5 +1733,6 @@ npx lighthouse https://simuler-loi-fiscale-jeanbrun.fr/villes/lyon \
 
 ---
 
-**Auteur:** Équipe Claude Code
+**Auteur:** Équipe Claude Code + Moldbot
 **Date:** 30 janvier 2026
+**Version:** 2.0 (enrichie)
