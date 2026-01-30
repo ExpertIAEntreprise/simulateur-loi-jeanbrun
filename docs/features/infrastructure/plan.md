@@ -174,8 +174,8 @@ pnpm db:push      # Applique à la base Neon
 ```
 
 **Validation:**
-- [ ] `pnpm db:push` sans erreur ⚠️ BLOQUÉ: credentials .env.local sont des placeholders
-- [ ] Drizzle Studio affiche 9 tables (4 auth + 5 métier + 4 enums)
+- [x] `pnpm db:push` sans erreur ✅
+- [x] Base affiche 9 tables (4 auth + 5 métier) ✅
 
 ---
 
@@ -806,7 +806,7 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 
 | # | Correction | Status | Notes |
 |---|------------|--------|-------|
-| 5.1.1 | Migration tables métier | ⚠️ BLOQUÉ | Credentials .env.local sont des placeholders |
+| 5.1.1 | Migration tables métier | ✅ FAIT | 9 tables confirmées en base |
 | 5.1.2 | URLs sensibles → Mailjet | ✅ FAIT | `src/lib/email.ts` créé, auth.ts mis à jour |
 | 5.1.3 | BETTER_AUTH_SECRET | ✅ FAIT | Secret généré + validation placeholder |
 | 5.1.4 | Type assertion db.ts | ✅ FAIT | `as string` supprimé |
