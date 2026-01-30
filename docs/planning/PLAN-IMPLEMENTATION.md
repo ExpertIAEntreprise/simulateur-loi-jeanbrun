@@ -1,10 +1,30 @@
 # Plan d'Implémentation - Simulateur Loi Jeanbrun
 
-**Version:** 2.0
+**Version:** 2.1
 **Date:** 30 janvier 2026
 **Durée totale:** 12 semaines (6 sprints de 2 semaines)
 **Auteur:** Équipe Claude Code
-**Modifications v2:** Stack Vercel/Neon (aligné CardImmo), parcours accompagnement, RGPD renforcé
+**Modifications v2.1:** Infrastructure déployée (GitHub + Vercel + Neon)
+
+---
+
+## Statut Actuel
+
+| Élément | Status | URL |
+|---------|--------|-----|
+| **GitHub** | ✅ Déployé | https://github.com/ExpertIAEntreprise/simulateur-loi-jeanbrun |
+| **Vercel** | ✅ Déployé | https://simulateur-loi-jeanbrun.vercel.app |
+| **Neon DB** | ✅ Connectée | ep-noisy-cell-agxf4bs5-pooler.c-2.eu-central-1.aws.neon.tech |
+| **Better Auth** | ✅ Configuré | Secret + URL configurés |
+
+### Variables d'environnement Vercel (Production)
+
+- [x] `POSTGRES_URL`
+- [x] `BETTER_AUTH_SECRET`
+- [x] `BETTER_AUTH_URL`
+- [x] `NEXT_PUBLIC_APP_URL`
+- [ ] `STRIPE_SECRET_KEY` (à configurer)
+- [ ] `ESPOCRM_API_KEY` (à configurer)
 
 ---
 
@@ -92,11 +112,11 @@
 
 ### 2.2 Checklist de fin de sprint
 
-- [ ] `npm run dev` démarre sans erreur
-- [ ] `npm run build` produit un build de production
-- [ ] Déploiement preview Vercel fonctionnel
-- [ ] Connexion Neon PostgreSQL OK
-- [ ] Schéma Drizzle avec migrations appliquées
+- [x] `npm run dev` démarre sans erreur
+- [x] `npm run build` produit un build de production
+- [x] Déploiement preview Vercel fonctionnel ✅ https://simulateur-loi-jeanbrun.vercel.app
+- [x] Connexion Neon PostgreSQL OK ✅ Configurée
+- [x] Schéma Drizzle avec migrations appliquées ✅ (boilerplate)
 - [ ] API EspoCRM accessible (sync leads)
 - [ ] 266 communes de test importées (Neon)
 - [ ] REGISTRE-RGPD.md créé et complet
@@ -433,8 +453,10 @@ test('achat pack simulations', async ({ page }) => {
 
 ### 8.1 Arborescence complète du projet
 
+> **Note:** Structure réorganisée le 30/01/2026 - Next.js à la racine (plus de sous-dossier `app/`)
+
 ```
-/root/simulateur_loi_Jeanbrun/app/
+/root/simulateur_loi_Jeanbrun/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
@@ -895,26 +917,32 @@ Sprint 1 ────► Sprint 2 ────► Sprint 3 ────► Sprin
 
 ```bash
 # Développement local
-cd /root/simulateur_loi_Jeanbrun/app
-npm run dev
+cd /root/simulateur_loi_Jeanbrun
+pnpm dev
 
 # Build local (test)
-npm run build
+pnpm run build:ci
 
 # Déploiement preview
-vercel
+vercel --token $VERCEL_TOKEN
 
 # Déploiement production
-vercel --prod
+vercel --token $VERCEL_TOKEN --prod
 
-# Vérification
+# Vérification (actuellement)
+curl -I https://simulateur-loi-jeanbrun.vercel.app
+
+# Vérification (domaine final)
 curl -I https://simuler-loi-fiscale-jeanbrun.fr
 
 # Migrations Drizzle
-npx drizzle-kit push:pg
+pnpm db:push
 
 # Voir la base de données
-npx drizzle-kit studio
+pnpm db:studio
+
+# Git push déclenche auto-deploy
+git push origin main
 ```
 
 ### B. Variables d'environnement
@@ -941,15 +969,17 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXX
 
 | Ressource | URL/Contact |
 |-----------|-------------|
-| REQUIREMENTS v2 | /root/simulateur_loi_Jeanbrun/REQUIREMENTS.md |
-| PRD complet | /root/simulateur_loi_Jeanbrun/PRD_Simulateur_Loi_Jeanbrun.md |
-| Formules calcul | /root/simulateur_loi_Jeanbrun/formules_calcul_simulateur_jeanbrun.md |
-| Wireframes v2.0 | /root/simulateur_loi_Jeanbrun/wireframes_simulateur_jeanbrun.md |
-| **Registre RGPD** | /root/simulateur_loi_Jeanbrun/docs/REGISTRE-RGPD.md **(à créer)** |
+| **GitHub Repo** | https://github.com/ExpertIAEntreprise/simulateur-loi-jeanbrun |
+| **Vercel Dashboard** | https://vercel.com/agent-ias-projects/simulateur-loi-jeanbrun |
+| **Site Preview** | https://simulateur-loi-jeanbrun.vercel.app |
+| REQUIREMENTS v2 | /root/simulateur_loi_Jeanbrun/docs/specs/REQUIREMENTS.md |
+| PRD complet | /root/simulateur_loi_Jeanbrun/docs/specs/PRD.md |
+| Formules calcul | /root/simulateur_loi_Jeanbrun/docs/technical/FORMULES.md |
+| Wireframes v2.0 | /root/simulateur_loi_Jeanbrun/docs/specs/WIREFRAMES.md |
+| **Registre RGPD** | /root/simulateur_loi_Jeanbrun/docs/legal/REGISTRE-RGPD.md **(à créer)** |
 | Schéma EspoCRM | /root/simulateur_loi_Jeanbrun/docs/ESPOCRM-SCHEMA.md |
-| Pipeline scraping | /root/simulateur_loi_Jeanbrun/docs/SCRAPING-PIPELINE.md |
 
 ---
 
 **Document maintenu par:** Équipe Claude Code
-**Dernière mise à jour:** 30 janvier 2026
+**Dernière mise à jour:** 30 janvier 2026 - v2.1 (Infrastructure déployée)
