@@ -58,3 +58,17 @@ export {
   LEAD_STATUT_COLORS,
   CONSENTEMENTS_TEXTES,
 } from "./lead";
+
+// Types Blog
+export type {
+  BlogCategory,
+  BlogCategoryMeta,
+  BlogAuthor,
+  BlogFrontmatter,
+  BlogPost,
+  BlogPostMeta,
+  PaginationInfo,
+  BlogListResponse,
+} from "./blog";
+
+export { BLOG_CATEGORIES, DEFAULT_AUTHOR } from "./blog";

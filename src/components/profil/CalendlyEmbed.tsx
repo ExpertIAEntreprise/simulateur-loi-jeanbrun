@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Calendar, ArrowRight, ExternalLink } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,12 @@ interface CalendlyEmbedProps {
   description?: string
 }
 
+// Check if Calendly is available (runs only on client)
+function checkCalendlyAvailable(): boolean {
+  if (typeof window === 'undefined') return false
+  return !!(window as unknown as { Calendly?: unknown }).Calendly
+}
+
 export function CalendlyEmbed({
   calendlyUrl = "https://calendly.com/expert-jeanbrun/consultation",
   title = "Reservez votre consultation gratuite",
@@ -21,18 +27,32 @@ export function CalendlyEmbed({
   const [isLoading, setIsLoading] = useState(true)
   const [hasCalendly, setHasCalendly] = useState(false)
 
+  const handleScriptLoad = useCallback(() => {
+    setHasCalendly(true)
+    setIsLoading(false)
+  }, [])
+
+  const handleScriptError = useCallback(() => {
+    setIsLoading(false)
+  }, [])
+
   useEffect(() => {
     // Check if Calendly is already loaded
-    if (typeof window !== 'undefined' && (window as unknown as { Calendly?: unknown }).Calendly) {
-      setHasCalendly(true)
-      setIsLoading(false)
+    if (checkCalendlyAvailable()) {
+      // Use requestAnimationFrame to avoid synchronous setState in effect
+      requestAnimationFrame(() => {
+        setHasCalendly(true)
+        setIsLoading(false)
+      })
       return
     }
 
     // Check if script already exists
     const existingScript = document.querySelector('script[src*="calendly"]')
     if (existingScript) {
-      setIsLoading(false)
+      requestAnimationFrame(() => {
+        setIsLoading(false)
+      })
       return
     }
 
@@ -40,15 +60,10 @@ export function CalendlyEmbed({
     const script = document.createElement('script')
     script.src = 'https://assets.calendly.com/assets/external/widget.js'
     script.async = true
-    script.onload = () => {
-      setHasCalendly(true)
-      setIsLoading(false)
-    }
-    script.onerror = () => {
-      setIsLoading(false)
-    }
+    script.onload = handleScriptLoad
+    script.onerror = handleScriptError
     document.body.appendChild(script)
-  }, [])
+  }, [handleScriptLoad, handleScriptError])
 
   return (
     <section id="calendly" className="py-16 md:py-24">

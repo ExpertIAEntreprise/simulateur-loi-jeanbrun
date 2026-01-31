@@ -214,19 +214,19 @@ Description: [Première phrase article ou résumé]
 
 ## Critères d'acceptation
 
-### AC-1: Page Loi
+### AC-1: Page Loi ✅
 
-- [ ] Toutes les sections présentes
-- [ ] Contenu juridiquement exact
-- [ ] CTA simulateur fonctionnel
-- [ ] Rich snippets FAQ
+- [x] Toutes les sections présentes
+- [x] Contenu juridiquement exact
+- [x] CTA simulateur fonctionnel
+- [x] Rich snippets FAQ
 
-### AC-2: Page Profil
+### AC-2: Page Profil ✅
 
-- [ ] Photo professionnelle affichée
-- [ ] Biographie complète
-- [ ] Calendly embed fonctionnel
-- [ ] LinkedIn linké
+- [x] Photo professionnelle affichée (placeholder avec fallback)
+- [x] Biographie complète (contenu par défaut)
+- [x] Calendly embed fonctionnel
+- [x] LinkedIn linké
 
 ### AC-3: Blog
 

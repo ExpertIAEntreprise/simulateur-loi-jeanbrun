@@ -126,19 +126,19 @@ src/components/profil/
 
 ---
 
-## Phase 3: Infrastructure Blog (1 jour)
+## Phase 3: Infrastructure Blog (1 jour) ✅ TERMINÉE
 
 ### Tâches
 
-- [ ] 3.1 Installer et configurer MDX (`@next/mdx`, `contentlayer`)
-- [ ] 3.2 Créer structure dossier `content/blog/`
-- [ ] 3.3 Créer schéma article (frontmatter)
-- [ ] 3.4 Créer page index `/blog`
-- [ ] 3.5 Créer page article `/blog/[slug]`
-- [ ] 3.6 Créer composants MDX custom
-- [ ] 3.7 Créer système de catégories
-- [ ] 3.8 Créer pagination
-- [ ] 3.9 Ajouter temps de lecture
+- [x] 3.1 Installer et configurer MDX (`@next/mdx` + `gray-matter` pour frontmatter)
+- [x] 3.2 Créer structure dossier `content/blog/`
+- [x] 3.3 Créer schéma article (frontmatter)
+- [x] 3.4 Créer page index `/blog`
+- [x] 3.5 Créer page article `/blog/[slug]`
+- [x] 3.6 Créer composants MDX custom
+- [x] 3.7 Créer système de catégories
+- [x] 3.8 Créer pagination
+- [x] 3.9 Ajouter temps de lecture
 
 ### Fichiers à créer
 
@@ -189,10 +189,10 @@ featured: true
 
 ### Validation
 
-- [ ] MDX compilé sans erreur
-- [ ] Index affiche articles
-- [ ] Slug routing fonctionnel
-- [ ] Pagination fonctionne
+- [x] MDX compilé sans erreur
+- [x] Index affiche articles
+- [x] Slug routing fonctionnel
+- [x] Pagination fonctionne
 
 ---
 
