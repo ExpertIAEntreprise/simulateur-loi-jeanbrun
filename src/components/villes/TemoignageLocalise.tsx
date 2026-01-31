@@ -5,10 +5,10 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Star, Quote } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface TemoignageLocaliseSProps {
   villeNom: string;
@@ -145,37 +145,33 @@ function NoteEtoiles({ note }: { note: number }) {
 }
 
 /**
- * Composant temoignage avec selection aleatoire
- * La selection se fait cote client pour eviter le mismatch SSR/CSR
+ * Hash simple basé sur le nom de ville pour sélection déterministe
+ */
+function hashVilleName(name: string): number {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    const char = name.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * Composant temoignage avec selection deterministe basee sur le nom de ville
+ * Evite Math.random() pendant le render pour respecter les regles de purete React
  */
 export function TemoignageLocalise({ villeNom }: TemoignageLocaliseSProps) {
-  const [temoignage, setTemoignage] = useState<Temoignage | null>(null);
+  // Selection deterministe basee sur le hash du nom de ville
+  const temoignage = useMemo(() => {
+    const hash = hashVilleName(villeNom);
+    const index = hash % TEMOIGNAGES.length;
+    return TEMOIGNAGES[index] ?? TEMOIGNAGES[0];
+  }, [villeNom]);
 
-  useEffect(() => {
-    // Selection aleatoire cote client
-    const randomIndex = Math.floor(Math.random() * TEMOIGNAGES.length);
-    const selected = TEMOIGNAGES[randomIndex];
-    if (selected) {
-      setTemoignage(selected);
-    }
-  }, []);
-
-  // Affichage skeleton pendant le chargement
+  // Fallback de securite (ne devrait jamais arriver)
   if (!temoignage) {
-    return (
-      <Card className="animate-pulse">
-        <CardContent className="p-6">
-          <div className="h-20 rounded bg-muted" />
-          <div className="mt-4 flex items-center gap-3">
-            <div className="size-10 rounded-full bg-muted" />
-            <div className="space-y-2">
-              <div className="h-4 w-24 rounded bg-muted" />
-              <div className="h-3 w-32 rounded bg-muted" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return null;
   }
 
   // Personnaliser la citation avec le nom de la ville si possible

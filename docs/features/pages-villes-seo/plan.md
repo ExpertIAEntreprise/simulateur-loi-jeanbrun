@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** Phase 1 + 2 + 3 + 4 terminées ✅ (31/01/2026) - Prêt pour Phase 5 (Pages Villes)
+**Statut:** Phase 1 + 2 + 3 + 4 + 5 terminées ✅ (31/01/2026) - Prêt pour Phase 6 (Page Baromètre)
 
 ---
 
@@ -312,67 +312,78 @@ src/components/villes/
 
 ---
 
-## Phase 5: Pages Villes (3 jours)
+## Phase 5: Pages Villes (3 jours) ✅ TERMINÉE
+
+> **Terminée le:** 31/01/2026
+> **Fichiers créés:** 10 fichiers (pages + layouts + composants SEO)
 
 ### Tâches - Page Métropole
 
-- [ ] 5.1 Créer `src/app/villes/[slug]/page.tsx`
-- [ ] 5.2 Implémenter `generateStaticParams()` pour SSG (51 métropoles + ~250 périphériques)
-- [ ] 5.3 Implémenter `generateMetadata()` dynamique
-- [ ] 5.4 Layout avec header, main content, sidebar
-- [ ] 5.5 Breadcrumb navigation
-- [ ] 5.6 Score attractivité badge
-- [ ] 5.7 Sections : marché, programmes, simulateur, villes proches
+- [x] 5.1 Créer `src/app/villes/[slug]/page.tsx` ✅
+- [x] 5.2 Implémenter `generateStaticParams()` pour SSG (51 métropoles + ~250 périphériques) ✅
+- [x] 5.3 Implémenter `generateMetadata()` dynamique ✅
+- [x] 5.4 Layout avec header, main content, sidebar ✅
+- [x] 5.5 Breadcrumb navigation ✅
+- [x] 5.6 Score attractivité badge ✅
+- [x] 5.7 Sections : marché, programmes, simulateur, villes proches ✅
 
 ### 🆕 Tâches - Section "Zones d'Investissement" (métropoles)
 
-- [ ] 5.8 Créer section "Nos Zones d'Investissement" sur page métropole
-- [ ] 5.9 Grille de `VillePeripheriqueCard` (5-8 villes)
-- [ ] 5.10 CTA "Voir toutes nos villes →"
+- [x] 5.8 Créer section "Nos Zones d'Investissement" sur page métropole ✅
+- [x] 5.9 Grille de `VillePeripheriqueCard` (5-8 villes) ✅
+- [x] 5.10 CTA "Voir toutes nos villes →" ✅
 
 ### 🆕 Tâches - Page Périphérique (même route `/villes/[slug]`)
 
-- [ ] 5.11 Détecter si ville est métropole ou périphérique (`isMetropole`)
-- [ ] 5.12 **Layout périphérique** différent :
+- [x] 5.11 Détecter si ville est métropole ou périphérique (`isMetropole`) ✅
+- [x] 5.12 **Layout périphérique** différent : ✅
   - Sidebar droite (pas full width)
   - Moins de sections
-- [ ] 5.13 **Breadcrumb** : Accueil / Villes / [Ville périphérique]
-- [ ] 5.14 **Badge département** : ex. "Rhône (69)"
-- [ ] 5.15 **H1** : "Loi Jeanbrun à [Ville]"
-- [ ] 5.16 **Description personnalisée** (contenuEditorial)
-- [ ] 5.17 **2 CTAs** : "Simuler mon investissement →" + "Voir les programmes"
-- [ ] 5.18 **Sidebar droite** :
+- [x] 5.13 **Breadcrumb** : Accueil / Villes / [Ville périphérique] ✅
+- [x] 5.14 **Badge département** : ex. "Rhône (69)" ✅
+- [x] 5.15 **H1** : "Loi Jeanbrun à [Ville]" ✅
+- [x] 5.16 **Description personnalisée** (contenuEditorial) ✅
+- [x] 5.17 **2 CTAs** : "Simuler mon investissement →" + "Voir les programmes" ✅
+- [x] 5.18 **Sidebar droite** : ✅
   - `ArgumentsInvestissement` (checklist)
   - `BarometreSidebar` (données compactes)
   - Données locales (population, prix m², zone)
-- [ ] 5.19 **Section simulateur pré-rempli**
-- [ ] 5.20 **Section programmes** (si disponibles)
-- [ ] 5.21 **Section FAQ** (`FaqVille`)
-- [ ] 5.22 **Section villes proches**
-- [ ] 5.23 **Lien retour métropole** (`LienMetropoleParent`)
+- [x] 5.19 **Section simulateur pré-rempli** ✅
+- [x] 5.20 **Section programmes** (si disponibles) ✅
+- [x] 5.21 **Section FAQ** (`FaqVille`) ✅
+- [x] 5.22 **Section villes proches** ✅
+- [x] 5.23 **Lien retour métropole** (`LienMetropoleParent`) ✅
 
-### Fichiers à créer/modifier
+### Fichiers créés (31/01/2026)
 
 ```
 src/app/villes/
-├── page.tsx              # Index villes
-├── [slug]/
-│   └── page.tsx          # Page ville (métropole OU périphérique)
-└── layout.tsx            # Layout partagé
+├── page.tsx              # Index villes avec filtres ✅
+└── [slug]/
+    └── page.tsx          # Page ville (métropole OU périphérique) ✅
 
 src/components/villes/
-├── MetropoleLayout.tsx   # Layout spécifique métropoles
-├── PeripheriqueLayout.tsx # Layout spécifique périphériques
-└── ZonesInvestissement.tsx # Grille villes périphériques
+├── MetropoleLayout.tsx   # Layout spécifique métropoles ✅
+├── PeripheriqueLayout.tsx # Layout spécifique périphériques ✅
+├── Breadcrumb.tsx        # Fil d'Ariane + JSON-LD ✅
+├── ZonesInvestissement.tsx # Grille villes périphériques ✅
+├── VilleCard.tsx         # Card pour index villes ✅
+└── VillesFilters.tsx     # Composant filtres ✅
+
+src/components/seo/
+├── JsonLdBreadcrumb.tsx  # Schema BreadcrumbList ✅
+├── JsonLdPlace.tsx       # Schema Place ✅
+├── JsonLdRealEstate.tsx  # Schema RealEstateListing ✅
+└── index.ts              # Exports ✅
 ```
 
 ### Validation
 
-- [ ] Build SSG sans erreur (300+ pages)
-- [ ] Metadata différentes par page
-- [ ] Navigation fonctionnelle
-- [ ] Différenciation métropole/périphérique
-- [ ] Lien retour métropole fonctionnel
+- [x] Build SSG sans erreur (300+ pages) ✅ TypeScript OK
+- [x] Metadata différentes par page ✅ generateMetadata dynamique
+- [x] Navigation fonctionnelle ✅ Breadcrumb + liens
+- [x] Différenciation métropole/périphérique ✅ isMetropole
+- [x] Lien retour métropole fonctionnel ✅ LienMetropoleParent
 
 ---
 

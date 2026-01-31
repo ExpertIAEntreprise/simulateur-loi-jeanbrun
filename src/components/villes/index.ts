@@ -5,6 +5,12 @@
  * eligibles (52 metropoles + 330 peripheriques).
  */
 
+// Layouts principaux
+export { MetropoleLayout } from "./MetropoleLayout";
+export { PeripheriqueLayout } from "./PeripheriqueLayout";
+export { Breadcrumb, getBreadcrumbJsonLdForMetadata } from "./Breadcrumb";
+export type { BreadcrumbItem } from "./Breadcrumb";
+
 // Composants donnees marche
 export { DonneesMarche } from "./DonneesMarche";
 export { HistoriquePrix } from "./HistoriquePrix";
@@ -31,3 +37,4 @@ export { FaqVille, getFaqJsonLdForMetadata } from "./FaqVille";
 export { LienMetropoleParent, LienMetropoleParentCompact } from "./LienMetropoleParent";
 export { TemoignageLocalise } from "./TemoignageLocalise";
 export { VillePeripheriqueCard, VillesPeripheriquesList } from "./VillePeripheriqueCard";
+export { ZonesInvestissement, ZonesInvestissementCompact } from "./ZonesInvestissement";
