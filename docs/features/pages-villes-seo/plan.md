@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** En attente (dépend de MoltBot pour les données)
+**Statut:** Phase 1 terminée ✅ (31/01/2026) - En attente Phase 2 (MoltBot pour données)
 
 ---
 
@@ -52,9 +52,11 @@
 
 | Entité | Status | Champs principaux |
 |--------|--------|-------------------|
-| `CJeanbrunVille` | ✅ Existe (51 villes) | nom, codePostal, zoneFiscale, photoVille, photoVilleAlt, contenuEditorial, metaTitle, metaDescription |
+| `CJeanbrunVille` | ✅ Existe (51 villes) | nom, codePostal, zoneFiscale, photoVille, photoVilleAlt, contenuEditorial, metaTitle, metaDescription, **isMetropole**, **metropoleParent**, **argumentsInvestissement**, **faqItems**, **villesProches** |
 | `CJeanbrunProgramme` | ✅ Existe (153 prog.) | name, villeId, promoteur, prixMin, prixMax, imagePrincipale, imageAlt |
 | `CJeanbrunBarometre` | ✅ Créée (vide) | villeId, mois, scoreAttractivite, prixM2, evolutionPrixMois, loyerM2, rendementBrut, nbProgrammesActifs, meilleureOpportunite, analyseIA |
+| `CJeanbrunRegion` | ✅ Créée (31/01/2026) | name, slug, code |
+| `CJeanbrunDepartement` | ✅ Créée (31/01/2026) | name, slug, code, regionId |
 
 ### Variable d'environnement
 
@@ -65,24 +67,24 @@ ESPOCRM_API_URL=https://espocrm.expert-ia-entreprise.fr/api/v1
 
 ---
 
-## Phase 1: Entités EspoCRM (1 jour)
+## Phase 1: Entités EspoCRM (1 jour) ✅ TERMINÉE
 
 ### Tâches
 
-- [ ] 1.1 Créer entité `CJeanbrunRegion` (13 régions)
-- [ ] 1.2 Créer entité `CJeanbrunDepartement` (101 départements)
+- [x] 1.1 Créer entité `CJeanbrunRegion` (13 régions) ✅ Fait 31/01/2026
+- [x] 1.2 Créer entité `CJeanbrunDepartement` (101 départements) ✅ Fait 31/01/2026
 - [x] 1.3 Ajouter champ `photoVille` (URL) sur `CJeanbrunVille` ✅ Fait 31/01/2026
 - [x] 1.4 Ajouter champ `imagePrincipale` + `imageAlt` sur `CJeanbrunProgramme` ✅ Fait 31/01/2026
 - [x] 1.5 Créer entité `CJeanbrunBarometre` ✅ Fait 31/01/2026
-- [ ] 1.6 Ajouter relations entre entités
+- [x] 1.6 Ajouter relations entre entités ✅ Fait 31/01/2026
 
 ### 🆕 Tâches MoltBot - Champs périphériques
 
-- [ ] 1.7 Ajouter champ `isMetropole` (boolean) sur `CJeanbrunVille`
-- [ ] 1.8 Ajouter champ `metropoleParentId` (link → CJeanbrunVille) sur `CJeanbrunVille`
-- [ ] 1.9 Ajouter champ `argumentsInvestissement` (text/JSON) sur `CJeanbrunVille`
-- [ ] 1.10 Ajouter champ `faqItems` (text/JSON) sur `CJeanbrunVille`
-- [ ] 1.11 Créer relation `villesProches` (many-to-many → CJeanbrunVille)
+- [x] 1.7 Ajouter champ `isMetropole` (boolean) sur `CJeanbrunVille` ✅ Fait 31/01/2026
+- [x] 1.8 Ajouter champ `metropoleParentId` (link → CJeanbrunVille) sur `CJeanbrunVille` ✅ Fait 31/01/2026
+- [x] 1.9 Ajouter champ `argumentsInvestissement` (text/JSON) sur `CJeanbrunVille` ✅ Fait 31/01/2026
+- [x] 1.10 Ajouter champ `faqItems` (text/JSON) sur `CJeanbrunVille` ✅ Fait 31/01/2026
+- [x] 1.11 Créer relation `villesProches` (many-to-many → CJeanbrunVille) ✅ Fait 31/01/2026
 
 ### Fichiers à créer/modifier
 
@@ -110,7 +112,15 @@ ESPOCRM_API_URL=https://espocrm.expert-ia-entreprise.fr/api/v1
 ### Validation
 
 - [x] Entités accessibles via API ✅ Vérifié
-- [ ] Relations fonctionnelles
+- [x] Relations fonctionnelles ✅ Vérifié 31/01/2026
+
+### Documentation créée
+
+- `/root/docs/features/prospection/ESPOCRM-JEANBRUN-ENTITIES-PHASE1.md` - Documentation technique
+- `/root/docs/features/prospection/PHASE1-SUMMARY.md` - Résumé exécutif
+- `/root/docs/features/prospection/QUICK-REFERENCE-JEANBRUN.md` - Aide-mémoire
+- `/root/scripts/validate-jeanbrun-entities.sh` - Script de validation
+- `/root/scripts/phase2-setup-jeanbrun.sh` - Menu interactif Phase 2
 
 ---
 
