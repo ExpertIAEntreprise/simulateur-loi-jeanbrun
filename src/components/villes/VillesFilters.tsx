@@ -61,6 +61,30 @@ const DEPARTEMENT_OPTIONS: { value: string; label: string }[] = [
   { value: "38", label: "38 - Isere (Grenoble)" },
 ];
 
+/**
+ * Options pour le filtre de prix au m2
+ */
+const PRIX_OPTIONS: { value: string; label: string; min?: number; max?: number }[] = [
+  { value: "all", label: "Tous les prix" },
+  { value: "0-3000", label: "< 3 000 \u20AC/m\u00B2", max: 3000 },
+  { value: "3000-5000", label: "3 000 - 5 000 \u20AC/m\u00B2", min: 3000, max: 5000 },
+  { value: "5000-7000", label: "5 000 - 7 000 \u20AC/m\u00B2", min: 5000, max: 7000 },
+  { value: "7000-10000", label: "7 000 - 10 000 \u20AC/m\u00B2", min: 7000, max: 10000 },
+  { value: "10000-", label: "> 10 000 \u20AC/m\u00B2", min: 10000 },
+];
+
+/**
+ * Options de tri
+ */
+const SORT_OPTIONS: { value: string; label: string }[] = [
+  { value: "name_asc", label: "Nom (A-Z)" },
+  { value: "name_desc", label: "Nom (Z-A)" },
+  { value: "prix_asc", label: "Prix croissant" },
+  { value: "prix_desc", label: "Prix decroissant" },
+  { value: "population_asc", label: "Population croissante" },
+  { value: "population_desc", label: "Population decroissante" },
+];
+
 interface VillesFiltersProps {
   totalVilles: number;
 }
@@ -81,6 +105,22 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
   const currentDepartement = searchParams.get("departement") ?? "all";
   const currentMetropoles = searchParams.get("metropoles") === "true";
   const currentSearch = searchParams.get("search") ?? "";
+
+  // Reconstruire la valeur du filtre prix depuis prixMin/prixMax
+  const prixMin = searchParams.get("prixMin");
+  const prixMax = searchParams.get("prixMax");
+  const currentPrix = (() => {
+    if (!prixMin && !prixMax) return "all";
+    if (!prixMin && prixMax === "3000") return "0-3000";
+    if (prixMin === "3000" && prixMax === "5000") return "3000-5000";
+    if (prixMin === "5000" && prixMax === "7000") return "5000-7000";
+    if (prixMin === "7000" && prixMax === "10000") return "7000-10000";
+    if (prixMin === "10000" && !prixMax) return "10000-";
+    return "all";
+  })();
+
+  // Reconstruire la valeur du tri depuis sort
+  const currentSort = searchParams.get("sort") ?? "name_asc";
 
   /**
    * Met a jour l'URL avec les nouveaux parametres
@@ -132,13 +172,46 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
   }, [router, pathname, debouncedSearch]);
 
   /**
+   * Gere le changement de filtre prix
+   */
+  const handlePrixChange = useCallback(
+    (value: string) => {
+      const option = PRIX_OPTIONS.find((o) => o.value === value);
+      if (!option || value === "all") {
+        updateSearchParams({ prixMin: null, prixMax: null });
+      } else {
+        updateSearchParams({
+          prixMin: option.min !== undefined ? String(option.min) : null,
+          prixMax: option.max !== undefined ? String(option.max) : null,
+        });
+      }
+    },
+    [updateSearchParams]
+  );
+
+  /**
+   * Gere le changement de tri
+   */
+  const handleSortChange = useCallback(
+    (value: string) => {
+      if (value === "name_asc") {
+        updateSearchParams({ sort: null }); // Default, pas besoin de param
+      } else {
+        updateSearchParams({ sort: value });
+      }
+    },
+    [updateSearchParams]
+  );
+
+  /**
    * Compte le nombre de filtres actifs
    */
   const activeFiltersCount =
     (currentZone !== "all" ? 1 : 0) +
     (currentDepartement !== "all" ? 1 : 0) +
     (currentMetropoles ? 1 : 0) +
-    (currentSearch ? 1 : 0);
+    (currentSearch ? 1 : 0) +
+    (currentPrix !== "all" ? 1 : 0);
 
   return (
     <div className="space-y-4">
@@ -191,9 +264,9 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
         </Button>
 
         {/* Filtres desktop (toujours visibles) */}
-        <div className="hidden gap-4 sm:flex">
+        <div className="hidden gap-4 sm:flex sm:flex-wrap">
           {/* Zone fiscale */}
-          <div className="w-56">
+          <div className="w-52">
             <Label htmlFor="zone" className="sr-only">
               Zone fiscale
             </Label>
@@ -217,7 +290,7 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
           </div>
 
           {/* Departement */}
-          <div className="w-56">
+          <div className="w-52">
             <Label htmlFor="departement" className="sr-only">
               Departement
             </Label>
@@ -237,6 +310,44 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
               </SelectTrigger>
               <SelectContent>
                 {DEPARTEMENT_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Prix au m2 */}
+          <div className="w-48">
+            <Label htmlFor="prix" className="sr-only">
+              Fourchette de prix
+            </Label>
+            <Select value={currentPrix} onValueChange={handlePrixChange}>
+              <SelectTrigger id="prix" aria-label="Filtrer par prix au m2">
+                <SelectValue placeholder="Prix au m2" />
+              </SelectTrigger>
+              <SelectContent>
+                {PRIX_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Tri */}
+          <div className="w-48">
+            <Label htmlFor="sort" className="sr-only">
+              Trier par
+            </Label>
+            <Select value={currentSort} onValueChange={handleSortChange}>
+              <SelectTrigger id="sort" aria-label="Trier les resultats">
+                <SelectValue placeholder="Trier par" />
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_OPTIONS.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -312,6 +423,40 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
             </Select>
           </div>
 
+          {/* Prix au m2 */}
+          <div className="space-y-2">
+            <Label htmlFor="prix-mobile">Prix au m2</Label>
+            <Select value={currentPrix} onValueChange={handlePrixChange}>
+              <SelectTrigger id="prix-mobile">
+                <SelectValue placeholder="Tous les prix" />
+              </SelectTrigger>
+              <SelectContent>
+                {PRIX_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Tri */}
+          <div className="space-y-2">
+            <Label htmlFor="sort-mobile">Trier par</Label>
+            <Select value={currentSort} onValueChange={handleSortChange}>
+              <SelectTrigger id="sort-mobile">
+                <SelectValue placeholder="Nom (A-Z)" />
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Toggle metropoles */}
           <Button
             variant={currentMetropoles ? "default" : "outline"}
@@ -330,11 +475,11 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
 
       {/* Resume des filtres actifs et compteur */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground" aria-live="polite" aria-atomic="true">
           <span className="font-semibold text-foreground">{totalVilles}</span>{" "}
           {totalVilles > 1 ? "villes eligibles" : "ville eligible"}
           {isPending && (
-            <span className="ml-2 text-primary">Chargement...</span>
+            <span className="ml-2 text-primary" role="status">Chargement...</span>
           )}
         </p>
 
@@ -380,6 +525,22 @@ export function VillesFilters({ totalVilles }: VillesFiltersProps) {
                   onClick={() => updateSearchParams({ metropoles: null })}
                   className="ml-1 hover:text-destructive"
                   aria-label="Supprimer le filtre metropoles"
+                >
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            )}
+
+            {currentPrix !== "all" && (
+              <Badge variant="secondary" className="gap-1">
+                {PRIX_OPTIONS.find((o) => o.value === currentPrix)?.label}
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateSearchParams({ prixMin: null, prixMax: null })
+                  }
+                  className="ml-1 hover:text-destructive"
+                  aria-label="Supprimer le filtre prix"
                 >
                   <X className="size-3" />
                 </button>

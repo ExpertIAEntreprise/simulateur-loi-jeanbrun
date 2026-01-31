@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** Phase 1 + 2 + 3 + 4 + 5 + 6 terminées ✅ (31/01/2026) - Prêt pour Phase 7 (Index Villes)
+**Statut:** Phase 1 + 2 + 3 + 4 + 5 + 6 + 7 terminées ✅ (31/01/2026) - Prêt pour Phase 8 (JSON-LD et SEO)
 
 ---
 
@@ -441,31 +441,59 @@ src/components/barometre/
 
 ---
 
-## Phase 7: Index Villes (1 jour)
+## Phase 7: Index Villes (1 jour) ✅ TERMINÉE
+
+> **Terminée le:** 31/01/2026
+> **Fichiers créés/modifiés:** 4 fichiers (page + composants + types)
 
 ### Tâches
 
-- [ ] 7.1 Créer page `/villes` avec liste filtrable
-- [ ] 7.2 Filtres : région, zone fiscale, fourchette prix
-- [ ] 7.3 Tri : score, prix, nb programmes
-- [ ] 7.4 Recherche par nom
-- [ ] 7.5 Pagination ou infinite scroll
-- [ ] 7.6 Cards villes avec miniatures
+- [x] 7.1 Créer page `/villes` avec liste filtrable ✅
+- [x] 7.2 Filtres : département, zone fiscale, fourchette prix ✅
+- [x] 7.3 Tri : nom, prix, population (asc/desc) ✅
+- [x] 7.4 Recherche par nom (debounce 300ms) ✅
+- [x] 7.5 Pagination (24 villes/page) ✅
+- [x] 7.6 Cards villes avec miniatures ✅
 
-### Fichiers à créer
+### Fichiers créés/modifiés
 
 ```
-src/app/villes/page.tsx
-src/components/villes/VilleCard.tsx
-src/components/villes/VilleFilters.tsx
-src/components/villes/VilleSearch.tsx
+src/app/villes/page.tsx              # Page index avec SSR + Suspense
+src/components/villes/VilleCard.tsx  # Card avec image, zone badge, stats
+src/components/villes/VillesFilters.tsx  # Filtres client avec URL params
+src/lib/espocrm/types.ts             # +prixMin, +prixMax, +orderBy, +order
+src/lib/espocrm/client.ts            # +price filtering, +sorting
 ```
+
+### Fonctionnalités implémentées
+
+| Fonctionnalité | Status | Détails |
+|----------------|--------|---------|
+| Page index `/villes` | ✅ | Server Component avec Suspense |
+| Recherche par nom | ✅ | Debounce 300ms, effaçable |
+| Filtre zone fiscale | ✅ | A bis, A, B1, B2, C |
+| Filtre département | ✅ | 20 départements principaux |
+| Filtre fourchette prix | ✅ | <3k, 3-5k, 5-7k, 7-10k, >10k €/m² |
+| Tri | ✅ | Nom, prix, population (asc/desc) |
+| Toggle métropoles | ✅ | Affiche uniquement les 52 métropoles |
+| Pagination | ✅ | 24 villes/page, navigation complète |
+| URL params | ✅ | ?zone=A&prixMin=3000&sort=prix_asc |
+| Cards villes | ✅ | Image, zone badge, population, prix m² |
+| Responsive mobile | ✅ | Panneau filtres collapsible |
+| Accessibilité | ✅ | ARIA labels, aria-live, role=status |
+
+### Corrections appliquées (code review)
+
+- [x] Validation page number (max 1000) - Protection DoS
+- [x] Validation ZoneFiscale (whitelist) - Sécurité type
+- [x] aria-live sur compteur villes - Accessibilité
 
 ### Validation
 
-- [ ] Filtres fonctionnels
-- [ ] URL reflète les filtres (?zone=A)
-- [ ] Performance avec 50+ villes
+- [x] Filtres fonctionnels ✅
+- [x] URL reflète les filtres (?zone=A, ?prixMin=3000, ?sort=prix_asc) ✅
+- [x] Performance avec 50+ villes ✅ (pagination 24/page)
+- [x] TypeScript strict ✅ pnpm check OK
 
 ---
 

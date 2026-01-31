@@ -169,6 +169,12 @@ export interface EspoLead {
 }
 
 /**
+ * Options de tri pour les villes
+ */
+export type VilleSortField = "name" | "prix" | "population";
+export type SortOrder = "asc" | "desc";
+
+/**
  * Filtres pour recherche de villes
  */
 export interface EspoVilleFilters {
@@ -176,6 +182,10 @@ export interface EspoVilleFilters {
   zoneFiscale?: ZoneFiscale;
   tensionLocative?: TensionLocative;
   search?: string; // Recherche par nom
+  prixMin?: number; // Prix m² minimum
+  prixMax?: number; // Prix m² maximum
+  orderBy?: VilleSortField; // Champ de tri
+  order?: SortOrder; // Direction du tri
 }
 
 /**

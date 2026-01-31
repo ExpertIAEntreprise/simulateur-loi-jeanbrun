@@ -43,6 +43,16 @@ export const metadata: Metadata = {
 const VILLES_PER_PAGE = 24;
 
 /**
+ * Page maximum autorisee (protection contre les requetes abusives)
+ */
+const MAX_PAGE = 1000;
+
+/**
+ * Zones fiscales valides
+ */
+const VALID_ZONES: ZoneFiscale[] = ["A_BIS", "A", "B1", "B2", "C"];
+
+/**
  * Props de la page avec searchParams
  */
 interface PageProps {
@@ -52,6 +62,9 @@ interface PageProps {
     search?: string;
     page?: string;
     metropoles?: string;
+    prixMin?: string;
+    prixMax?: string;
+    sort?: string;
   }>;
 }
 
@@ -162,13 +175,19 @@ function buildBasePath(
   zone: string | undefined,
   departement: string | undefined,
   search: string | undefined,
-  metropoles: boolean
+  metropoles: boolean,
+  prixMin: string | undefined,
+  prixMax: string | undefined,
+  sort: string | undefined
 ): string {
   const params = new URLSearchParams();
   if (zone && zone !== "all") params.set("zone", zone);
   if (departement && departement !== "all") params.set("departement", departement);
   if (search) params.set("search", search);
   if (metropoles) params.set("metropoles", "true");
+  if (prixMin) params.set("prixMin", prixMin);
+  if (prixMax) params.set("prixMax", prixMax);
+  if (sort && sort !== "name_asc") params.set("sort", sort);
 
   const queryString = params.toString();
   return queryString ? `/villes?${queryString}` : "/villes";
@@ -197,6 +216,28 @@ async function fetchVilles(
 }
 
 /**
+ * Parse le parametre sort en orderBy et order
+ */
+function parseSort(sort: string | undefined): {
+  orderBy?: "name" | "prix" | "population";
+  order?: "asc" | "desc";
+} {
+  if (!sort) return {};
+
+  const parts = sort.split("_");
+  if (parts.length !== 2) return {};
+
+  const [field, direction] = parts;
+
+  const orderBy = field === "name" ? "name" : field === "prix" ? "prix" : field === "population" ? "population" : undefined;
+  const order = direction === "asc" ? "asc" : direction === "desc" ? "desc" : undefined;
+
+  if (!orderBy || !order) return {};
+
+  return { orderBy, order };
+}
+
+/**
  * Composant de donnees villes (Server Component avec fetch)
  */
 async function VillesData({
@@ -205,12 +246,18 @@ async function VillesData({
   search,
   page,
   metropoles,
+  prixMin,
+  prixMax,
+  sort,
 }: {
   zone: string | undefined;
   departement: string | undefined;
   search: string | undefined;
   page: number;
   metropoles: boolean;
+  prixMin: string | undefined;
+  prixMax: string | undefined;
+  sort: string | undefined;
 }) {
   // Verifier si EspoCRM est disponible
   if (!isEspoCRMAvailable()) {
@@ -225,7 +272,7 @@ async function VillesData({
   // Construire les filtres
   const filters: EspoVilleFilters = {};
 
-  if (zone && zone !== "all") {
+  if (zone && zone !== "all" && VALID_ZONES.includes(zone as ZoneFiscale)) {
     filters.zoneFiscale = zone as ZoneFiscale;
   }
 
@@ -236,6 +283,26 @@ async function VillesData({
   if (search) {
     filters.search = search;
   }
+
+  // Filtres prix
+  if (prixMin) {
+    const parsed = parseInt(prixMin, 10);
+    if (!Number.isNaN(parsed)) {
+      filters.prixMin = parsed;
+    }
+  }
+
+  if (prixMax) {
+    const parsed = parseInt(prixMax, 10);
+    if (!Number.isNaN(parsed)) {
+      filters.prixMax = parsed;
+    }
+  }
+
+  // Tri
+  const { orderBy, order } = parseSort(sort);
+  if (orderBy) filters.orderBy = orderBy;
+  if (order) filters.order = order;
 
   // Calculer l'offset pour la pagination
   const offset = (page - 1) * VILLES_PER_PAGE;
@@ -262,7 +329,7 @@ async function VillesData({
   }
 
   // Construire l'URL de base pour la pagination
-  const basePath = buildBasePath(zone, departement, search, metropoles);
+  const basePath = buildBasePath(zone, departement, search, metropoles, prixMin, prixMax, sort);
 
   return (
     <VillesGrid
@@ -302,18 +369,22 @@ async function VillesFiltersWrapper({
   departement,
   search,
   metropoles,
+  prixMin,
+  prixMax,
 }: {
   zone: string | undefined;
   departement: string | undefined;
   search: string | undefined;
   metropoles: boolean;
+  prixMin: string | undefined;
+  prixMax: string | undefined;
 }) {
   // Compter le total pour l'affichage
   let totalVilles = 0;
 
   if (isEspoCRMAvailable()) {
     const filters: EspoVilleFilters = {};
-    if (zone && zone !== "all") {
+    if (zone && zone !== "all" && VALID_ZONES.includes(zone as ZoneFiscale)) {
       filters.zoneFiscale = zone as ZoneFiscale;
     }
     if (departement && departement !== "all") {
@@ -321,6 +392,21 @@ async function VillesFiltersWrapper({
     }
     if (search) {
       filters.search = search;
+    }
+
+    // Filtres prix pour le comptage
+    if (prixMin) {
+      const parsed = parseInt(prixMin, 10);
+      if (!Number.isNaN(parsed)) {
+        filters.prixMin = parsed;
+      }
+    }
+
+    if (prixMax) {
+      const parsed = parseInt(prixMax, 10);
+      if (!Number.isNaN(parsed)) {
+        filters.prixMax = parsed;
+      }
     }
 
     totalVilles = await fetchVillesCount(filters, metropoles);
@@ -338,8 +424,12 @@ export default async function VillesPage({ searchParams }: PageProps) {
   const zone = params.zone;
   const departement = params.departement;
   const search = params.search;
-  const page = Math.max(1, parseInt(params.page ?? "1", 10));
+  const parsedPage = parseInt(params.page ?? "1", 10);
+  const page = Math.max(1, Math.min(Number.isNaN(parsedPage) ? 1 : parsedPage, MAX_PAGE));
   const metropoles = params.metropoles === "true";
+  const prixMin = params.prixMin;
+  const prixMax = params.prixMax;
+  const sort = params.sort;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -367,10 +457,12 @@ export default async function VillesPage({ searchParams }: PageProps) {
         <Suspense
           fallback={
             <div className="space-y-4">
-              <div className="flex gap-4">
-                <Skeleton className="h-9 flex-1" />
-                <Skeleton className="h-9 w-56" />
-                <Skeleton className="h-9 w-56" />
+              <div className="flex gap-4 flex-wrap">
+                <Skeleton className="h-9 flex-1 min-w-[200px]" />
+                <Skeleton className="h-9 w-52" />
+                <Skeleton className="h-9 w-52" />
+                <Skeleton className="h-9 w-48" />
+                <Skeleton className="h-9 w-48" />
                 <Skeleton className="h-9 w-40" />
               </div>
               <Skeleton className="h-5 w-32" />
@@ -382,6 +474,8 @@ export default async function VillesPage({ searchParams }: PageProps) {
             departement={departement}
             search={search}
             metropoles={metropoles}
+            prixMin={prixMin}
+            prixMax={prixMax}
           />
         </Suspense>
       </section>
@@ -395,6 +489,9 @@ export default async function VillesPage({ searchParams }: PageProps) {
             search={search}
             page={page}
             metropoles={metropoles}
+            prixMin={prixMin}
+            prixMax={prixMax}
+            sort={sort}
           />
         </Suspense>
       </section>

@@ -192,11 +192,32 @@ export class EspoCRMClient {
     filters?: EspoVilleFilters,
     options?: PaginationOptions
   ): Promise<EspoListResponse<EspoVille>> {
+    // Déterminer le champ de tri EspoCRM
+    let orderByField = "name";
+    let orderDirection: "asc" | "desc" = "asc";
+
+    if (filters?.orderBy) {
+      switch (filters.orderBy) {
+        case "prix":
+          orderByField = "cPrixM2Moyen";
+          break;
+        case "population":
+          orderByField = "cPopulationCommune";
+          break;
+        default:
+          orderByField = "name";
+      }
+    }
+
+    if (filters?.order) {
+      orderDirection = filters.order;
+    }
+
     const params: Record<string, string | number> = {
       maxSize: options?.limit ?? 50,
       offset: options?.offset ?? 0,
-      orderBy: "name",
-      order: "asc",
+      orderBy: orderByField,
+      order: orderDirection,
     };
 
     // Ajouter filtres
@@ -209,12 +230,30 @@ export class EspoCRMClient {
 
       Object.assign(params, whereParams);
 
+      // Calculer l'index pour les where clauses additionnelles
+      let whereIndex = Object.keys(whereParams).length / 3; // 3 params par where clause
+
       // Recherche par nom (like)
       if (filters.search) {
-        const searchIndex = Object.keys(whereParams).length / 3; // 3 params par where clause
-        params[`where[${searchIndex}][type]`] = "like";
-        params[`where[${searchIndex}][attribute]`] = "name";
-        params[`where[${searchIndex}][value]`] = `%${filters.search}%`;
+        params[`where[${whereIndex}][type]`] = "like";
+        params[`where[${whereIndex}][attribute]`] = "name";
+        params[`where[${whereIndex}][value]`] = `%${filters.search}%`;
+        whereIndex++;
+      }
+
+      // Filtre prix minimum
+      if (filters.prixMin !== undefined) {
+        params[`where[${whereIndex}][type]`] = "greaterThanOrEquals";
+        params[`where[${whereIndex}][attribute]`] = "cPrixM2Moyen";
+        params[`where[${whereIndex}][value]`] = filters.prixMin;
+        whereIndex++;
+      }
+
+      // Filtre prix maximum
+      if (filters.prixMax !== undefined) {
+        params[`where[${whereIndex}][type]`] = "lessThanOrEquals";
+        params[`where[${whereIndex}][attribute]`] = "cPrixM2Moyen";
+        params[`where[${whereIndex}][value]`] = filters.prixMax;
       }
     }
 
