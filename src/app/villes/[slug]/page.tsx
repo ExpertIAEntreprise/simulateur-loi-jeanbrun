@@ -14,15 +14,16 @@
  */
 
 
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, Home, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
+import { getVilleJsonLdForMetadata } from "@/components/seo";
 import { Badge } from "@/components/ui/badge";
 import { ArgumentsInvestissement } from "@/components/villes/ArgumentsInvestissement";
 import { BarometreSidebar } from "@/components/villes/BarometreSidebar";
+import { Breadcrumb, getBreadcrumbJsonLdForMetadata } from "@/components/villes/Breadcrumb";
 import { ContenuEditorial } from "@/components/villes/ContenuEditorial";
 import { DonneesMarche } from "@/components/villes/DonneesMarche";
-import { FaqVille } from "@/components/villes/FaqVille";
+import { FaqVille, getFaqJsonLdForMetadata } from "@/components/villes/FaqVille";
 import { LienMetropoleParent } from "@/components/villes/LienMetropoleParent";
 import { PhotoVille } from "@/components/villes/PhotoVille";
 import { PlafondsJeanbrun } from "@/components/villes/PlafondsJeanbrun";
@@ -89,6 +90,7 @@ export async function generateStaticParams() {
 
 /**
  * Generation des metadonnees SEO dynamiques
+ * Inclut les JSON-LD pour Google Rich Snippets
  */
 export async function generateMetadata({
   params,
@@ -105,6 +107,7 @@ export async function generateMetadata({
 
   const zoneLabel = ZONE_LABELS[ville.cZoneFiscale] ?? ville.cZoneFiscale;
   const plafond = PLAFONDS_LOYER[ville.cZoneFiscale] ?? 0;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
 
   // Title optimise SEO (< 60 caracteres)
   const title =
@@ -117,7 +120,27 @@ export async function generateMetadata({
     `Investissement locatif a ${ville.name} avec la loi Jeanbrun. Zone ${zoneLabel}, plafond ${plafond.toFixed(2)} EUR/m2. Simulez votre economie d'impot.`;
 
   // URL canonique
-  const canonicalUrl = `https://simulateur-loi-jeanbrun.vercel.app/villes/${slug}`;
+  const canonicalUrl = `${baseUrl}/villes/${slug}`;
+
+  // JSON-LD schemas pour Google Rich Snippets
+  const breadcrumbJsonLd = getBreadcrumbJsonLdForMetadata([
+    { label: "Villes", href: "/villes" },
+    { label: ville.name, href: `/villes/${ville.cSlug}` },
+  ]);
+
+  const villeJsonLd = getVilleJsonLdForMetadata({
+    ville,
+    baseUrl,
+  });
+
+  const faqItems = getVilleFaq(ville);
+  const faqJsonLd = faqItems.length > 0 ? getFaqJsonLdForMetadata(faqItems) : null;
+
+  // Combiner tous les JSON-LD en un array
+  const jsonLdScripts = [breadcrumbJsonLd, villeJsonLd];
+  if (faqJsonLd) {
+    jsonLdScripts.push(faqJsonLd);
+  }
 
   return {
     title,
@@ -162,66 +185,11 @@ export async function generateMetadata({
       index: true,
       follow: true,
     },
+    // JSON-LD schemas injectes dans <head>
+    other: {
+      "script:ld+json": JSON.stringify(jsonLdScripts),
+    },
   };
-}
-
-/**
- * Composant Breadcrumb
- */
-function Breadcrumb({ ville }: { ville: EspoVille }) {
-  const breadcrumbItems = [
-    { label: "Accueil", href: "/" },
-    { label: "Villes", href: "/villes" },
-    { label: ville.name, href: null },
-  ];
-
-  // Schema JSON-LD BreadcrumbList
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: breadcrumbItems.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.label,
-      item: item.href
-        ? `https://simulateur-loi-jeanbrun.vercel.app${item.href}`
-        : undefined,
-    })),
-  };
-
-  return (
-    <>
-      {/* JSON-LD BreadcrumbList */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbJsonLd),
-        }}
-      />
-
-      {/* Breadcrumb visuel */}
-      <nav
-        aria-label="Fil d'Ariane"
-        className="mb-6 flex items-center gap-2 text-sm text-muted-foreground"
-      >
-        <Link
-          href="/"
-          className="flex items-center gap-1 hover:text-foreground"
-        >
-          <Home className="size-4" aria-hidden="true" />
-          <span className="sr-only">Accueil</span>
-        </Link>
-        <ChevronRight className="size-4" aria-hidden="true" />
-        <Link href="/villes" className="hover:text-foreground">
-          Villes
-        </Link>
-        <ChevronRight className="size-4" aria-hidden="true" />
-        <span className="font-medium text-foreground" aria-current="page">
-          {ville.name}
-        </span>
-      </nav>
-    </>
-  );
 }
 
 /**
@@ -243,41 +211,6 @@ function ZoneBadge({ zone }: { zone: string }) {
       <MapPin className="mr-1 size-3" aria-hidden="true" />
       Zone {label}
     </Badge>
-  );
-}
-
-/**
- * JSON-LD Place schema pour la ville
- */
-function PlaceJsonLd({ ville }: { ville: EspoVille }) {
-  const placeSchema = {
-    "@context": "https://schema.org",
-    "@type": "Place",
-    name: ville.name,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: ville.name,
-      addressRegion: ville.cRegion,
-      addressCountry: "FR",
-    },
-    geo:
-      ville.cLatitude && ville.cLongitude
-        ? {
-            "@type": "GeoCoordinates",
-            latitude: ville.cLatitude,
-            longitude: ville.cLongitude,
-          }
-        : undefined,
-    ...(ville.cPhotoVille ? { image: ville.cPhotoVille } : {}),
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(placeSchema),
-      }}
-    />
   );
 }
 
@@ -311,11 +244,17 @@ function MetropoleLayout({
     zoneFiscale: v.cZoneFiscale,
   }));
 
+  // Breadcrumb items (sans Accueil, ajoute automatiquement par le composant)
+  const breadcrumbItems = [
+    { label: "Villes", href: "/villes" },
+    { label: ville.name, href: `/villes/${ville.cSlug}` },
+  ];
+
   return (
     <div className="space-y-12">
       {/* Hero Section */}
       <section className="space-y-6">
-        <Breadcrumb ville={ville} />
+        <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
         {/* Photo hero */}
         <PhotoVille
@@ -377,7 +316,7 @@ function MetropoleLayout({
             </section>
           )}
 
-          {/* FAQ avec JSON-LD */}
+          {/* FAQ (JSON-LD deja dans generateMetadata) */}
           <FaqVille faqItems={faqItems} villeNom={ville.name} />
         </div>
 
@@ -428,11 +367,17 @@ function PeripheriqueLayout({
   const faqItems = getVilleFaq(ville);
   const argumentsItems = getVilleArguments(ville);
 
+  // Breadcrumb items (sans Accueil, ajoute automatiquement par le composant)
+  const breadcrumbItems = [
+    { label: "Villes", href: "/villes" },
+    { label: ville.name, href: `/villes/${ville.cSlug}` },
+  ];
+
   return (
     <div className="space-y-12">
       {/* Hero Section */}
       <section className="space-y-6">
-        <Breadcrumb ville={ville} />
+        <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
         {/* Lien metropole parent */}
         {metropoleParent && (
@@ -500,7 +445,7 @@ function PeripheriqueLayout({
           {/* Programmes neufs */}
           <ProgrammesList programmes={programmes} maxItems={6} />
 
-          {/* FAQ avec JSON-LD */}
+          {/* FAQ (JSON-LD deja dans generateMetadata) */}
           <FaqVille faqItems={faqItems} villeNom={ville.name} />
         </div>
 
@@ -537,6 +482,7 @@ function PeripheriqueLayout({
 
 /**
  * Page principale /villes/[slug]
+ * JSON-LD schemas (Ville, Breadcrumb, FAQ) injectes via generateMetadata()
  */
 export default async function VillePage({ params }: PageParams) {
   const { slug } = await params;
@@ -553,9 +499,6 @@ export default async function VillePage({ params }: PageParams) {
 
   return (
     <main className="container mx-auto px-4 py-8 md:py-12">
-      {/* JSON-LD Place schema */}
-      <PlaceJsonLd ville={ville} />
-
       {/* Layout conditionnel selon type de ville */}
       {ville.cIsMetropole ? (
         <MetropoleLayout
