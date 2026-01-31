@@ -222,19 +222,22 @@ function MetropoleLayout({
   programmes,
   barometre,
   villesPeripheriques,
+  villesProches,
 }: {
   ville: EspoVille;
   programmes: EspoProgramme[];
   barometre: EspoBarometre | null;
   villesPeripheriques: EspoVille[];
+  villesProches: EspoVille[];
 }) {
   const faqItems = getVilleFaq(ville);
 
-  // Transformer les villes peripheriques pour VillesProches
-  const villesProches = villesPeripheriques.slice(0, 6).map((v) => ({
+  // Transformer les villes proches pour le composant VillesProches
+  const villesProchesMapped = villesProches.map((v) => ({
     nom: v.name,
     slug: v.cSlug,
     zoneFiscale: v.cZoneFiscale,
+    region: v.cRegion,
   }));
 
   // Transformer pour VillesPeripheriquesList
@@ -330,17 +333,20 @@ function MetropoleLayout({
               zoneFiscale={ville.cZoneFiscale}
             />
 
-            {/* Barometre si disponible */}
+            {/* Barometre si disponible (avec lien vers page barometre) */}
             {barometre && (
               <div className="mt-6">
-                <BarometreSidebar barometre={barometre} />
+                <BarometreSidebar barometre={barometre} villeSlug={ville.cSlug} />
               </div>
             )}
 
-            {/* Villes proches */}
-            {villesProches.length > 0 && (
+            {/* Villes proches (maillage interne SEO) */}
+            {villesProchesMapped.length > 0 && (
               <div className="mt-6">
-                <VillesProches villes={villesProches} />
+                <VillesProches
+                  villes={villesProchesMapped}
+                  titre="Villes de la region"
+                />
               </div>
             )}
           </div>
@@ -358,14 +364,24 @@ function PeripheriqueLayout({
   programmes,
   barometre,
   metropoleParent,
+  villesProches,
 }: {
   ville: EspoVille;
   programmes: EspoProgramme[];
   barometre: EspoBarometre | null;
   metropoleParent: EspoVille | null;
+  villesProches: EspoVille[];
 }) {
   const faqItems = getVilleFaq(ville);
   const argumentsItems = getVilleArguments(ville);
+
+  // Transformer les villes proches pour le composant VillesProches
+  const villesProchesMapped = villesProches.map((v) => ({
+    nom: v.name,
+    slug: v.cSlug,
+    zoneFiscale: v.cZoneFiscale,
+    region: v.cRegion,
+  }));
 
   // Breadcrumb items (sans Accueil, ajoute automatiquement par le composant)
   const breadcrumbItems = [
@@ -443,10 +459,23 @@ function PeripheriqueLayout({
           <PlafondsJeanbrun zoneFiscale={ville.cZoneFiscale} />
 
           {/* Programmes neufs */}
-          <ProgrammesList programmes={programmes} maxItems={6} />
+          <ProgrammesList
+            programmes={programmes}
+            maxItems={6}
+            villeSlug={ville.cSlug}
+            villeNom={ville.name}
+          />
 
           {/* FAQ (JSON-LD deja dans generateMetadata) */}
           <FaqVille faqItems={faqItems} villeNom={ville.name} />
+
+          {/* Villes proches (maillage interne SEO) */}
+          {villesProchesMapped.length > 0 && (
+            <VillesProches
+              villes={villesProchesMapped}
+              titre="Autres villes proches"
+            />
+          )}
         </div>
 
         {/* Sidebar (1/3) */}
@@ -459,9 +488,9 @@ function PeripheriqueLayout({
               zoneFiscale={ville.cZoneFiscale}
             />
 
-            {/* Barometre sidebar (PERIPHERIQUES: plus visible) */}
+            {/* Barometre sidebar (PERIPHERIQUES: plus visible, avec lien) */}
             <div className="mt-6">
-              <BarometreSidebar barometre={barometre} />
+              <BarometreSidebar barometre={barometre} villeSlug={ville.cSlug} />
             </div>
 
             {/* Lien retour metropole en sidebar aussi */}
@@ -489,7 +518,7 @@ export default async function VillePage({ params }: PageParams) {
   const client = getEspoCRMClient();
 
   // Recuperer toutes les donnees en une seule requete enrichie
-  const { ville, programmes, barometre, villesPeripheriques, metropoleParent } =
+  const { ville, programmes, barometre, villesPeripheriques, metropoleParent, villesProches } =
     await client.getVilleBySlugEnriched(slug);
 
   // 404 si ville non trouvee
@@ -506,6 +535,7 @@ export default async function VillePage({ params }: PageParams) {
           programmes={programmes}
           barometre={barometre}
           villesPeripheriques={villesPeripheriques}
+          villesProches={villesProches}
         />
       ) : (
         <PeripheriqueLayout
@@ -513,6 +543,7 @@ export default async function VillePage({ params }: PageParams) {
           programmes={programmes}
           barometre={barometre}
           metropoleParent={metropoleParent}
+          villesProches={villesProches}
         />
       )}
     </main>

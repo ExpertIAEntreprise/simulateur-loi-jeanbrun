@@ -1,4 +1,6 @@
-import { Building2 } from "lucide-react";
+import Link from "next/link";
+import { Building2, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { EspoProgramme } from "@/lib/espocrm/types";
 import { cn } from "@/lib/utils";
 import { ProgrammeCard } from "./ProgrammeCard";
@@ -8,6 +10,12 @@ interface ProgrammesListProps {
   programmes: EspoProgramme[];
   /** Maximum number of programmes to display (default: 6) */
   maxItems?: number;
+  /** Total number of programmes available (for "voir tous" link) */
+  totalProgrammes?: number;
+  /** Slug de la ville pour le lien vers tous les programmes */
+  villeSlug?: string;
+  /** Nom de la ville pour l'aria-label */
+  villeNom?: string;
   /** Additional CSS classes for the container */
   className?: string;
 }
@@ -21,15 +29,20 @@ interface ProgrammesListProps {
  * - Empty state with helpful message
  * - Section title "Programmes neufs eligibles"
  * - Priority loading for first 2 images (LCP optimization)
+ * - Link to see all programmes (maillage interne SEO)
  */
 export function ProgrammesList({
   programmes,
   maxItems = 6,
+  totalProgrammes,
+  villeSlug,
+  villeNom,
   className,
 }: ProgrammesListProps) {
   // Limit to maxItems programmes
   const displayedProgrammes = programmes.slice(0, maxItems);
   const hasNoProgrammes = displayedProgrammes.length === 0;
+  const hasMoreProgrammes = (totalProgrammes ?? programmes.length) > maxItems;
 
   return (
     <section className={cn("space-y-6", className)} aria-labelledby="programmes-title">
@@ -56,16 +69,37 @@ export function ProgrammesList({
           </p>
         </div>
       ) : (
-        /* Programmes grid */
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {displayedProgrammes.map((programme, index) => (
-            <ProgrammeCard
-              key={programme.id}
-              programme={programme}
-              priority={index < 2}
-            />
-          ))}
-        </div>
+        <>
+          {/* Programmes grid */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {displayedProgrammes.map((programme, index) => (
+              <ProgrammeCard
+                key={programme.id}
+                programme={programme}
+                priority={index < 2}
+              />
+            ))}
+          </div>
+
+          {/* Lien vers tous les programmes (maillage interne SEO) */}
+          {hasMoreProgrammes && villeSlug && (
+            <div className="mt-6 text-center">
+              <Button variant="outline" asChild>
+                <Link
+                  href={`/villes/${villeSlug}#programmes`}
+                  aria-label={
+                    villeNom
+                      ? `Voir tous les programmes neufs a ${villeNom}`
+                      : "Voir tous les programmes neufs"
+                  }
+                >
+                  Voir tous les programmes
+                  <ArrowRight className="ml-2 size-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </section>
   );

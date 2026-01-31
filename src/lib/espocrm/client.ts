@@ -328,7 +328,7 @@ export class EspoCRMClient {
   }
 
   /**
-   * Récupère une ville par slug avec données enrichies (programmes, baromètre)
+   * Récupère une ville par slug avec données enrichies (programmes, baromètre, villes proches)
    */
   async getVilleBySlugEnriched(slug: string): Promise<{
     ville: EspoVille | null;
@@ -336,6 +336,7 @@ export class EspoCRMClient {
     barometre: EspoBarometre | null;
     villesPeripheriques: EspoVille[];
     metropoleParent: EspoVille | null;
+    villesProches: EspoVille[];
   }> {
     const ville = await this.getVilleBySlug(slug);
 
@@ -346,11 +347,12 @@ export class EspoCRMClient {
         barometre: null,
         villesPeripheriques: [],
         metropoleParent: null,
+        villesProches: [],
       };
     }
 
-    // Récupérer en parallèle: programmes, baromètre, villes liées
-    const [programmesResponse, barometre, villesLiees, metropoleParent] = await Promise.all([
+    // Récupérer en parallèle: programmes, baromètre, villes liées, villes proches
+    const [programmesResponse, barometre, villesLiees, metropoleParent, villesProches] = await Promise.all([
       this.getProgrammes({ villeId: ville.id, actif: true }, { limit: 10 }),
       this.getLatestBarometre(ville.id),
       ville.cIsMetropole
@@ -359,6 +361,7 @@ export class EspoCRMClient {
       ville.cMetropoleParentId
         ? this.getVilleById(ville.cMetropoleParentId)
         : Promise.resolve(null),
+      this.getVillesProches(ville, 6),
     ]);
 
     return {
@@ -367,6 +370,7 @@ export class EspoCRMClient {
       barometre,
       villesPeripheriques: villesLiees.list,
       metropoleParent,
+      villesProches,
     };
   }
 
@@ -562,6 +566,74 @@ export class EspoCRMClient {
     const url = this.buildUrl("/CJeanbrunBarometre", params);
 
     return this.fetchWithRetry<EspoListResponse<EspoBarometre>>(url);
+  }
+
+  /**
+   * Récupère les villes de la même région (pour maillage interne)
+   */
+  async getVillesByRegion(
+    region: string,
+    excludeSlug?: string,
+    options?: PaginationOptions
+  ): Promise<EspoListResponse<EspoVille>> {
+    const params: Record<string, string | number> = {
+      maxSize: options?.limit ?? 10,
+      offset: options?.offset ?? 0,
+      orderBy: "cPopulationCommune",
+      order: "desc",
+    };
+
+    const whereParams = this.buildWhereParams({ cRegion: region });
+    Object.assign(params, whereParams);
+
+    // Exclure la ville actuelle si spécifiée
+    if (excludeSlug) {
+      const whereIndex = Object.keys(whereParams).length / 3;
+      params[`where[${whereIndex}][type]`] = "notEquals";
+      params[`where[${whereIndex}][attribute]`] = "cSlug";
+      params[`where[${whereIndex}][value]`] = excludeSlug;
+    }
+
+    const url = this.buildUrl("/CJeanbrunVille", params);
+
+    return this.fetchWithRetry<EspoListResponse<EspoVille>>(url);
+  }
+
+  /**
+   * Récupère les villes proches pour le maillage interne
+   * Priorise les villes de la même région, puis les métropoles
+   */
+  async getVillesProches(
+    ville: EspoVille,
+    limit: number = 6
+  ): Promise<EspoVille[]> {
+    // Si c'est une périphérique, récupérer les autres périphériques de la même métropole
+    if (!ville.cIsMetropole && ville.cMetropoleParentId) {
+      const peripheriques = await this.getVillesPeripheriques(
+        ville.cMetropoleParentId,
+        { limit: limit + 1 }
+      );
+      // Exclure la ville actuelle
+      return peripheriques.list
+        .filter((v) => v.cSlug !== ville.cSlug)
+        .slice(0, limit);
+    }
+
+    // Si c'est une métropole, récupérer d'autres métropoles de la même région
+    if (ville.cRegion) {
+      const villesRegion = await this.getVillesByRegion(
+        ville.cRegion,
+        ville.cSlug,
+        { limit: limit }
+      );
+      return villesRegion.list;
+    }
+
+    // Fallback: retourner les métropoles les plus populaires
+    const metropoles = await this.getMetropoles({ limit: limit + 1 });
+    return metropoles.list
+      .filter((v) => v.cSlug !== ville.cSlug)
+      .slice(0, limit);
   }
 
   /**

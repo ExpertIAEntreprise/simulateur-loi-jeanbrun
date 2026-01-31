@@ -1,14 +1,19 @@
 /**
  * BarometreSidebar.tsx
  * Version compacte du barometre pour affichage en sidebar
+ * Inclut un lien vers la page barometre detaillee (maillage interne SEO)
  */
 
+import Link from "next/link";
+import { TrendingUp, TrendingDown, Minus, Star, Activity, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EspoBarometre } from "@/lib/espocrm/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, Minus, Star, Activity } from "lucide-react";
 
 interface BarometreSidebarProps {
   barometre: EspoBarometre | null;
+  /** Slug de la ville pour le lien vers le barometre (optionnel) */
+  villeSlug?: string;
 }
 
 /**
@@ -73,7 +78,7 @@ function formatPercent(value: number | null): string {
   return `${sign}${value.toFixed(1)}%`;
 }
 
-export function BarometreSidebar({ barometre }: BarometreSidebarProps) {
+export function BarometreSidebar({ barometre, villeSlug }: BarometreSidebarProps) {
   if (!barometre) {
     return (
       <Card className="bg-muted/30">
@@ -91,6 +96,9 @@ export function BarometreSidebar({ barometre }: BarometreSidebarProps) {
       </Card>
     );
   }
+
+  // Extraire le mois au format YYYY-MM pour le lien
+  const moisForUrl = barometre.cMois?.slice(0, 7)?.replace("-", "-") ?? "";
 
   const rendementFormate = barometre.cRendementBrut
     ? `${barometre.cRendementBrut.toFixed(1)}%`
@@ -160,6 +168,21 @@ export function BarometreSidebar({ barometre }: BarometreSidebarProps) {
           </div>
         )}
       </CardContent>
+
+      {/* Lien vers le barometre complet (maillage interne SEO) */}
+      {villeSlug && moisForUrl && (
+        <CardFooter className="pt-0">
+          <Button variant="link" className="h-auto p-0 text-sm" asChild>
+            <Link
+              href={`/barometre/${villeSlug}/${moisForUrl}`}
+              aria-label={`Voir le barometre complet de ${moisForUrl}`}
+            >
+              Voir le barometre complet
+              <ArrowRight className="ml-1 size-3" aria-hidden="true" />
+            </Link>
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }

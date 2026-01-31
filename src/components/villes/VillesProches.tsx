@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MapPin, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ZoneFiscale } from "@/types/ville";
 
 /**
@@ -16,6 +17,8 @@ interface VilleProche {
   slug: string;
   /** Zone fiscale */
   zoneFiscale: ZoneFiscale;
+  /** Region (optionnel, pour filtrage) */
+  region?: string | null;
 }
 
 /**
@@ -24,6 +27,10 @@ interface VilleProche {
 interface VillesProchesProp {
   /** Liste des villes proches (max 6 affichees) */
   villes: VilleProche[];
+  /** Titre personnalise (optionnel) */
+  titre?: string;
+  /** Afficher le lien vers toutes les villes */
+  showAllLink?: boolean;
 }
 
 /**
@@ -56,7 +63,11 @@ function getZoneBadgeVariant(zone: ZoneFiscale): "default" | "secondary" | "outl
  * Grille de villes proches pour le maillage interne SEO
  * Affiche jusqu'a 6 villes avec liens vers leurs pages respectives
  */
-export function VillesProches({ villes }: VillesProchesProp) {
+export function VillesProches({
+  villes,
+  titre = "Villes proches",
+  showAllLink = true,
+}: VillesProchesProp) {
   // Ne rien afficher si pas de villes
   if (villes.length === 0) {
     return null;
@@ -70,7 +81,7 @@ export function VillesProches({ villes }: VillesProchesProp) {
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
           <MapPin className="size-5 text-primary" aria-hidden="true" />
-          <CardTitle className="text-lg">Villes proches</CardTitle>
+          <CardTitle className="text-lg">{titre}</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
@@ -98,6 +109,17 @@ export function VillesProches({ villes }: VillesProchesProp) {
           </ul>
         </nav>
       </CardContent>
+      {/* Lien vers toutes les villes (maillage interne SEO) */}
+      {showAllLink && (
+        <CardFooter className="pt-0">
+          <Button variant="link" className="h-auto p-0 text-sm" asChild>
+            <Link href="/villes" aria-label="Voir toutes les villes eligibles">
+              Voir toutes les villes
+              <ArrowRight className="ml-1 size-3" aria-hidden="true" />
+            </Link>
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }

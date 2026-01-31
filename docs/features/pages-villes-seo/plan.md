@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** Phase 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 terminées ✅ (31/01/2026) - Prêt pour Phase 9 (Maillage Interne)
+**Statut:** Phase 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 terminées ✅ (31/01/2026) - Prêt pour Phase 10 (Crons et Automatisation)
 
 ---
 
@@ -555,19 +555,50 @@ src/app/
 
 ---
 
-## Phase 9: Maillage Interne (0.5 jour)
+## Phase 9: Maillage Interne (0.5 jour) ✅ TERMINÉE
+
+> **Terminée le:** 31/01/2026
+> **Fichiers créés/modifiés:** 6 fichiers
 
 ### Tâches
 
-- [ ] 9.1 Composant villes proches (même région)
-- [ ] 9.2 Liens vers baromètre depuis page ville
-- [ ] 9.3 Liens vers programmes depuis page ville
-- [ ] 9.4 Footer avec top villes par zone
+- [x] 9.1 Composant villes proches (même région) ✅
+  - Ajout méthode `getVillesByRegion()` et `getVillesProches()` dans client EspoCRM
+  - VillesProches enrichi avec titre personnalisable et lien "Voir toutes les villes"
+- [x] 9.2 Liens vers baromètre depuis page ville ✅
+  - BarometreSidebar: ajout lien "Voir le baromètre complet →" vers `/barometre/[ville]/[mois]`
+  - Prop `villeSlug` ajoutée pour construire l'URL
+- [x] 9.3 Liens vers programmes depuis page ville ✅
+  - ProgrammesList: ajout lien "Voir tous les programmes →"
+  - Props `villeSlug`, `villeNom`, `totalProgrammes` ajoutées
+- [x] 9.4 Footer avec top villes par zone ✅
+  - Nouveau composant `FooterVilles` avec grille par zone fiscale (A bis, A, B1, B2)
+  - Version compacte `FooterVillesCompact` pour mobile
+  - Intégration dans `SiteFooter` avec liens vers `/villes` et `/barometre`
+
+### Fichiers modifiés
+
+```
+src/components/villes/
+├── VillesProches.tsx         # +titre, +showAllLink, +CardFooter avec lien
+├── BarometreSidebar.tsx      # +villeSlug prop, +lien baromètre complet
+├── ProgrammesList.tsx        # +villeSlug, +villeNom, +lien programmes
+├── FooterVilles.tsx          # NOUVEAU: top villes par zone fiscale
+└── index.ts                  # +export FooterVilles
+
+src/components/site-footer.tsx  # +section villes, +liens baromètre/villes
+
+src/lib/espocrm/client.ts       # +getVillesByRegion(), +getVillesProches()
+                                # +villesProches dans getVilleBySlugEnriched()
+
+src/app/villes/[slug]/page.tsx  # +villesProches props, +villeSlug pour composants
+```
 
 ### Validation
 
-- [ ] Aucun lien cassé
-- [ ] Crawl complet possible
+- [x] Aucun lien cassé ✅ URLs valides construites dynamiquement
+- [x] Crawl complet possible ✅ Maillage interne complet
+- [x] TypeScript compile ✅ pnpm check OK
 
 ---
 

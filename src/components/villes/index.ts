@@ -38,3 +38,6 @@ export { LienMetropoleParent, LienMetropoleParentCompact } from "./LienMetropole
 export { TemoignageLocalise } from "./TemoignageLocalise";
 export { VillePeripheriqueCard, VillesPeripheriquesList } from "./VillePeripheriqueCard";
 export { ZonesInvestissement, ZonesInvestissementCompact } from "./ZonesInvestissement";
+
+// Composant footer maillage interne
+export { FooterVilles, FooterVillesCompact } from "./FooterVilles";
