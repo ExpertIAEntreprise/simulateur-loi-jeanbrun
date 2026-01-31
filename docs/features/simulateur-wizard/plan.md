@@ -3,6 +3,41 @@
 **Feature:** Simulateur Loi Jeanbrun 6 etapes
 **Estimation totale:** 18,5 jours
 **Date:** 30 janvier 2026
+**Derniere MAJ:** 31 janvier 2026
+
+---
+
+## Ameliorations apportees (31/01/2026)
+
+### Feature Lead Financement / Courtier
+
+Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
+
+**Contexte metier:**
+- Les banques ont 20% de marge de derogation sur la regle HCSF des 35%
+- Un bon reste a vivre peut permettre de passer meme au-dela de 35%
+- Un courtier peut identifier les banques avec de la marge pour ces profils
+
+**Fichiers crees:**
+- `src/types/lead-financement.ts` - Types pour leads courtier
+- `src/lib/calculs/analyse-financement.ts` - Analyse de financabilite
+- `src/components/simulateur/resultats/EncartFinancement.tsx` - Encart dans les resultats
+- `src/components/simulateur/resultats/LeadCourtierModal.tsx` - Modal capture lead
+- `src/components/simulateur/etape-3/AlerteEndettement.tsx` - Alerte dans le wizard
+- `src/app/api/leads/financement/route.ts` - API capture lead
+
+**Logique d'analyse:**
+- < 30% : Excellent (vert fonce)
+- 30-33% : Bon (vert clair)
+- 33-35% : Acceptable HCSF (vert pale)
+- 35-40% : Derogation possible (jaune) - CTA courtier
+- 40-45% : Tendu (orange) - CTA courtier fort
+- > 45% : Difficile (rouge)
+
+**Integration:**
+- Encart dans la page resultats avec jauge endettement
+- Alerte contextuelle dans l'etape 3 si > 35%
+- Modal de capture avec formulaire + consentements RGPD
 
 ---
 
@@ -147,6 +182,12 @@
   - Route: `/simulateur/avance/etape-3`
   - Fichier: `src/app/simulateur/avance/etape-3/page.tsx`
 
+- [x] **C.4bis** Creer `AlerteEndettement.tsx` (FAIT)
+  - Alerte contextuelle si endettement > 35%
+  - Mention derogation 20% et reste a vivre
+  - CTA vers courtier partenaire
+  - Fichier: `src/components/simulateur/etape-3/AlerteEndettement.tsx`
+
 ### Taches Etape 4 - Location (2j)
 
 - [ ] **C.5** Creer `NiveauLoyerCards.tsx` (0,75j)
@@ -245,6 +286,24 @@
 - [ ] **E.4** Creer `ComparatifLMNP.tsx` (0,5j)
   - Comparaison Jeanbrun vs LMNP (Premium)
   - Fichier: `src/components/simulateur/resultats/ComparatifLMNP.tsx`
+
+- [x] **E.4bis** Creer `EncartFinancement.tsx` (FAIT)
+  - Analyse financabilite (taux endettement, reste a vivre)
+  - Jauge visuelle avec seuils HCSF + derogation 20%
+  - CTA "Etre rappele par un courtier"
+  - Fichier: `src/components/simulateur/resultats/EncartFinancement.tsx`
+
+- [x] **E.4ter** Creer `LeadCourtierModal.tsx` (FAIT)
+  - Formulaire capture lead courtier
+  - Consentements RGPD + courtier
+  - Recap donnees simulation
+  - Fichier: `src/components/simulateur/resultats/LeadCourtierModal.tsx`
+
+- [x] **E.4quater** Creer API `/api/leads/financement` (FAIT)
+  - Validation Zod
+  - Stockage lead (TODO: Drizzle)
+  - Webhook courtier partenaire (configurable)
+  - Fichier: `src/app/api/leads/financement/route.ts`
 
 - [ ] **E.5** Creer API `simulation/avancee` (0,5j)
   - Route: `/api/simulation/avancee`
