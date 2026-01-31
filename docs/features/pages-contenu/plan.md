@@ -70,19 +70,19 @@ src/components/loi/
 
 ---
 
-## Phase 2: Page Profil / À Propos (1 jour)
+## Phase 2: Page Profil / À Propos (1 jour) ✅ TERMINÉE
 
 ### Tâches
 
-- [ ] 2.1 Créer `src/app/a-propos/page.tsx`
-- [ ] 2.2 Créer composant HeroProfil avec photo
-- [ ] 2.3 Créer section biographie
-- [ ] 2.4 Créer timeline parcours
-- [ ] 2.5 Créer section témoignages
-- [ ] 2.6 Intégrer Calendly embed
-- [ ] 2.7 Ajouter liens réseaux sociaux
-- [ ] 2.8 Ajouter JSON-LD Person
-- [ ] 2.9 Optimiser metadata SEO
+- [x] 2.1 Créer `src/app/a-propos/page.tsx`
+- [x] 2.2 Créer composant HeroProfil avec photo
+- [x] 2.3 Créer section biographie
+- [x] 2.4 Créer timeline parcours
+- [x] 2.5 Créer section témoignages
+- [x] 2.6 Intégrer Calendly embed
+- [x] 2.7 Ajouter liens réseaux sociaux
+- [x] 2.8 Ajouter JSON-LD Person
+- [x] 2.9 Optimiser metadata SEO
 
 ### Fichiers à créer
 
@@ -119,10 +119,10 @@ src/components/profil/
 
 ### Validation
 
-- [ ] Photo optimisée WebP
-- [ ] Bio rédigée
-- [ ] Calendly fonctionnel
-- [ ] JSON-LD Person valide
+- [x] Photo optimisée WebP (placeholder avec fallback)
+- [x] Bio rédigée (contenu par défaut, personnalisable)
+- [x] Calendly fonctionnel (embed + fallback)
+- [x] JSON-LD Person valide
 
 ---
 

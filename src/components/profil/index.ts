@@ -1,0 +1,6 @@
+export { HeroProfil } from './HeroProfil'
+export { Biographie } from './Biographie'
+export { Timeline } from './Timeline'
+export { Temoignages } from './Temoignages'
+export { CalendlyEmbed } from './CalendlyEmbed'
+export { SocialLinks } from './SocialLinks'
