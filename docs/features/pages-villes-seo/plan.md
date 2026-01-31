@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** Phase 1 + 2 + 3 + 4 + 5 terminées ✅ (31/01/2026) - Prêt pour Phase 6 (Page Baromètre)
+**Statut:** Phase 1 + 2 + 3 + 4 + 5 + 6 terminées ✅ (31/01/2026) - Prêt pour Phase 7 (Index Villes)
 
 ---
 
@@ -387,39 +387,57 @@ src/components/seo/
 
 ---
 
-## Phase 6: Page Baromètre (1.5 jours)
+## Phase 6: Page Baromètre (1.5 jours) ✅ TERMINÉE
+
+> **Terminée le:** 31/01/2026
+> **Fichiers créés:** 7 composants + 2 pages
 
 ### Tâches
 
-- [ ] 6.1 Créer `src/app/barometre/[ville]/[mois]/page.tsx`
-- [ ] 6.2 Créer composants baromètre (score, indicateurs, analyse)
-- [ ] 6.3 Historique avec graphique
-- [ ] 6.4 CTA vers simulateur
-- [ ] 6.5 Navigation entre mois
+- [x] 6.1 Créer `src/app/barometre/[ville]/[mois]/page.tsx` ✅
+- [x] 6.2 Créer composants baromètre (score, indicateurs, analyse) ✅
+- [x] 6.3 Historique avec graphique ✅
+- [x] 6.4 CTA vers simulateur ✅
+- [x] 6.5 Navigation entre mois ✅
 
-### Fichiers à créer
+### Fichiers créés (31/01/2026)
 
 ```
 src/app/barometre/
-├── page.tsx                     # Index baromètres
+├── page.tsx                     # Index baromètres avec filtres ✅
 └── [ville]/
     └── [mois]/
-        └── page.tsx             # Baromètre détail
+        └── page.tsx             # Baromètre détail + generateStaticParams ✅
 
 src/components/barometre/
-├── ScoreAttractivite.tsx
-├── IndicateursMarche.tsx
-├── AnalyseIA.tsx
-├── MeilleureOpportunite.tsx
-├── BarometreHistorique.tsx
-└── index.ts
+├── ScoreAttractivite.tsx        # Jauge circulaire SVG colorée ✅
+├── IndicateursMarche.tsx        # Grille 4 métriques ✅
+├── AnalyseIA.tsx                # Prose formatée ✅
+├── MeilleureOpportunite.tsx     # Card programme recommandé ✅
+├── BarometreHistorique.tsx      # Graphique barres 12 mois ✅
+├── BarometreCard.tsx            # Card compacte index ✅ (bonus)
+└── index.ts                     # Exports centralisés ✅
 ```
+
+### Fonctionnalités implémentées
+
+| Fonctionnalité | Status |
+|----------------|--------|
+| Index `/barometre` | ✅ Liste avec filtres zone/score |
+| Page détail `/barometre/[ville]/[mois]` | ✅ Layout complet |
+| generateStaticParams() | ✅ 51 métropoles SSG |
+| generateMetadata() | ✅ SEO dynamique |
+| Navigation mois | ✅ Précédent/Suivant |
+| CTA simulateur | ✅ Haut et bas de page |
+| Breadcrumb JSON-LD | ✅ Schema.org |
+| ISR | ✅ revalidate: 3600 (1h) |
 
 ### Validation
 
-- [ ] Navigation mois fonctionnelle
-- [ ] Score affiché correctement
-- [ ] Analyse IA rendue en prose
+- [x] Navigation mois fonctionnelle ✅
+- [x] Score affiché correctement ✅ Jauge SVG avec couleurs
+- [x] Analyse IA rendue en prose ✅ Paragraphes formatés
+- [x] TypeScript strict ✅ pnpm check OK
 
 ---
 
