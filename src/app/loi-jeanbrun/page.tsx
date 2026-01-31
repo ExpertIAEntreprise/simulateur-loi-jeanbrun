@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Metadata } from 'next'
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://simulateur-loi-jeanbrun.vercel.app'
+
 export const metadata: Metadata = {
   title: 'Loi Jeanbrun 2026 - Guide Complet du Nouveau Dispositif de Defiscalisation',
   description:
@@ -80,10 +82,10 @@ const articleJsonLd = {
     url: 'https://expert-ia-entreprise.fr',
   },
   datePublished: '2026-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
+  dateModified: '2026-01-31', // Update manually when content changes
   mainEntityOfPage: {
     '@type': 'WebPage',
-    '@id': 'https://simulateur-loi-jeanbrun.vercel.app/loi-jeanbrun',
+    '@id': `${BASE_URL}/loi-jeanbrun`,
   },
 }
 

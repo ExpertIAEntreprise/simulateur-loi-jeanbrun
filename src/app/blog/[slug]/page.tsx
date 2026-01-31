@@ -9,227 +9,19 @@ import {
   Clock,
   User,
 } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { ShareButtons } from './share-buttons'
+import { getPostBySlug, getAllSlugs, getRelatedPosts } from '@/lib/blog'
+import type { BlogPostMeta, BlogCategory } from '@/types/blog'
 import type { Metadata } from 'next'
-
-// Types
-interface BlogPost {
-  slug: string
-  title: string
-  description: string
-  date: string
-  author: string
-  category: string
-  tags: string[]
-  image: string
-  imageAlt: string
-  readingTime: number
-  featured: boolean
-  content: string
-}
+import type { Components } from 'react-markdown'
 
 // Configuration
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://simulateur-loi-jeanbrun.vercel.app'
-
-// Articles de demonstration (a remplacer par getAllPosts() et getPostBySlug() de src/lib/blog.ts)
-const DEMO_POSTS: BlogPost[] = [
-  {
-    slug: 'loi-jeanbrun-2026-guide-complet',
-    title: 'Loi Jeanbrun 2026 : Guide Complet pour les Investisseurs',
-    description:
-      'Decouvrez tout ce que vous devez savoir sur la loi Jeanbrun, le nouveau dispositif de defiscalisation immobiliere du PLF 2026.',
-    date: '2026-01-30',
-    author: 'Expert IA Entreprise',
-    category: 'defiscalisation',
-    tags: ['loi-jeanbrun', 'plf-2026', 'defiscalisation'],
-    image: '/images/blog/loi-jeanbrun-guide.webp',
-    imageAlt: 'Guide complet de la loi Jeanbrun 2026',
-    readingTime: 12,
-    featured: true,
-    content: `
-## Introduction a la Loi Jeanbrun
-
-La loi Jeanbrun, integree au Projet de Loi de Finances (PLF) 2026, represente une evolution majeure dans le paysage de la defiscalisation immobiliere francaise. Ce dispositif vient remplacer progressivement la loi Pinel, dont les avantages fiscaux ont ete reduits ces dernieres annees.
-
-## Qu'est-ce que la Loi Jeanbrun ?
-
-La loi Jeanbrun est un dispositif fiscal permettant aux investisseurs immobiliers de beneficier d'une reduction d'impot sur le revenu en contrepartie d'un engagement de location. Le bien immobilier doit etre neuf ou en VEFA (Vente en l'Etat Futur d'Achevement) et situe dans une zone tendue.
-
-### Les avantages fiscaux
-
-- **6% de reduction** pour un engagement de 6 ans
-- **9% de reduction** pour un engagement de 9 ans
-- **12% de reduction** pour un engagement de 12 ans
-
-Ces pourcentages s'appliquent sur le prix d'acquisition du bien, dans la limite de 300 000 euros par an et de 5 500 euros par metre carre.
-
-## Les Zones Eligibles
-
-La loi Jeanbrun s'applique uniquement dans les zones dites "tendues" :
-
-1. **Zone A bis** : Paris et sa proche banlieue
-2. **Zone A** : Ile-de-France, Cote d'Azur, agglomerations cheres
-3. **Zone B1** : Grandes agglomerations de plus de 250 000 habitants
-
-## Conditions d'Eligibilite
-
-Pour beneficier de la loi Jeanbrun, plusieurs conditions doivent etre respectees :
-
-- Le bien doit etre neuf ou en VEFA
-- Le logement doit respecter les normes energetiques RT 2020
-- Le loyer doit etre plafonne selon la zone
-- Les ressources du locataire doivent etre inferieures aux plafonds
-- Le proprietaire doit s'engager a louer pendant la duree choisie
-
-## Comparaison avec la Loi Pinel
-
-| Critere | Loi Jeanbrun | Loi Pinel (2024) |
-|---------|--------------|------------------|
-| Reduction 6 ans | 6% | 9% |
-| Reduction 9 ans | 9% | 12% |
-| Reduction 12 ans | 12% | 14% |
-| Zones eligibles | A bis, A, B1 | A bis, A, B1 |
-| Plafond investissement | 300 000 euros | 300 000 euros |
-
-## Conclusion
-
-La loi Jeanbrun offre des opportunites interessantes pour les investisseurs souhaitant se constituer un patrimoine immobilier tout en beneficiant d'avantages fiscaux. N'hesitez pas a utiliser notre simulateur gratuit pour estimer votre reduction d'impot.
-    `,
-  },
-  {
-    slug: 'loi-jeanbrun-vs-pinel-comparatif',
-    title: 'Loi Jeanbrun vs Pinel : Comparatif Detaille 2026',
-    description:
-      "Quel dispositif choisir entre la loi Jeanbrun et l'ancienne loi Pinel ? Comparatif complet des avantages fiscaux.",
-    date: '2026-01-28',
-    author: 'Expert IA Entreprise',
-    category: 'defiscalisation',
-    tags: ['loi-jeanbrun', 'pinel', 'comparatif'],
-    image: '/images/blog/jeanbrun-vs-pinel.webp',
-    imageAlt: 'Comparaison Jeanbrun vs Pinel',
-    readingTime: 8,
-    featured: true,
-    content: `
-## Jeanbrun vs Pinel : Le Grand Comparatif
-
-Avec l'arrivee de la loi Jeanbrun, de nombreux investisseurs se demandent s'ils doivent encore considerer le dispositif Pinel. Voici notre analyse complete.
-
-## Les Differences Cles
-
-La principale difference reside dans les taux de reduction d'impot. Alors que le Pinel offrait des taux plus eleves, la loi Jeanbrun propose des conditions d'eligibilite assouplies.
-
-## Notre Recommandation
-
-Pour un investissement en 2026, la loi Jeanbrun reste le choix le plus pertinent compte tenu de la fin programmee du Pinel.
-    `,
-  },
-  {
-    slug: 'zones-eligibles-loi-jeanbrun',
-    title: 'Zones Eligibles a la Loi Jeanbrun : A bis, A et B1',
-    description:
-      'Quelles sont les zones geographiques eligibles au dispositif Jeanbrun ? Decouvrez la carte des zones tendues.',
-    date: '2026-01-25',
-    author: 'Expert IA Entreprise',
-    category: 'defiscalisation',
-    tags: ['zones', 'eligibilite', 'immobilier'],
-    image: '/images/blog/zones-eligibles.webp',
-    imageAlt: 'Carte des zones eligibles Jeanbrun',
-    readingTime: 6,
-    featured: false,
-    content: `
-## Les Zones Tendues en France
-
-La loi Jeanbrun s'applique exclusivement dans les zones ou la demande de logements depasse l'offre.
-
-## Zone A bis
-
-La zone A bis comprend Paris et 76 communes de la petite couronne.
-
-## Zone A
-
-La zone A englobe l'agglomeration parisienne, la Cote d'Azur et certaines grandes villes.
-
-## Zone B1
-
-La zone B1 regroupe les grandes agglomerations de plus de 250 000 habitants.
-    `,
-  },
-  {
-    slug: 'calculer-reduction-impot-jeanbrun',
-    title: "Comment Calculer sa Reduction d'Impot avec la Loi Jeanbrun",
-    description:
-      "Apprenez a calculer precisement votre reduction d'impot selon la duree d'engagement et le montant investi.",
-    date: '2026-01-22',
-    author: 'Expert IA Entreprise',
-    category: 'guides',
-    tags: ['calcul', 'impot', 'simulation'],
-    image: '/images/blog/calculer-reduction.webp',
-    imageAlt: "Calculer sa reduction d'impot Jeanbrun",
-    readingTime: 10,
-    featured: false,
-    content: `
-## Methode de Calcul
-
-Le calcul de la reduction d'impot Jeanbrun est relativement simple une fois que vous connaissez les parametres.
-
-## Exemple Pratique
-
-Pour un investissement de 200 000 euros sur 12 ans :
-- Reduction totale : 200 000 x 12% = 24 000 euros
-- Reduction annuelle : 24 000 / 12 = 2 000 euros par an
-    `,
-  },
-  {
-    slug: 'top-10-villes-investir-jeanbrun',
-    title: 'Top 10 des Villes pour Investir en Loi Jeanbrun en 2026',
-    description:
-      'Decouvrez les meilleures villes francaises pour un investissement locatif en loi Jeanbrun.',
-    date: '2026-01-20',
-    author: 'Expert IA Entreprise',
-    category: 'investissement',
-    tags: ['villes', 'investissement', 'rentabilite'],
-    image: '/images/blog/top-villes.webp',
-    imageAlt: 'Top 10 villes investissement Jeanbrun',
-    readingTime: 15,
-    featured: true,
-    content: `
-## Les Meilleures Villes en 2026
-
-Notre selection des 10 villes les plus prometteuses pour un investissement Jeanbrun.
-
-1. Lyon
-2. Bordeaux
-3. Nantes
-4. Toulouse
-5. Montpellier
-6. Lille
-7. Rennes
-8. Strasbourg
-9. Nice
-10. Marseille
-    `,
-  },
-]
-
-// Fonctions utilitaires (a remplacer par imports de src/lib/blog.ts)
-function getAllPosts(): BlogPost[] {
-  return DEMO_POSTS
-}
-
-function getPostBySlug(slug: string): BlogPost | undefined {
-  return DEMO_POSTS.find((post) => post.slug === slug)
-}
-
-function getRelatedPosts(currentSlug: string, category: string, limit = 3): BlogPost[] {
-  return DEMO_POSTS.filter((post) => post.slug !== currentSlug && post.category === category).slice(
-    0,
-    limit
-  )
-}
 
 // Formater la date en francais
 function formatDate(dateString: string): string {
@@ -241,11 +33,111 @@ function formatDate(dateString: string): string {
   }).format(date)
 }
 
+// Custom components for ReactMarkdown
+const markdownComponents: Components = {
+  h1: ({ children }) => (
+    <h1 className="mb-6 mt-8 scroll-mt-20 text-4xl font-bold tracking-tight">
+      {children}
+    </h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="mb-4 mt-8 scroll-mt-20 text-3xl font-semibold tracking-tight">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="mb-3 mt-6 scroll-mt-20 text-2xl font-semibold tracking-tight">
+      {children}
+    </h3>
+  ),
+  h4: ({ children }) => (
+    <h4 className="mb-2 mt-4 scroll-mt-20 text-xl font-semibold tracking-tight">
+      {children}
+    </h4>
+  ),
+  p: ({ children }) => (
+    <p className="mb-4 leading-7 text-muted-foreground">{children}</p>
+  ),
+  ul: ({ children }) => (
+    <ul className="mb-4 ml-6 list-disc space-y-2">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="mb-4 ml-6 list-decimal space-y-2">{children}</ol>
+  ),
+  li: ({ children }) => (
+    <li className="leading-7 text-muted-foreground">{children}</li>
+  ),
+  blockquote: ({ children }) => (
+    <blockquote className="mb-4 border-l-4 border-primary pl-4 italic text-muted-foreground">
+      {children}
+    </blockquote>
+  ),
+  code: ({ children, className }) => {
+    const isBlock = className?.includes('language-')
+    if (isBlock) {
+      return (
+        <code className="block overflow-x-auto rounded bg-muted p-4 font-mono text-sm">
+          {children}
+        </code>
+      )
+    }
+    return (
+      <code className="rounded bg-muted px-1 py-0.5 font-mono text-sm font-semibold">
+        {children}
+      </code>
+    )
+  },
+  pre: ({ children }) => (
+    <pre className="mb-4 overflow-x-auto rounded-lg bg-muted">{children}</pre>
+  ),
+  table: ({ children }) => (
+    <div className="mb-4 overflow-x-auto">
+      <table className="w-full border-collapse text-sm">{children}</table>
+    </div>
+  ),
+  th: ({ children }) => (
+    <th className="border border-border bg-muted px-4 py-2 text-left font-semibold">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="border border-border px-4 py-2">{children}</td>
+  ),
+  a: ({ href, children }) => {
+    const isInternal = href?.startsWith('/') || href?.startsWith('#')
+    if (isInternal && href) {
+      return (
+        <Link
+          href={href}
+          className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+        >
+          {children}
+        </Link>
+      )
+    }
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+      >
+        {children}
+      </a>
+    )
+  },
+  hr: () => <hr className="my-8 border-border" />,
+  strong: ({ children }) => (
+    <strong className="font-semibold text-foreground">{children}</strong>
+  ),
+  em: ({ children }) => <em className="italic">{children}</em>,
+}
+
 // Generer les params statiques pour SSG
 export async function generateStaticParams() {
-  const posts = getAllPosts()
-  return posts.map((post) => ({
-    slug: post.slug,
+  const slugs = getAllSlugs()
+  return slugs.map((slug) => ({
+    slug,
   }))
 }
 
@@ -271,7 +163,7 @@ export async function generateMetadata({
     title: post.title,
     description: post.description,
     keywords: post.tags,
-    authors: [{ name: post.author }],
+    authors: [{ name: post.author.name }],
     openGraph: {
       title: post.title,
       description: post.description,
@@ -280,21 +172,23 @@ export async function generateMetadata({
       url: articleUrl,
       siteName: 'Simulateur Loi Jeanbrun',
       publishedTime: post.date,
-      authors: [post.author],
-      images: [
-        {
-          url: `${BASE_URL}${post.image}`,
-          width: 1200,
-          height: 630,
-          alt: post.imageAlt,
-        },
-      ],
+      authors: [post.author.name],
+      images: post.image
+        ? [
+            {
+              url: `${BASE_URL}${post.image}`,
+              width: 1200,
+              height: 630,
+              alt: post.imageAlt ?? post.title,
+            },
+          ]
+        : [],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: [`${BASE_URL}${post.image}`],
+      images: post.image ? [`${BASE_URL}${post.image}`] : [],
     },
     alternates: {
       canonical: articleUrl,
@@ -303,7 +197,7 @@ export async function generateMetadata({
 }
 
 // Composant RelatedArticles
-function RelatedArticles({ posts }: { posts: BlogPost[] }) {
+function RelatedArticles({ posts }: { posts: BlogPostMeta[] }) {
   if (posts.length === 0) return null
 
   return (
@@ -315,13 +209,19 @@ function RelatedArticles({ posts }: { posts: BlogPost[] }) {
         {posts.map((post) => (
           <Card key={post.slug} className="group overflow-hidden">
             <div className="relative aspect-video overflow-hidden bg-muted">
-              <Image
-                src={post.image}
-                alt={post.imageAlt}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
+              {post.image ? (
+                <Image
+                  src={post.image}
+                  alt={post.imageAlt ?? post.title}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                  <span className="text-4xl text-primary/30">📰</span>
+                </div>
+              )}
             </div>
             <CardHeader className="p-4">
               <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
@@ -355,7 +255,7 @@ export default async function BlogArticlePage({
   }
 
   const articleUrl = `${BASE_URL}/blog/${post.slug}`
-  const relatedPosts = getRelatedPosts(post.slug, post.category)
+  const relatedPosts = getRelatedPosts(post.slug, post.category as BlogCategory, post.tags)
 
   // JSON-LD Article Schema
   const articleJsonLd = {
@@ -363,12 +263,13 @@ export default async function BlogArticlePage({
     '@type': 'Article',
     headline: post.title,
     description: post.description,
-    image: `${BASE_URL}${post.image}`,
+    image: post.image ? `${BASE_URL}${post.image}` : undefined,
     datePublished: post.date,
     dateModified: post.date,
     author: {
       '@type': 'Person',
-      name: post.author,
+      name: post.author.name,
+      url: post.author.url,
     },
     publisher: {
       '@type': 'Organization',
@@ -460,7 +361,7 @@ export default async function BlogArticlePage({
             </span>
             <span className="flex items-center gap-1">
               <User className="h-4 w-4" aria-hidden="true" />
-              {post.author}
+              {post.author.name}
             </span>
           </div>
 
@@ -487,69 +388,27 @@ export default async function BlogArticlePage({
           </div>
 
           {/* Featured Image */}
-          <div className="relative mb-8 aspect-video overflow-hidden rounded-lg bg-muted">
-            <Image
-              src={post.image}
-              alt={post.imageAlt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-              priority
-            />
-          </div>
+          {post.image && (
+            <div className="relative mb-8 aspect-video overflow-hidden rounded-lg bg-muted">
+              <Image
+                src={post.image}
+                alt={post.imageAlt ?? post.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                priority
+              />
+            </div>
+          )}
         </header>
 
         {/* Content */}
         <div className="mx-auto max-w-3xl">
-          {/* Article Content - rendu MDX simplifie */}
+          {/* Article Content - MDX rendered with ReactMarkdown */}
           <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20 prose-headings:font-semibold prose-a:text-primary prose-pre:bg-muted">
-            {/* TODO: Remplacer par le rendu MDX reel de src/components/blog/ArticleContent.tsx */}
-            {post.content.split('\n').map((paragraph, index) => {
-              if (paragraph.startsWith('## ')) {
-                return (
-                  <h2 key={index} className="mt-8 mb-4 text-2xl font-semibold">
-                    {paragraph.replace('## ', '')}
-                  </h2>
-                )
-              }
-              if (paragraph.startsWith('### ')) {
-                return (
-                  <h3 key={index} className="mt-6 mb-3 text-xl font-semibold">
-                    {paragraph.replace('### ', '')}
-                  </h3>
-                )
-              }
-              if (paragraph.startsWith('- ')) {
-                return (
-                  <li key={index} className="ml-6">
-                    {paragraph.replace('- ', '')}
-                  </li>
-                )
-              }
-              if (paragraph.startsWith('|')) {
-                // Simplified table rendering
-                return (
-                  <p key={index} className="font-mono text-sm">
-                    {paragraph}
-                  </p>
-                )
-              }
-              if (paragraph.match(/^\d+\. /)) {
-                return (
-                  <li key={index} className="ml-6 list-decimal">
-                    {paragraph.replace(/^\d+\. /, '')}
-                  </li>
-                )
-              }
-              if (paragraph.trim()) {
-                return (
-                  <p key={index} className="mb-4">
-                    {paragraph}
-                  </p>
-                )
-              }
-              return null
-            })}
+            <ReactMarkdown components={markdownComponents}>
+              {post.content}
+            </ReactMarkdown>
           </div>
 
           <Separator className="my-12" />
