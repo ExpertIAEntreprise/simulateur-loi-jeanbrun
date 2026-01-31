@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** Phase 1 + 2 + 3 terminées ✅ (31/01/2026) - Prêt pour Phase 4 (Composants UI)
+**Statut:** Phase 1 + 2 + 3 + 4 terminées ✅ (31/01/2026) - Prêt pour Phase 5 (Pages Villes)
 
 ---
 
@@ -218,37 +218,40 @@ src/lib/espocrm/
 
 ---
 
-## Phase 4: Composants UI (4 jours)
+## Phase 4: Composants UI (4 jours) ✅ TERMINÉE
+
+> **Terminée le:** 31/01/2026
+> **18 composants créés** dans `src/components/villes/`
 
 ### Tâches - Composants existants
 
-- [ ] 4.1 Créer `DonneesMarche` (prix DVF, évolution, graphique)
-- [ ] 4.2 Créer `HistoriquePrix` (graphique Recharts)
-- [ ] 4.3 Créer `DonneesInsee` (population, revenus)
-- [ ] 4.4 Créer `PlafondsJeanbrun` (3 niveaux, tableau)
-- [ ] 4.5 Créer `ProgrammesList` (cards programmes avec photos)
-- [ ] 4.6 Créer `ProgrammeCard` (card individuelle)
-- [ ] 4.7 Créer `SimulateurPreRempli` (mini formulaire)
-- [ ] 4.8 Créer `VillesProches` (maillage interne)
-- [ ] 4.9 Créer `BarometreResume` (score + indicateurs)
-- [ ] 4.10 Créer `ContenuEditorial` (prose formatée)
-- [ ] 4.11 Créer `PhotoVille` (image hero avec fallback)
+- [x] 4.1 Créer `DonneesMarche` (prix DVF, évolution, graphique) ✅
+- [x] 4.2 Créer `HistoriquePrix` (graphique Recharts) ✅
+- [x] 4.3 Créer `DonneesInsee` (population, revenus) ✅
+- [x] 4.4 Créer `PlafondsJeanbrun` (3 niveaux, tableau) ✅
+- [x] 4.5 Créer `ProgrammesList` (cards programmes avec photos) ✅
+- [x] 4.6 Créer `ProgrammeCard` (card individuelle) ✅
+- [x] 4.7 Créer `SimulateurPreRempli` (mini formulaire) ✅
+- [x] 4.8 Créer `VillesProches` (maillage interne) ✅
+- [x] 4.9 Créer `BarometreResume` (score + indicateurs) ✅
+- [x] 4.10 Créer `ContenuEditorial` (prose formatée) ✅
+- [x] 4.11 Créer `PhotoVille` (image hero avec fallback) ✅
 
 ### 🆕 Tâches - Composants pages périphériques
 
-- [ ] 4.12 Créer `BarometreSidebar` (version compacte pour sidebar)
+- [x] 4.12 Créer `BarometreSidebar` (version compacte pour sidebar) ✅
   - Rendement moyen, évolution prix, tension locative, score
-- [ ] 4.13 Créer `ArgumentsInvestissement` (checklist dynamique)
+- [x] 4.13 Créer `ArgumentsInvestissement` (checklist dynamique) ✅
   - Affiche les arguments personnalisés de `argumentsInvestissement`
-- [ ] 4.14 Créer `FaqVille` (accordéon FAQ + JSON-LD FAQPage)
+- [x] 4.14 Créer `FaqVille` (accordéon FAQ + JSON-LD FAQPage) ✅
   - Parse `faqItems` et génère JSON-LD automatiquement
-- [ ] 4.15 Créer `CarteVille` (Leaflet/Mapbox avec pin)
-  - Pin sur la ville + programmes proches
-- [ ] 4.16 Créer `TemoignageLocalise` (pool rotation)
+- [x] 4.15 Créer `CarteVille` (OpenStreetMap avec pin) ✅
+  - Pin sur la ville + lien interactif
+- [x] 4.16 Créer `TemoignageLocalise` (pool rotation) ✅
   - 10 témoignages génériques, rotation aléatoire
-- [ ] 4.17 Créer `VillePeripheriqueCard` (card pour section "Zones d'Investissement")
+- [x] 4.17 Créer `VillePeripheriqueCard` (card pour section "Zones d'Investissement") ✅
   - Nom, zone fiscale, "En savoir plus →"
-- [ ] 4.18 Créer `LienMetropoleParent` (lien retour vers métropole)
+- [x] 4.18 Créer `LienMetropoleParent` (lien retour vers métropole) ✅
   - "Voir aussi Lyon et ses X programmes"
 
 ### Fichiers à créer
@@ -278,10 +281,34 @@ src/components/villes/
 
 ### Validation
 
-- [ ] Composants responsive
-- [ ] Fallbacks si données manquantes
-- [ ] Accessibilité (ARIA)
-- [ ] JSON-LD FAQPage valide (FaqVille)
+- [x] Composants responsive ✅
+- [x] Fallbacks si données manquantes ✅
+- [x] Accessibilité (ARIA) ✅
+- [x] JSON-LD FAQPage valide (FaqVille) ✅
+
+### Composants créés (31/01/2026)
+
+| Composant | Taille | Description |
+|-----------|--------|-------------|
+| DonneesMarche.tsx | 5.7 KB | Prix DVF, évolution avec badges colorés |
+| HistoriquePrix.tsx | 5.0 KB | Graphique Recharts AreaChart 12 mois |
+| DonneesInsee.tsx | 3.2 KB | Population, revenu médian |
+| PlafondsJeanbrun.tsx | 5.0 KB | Tableau plafonds par zone fiscale |
+| ProgrammeCard.tsx | 6.2 KB | Card programme avec image Next.js |
+| ProgrammesList.tsx | 2.3 KB | Grille responsive programmes |
+| SimulateurPreRempli.tsx | 2.5 KB | CTA vers chat avec params |
+| VillesProches.tsx | 2.8 KB | Grille maillage interne |
+| BarometreResume.tsx | 7.0 KB | Jauge circulaire score |
+| ContenuEditorial.tsx | 2.3 KB | Prose Tailwind |
+| PhotoVille.tsx | 3.3 KB | Image Next.js + fallback |
+| BarometreSidebar.tsx | 5.1 KB | Version compacte sidebar |
+| ArgumentsInvestissement.tsx | 1.9 KB | Checklist verte |
+| FaqVille.tsx | 2.9 KB | Accordion + JSON-LD SEO |
+| CarteVille.tsx | 6.0 KB | OpenStreetMap statique |
+| TemoignageLocalise.tsx | 6.5 KB | Pool 10 témoignages |
+| VillePeripheriqueCard.tsx | 3.5 KB | Card périphérique + liste |
+| LienMetropoleParent.tsx | 3.1 KB | Lien retour + version compacte |
+| index.ts | 1.4 KB | Exports centralisés |
 
 ---
 
