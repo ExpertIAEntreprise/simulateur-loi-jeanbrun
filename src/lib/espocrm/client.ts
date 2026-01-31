@@ -9,9 +9,11 @@ import type {
   EspoVille,
   EspoProgramme,
   EspoLead,
+  EspoBarometre,
   EspoListResponse,
   EspoVilleFilters,
   EspoProgrammeFilters,
+  EspoBarometreFilters,
 } from "./types";
 
 /**
@@ -238,6 +240,121 @@ export class EspoCRMClient {
   }
 
   /**
+   * Récupère une ville par son ID
+   */
+  async getVilleById(id: string): Promise<EspoVille> {
+    const url = `${this.baseUrl}/CJeanbrunVille/${id}`;
+    return this.fetchWithRetry<EspoVille>(url);
+  }
+
+  /**
+   * Récupère toutes les métropoles (isMetropole=true)
+   */
+  async getMetropoles(options?: PaginationOptions): Promise<EspoListResponse<EspoVille>> {
+    const params: Record<string, string | number> = {
+      maxSize: options?.limit ?? 100,
+      offset: options?.offset ?? 0,
+      orderBy: "name",
+      order: "asc",
+    };
+
+    const whereParams = this.buildWhereParams({ cIsMetropole: true });
+    Object.assign(params, whereParams);
+
+    const url = this.buildUrl("/CJeanbrunVille", params);
+
+    return this.fetchWithRetry<EspoListResponse<EspoVille>>(url);
+  }
+
+  /**
+   * Récupère les villes périphériques d'une métropole
+   */
+  async getVillesPeripheriques(
+    metropoleId: string,
+    options?: PaginationOptions
+  ): Promise<EspoListResponse<EspoVille>> {
+    const params: Record<string, string | number> = {
+      maxSize: options?.limit ?? 50,
+      offset: options?.offset ?? 0,
+      orderBy: "name",
+      order: "asc",
+    };
+
+    const whereParams = this.buildWhereParams({ cMetropoleParentId: metropoleId });
+    Object.assign(params, whereParams);
+
+    const url = this.buildUrl("/CJeanbrunVille", params);
+
+    return this.fetchWithRetry<EspoListResponse<EspoVille>>(url);
+  }
+
+  /**
+   * Récupère une ville par slug avec données enrichies (programmes, baromètre)
+   */
+  async getVilleBySlugEnriched(slug: string): Promise<{
+    ville: EspoVille | null;
+    programmes: EspoProgramme[];
+    barometre: EspoBarometre | null;
+    villesPeripheriques: EspoVille[];
+    metropoleParent: EspoVille | null;
+  }> {
+    const ville = await this.getVilleBySlug(slug);
+
+    if (!ville) {
+      return {
+        ville: null,
+        programmes: [],
+        barometre: null,
+        villesPeripheriques: [],
+        metropoleParent: null,
+      };
+    }
+
+    // Récupérer en parallèle: programmes, baromètre, villes liées
+    const [programmesResponse, barometre, villesLiees, metropoleParent] = await Promise.all([
+      this.getProgrammes({ villeId: ville.id, actif: true }, { limit: 10 }),
+      this.getLatestBarometre(ville.id),
+      ville.cIsMetropole
+        ? this.getVillesPeripheriques(ville.id, { limit: 8 })
+        : Promise.resolve({ total: 0, list: [] }),
+      ville.cMetropoleParentId
+        ? this.getVilleById(ville.cMetropoleParentId)
+        : Promise.resolve(null),
+    ]);
+
+    return {
+      ville,
+      programmes: programmesResponse.list,
+      barometre,
+      villesPeripheriques: villesLiees.list,
+      metropoleParent,
+    };
+  }
+
+  /**
+   * Récupère tous les slugs de villes pour generateStaticParams()
+   */
+  async getAllVilleSlugs(): Promise<string[]> {
+    const slugs: string[] = [];
+    let offset = 0;
+    const limit = 100;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await this.getVilles(undefined, { limit, offset });
+      slugs.push(...response.list.map((v) => v.cSlug));
+
+      if (response.list.length < limit) {
+        hasMore = false;
+      } else {
+        offset += limit;
+      }
+    }
+
+    return slugs;
+  }
+
+  /**
    * Récupère la liste des programmes immobiliers
    */
   async getProgrammes(
@@ -321,6 +438,91 @@ export class EspoCRMClient {
     const response = await this.fetchWithRetry<EspoListResponse<EspoLead>>(url);
 
     return response.list[0] ?? null;
+  }
+
+  /**
+   * Récupère le dernier baromètre d'une ville
+   */
+  async getLatestBarometre(villeId: string): Promise<EspoBarometre | null> {
+    const params: Record<string, string | number> = {
+      maxSize: 1,
+      orderBy: "cMois",
+      order: "desc",
+    };
+
+    const whereParams = this.buildWhereParams({ cVilleId: villeId });
+    Object.assign(params, whereParams);
+
+    const url = this.buildUrl("/CJeanbrunBarometre", params);
+
+    const response = await this.fetchWithRetry<EspoListResponse<EspoBarometre>>(url);
+
+    return response.list[0] ?? null;
+  }
+
+  /**
+   * Récupère l'historique des baromètres d'une ville sur N mois
+   */
+  async getBarometreHistorique(
+    villeId: string,
+    months: number = 12
+  ): Promise<EspoBarometre[]> {
+    const params: Record<string, string | number> = {
+      maxSize: months,
+      orderBy: "cMois",
+      order: "desc",
+    };
+
+    const whereParams = this.buildWhereParams({ cVilleId: villeId });
+    Object.assign(params, whereParams);
+
+    const url = this.buildUrl("/CJeanbrunBarometre", params);
+
+    const response = await this.fetchWithRetry<EspoListResponse<EspoBarometre>>(url);
+
+    return response.list;
+  }
+
+  /**
+   * Récupère les baromètres avec filtres
+   */
+  async getBarometres(
+    filters?: EspoBarometreFilters,
+    options?: PaginationOptions
+  ): Promise<EspoListResponse<EspoBarometre>> {
+    const params: Record<string, string | number> = {
+      maxSize: options?.limit ?? 50,
+      offset: options?.offset ?? 0,
+      orderBy: "cMois",
+      order: "desc",
+    };
+
+    if (filters) {
+      const whereParams = this.buildWhereParams({
+        cVilleId: filters.villeId,
+      });
+      Object.assign(params, whereParams);
+
+      // Filtres de date
+      let whereIndex = Object.keys(whereParams).length / 3;
+
+      if (filters.moisMin) {
+        params[`where[${whereIndex}][type]`] = "greaterThanOrEquals";
+        params[`where[${whereIndex}][attribute]`] = "cMois";
+        params[`where[${whereIndex}][value]`] = filters.moisMin;
+        whereIndex++;
+      }
+
+      if (filters.moisMax) {
+        params[`where[${whereIndex}][type]`] = "lessThanOrEquals";
+        params[`where[${whereIndex}][attribute]`] = "cMois";
+        params[`where[${whereIndex}][value]`] = filters.moisMax;
+      }
+    }
+
+    const url = this.buildUrl("/CJeanbrunBarometre", params);
+
+    return this.fetchWithRetry<EspoListResponse<EspoBarometre>>(url);
   }
 
   /**

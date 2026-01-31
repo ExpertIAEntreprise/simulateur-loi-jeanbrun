@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** Phase 1 + 2 terminées ✅ (31/01/2026) - Prêt pour Phase 3 (API Client)
+**Statut:** Phase 1 + 2 + 3 terminées ✅ (31/01/2026) - Prêt pour Phase 4 (Composants UI)
 
 ---
 
@@ -173,31 +173,48 @@ ESPOCRM_API_URL=https://espocrm.expert-ia-entreprise.fr/api/v1
 
 ---
 
-## Phase 3: API Client EspoCRM (1 jour)
+## Phase 3: API Client EspoCRM (1 jour) ✅ TERMINÉE
+
+> **Terminée le:** 31/01/2026
 
 ### Tâches
 
-- [ ] 3.1 Créer `src/lib/api/espocrm.ts` avec fonctions typées
-- [ ] 3.2 Fonction `getJeanbrunVilles()` avec filtres
-- [ ] 3.3 Fonction `getJeanbrunVilleBySlug(slug)`
-- [ ] 3.4 Fonction `getJeanbrunProgrammes(villeId)`
-- [ ] 3.5 Fonction `getLatestBarometre(villeId)`
-- [ ] 3.6 Fonction `getBarometreHistorique(villeId, months)`
+- [x] 3.1 Créer `src/lib/espocrm/` avec fonctions typées ✅ (existait déjà, enrichi)
+- [x] 3.2 Fonction `getVilles()` avec filtres ✅
+- [x] 3.3 Fonction `getVilleBySlug(slug)` ✅
+- [x] 3.4 Fonction `getProgrammes(villeId)` ✅
+- [x] 3.5 Fonction `getLatestBarometre(villeId)` ✅ Ajoutée 31/01/2026
+- [x] 3.6 Fonction `getBarometreHistorique(villeId, months)` ✅ Ajoutée 31/01/2026
 
-### Fichiers à créer/modifier
+### 🆕 Fonctions ajoutées (31/01/2026)
+
+- `getMetropoles()` - Récupère les 52 métropoles
+- `getVillesPeripheriques(metropoleId)` - Récupère les périphériques d'une métropole
+- `getVilleBySlugEnriched(slug)` - Récupère ville + programmes + baromètre en une requête
+- `getAllVilleSlugs()` - Pour `generateStaticParams()` Next.js
+- `getBarometres(filters)` - Récupère baromètres avec filtres
+
+### Types ajoutés
+
+- `EspoBarometre` - Entité baromètre mensuel
+- `EspoFaqItem` - Item FAQ pour JSON-LD
+- `EspoArgumentInvestissement` - Arguments investissement
+- Champs `EspoVille` enrichis: `isMetropole`, `metropoleParentId`, `photoVille`, `contenuEditorial`, `argumentsInvestissement`, `faqItems`, etc.
+
+### Fichiers modifiés
 
 ```
-src/lib/api/
-├── espocrm.ts         # Client API
-├── espocrm.types.ts   # Types TypeScript
-└── index.ts           # Exports
+src/lib/espocrm/
+├── client.ts          # +7 fonctions (baromètre, métropoles, enriched)
+├── types.ts           # +EspoBarometre, +EspoFaqItem, +champs ville
+└── index.ts           # +exports, +cache options, +helpers
 ```
 
 ### Validation
 
-- [ ] Types stricts (no any)
-- [ ] Erreurs gérées
-- [ ] Caching configurable
+- [x] Types stricts (no any) ✅
+- [x] Erreurs gérées (EspoCRMError + retry) ✅
+- [x] Caching configurable (ESPOCRM_CACHE_DURATIONS) ✅
 
 ---
 
