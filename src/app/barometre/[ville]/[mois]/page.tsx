@@ -119,7 +119,7 @@ export async function generateStaticParams() {
     const currentMois = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
     return metropoles.list.map((ville) => ({
-      ville: ville.cSlug,
+      ville: ville.slug,
       mois: currentMois,
     }));
   } catch (error) {
@@ -209,7 +209,7 @@ function Breadcrumb({
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
     { label: "Barometre", href: "/barometre" },
-    { label: ville.name, href: `/villes/${ville.cSlug}` },
+    { label: ville.name, href: `/villes/${ville.slug}` },
     { label: moisFormate, href: null },
   ];
 
@@ -254,7 +254,7 @@ function Breadcrumb({
           Barometre
         </Link>
         <ChevronSep className="size-4" aria-hidden="true" />
-        <Link href={`/villes/${ville.cSlug}`} className="hover:text-foreground">
+        <Link href={`/villes/${ville.slug}`} className="hover:text-foreground">
           {ville.name}
         </Link>
         <ChevronSep className="size-4" aria-hidden="true" />
@@ -397,9 +397,9 @@ export default async function BarometreDetailPage({ params }: PageParams) {
           Barometre Jeanbrun {ville.name} - {moisFormate}
         </h1>
 
-        {ville.cRegion && (
+        {ville.regionName && (
           <p className="text-lg text-muted-foreground">
-            {ville.cDepartement} - {ville.cRegion}
+            {ville.departementName} - {ville.regionName}
           </p>
         )}
       </header>
@@ -427,7 +427,7 @@ export default async function BarometreDetailPage({ params }: PageParams) {
           <MeilleureOpportunite
             programmeId={barometre.cMeilleureOpportuniteId}
             programmeName={barometre.cMeilleureOpportuniteName ?? null}
-            villeSlug={ville.cSlug}
+            villeSlug={ville.slug}
           />
 
           {/* Historique */}
@@ -435,14 +435,14 @@ export default async function BarometreDetailPage({ params }: PageParams) {
 
           {/* Navigation mois */}
           <MoisNavigation
-            villeSlug={ville.cSlug}
+            villeSlug={ville.slug}
             moisUrl={moisUrl}
             hasPrecedent={hasPrecedent}
             hasSuivant={hasSuivant}
           />
 
           {/* CTA Simulateur */}
-          <SimulateurCTA villeNom={ville.name} villeSlug={ville.cSlug} />
+          <SimulateurCTA villeNom={ville.name} villeSlug={ville.slug} />
         </div>
       ) : (
         /* Pas de barometre pour ce mois */
@@ -458,13 +458,13 @@ export default async function BarometreDetailPage({ params }: PageParams) {
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button asChild variant="outline">
-                <Link href={`/barometre/${ville.cSlug}/${getMoisPrecedent(moisUrl)}`}>
+                <Link href={`/barometre/${ville.slug}/${getMoisPrecedent(moisUrl)}`}>
                   <ChevronLeft className="mr-1 size-4" aria-hidden="true" />
                   Mois precedent
                 </Link>
               </Button>
               <Button asChild>
-                <Link href={`/villes/${ville.cSlug}`}>
+                <Link href={`/villes/${ville.slug}`}>
                   Voir la page ville
                 </Link>
               </Button>
@@ -477,7 +477,7 @@ export default async function BarometreDetailPage({ params }: PageParams) {
           )}
 
           {/* CTA Simulateur */}
-          <SimulateurCTA villeNom={ville.name} villeSlug={ville.cSlug} />
+          <SimulateurCTA villeNom={ville.name} villeSlug={ville.slug} />
         </div>
       )}
     </main>
