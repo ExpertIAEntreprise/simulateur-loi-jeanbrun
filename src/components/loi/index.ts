@@ -1,0 +1,6 @@
+export { HeroLoi } from './HeroLoi'
+export { ConditionsEligibilite } from './ConditionsEligibilite'
+export { AvantagesFiscaux } from './AvantagesFiscaux'
+export { ComparaisonDispositifs } from './ComparaisonDispositifs'
+export { FaqLoi } from './FaqLoi'
+export { faqItems } from './data/faq-data'
