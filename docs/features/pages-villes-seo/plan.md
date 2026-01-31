@@ -2,7 +2,7 @@
 
 **Sprint:** 4 (S7-S8)
 **Effort:** 20 jours
-**Statut:** Phase 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 terminées ✅ (31/01/2026) - Prêt pour Phase 10 (Crons et Automatisation)
+**Statut:** Phase 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 terminées ✅ (31/01/2026) - Prêt pour Phase 11 (Tests et Validation)
 
 ---
 
@@ -602,31 +602,77 @@ src/app/villes/[slug]/page.tsx  # +villesProches props, +villeSlug pour composan
 
 ---
 
-## Phase 10: Crons et Automatisation (0.5 jour)
+## Phase 10: Crons et Automatisation (0.5 jour) ✅ TERMINÉE
+
+> **Terminée le:** 31/01/2026
+> **Scripts créés:** 6 scripts Python + 5 wrappers Bash
+> **Documentation:** 7 fichiers markdown
 
 ### Tâches
 
-- [ ] 10.1 Configurer cron DVF (hebdo dimanche 3h)
-- [ ] 10.2 Configurer cron INSEE (mensuel 1er 2h)
-- [ ] 10.3 Configurer cron baromètre (mensuel 1er 8h)
-- [ ] 10.4 Script health_check.py pour alertes
-- [ ] 10.5 Logs centralisés
+- [x] 10.1 Configurer cron DVF (hebdo dimanche 3h30) ✅ Créé mais désactivé (API DVF preprod)
+- [x] 10.2 Configurer cron INSEE (mensuel 1er 2h) ✅
+- [x] 10.3 Configurer cron baromètre (mensuel 1er 8h) ✅
+- [x] 10.4 Script health_check.py pour alertes ✅
+- [x] 10.5 Logs centralisés ✅ /var/log/jeanbrun/
 
-### Fichiers à créer/modifier
+### Scripts créés (31/01/2026)
 
-```bash
-# Ajouter dans crontab VPS CardImmo
-0 2 * * 0 python3 /root/scripts/jeanbrun/enrich_villes_geo.py
-0 3 * * 0 python3 /root/scripts/jeanbrun/import_dvf_historique.py
-0 2 1 * * python3 /root/scripts/jeanbrun/import_insee_data.py
-0 8 1 * * python3 /root/scripts/jeanbrun/generate_barometre.py
 ```
+/root/scripts/jeanbrun/
+├── enrich_villes_geo.py       # Géocodage villes (geo.api.gouv.fr)
+├── import_dvf_historique.py   # Import DVF CEREMA (prix m²)
+├── import_insee_data.py       # Import INSEE (population, revenus)
+├── generate_barometre.py      # Génération baromètre mensuel
+├── health_check.py            # Vérification santé pipeline
+├── run_dvf_import.sh          # Wrapper DVF avec env
+├── import-insee-cron.sh       # Wrapper INSEE avec env
+├── run_barometre_monthly.sh   # Wrapper baromètre avec env
+├── health_check_wrapper.sh    # Wrapper health check
+├── test_barometre.sh          # Tests pré-vol baromètre
+├── setup_health_check.sh      # Setup interactif
+├── README.md                  # Documentation principale
+├── BAROMETRE_INSTALLATION.md  # Guide baromètre
+├── DVF_API_NOTES.md           # Notes API DVF (problème preprod)
+├── INSTALLATION.md            # Guide installation
+├── INSTALLATION_SUMMARY.md    # Résumé installation
+├── QUICKSTART.md              # Démarrage rapide
+└── HEALTH_CHECK_QUICK_REF.md  # Référence rapide health check
+```
+
+### Crons configurés
+
+| Horaire | Script | Description |
+|---------|--------|-------------|
+| `0 7 * * *` | health_check_wrapper.sh | Health check quotidien (7h) |
+| `0 2 * * 0` | enrich_villes_geo.py | Géocodage (dimanche 2h) |
+| `0 2 1 * *` | import-insee-cron.sh | INSEE (1er du mois 2h) |
+| `0 8 1 * *` | run_barometre_monthly.sh | Baromètre (1er du mois 8h) |
+| *(désactivé)* | run_dvf_import.sh | DVF (attente API production) |
+
+### Logs centralisés
+
+```
+/var/log/jeanbrun/
+├── health_check.log           # Health check (quotidien)
+├── health_check.json          # Rapport JSON health check
+├── enrich_geo.log             # Géocodage (hebdo)
+├── import_dvf.log             # Import DVF (hebdo)
+├── import_insee.log           # Import INSEE (mensuel)
+└── generate_barometre.log     # Baromètre (mensuel)
+```
+
+### Logrotate configuré
+
+- Rotation hebdomadaire
+- Rétention 8 semaines
+- Compression gzip
 
 ### Validation
 
-- [ ] Crons fonctionnent
-- [ ] Logs accessibles
-- [ ] Alertes si échec
+- [x] Crons fonctionnent ✅ `crontab -l | grep jeanbrun`
+- [x] Logs accessibles ✅ `/var/log/jeanbrun/`
+- [x] Alertes si échec ✅ Email via Mailjet
 
 ---
 
