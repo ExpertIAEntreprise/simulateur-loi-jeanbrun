@@ -55,9 +55,9 @@ export function Biographie({
           {/* Biography Text */}
           <Card className="mb-12">
             <CardContent className="p-6 md:p-8">
-              <div className="prose prose-neutral dark:prose-invert max-w-none">
+              <div className="space-y-4">
                 {bio.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="mb-4 text-muted-foreground last:mb-0">
+                  <p key={index} className="leading-relaxed text-muted-foreground">
                     {paragraph}
                   </p>
                 ))}

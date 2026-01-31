@@ -22,7 +22,21 @@ export function CalendlyEmbed({
   const [hasCalendly, setHasCalendly] = useState(false)
 
   useEffect(() => {
-    // Check if Calendly script is available
+    // Check if Calendly is already loaded
+    if (typeof window !== 'undefined' && (window as unknown as { Calendly?: unknown }).Calendly) {
+      setHasCalendly(true)
+      setIsLoading(false)
+      return
+    }
+
+    // Check if script already exists
+    const existingScript = document.querySelector('script[src*="calendly"]')
+    if (existingScript) {
+      setIsLoading(false)
+      return
+    }
+
+    // Load Calendly script
     const script = document.createElement('script')
     script.src = 'https://assets.calendly.com/assets/external/widget.js'
     script.async = true
@@ -34,13 +48,6 @@ export function CalendlyEmbed({
       setIsLoading(false)
     }
     document.body.appendChild(script)
-
-    return () => {
-      // Cleanup script on unmount
-      if (document.body.contains(script)) {
-        document.body.removeChild(script)
-      }
-    }
   }, [])
 
   return (
