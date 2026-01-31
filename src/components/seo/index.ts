@@ -18,3 +18,7 @@ export type { JsonLdPlaceProps, PostalAddress, GeoCoordinates } from "./JsonLdPl
 // RealEstateListing - Programmes immobiliers
 export { JsonLdRealEstate, getRealEstateJsonLdForMetadata } from "./JsonLdRealEstate";
 export type { JsonLdRealEstateProps, RealEstateAddress, RealEstatePrice } from "./JsonLdRealEstate";
+
+// Ville - Place + LocalBusiness combine pour les pages villes
+export { JsonLdVille, getVilleJsonLdForMetadata } from "./JsonLdVille";
+export type { JsonLdVilleProps, EspoVille } from "./JsonLdVille";

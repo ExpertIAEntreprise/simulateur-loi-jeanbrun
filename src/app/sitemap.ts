@@ -1,7 +1,19 @@
-import type { MetadataRoute } from "next";
 import { getAllSlugs } from "@/lib/blog";
+import { getEspoCRMClient, isEspoCRMAvailable } from "@/lib/espocrm";
+import type { MetadataRoute } from "next";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+/**
+ * Dynamic sitemap generator for SEO
+ *
+ * Includes:
+ * - Static pages (homepage, loi-jeanbrun, a-propos, etc.)
+ * - Blog articles (from MDX files)
+ * - Ville pages (382 pages from EspoCRM)
+ * - Barometre index page
+ *
+ * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
+ */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   // Static pages
@@ -42,6 +54,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/barometre`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 
   // Dynamic blog articles from MDX files
@@ -53,5 +71,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...blogPages];
+  // Dynamic ville pages from EspoCRM
+  let villePages: MetadataRoute.Sitemap = [];
+
+  if (isEspoCRMAvailable()) {
+    try {
+      const espoClient = getEspoCRMClient();
+      const villeSlugs = await espoClient.getAllVilleSlugs();
+
+      villePages = villeSlugs.map((slug) => ({
+        url: `${baseUrl}/villes/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      }));
+    } catch (error) {
+      // Log error but continue with static sitemap
+      console.error(
+        "[Sitemap] Failed to fetch ville slugs from EspoCRM:",
+        error instanceof Error ? error.message : String(error)
+      );
+      // Fallback: continue without ville pages
+    }
+  }
+
+  return [...staticPages, ...blogPages, ...villePages];
 }
