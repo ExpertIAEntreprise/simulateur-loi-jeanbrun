@@ -80,13 +80,13 @@ function formatPrice(value: number | null | undefined): string | null {
  * Design enrichi avec prix m2 et animations hover
  */
 function PeripheriqueCard({ ville }: { ville: EspoVille }) {
-  const zoneConfig = ZONE_BADGE_CONFIG[ville.cZoneFiscale];
-  const zoneLabel = ZONE_SHORT_LABELS[ville.cZoneFiscale];
-  const prixFormate = formatPrice(ville.cPrixM2Moyen);
+  const zoneConfig = ville.zoneFiscale ? ZONE_BADGE_CONFIG[ville.zoneFiscale] : ZONE_BADGE_CONFIG["B1"];
+  const zoneLabel = ville.zoneFiscale ? ZONE_SHORT_LABELS[ville.zoneFiscale] : "Zone N/A";
+  const prixFormate = formatPrice(ville.prixM2Moyen);
 
   return (
     <Link
-      href={`/villes/${ville.cSlug}`}
+      href={`/villes/${ville.slug}`}
       className="group block h-full"
       aria-label={`Decouvrir ${ville.name} - ${zoneLabel}`}
     >
@@ -184,7 +184,7 @@ export function ZonesInvestissement({
         {hasMore && (
           <div className="mt-8 text-center">
             <Button asChild variant="outline" size="lg" className="group">
-              <Link href={`/villes?metropole=${metropole.cSlug}`}>
+              <Link href={`/villes?metropole=${metropole.slug}`}>
                 <span>Voir toutes les {villesPeripheriques.length} villes</span>
                 <ArrowRight
                   className="ml-2 size-4 transition-transform group-hover:translate-x-1"
@@ -235,7 +235,7 @@ export function ZonesInvestissementCompact({
           {villesAffichees.map((ville) => (
             <li key={ville.id}>
               <Link
-                href={`/villes/${ville.cSlug}`}
+                href={`/villes/${ville.slug}`}
                 className="group flex items-center justify-between rounded-lg border p-3 transition-colors hover:border-primary hover:bg-primary/5"
               >
                 <div className="flex items-center gap-2 min-w-0">
@@ -244,8 +244,8 @@ export function ZonesInvestissementCompact({
                     {ville.name}
                   </span>
                 </div>
-                <Badge className={ZONE_BADGE_CONFIG[ville.cZoneFiscale].className}>
-                  {ZONE_SHORT_LABELS[ville.cZoneFiscale]}
+                <Badge className={ville.zoneFiscale ? ZONE_BADGE_CONFIG[ville.zoneFiscale].className : ""}>
+                  {ville.zoneFiscale ? ZONE_SHORT_LABELS[ville.zoneFiscale] : "N/A"}
                 </Badge>
               </Link>
             </li>
@@ -254,7 +254,7 @@ export function ZonesInvestissementCompact({
 
         {hasMore && (
           <Link
-            href={`/villes?metropole=${metropole.cSlug}`}
+            href={`/villes?metropole=${metropole.slug}`}
             className="group mt-4 flex items-center justify-center gap-1 text-sm font-medium text-primary"
           >
             <span>Voir les {villesPeripheriques.length} villes</span>

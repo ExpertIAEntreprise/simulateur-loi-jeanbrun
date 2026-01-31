@@ -644,7 +644,671 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 
 ---
 
-*Dernière mise à jour: 30 janvier 2026 (22h00 - Pino logging implémenté)*
+*Dernière mise à jour: 31 janvier 2026 (Session correction types EspoCRM)*
+
+---
+
+## B2: PROBLÈME CRITIQUE - Mismatch Types EspoCRM vs API Réelle (31/01/2026)
+
+### Contexte Initial
+
+Le build Vercel échouait avec l'erreur:
+```
+Error: ESPOCRM_API_KEY is not configured. Cannot initialize EspoCRM client.
+```
+
+Après ajout de la variable `ESPOCRM_API_KEY` à Vercel, une nouvelle erreur apparaît:
+```
+EspoCRM API error: 400 Bad Request
+Error: A required parameter (slug) was not provided as a string received undefined
+```
+
+### Problème Découvert
+
+**Les types TypeScript dans `src/lib/espocrm/types.ts` NE CORRESPONDENT PAS aux champs réels de l'API EspoCRM.**
+
+Exemple de réponse API EspoCRM réelle:
+```json
+{
+  "slug": "abbeville",
+  "isMetropole": false,
+  "codeInsee": "80001",
+  "prixM2Moyen": 1919.98,
+  "departementName": "Somme",
+  "regionName": "Hauts-de-France"
+}
+```
+
+Mais les types TypeScript attendaient:
+```typescript
+{
+  cSlug: string;        // ❌ L'API utilise "slug" sans préfixe
+  cIsMetropole: boolean; // ❌ L'API utilise "isMetropole"
+  cCodeInsee: string;    // ❌ L'API utilise "codeInsee"
+  cZoneFiscale: string;  // ❌ CE CHAMP N'EXISTE PAS DANS L'API
+  // ... et beaucoup d'autres
+}
+```
+
+### Champs qui N'EXISTENT PAS dans l'API EspoCRM
+
+Ces champs sont référencés dans le code mais **ne sont pas dans l'entité CJeanbrunVille**:
+- `cZoneFiscale` - Zone fiscale (A, A_BIS, B1, B2, C)
+- `cTensionLocative` - Tension locative
+- `cNiveauLoyer` - Niveau loyer
+- `cLoyerM2Moyen` - Loyer moyen au m²
+- `cPopulationCommune` - Population
+- `cRevenuMedian` - Revenu médian
+- `cPhotoVille`, `cPhotoVilleAlt` - Photo de la ville
+- `cContenuEditorial` - Contenu SEO
+- `cMetaTitle`, `cMetaDescription` - Meta SEO
+- `cLatitude`, `cLongitude` - Coordonnées GPS
+
+### Fichiers Modifiés pendant la session (31/01/2026)
+
+#### 1. Types EspoCRM (`src/lib/espocrm/types.ts`)
+- Interface `EspoVille` réécrite avec les champs réels de l'API
+- Fonction `fromEspoVille()` mise à jour
+- Fonction `fromEspoVilleEnriched()` mise à jour
+- Fonctions `getVilleArguments()`, `getVilleFaq()` mises à jour
+- Interface `EspoVilleFilters` mise à jour
+
+#### 2. Client EspoCRM (`src/lib/espocrm/client.ts`)
+- `getVilles()` - Noms de champs mis à jour
+- `getVilleBySlug()` - `cSlug` → `slug`
+- `getMetropoles()` - `cIsMetropole` → `isMetropole`
+- `getVillesPeripheriques()` - `cMetropoleParentId` → `metropoleParentId`
+- `getVilleBySlugEnriched()` - Champs mis à jour
+- `getAllVilleSlugs()` - `cSlug` → `slug`
+- `getVillesByRegionId()` (renommé depuis `getVillesByRegion`) - Champs mis à jour
+- `getVillesProches()` - Champs mis à jour
+
+#### 3. Page Villes (`src/app/villes/[slug]/page.tsx`)
+- `generateStaticParams()` - Ajout try/catch pour éviter erreurs build
+- Références `cSlug` → `slug`, `cIsMetropole` → `isMetropole`, etc.
+- Champs manquants remplacés par valeurs par défaut (ex: `zoneFiscale: "B1"`)
+
+#### 4. Page Baromètre (`src/app/barometre/[ville]/[mois]/page.tsx`)
+- `ville.cSlug` → `ville.slug`
+- `ville.cRegion` → `ville.regionName`
+- `ville.cDepartement` → `ville.departementName`
+
+#### 5. Composant DonneesMarche (`src/components/villes/DonneesMarche.tsx`)
+- `cEvolutionPrix1An` → `evolutionPrix1An`
+- `cPrixM2Moyen` → `prixM2Moyen`
+- `cNbTransactions12Mois` → `nbTransactions12Mois`
+
+#### 6. Composant JsonLdVille (`src/components/seo/JsonLdVille.tsx`)
+- Interface locale `EspoVille` simplifiée (elle avait sa propre définition!)
+- Références aux champs qui n'existent pas supprimées
+- Champs simplifiés: `slug`, `codeInsee`, `departementName`, `regionName`
+
+#### 7. Remplacement en masse (sed)
+Commandes exécutées pour remplacer les noms de champs:
+```bash
+sed -i 's/\.cSlug/.slug/g'
+sed -i 's/\.cIsMetropole/.isMetropole/g'
+sed -i 's/\.cMetropoleParentId/.metropoleParentId/g'
+sed -i 's/\.cRegion/.regionName/g'
+sed -i 's/\.cDepartement/.departementName/g'
+sed -i 's/\.cCodeInsee/.codeInsee/g'
+sed -i 's/\.cPrixM2Moyen/.prixM2Moyen/g'
+sed -i 's/\.cEvolutionPrix1An/.evolutionPrix1An/g'
+sed -i 's/\.cNbTransactions12Mois/.nbTransactions12Mois/g'
+```
+
+### État actuel (FIN DE SESSION)
+
+**❌ Le build TypeScript échoue encore** avec ~60 erreurs liées à:
+
+1. **Fichiers avec interfaces locales** qui ont les anciens noms:
+   - `src/components/villes/VilleCard.tsx`
+   - `src/components/villes/MetropoleLayout.tsx`
+   - `src/components/villes/PeripheriqueLayout.tsx`
+   - `src/components/villes/ZonesInvestissement.tsx`
+   - `src/components/villes/DonneesInsee.tsx`
+   - `src/components/barometre/BarometreCard.tsx`
+   - `src/app/barometre/page.tsx`
+   - `src/app/villes/page.tsx`
+   - `scripts/test-espocrm.ts`
+
+2. **Champs qui n'existent pas** et doivent être soit:
+   - Ajoutés à EspoCRM
+   - Supprimés du code
+   - Remplacés par des valeurs par défaut
+
+3. **Types incompatibles**:
+   - `zoneFiscale: string` vs `zoneFiscale: ZoneFiscale` (enum)
+   - `arguments: string[]` vs `arguments: ArgumentItem[]`
+
+### Actions Requises (À FAIRE)
+
+1. **Mettre à jour EspoCRM** - Ajouter les champs manquants à l'entité CJeanbrunVille:
+   - `zoneFiscale` (enum)
+   - `photoVille`, `photoVilleAlt`
+   - `contenuEditorial`, `metaTitle`, `metaDescription`
+   - `latitude`, `longitude`
+   - `populationCommune`, `revenuMedian`
+   - `loyerM2Moyen`, `tensionLocative`, `niveauLoyer`
+
+2. **OU simplifier le code** - Supprimer les références aux champs manquants et utiliser des valeurs par défaut
+
+3. **Corriger tous les composants** qui ont leurs propres interfaces `EspoVille` locales
+
+4. **Aligner les types** - S'assurer que tous les fichiers utilisent la même interface EspoVille depuis `@/lib/espocrm/types`
+
+### Commande de diagnostic
+
+```bash
+pnpm typecheck 2>&1 | head -100
+```
+
+### Note importante
+
+Le problème fondamental est que **l'entité EspoCRM CJeanbrunVille a été créée avec des champs différents de ce que le code TypeScript attend**. Il faut soit:
+- Ajouter les champs manquants à EspoCRM (via l'admin EspoCRM)
+- Ou adapter tout le code pour utiliser uniquement les champs disponibles
+
+---
+
+## Phase 6: Correction Types EspoCRM + Champs Manquants (31/01/2026)
+
+**Contexte:** Session précédente a commencé une migration correcte des noms de champs (cSlug → slug) mais n'a pas terminé. 62 erreurs TypeScript bloquent le build.
+
+**Diagnostic:**
+- ✅ Les noms de champs dans l'API EspoCRM sont SANS préfixe `c` (confirmé par API)
+- ❌ 17+ composants utilisent encore les anciens noms (cZoneFiscale, cPopulationCommune...)
+- ❌ Certains champs référencés N'EXISTENT PAS dans EspoCRM
+
+### 6.1 Champs API EspoCRM Réels (confirmés)
+
+```json
+{
+  "id": "697de61e41a61f65b",
+  "name": "Abbeville",
+  "slug": "abbeville",
+  "isMetropole": false,
+  "codeInsee": "80001",
+  "codePostal": "80100",
+  "prixM2Moyen": 1919.98,
+  "prixM2Median": 1752.63,
+  "evolutionPrix1An": -25.19,
+  "nbTransactions12Mois": 121,
+  "departementId": null,
+  "departementName": null,
+  "regionId": null,
+  "regionName": null,
+  "metropoleParentId": "697c88adb43c504ce",
+  "metropoleParentName": "Amiens",
+  "argumentsInvestissement": "[...]",
+  "faqItems": "Array"
+}
+```
+
+### 6.2 Champs Manquants à Ajouter à EspoCRM
+
+| Champ | Type | Description | Priorité |
+|-------|------|-------------|----------|
+| `zoneFiscale` | Enum (A_BIS, A, B1, B2, C) | Zone fiscale Jeanbrun | CRITIQUE |
+| `population` | Integer | Population commune | HAUTE |
+| `loyerM2Moyen` | Float | Loyer moyen au m² | HAUTE |
+| `plafondLoyerJeanbrun` | Float | Plafond loyer Pinel/Jeanbrun | HAUTE |
+| `plafondPrixJeanbrun` | Integer | Plafond prix Jeanbrun | HAUTE |
+| `tensionLocative` | Enum | Tension marché locatif | MOYENNE |
+| `niveauLoyer` | Enum | Niveau loyer (haut/moyen/bas) | MOYENNE |
+| `latitude` | Float | Coordonnée GPS | MOYENNE |
+| `longitude` | Float | Coordonnée GPS | MOYENNE |
+| `photoVille` | Varchar | URL photo ville | BASSE |
+| `photoVilleAlt` | Varchar | Alt text SEO | BASSE |
+| `contenuEditorial` | Text | Contenu SEO 300-600 mots | BASSE |
+| `metaTitle` | Varchar | Meta title SEO | BASSE |
+| `metaDescription` | Varchar | Meta description SEO | BASSE |
+| `revenuMedian` | Integer | Revenu médian INSEE | BASSE |
+
+### 6.3 Tâches de Correction
+
+#### 6.3.1 Ajouter champs à EspoCRM (via API)
+
+**Clé API EspoCRM:** `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+**Base URL:** `https://espocrm.expert-ia-entreprise.fr`
+
+**Option A: Via Interface Admin**
+1. Accéder à https://espocrm.expert-ia-entreprise.fr
+2. Admin > Entity Manager > CJeanbrunVille > Fields
+3. Ajouter chaque champ manuellement
+
+**Option B: Via API (recommandé pour traçabilité)**
+
+```bash
+# Variables
+API_KEY="1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+BASE_URL="https://espocrm.expert-ia-entreprise.fr/api/v1"
+
+# 1. Ajouter champ zoneFiscale (Enum)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "zoneFiscale",
+    "type": "enum",
+    "label": "Zone Fiscale",
+    "options": ["A_BIS", "A", "B1", "B2", "C"],
+    "required": false
+  }'
+
+# 2. Ajouter champ population (Integer)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "population",
+    "type": "int",
+    "label": "Population",
+    "required": false
+  }'
+
+# 3. Ajouter champ loyerM2Moyen (Float)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "loyerM2Moyen",
+    "type": "float",
+    "label": "Loyer m² Moyen",
+    "required": false
+  }'
+
+# 4. Ajouter champ plafondLoyerJeanbrun (Float)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "plafondLoyerJeanbrun",
+    "type": "float",
+    "label": "Plafond Loyer Jeanbrun",
+    "required": false
+  }'
+
+# 5. Ajouter champ plafondPrixJeanbrun (Integer)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "plafondPrixJeanbrun",
+    "type": "int",
+    "label": "Plafond Prix Jeanbrun",
+    "required": false
+  }'
+
+# 6. Ajouter champ tensionLocative (Enum)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "tensionLocative",
+    "type": "enum",
+    "label": "Tension Locative",
+    "options": ["tres_tendu", "tendu", "equilibre", "detendu"],
+    "required": false
+  }'
+
+# 7. Ajouter champ niveauLoyer (Enum)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "niveauLoyer",
+    "type": "enum",
+    "label": "Niveau Loyer",
+    "options": ["haut", "moyen", "bas"],
+    "required": false
+  }'
+
+# 8. Ajouter champ latitude (Float)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "latitude",
+    "type": "float",
+    "label": "Latitude",
+    "required": false
+  }'
+
+# 9. Ajouter champ longitude (Float)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "longitude",
+    "type": "float",
+    "label": "Longitude",
+    "required": false
+  }'
+
+# 10. Ajouter champ photoVille (Varchar)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "photoVille",
+    "type": "varchar",
+    "label": "Photo Ville URL",
+    "maxLength": 500,
+    "required": false
+  }'
+
+# 11. Ajouter champ photoVilleAlt (Varchar)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "photoVilleAlt",
+    "type": "varchar",
+    "label": "Photo Alt Text",
+    "maxLength": 255,
+    "required": false
+  }'
+
+# 12. Ajouter champ contenuEditorial (Text)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "contenuEditorial",
+    "type": "text",
+    "label": "Contenu Editorial SEO",
+    "required": false
+  }'
+
+# 13. Ajouter champ metaTitle (Varchar)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "metaTitle",
+    "type": "varchar",
+    "label": "Meta Title SEO",
+    "maxLength": 70,
+    "required": false
+  }'
+
+# 14. Ajouter champ metaDescription (Varchar)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "metaDescription",
+    "type": "varchar",
+    "label": "Meta Description SEO",
+    "maxLength": 160,
+    "required": false
+  }'
+
+# 15. Ajouter champ revenuMedian (Integer)
+curl -X POST "$BASE_URL/Admin/fieldManager/CJeanbrunVille" \
+  -H "X-Api-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "revenuMedian",
+    "type": "int",
+    "label": "Revenu Median INSEE",
+    "required": false
+  }'
+
+# Vérifier que les champs ont été ajoutés
+curl -s "$BASE_URL/CJeanbrunVille?maxSize=1" -H "X-Api-Key: $API_KEY" | jq '.list[0] | keys'
+```
+
+**Checklist ajout champs:**
+- [x] zoneFiscale (Enum: A_BIS, A, B1, B2, C) - CRITIQUE ✅
+- [x] population (Integer) - HAUTE ✅
+- [x] loyerM2Moyen (Float) - HAUTE ✅
+- [x] plafondLoyerJeanbrun (Float) - HAUTE ✅
+- [x] plafondPrixJeanbrun (Integer) - HAUTE ✅
+- [x] tensionLocative (Enum) - MOYENNE ✅
+- [x] niveauLoyer (Enum) - MOYENNE ✅
+- [x] latitude (Float) - MOYENNE ✅
+- [x] longitude (Float) - MOYENNE ✅
+- [x] photoVille (Varchar) - BASSE ✅
+- [x] photoVilleAlt (Varchar) - BASSE ✅
+- [x] contenuEditorial (Text) - BASSE ✅
+- [x] metaTitle (Varchar) - BASSE ✅
+- [x] metaDescription (Varchar) - BASSE ✅
+- [x] revenuMedian (Integer) - BASSE ✅
+
+#### 6.3.2 Mettre à jour types.ts avec champs complets
+
+**Fichier:** `src/lib/espocrm/types.ts`
+
+**1. Réimporter les types enum (ligne ~11):**
+```typescript
+import type { ZoneFiscale, TensionLocative, NiveauLoyer } from "@/types/ville";
+```
+
+**2. Ajouter les champs manquants à EspoVille (après ligne 64):**
+```typescript
+  // Zone fiscale et marché locatif
+  zoneFiscale: ZoneFiscale | null;
+  tensionLocative: TensionLocative | null;
+  niveauLoyer: NiveauLoyer | null;
+  loyerM2Moyen: number | null;
+
+  // Plafonds Jeanbrun
+  plafondLoyerJeanbrun: number | null;
+  plafondPrixJeanbrun: number | null;
+
+  // Données INSEE
+  population: number | null;
+  revenuMedian: number | null;
+
+  // Géolocalisation
+  latitude: number | null;
+  longitude: number | null;
+
+  // Contenu SEO
+  photoVille: string | null;
+  photoVilleAlt: string | null;
+  contenuEditorial: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+```
+
+**3. Mettre à jour EspoVilleFilters (ligne ~168):**
+```typescript
+export interface EspoVilleFilters {
+  departementId?: string;
+  regionId?: string;
+  zoneFiscale?: ZoneFiscale;  // AJOUTER
+  tensionLocative?: TensionLocative;  // AJOUTER
+  search?: string;
+  prixMin?: number;
+  prixMax?: number;
+  orderBy?: VilleSortField;
+  order?: SortOrder;
+  isMetropole?: boolean;
+}
+```
+
+**4. Mettre à jour fromEspoVille (ligne ~241):**
+```typescript
+export function fromEspoVille(espo: EspoVille) {
+  return {
+    id: espo.id,
+    codeInsee: espo.codeInsee,
+    codePostal: espo.codePostal,
+    nom: espo.name,
+    departement: espo.departementName ?? null,
+    departementId: espo.departementId,
+    region: espo.regionName ?? null,
+    regionId: espo.regionId,
+    zoneFiscale: espo.zoneFiscale,  // AJOUTER
+    tensionLocative: espo.tensionLocative,  // AJOUTER
+    niveauLoyer: espo.niveauLoyer,  // AJOUTER
+    prixM2Moyen: espo.prixM2Moyen,
+    prixM2Median: espo.prixM2Median,
+    loyerM2Moyen: espo.loyerM2Moyen,  // AJOUTER
+    population: espo.population,  // AJOUTER
+    slug: espo.slug,
+    espoId: espo.id,
+  };
+}
+```
+
+**5. Mettre à jour fromEspoVilleEnriched (ligne ~348):**
+```typescript
+export function fromEspoVilleEnriched(espo: EspoVille) {
+  const base = fromEspoVille(espo);
+  return {
+    ...base,
+    isMetropole: espo.isMetropole,
+    metropoleParentId: espo.metropoleParentId,
+    metropoleParentName: espo.metropoleParentName ?? null,
+    arguments: getVilleArguments(espo),
+    faqItems: getVilleFaq(espo),
+    evolutionPrix1An: espo.evolutionPrix1An,
+    nbTransactions12Mois: espo.nbTransactions12Mois,
+    // Champs ajoutés
+    plafondLoyerJeanbrun: espo.plafondLoyerJeanbrun,
+    plafondPrixJeanbrun: espo.plafondPrixJeanbrun,
+    latitude: espo.latitude,
+    longitude: espo.longitude,
+    photoVille: espo.photoVille,
+    photoVilleAlt: espo.photoVilleAlt,
+    contenuEditorial: espo.contenuEditorial,
+    metaTitle: espo.metaTitle,
+    metaDescription: espo.metaDescription,
+    revenuMedian: espo.revenuMedian,
+  };
+}
+```
+
+**6. Corriger fromEspoProgramme (ligne 272):**
+```typescript
+prixM2Moyen: espo.cPrixM2Moyen,  // Corriger: espo.prixM2Moyen → espo.cPrixM2Moyen
+```
+
+**Checklist types.ts:**
+- [x] Import ZoneFiscale, TensionLocative, NiveauLoyer ✅
+- [x] Ajouter 15 champs à EspoVille ✅
+- [x] Ajouter zoneFiscale à EspoVilleFilters ✅
+- [x] Mettre à jour fromEspoVille ✅
+- [x] Mettre à jour fromEspoVilleEnriched ✅
+- [x] Corriger typo fromEspoProgramme ✅
+
+#### 6.3.3 Mettre à jour les 17 composants
+
+**Remplacement global à effectuer (dans tous les fichiers):**
+```
+cZoneFiscale → zoneFiscale
+cPopulationCommune → population
+cRevenuMedian → revenuMedian
+cLatitude → latitude
+cLongitude → longitude
+cPhotoVille → photoVille
+cPhotoVilleAlt → photoVilleAlt
+cContenuEditorial → contenuEditorial
+cLoyerM2Moyen → loyerM2Moyen
+```
+
+**Détail par fichier:**
+
+| Fichier | Erreurs | Corrections détaillées |
+|---------|---------|------------------------|
+| `src/app/barometre/page.tsx:302` | 1 | `ville.cZoneFiscale` → `ville.zoneFiscale` |
+| `src/app/villes/[slug]/page.tsx` | 4 | Lignes 309,340,440,468: cast `as ZoneFiscale`, type `ArgumentItem[]` |
+| `src/app/villes/page.tsx` | 4 | Lignes 276,280,388,391: `zoneFiscale` dans filtres, `departementId` |
+| `src/components/barometre/BarometreCard.tsx:63` | 2 | `ville.cZoneFiscale` → `ville.zoneFiscale` (2x) |
+| `src/components/villes/DonneesInsee.tsx` | 5 | Lignes 40,77,79,93,95: `cPopulationCommune` → `population`, `cRevenuMedian` → `revenuMedian` |
+| `src/components/villes/MetropoleLayout.tsx` | 12 | Lignes 169-370: multiple champs (voir liste) |
+| `src/components/villes/PeripheriqueLayout.tsx` | 10 | Lignes 146-341: multiple champs |
+| `src/components/villes/VilleCard.tsx` | 7 | Lignes 61-127: `cZoneFiscale`, `cPhotoVille`, `cPopulationCommune` |
+| `src/components/villes/ZonesInvestissement.tsx` | 8 | Lignes 83-248: `cZoneFiscale` → `zoneFiscale` |
+| `scripts/test-espocrm.ts` | 5 | Lignes 49-64: filtres et champs |
+
+**Fichiers avec interfaces locales à synchroniser:**
+- `src/components/seo/JsonLdVille.tsx` - Interface locale OK (déjà sans préfixe c)
+- `src/components/villes/MetropoleLayout.tsx` - VillePeripherique, VilleProche
+- `src/components/villes/PeripheriqueLayout.tsx` - VilleProche
+- `src/components/villes/VillePeripheriqueCard.tsx` - VillePeripherique
+
+**Commande de recherche pour vérifier:**
+```bash
+cd /root/simulateur_loi_Jeanbrun
+grep -r "cZoneFiscale\|cPopulationCommune\|cRevenuMedian\|cLatitude\|cLongitude\|cPhotoVille\|cContenuEditorial" --include="*.tsx" --include="*.ts" src/
+```
+
+**Checklist composants:**
+- [x] src/app/barometre/page.tsx ✅
+- [x] src/app/villes/[slug]/page.tsx ✅
+- [x] src/app/villes/page.tsx ✅
+- [x] src/components/barometre/BarometreCard.tsx ✅
+- [x] src/components/villes/DonneesInsee.tsx ✅
+- [x] src/components/villes/MetropoleLayout.tsx ✅
+- [x] src/components/villes/PeripheriqueLayout.tsx ✅
+- [x] src/components/villes/VilleCard.tsx ✅
+- [x] src/components/villes/ZonesInvestissement.tsx ✅
+- [x] scripts/test-espocrm.ts ✅
+
+#### 6.3.4 Corriger le typo dans fromEspoProgramme
+
+**Fichier:** `src/lib/espocrm/types.ts` ligne 272
+
+**Avant:**
+```typescript
+prixM2Moyen: espo.prixM2Moyen,
+```
+
+**Après:**
+```typescript
+prixM2Moyen: espo.cPrixM2Moyen,
+```
+
+- [x] Corriger le typo ✅
+
+#### 6.3.5 Corriger la vulnérabilité XSS (HIGH) ✅ FAIT
+
+**Fichier:** `src/components/villes/PhotoVille.tsx` lignes 110-114
+
+**Avant (VULNÉRABLE):**
+```typescript
+parent.innerHTML = `
+  <div class="flex h-full w-full items-center justify-center">
+    <span class="text-sm font-medium text-muted-foreground opacity-70">${villeNom}</span>
+  </div>
+`;
+```
+
+**Après (SÉCURISÉ):**
+```typescript
+if (parent) {
+  parent.innerHTML = '';
+  const wrapper = document.createElement("div");
+  wrapper.className = "flex h-full w-full items-center justify-center";
+  const span = document.createElement("span");
+  span.className = "text-sm font-medium text-muted-foreground opacity-70";
+  span.textContent = villeNom; // textContent échappe le HTML
+  wrapper.appendChild(span);
+  parent.appendChild(wrapper);
+}
+```
+
+- [x] Corriger la vulnérabilité XSS ✅
+
+### 6.4 Validation ✅ COMPLÉTÉ
+
+- [x] `pnpm typecheck` passe (0 erreurs) ✅
+- [x] `pnpm build:ci` passe ✅
+- [x] API EspoCRM retourne les nouveaux champs ✅
+- [ ] Pages villes affichent zoneFiscale correctement (à vérifier en dev)
+- [ ] Baromètre affiche les données (à vérifier en dev)
+
+### 6.5 Ordre d'exécution
+
+1. **D'abord** : Ajouter les champs à EspoCRM (6.3.1)
+2. **Ensuite** : Mettre à jour types.ts (6.3.2)
+3. **Puis** : Corriger les composants (6.3.3)
+4. **Enfin** : Valider le build (6.4)
 
 ---
 

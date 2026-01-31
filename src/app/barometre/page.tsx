@@ -299,7 +299,7 @@ async function fetchVillesAvecBarometres(
 
     // Filtre par zone
     if (zoneFilter && zoneFilter !== "all") {
-      villes = villes.filter((v) => v.cZoneFiscale === zoneFilter);
+      villes = villes.filter((v) => v.zoneFiscale === zoneFilter);
     }
 
     // Recuperer les barometres pour chaque ville

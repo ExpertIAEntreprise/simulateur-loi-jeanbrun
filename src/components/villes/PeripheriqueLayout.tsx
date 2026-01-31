@@ -143,23 +143,23 @@ function QuickDataCard({ ville }: { ville: EspoVille }) {
         <QuickDataRow
           icon={Users}
           label="Population"
-          value={formatNumber(ville.cPopulationCommune)}
+          value={formatNumber(ville.population)}
         />
         <QuickDataRow
           icon={Euro}
           label="Prix m2"
-          value={formatEuros(ville.cPrixM2Moyen)}
+          value={formatEuros(ville.prixM2Moyen)}
         />
         <QuickDataRow
           icon={Building2}
           label="Zone fiscale"
-          value={`Zone ${ZONE_LABELS[ville.cZoneFiscale]}`}
+          value={ville.zoneFiscale ? `Zone ${ZONE_LABELS[ville.zoneFiscale]}` : "N/A"}
         />
-        {ville.cDepartement && (
+        {ville.departementName && (
           <QuickDataRow
             icon={MapPin}
             label="Departement"
-            value={ville.cDepartement}
+            value={ville.departementName}
           />
         )}
       </CardContent>
@@ -191,14 +191,14 @@ export function PeripheriqueLayout({
   if (metropoleParent) {
     breadcrumbItems.push({
       label: metropoleParent.name,
-      href: `/villes/${metropoleParent.cSlug}`,
+      href: `/villes/${metropoleParent.slug}`,
     });
   }
 
   // Ajouter la ville actuelle
   breadcrumbItems.push({
     label: ville.name,
-    href: `/villes/${ville.cSlug}`,
+    href: `/villes/${ville.slug}`,
   });
 
   return (
@@ -210,14 +210,14 @@ export function PeripheriqueLayout({
         {/* Header compact */}
         <header className="mb-8">
           {/* Departement badge */}
-          {ville.cDepartement && (
+          {ville.departementName && (
             <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="size-4" aria-hidden="true" />
-              <span>Departement {ville.cDepartement}</span>
-              {ville.cRegion && (
+              <span>Departement {ville.departementName}</span>
+              {ville.regionName && (
                 <>
                   <span className="text-muted-foreground/50">|</span>
-                  <span>{ville.cRegion}</span>
+                  <span>{ville.regionName}</span>
                 </>
               )}
             </div>
@@ -228,12 +228,14 @@ export function PeripheriqueLayout({
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
               Loi Jeanbrun a {ville.name}
             </h1>
-            <Badge
-              variant={getZoneBadgeVariant(ville.cZoneFiscale)}
-              className="text-sm"
-            >
-              Zone {ZONE_LABELS[ville.cZoneFiscale]}
-            </Badge>
+            {ville.zoneFiscale && (
+              <Badge
+                variant={getZoneBadgeVariant(ville.zoneFiscale)}
+                className="text-sm"
+              >
+                Zone {ZONE_LABELS[ville.zoneFiscale]}
+              </Badge>
+            )}
           </div>
 
           {/* Sous-titre avec metropole parent */}
@@ -260,7 +262,7 @@ export function PeripheriqueLayout({
                 Investir a {ville.name}
               </h2>
               <ContenuEditorial
-                contenu={ville.cContenuEditorial}
+                contenu={ville.contenuEditorial}
                 villeNom={ville.name}
               />
             </section>
@@ -280,8 +282,8 @@ export function PeripheriqueLayout({
               </h2>
               <SimulateurPreRempli
                 villeNom={ville.name}
-                villeSlug={ville.cSlug}
-                zoneFiscale={ville.cZoneFiscale}
+                villeSlug={ville.slug}
+                zoneFiscale={ville.zoneFiscale ?? "B1"}
               />
             </section>
 
@@ -310,7 +312,7 @@ export function PeripheriqueLayout({
                 </h2>
                 <LienMetropoleParent
                   metropoleNom={metropoleParent.name}
-                  metropoleSlug={metropoleParent.cSlug}
+                  metropoleSlug={metropoleParent.slug}
                   nbProgrammes={nbProgrammesMetropole}
                 />
               </section>
@@ -324,7 +326,9 @@ export function PeripheriqueLayout({
               {/* Arguments d'investissement */}
               {arguments_.length > 0 && (
                 <ArgumentsInvestissement
-                  arguments={arguments_}
+                  arguments={arguments_.map((arg) =>
+                    typeof arg === "string" ? { titre: arg } : arg
+                  )}
                   villeNom={ville.name}
                 />
               )}
@@ -337,8 +341,8 @@ export function PeripheriqueLayout({
 
               {/* Carte de la ville */}
               <CarteVille
-                latitude={ville.cLatitude}
-                longitude={ville.cLongitude}
+                latitude={ville.latitude}
+                longitude={ville.longitude}
                 villeNom={ville.name}
               />
             </div>

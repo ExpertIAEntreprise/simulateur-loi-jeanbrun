@@ -107,11 +107,15 @@ export function PhotoVille({
           const parent = target.parentElement;
           if (parent) {
             parent.classList.add("bg-gradient-to-br", "from-primary/20", "via-primary/10", "to-secondary/20");
-            parent.innerHTML = `
-              <div class="flex h-full w-full items-center justify-center">
-                <span class="text-sm font-medium text-muted-foreground opacity-70">${villeNom}</span>
-              </div>
-            `;
+            // Utiliser manipulation DOM au lieu de innerHTML pour eviter XSS
+            parent.innerHTML = "";
+            const wrapper = document.createElement("div");
+            wrapper.className = "flex h-full w-full items-center justify-center";
+            const span = document.createElement("span");
+            span.className = "text-sm font-medium text-muted-foreground opacity-70";
+            span.textContent = villeNom; // textContent echappe automatiquement le HTML
+            wrapper.appendChild(span);
+            parent.appendChild(wrapper);
           }
         }}
       />

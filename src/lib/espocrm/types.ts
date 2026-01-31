@@ -30,50 +30,64 @@ export interface EspoArgumentInvestissement {
 /**
  * Ville EspoCRM (entité CJeanbrunVille)
  * 382 villes: 52 métropoles + 330 périphériques
+ *
+ * Note: Les noms de champs correspondent à l'API EspoCRM (sans préfixe c)
  */
 export interface EspoVille {
   id: string;
   name: string; // Nom de la ville
-  cCodeInsee: string; // Code INSEE
-  cDepartement: string; // Code département
-  cRegion: string | null; // Région
-  cZoneFiscale: ZoneFiscale; // A_BIS, A, B1, B2, C
-  cTensionLocative: TensionLocative | null; // tres_tendu, tendu, equilibre, detendu
-  cNiveauLoyer: NiveauLoyer | null; // haut, moyen, bas
-  cPrixM2Moyen: number | null; // Prix moyen au m² (en euros)
-  cLoyerM2Moyen: number | null; // Loyer moyen au m²/mois (en euros)
-  cPopulationCommune: number | null; // Population de la commune
-  cSlug: string; // Slug URL
+  deleted?: boolean;
 
-  // Champs métropole/périphérique (Phase 2)
-  cIsMetropole: boolean; // true pour les 52 métropoles principales
-  cMetropoleParentId: string | null; // ID de la métropole parent (pour périphériques)
-  cMetropoleParentName?: string | null; // Nom de la métropole parent (expand)
+  // Identifiants
+  codeInsee: string; // Code INSEE
+  codePostal: string | null; // Code postal
+  slug: string; // Slug URL
 
-  // Contenu éditorial SEO
-  cPhotoVille: string | null; // URL photo représentative
-  cPhotoVilleAlt: string | null; // Alt text SEO
-  cContenuEditorial: string | null; // Contenu 300-600 mots
-  cMetaTitle: string | null; // Meta title SEO
-  cMetaDescription: string | null; // Meta description SEO
+  // Localisation
+  departementId: string | null; // ID du département
+  departementName?: string | null; // Nom du département (expand)
+  regionId: string | null; // ID de la région
+  regionName?: string | null; // Nom de la région (expand)
+
+  // Métropole/périphérique
+  isMetropole: boolean; // true pour les 52 métropoles principales
+  metropoleParentId: string | null; // ID de la métropole parent (pour périphériques)
+  metropoleParentName?: string | null; // Nom de la métropole parent (expand)
+
+  // Données marché
+  prixM2Moyen: number | null; // Prix moyen au m² (en euros)
+  prixM2Median: number | null; // Prix médian au m² (en euros)
+  evolutionPrix1An: number | null; // Évolution prix sur 1 an (%)
+  nbTransactions12Mois: number | null; // Nombre de transactions sur 12 mois
 
   // Arguments et FAQ (JSON strings)
-  cArgumentsInvestissement: string | null; // JSON array of EspoArgumentInvestissement
-  cFaqItems: string | null; // JSON array of EspoFaqItem
+  argumentsInvestissement: string | null; // JSON array string
+  faqItems: string | null; // JSON array string
 
-  // Géolocalisation
-  cLatitude: number | null;
-  cLongitude: number | null;
+  // Zone fiscale et marché locatif
+  zoneFiscale: ZoneFiscale | null;
+  tensionLocative: TensionLocative | null;
+  niveauLoyer: NiveauLoyer | null;
+  loyerM2Moyen: number | null;
 
-  // Données DVF
-  cEvolutionPrix1An: number | null; // Évolution prix sur 1 an (%)
-  cNbTransactions12Mois: number | null; // Nombre de transactions sur 12 mois
+  // Plafonds Jeanbrun
+  plafondLoyerJeanbrun: number | null;
+  plafondPrixJeanbrun: number | null;
 
   // Données INSEE
-  cRevenuMedian: number | null; // Revenu médian
+  population: number | null;
+  revenuMedian: number | null;
 
-  createdAt: string; // ISO date string
-  modifiedAt: string; // ISO date string
+  // Géolocalisation
+  latitude: number | null;
+  longitude: number | null;
+
+  // Contenu SEO
+  photoVille: string | null;
+  photoVilleAlt: string | null;
+  contenuEditorial: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }
 
 /**
@@ -178,14 +192,16 @@ export type SortOrder = "asc" | "desc";
  * Filtres pour recherche de villes
  */
 export interface EspoVilleFilters {
-  departement?: string;
-  zoneFiscale?: ZoneFiscale;
-  tensionLocative?: TensionLocative;
+  departementId?: string;
+  regionId?: string;
   search?: string; // Recherche par nom
   prixMin?: number; // Prix m² minimum
   prixMax?: number; // Prix m² maximum
   orderBy?: VilleSortField; // Champ de tri
   order?: SortOrder; // Direction du tri
+  isMetropole?: boolean; // Filtrer par métropole
+  zoneFiscale?: ZoneFiscale; // Filtre par zone fiscale
+  tensionLocative?: TensionLocative; // Filtre par tension locative
 }
 
 /**
@@ -253,20 +269,22 @@ export function toEspoLead(lead: LeadInput): EspoLead {
 export function fromEspoVille(espo: EspoVille) {
   return {
     id: espo.id, // On utilise l'ID EspoCRM comme ID local pour sync
-    codeInsee: espo.cCodeInsee,
+    codeInsee: espo.codeInsee,
+    codePostal: espo.codePostal,
     nom: espo.name,
-    departement: espo.cDepartement,
-    region: espo.cRegion,
-    zoneFiscale: espo.cZoneFiscale,
-    tensionLocative: espo.cTensionLocative,
-    niveauLoyer: espo.cNiveauLoyer,
-    prixM2Moyen: espo.cPrixM2Moyen,
-    loyerM2Moyen: espo.cLoyerM2Moyen,
-    populationCommune: espo.cPopulationCommune,
-    slug: espo.cSlug,
+    departement: espo.departementName ?? null,
+    departementId: espo.departementId,
+    region: espo.regionName ?? null,
+    regionId: espo.regionId,
+    prixM2Moyen: espo.prixM2Moyen,
+    prixM2Median: espo.prixM2Median,
+    slug: espo.slug,
     espoId: espo.id,
-    createdAt: new Date(espo.createdAt),
-    updatedAt: new Date(espo.modifiedAt),
+    zoneFiscale: espo.zoneFiscale,
+    tensionLocative: espo.tensionLocative,
+    niveauLoyer: espo.niveauLoyer,
+    loyerM2Moyen: espo.loyerM2Moyen,
+    population: espo.population,
   };
 }
 
@@ -339,16 +357,22 @@ export function parseJsonField<T>(jsonString: string | null, defaultValue: T): T
 
 /**
  * Extrait les arguments d'investissement d'une ville
+ * Note: argumentsInvestissement est un JSON array string ou "Array" si non parsé
  */
-export function getVilleArguments(ville: EspoVille): EspoArgumentInvestissement[] {
-  return parseJsonField<EspoArgumentInvestissement[]>(ville.cArgumentsInvestissement, []);
+export function getVilleArguments(ville: EspoVille): string[] {
+  if (!ville.argumentsInvestissement) return [];
+  if (ville.argumentsInvestissement === "Array") return [];
+  return parseJsonField<string[]>(ville.argumentsInvestissement, []);
 }
 
 /**
  * Extrait les FAQ d'une ville
+ * Note: faqItems est un JSON array string ou "Array" si non parsé
  */
 export function getVilleFaq(ville: EspoVille): EspoFaqItem[] {
-  return parseJsonField<EspoFaqItem[]>(ville.cFaqItems, []);
+  if (!ville.faqItems) return [];
+  if (ville.faqItems === "Array") return [];
+  return parseJsonField<EspoFaqItem[]>(ville.faqItems, []);
 }
 
 /**
@@ -358,20 +382,22 @@ export function fromEspoVilleEnriched(espo: EspoVille) {
   const base = fromEspoVille(espo);
   return {
     ...base,
-    isMetropole: espo.cIsMetropole,
-    metropoleParentId: espo.cMetropoleParentId,
-    metropoleParentName: espo.cMetropoleParentName ?? null,
-    photoVille: espo.cPhotoVille,
-    photoVilleAlt: espo.cPhotoVilleAlt,
-    contenuEditorial: espo.cContenuEditorial,
-    metaTitle: espo.cMetaTitle,
-    metaDescription: espo.cMetaDescription,
+    isMetropole: espo.isMetropole,
+    metropoleParentId: espo.metropoleParentId,
+    metropoleParentName: espo.metropoleParentName ?? null,
     arguments: getVilleArguments(espo),
     faqItems: getVilleFaq(espo),
-    latitude: espo.cLatitude,
-    longitude: espo.cLongitude,
-    evolutionPrix1An: espo.cEvolutionPrix1An,
-    nbTransactions12Mois: espo.cNbTransactions12Mois,
-    revenuMedian: espo.cRevenuMedian,
+    evolutionPrix1An: espo.evolutionPrix1An,
+    nbTransactions12Mois: espo.nbTransactions12Mois,
+    plafondLoyerJeanbrun: espo.plafondLoyerJeanbrun,
+    plafondPrixJeanbrun: espo.plafondPrixJeanbrun,
+    latitude: espo.latitude,
+    longitude: espo.longitude,
+    photoVille: espo.photoVille,
+    photoVilleAlt: espo.photoVilleAlt,
+    contenuEditorial: espo.contenuEditorial,
+    metaTitle: espo.metaTitle,
+    metaDescription: espo.metaDescription,
+    revenuMedian: espo.revenuMedian,
   };
 }

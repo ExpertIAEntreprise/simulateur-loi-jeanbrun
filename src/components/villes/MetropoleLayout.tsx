@@ -166,8 +166,8 @@ export function MetropoleLayout({
         {/* Photo de fond */}
         <div className="relative h-64 w-full md:h-80 lg:h-96">
           <PhotoVille
-            photoUrl={ville.cPhotoVille}
-            alt={ville.cPhotoVilleAlt}
+            photoUrl={ville.photoVille}
+            alt={ville.photoVilleAlt}
             villeNom={ville.name}
             shape="rectangle"
             className="h-full w-full"
@@ -188,19 +188,19 @@ export function MetropoleLayout({
               <StatCard
                 icon={Users}
                 label="Population"
-                value={formatNumber(ville.cPopulationCommune)}
+                value={formatNumber(ville.population)}
               />
               <StatCard
                 icon={Euro}
                 label="Prix m2 moyen"
-                value={formatEuros(ville.cPrixM2Moyen)}
+                value={formatEuros(ville.prixM2Moyen)}
               />
               <StatCard
                 icon={TrendingUp}
                 label="Evolution 1 an"
                 value={
-                  ville.cEvolutionPrix1An !== null
-                    ? `${ville.cEvolutionPrix1An >= 0 ? "+" : ""}${ville.cEvolutionPrix1An.toFixed(1)}%`
+                  ville.evolutionPrix1An !== null
+                    ? `${ville.evolutionPrix1An >= 0 ? "+" : ""}${ville.evolutionPrix1An.toFixed(1)}%`
                     : "N/A"
                 }
               />
@@ -220,7 +220,7 @@ export function MetropoleLayout({
         <Breadcrumb
           items={[
             { label: "Villes", href: "/villes" },
-            { label: ville.name, href: `/villes/${ville.cSlug}` },
+            { label: ville.name, href: `/villes/${ville.slug}` },
           ]}
           className="mb-6"
         />
@@ -230,12 +230,14 @@ export function MetropoleLayout({
           <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
             Loi Jeanbrun a {ville.name}
           </h1>
-          <Badge
-            variant={getZoneBadgeVariant(ville.cZoneFiscale)}
-            className="text-sm"
-          >
-            Zone {ZONE_LABELS[ville.cZoneFiscale]}
-          </Badge>
+          {ville.zoneFiscale && (
+            <Badge
+              variant={getZoneBadgeVariant(ville.zoneFiscale)}
+              className="text-sm"
+            >
+              Zone {ZONE_LABELS[ville.zoneFiscale]}
+            </Badge>
+          )}
         </div>
 
         {/* Contenu enfant additionnel (si fourni) */}
@@ -255,12 +257,14 @@ export function MetropoleLayout({
           </section>
 
           {/* Section plafonds Loi Jeanbrun */}
-          <section aria-labelledby="section-plafonds">
-            <h2 id="section-plafonds" className="sr-only">
-              Plafonds de loyer Loi Jeanbrun
-            </h2>
-            <PlafondsJeanbrun zoneFiscale={ville.cZoneFiscale} />
-          </section>
+          {ville.zoneFiscale && (
+            <section aria-labelledby="section-plafonds">
+              <h2 id="section-plafonds" className="sr-only">
+                Plafonds de loyer Loi Jeanbrun
+              </h2>
+              <PlafondsJeanbrun zoneFiscale={ville.zoneFiscale} />
+            </section>
+          )}
 
           {/* Section programmes neufs */}
           <ProgrammesList programmes={programmes} maxItems={6} />
@@ -296,7 +300,7 @@ export function MetropoleLayout({
             <div className="grid gap-6 lg:grid-cols-2">
               <BarometreResume
                 barometre={barometre}
-                villeSlug={ville.cSlug}
+                villeSlug={ville.slug}
               />
               {/* Arguments d'investissement dans la seconde colonne */}
               {arguments_.length > 0 && (
@@ -327,12 +331,7 @@ export function MetropoleLayout({
                             </svg>
                           </span>
                           <div>
-                            <span className="font-medium">{arg.titre}</span>
-                            {arg.description && (
-                              <p className="mt-0.5 text-sm text-muted-foreground">
-                                {arg.description}
-                              </p>
-                            )}
+                            <span className="font-medium">{arg}</span>
                           </div>
                         </li>
                       ))}
@@ -349,7 +348,7 @@ export function MetropoleLayout({
               Investir a {ville.name}
             </h2>
             <ContenuEditorial
-              contenu={ville.cContenuEditorial}
+              contenu={ville.contenuEditorial}
               villeNom={ville.name}
             />
           </section>
@@ -365,8 +364,8 @@ export function MetropoleLayout({
             <div className="mx-auto max-w-2xl">
               <SimulateurPreRempli
                 villeNom={ville.name}
-                villeSlug={ville.cSlug}
-                zoneFiscale={ville.cZoneFiscale}
+                villeSlug={ville.slug}
+                zoneFiscale={ville.zoneFiscale ?? "B1"}
               />
             </div>
           </section>

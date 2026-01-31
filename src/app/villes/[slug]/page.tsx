@@ -40,6 +40,7 @@ import {
   type EspoVille,
 } from "@/lib/espocrm";
 import type { Metadata } from "next";
+import type { ZoneFiscale } from "@/types/ville";
 
 /**
  * Configuration ISR: revalidation toutes les heures
@@ -80,12 +81,18 @@ const PLAFONDS_LOYER: Record<string, number> = {
  * Appele au build time par Next.js
  */
 export async function generateStaticParams() {
-  const client = getEspoCRMClient();
-  const slugs = await client.getAllVilleSlugs();
+  try {
+    const client = getEspoCRMClient();
+    const slugs = await client.getAllVilleSlugs();
 
-  return slugs.map((slug) => ({
-    slug,
-  }));
+    return slugs.map((slug) => ({
+      slug,
+    }));
+  } catch (error) {
+    console.error("Erreur generateStaticParams villes:", error);
+    // Retourner tableau vide pour permettre ISR dynamique
+    return [];
+  }
 }
 
 /**
@@ -105,19 +112,17 @@ export async function generateMetadata({
     };
   }
 
-  const zoneLabel = ZONE_LABELS[ville.cZoneFiscale] ?? ville.cZoneFiscale;
-  const plafond = PLAFONDS_LOYER[ville.cZoneFiscale] ?? 0;
+  // Zone fiscale par defaut B1 (la plus courante)
+  const zoneFiscale = "B1";
+  const zoneLabel = ZONE_LABELS[zoneFiscale] ?? zoneFiscale;
+  const plafond = PLAFONDS_LOYER[zoneFiscale] ?? 0;
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
 
   // Title optimise SEO (< 60 caracteres)
-  const title =
-    ville.cMetaTitle ??
-    `Loi Jeanbrun ${ville.name} 2026 : Investir et Defiscaliser`;
+  const title = `Loi Jeanbrun ${ville.name} 2026 : Investir et Defiscaliser`;
 
   // Description optimisee (150-160 caracteres)
-  const description =
-    ville.cMetaDescription ??
-    `Investissement locatif a ${ville.name} avec la loi Jeanbrun. Zone ${zoneLabel}, plafond ${plafond.toFixed(2)} EUR/m2. Simulez votre economie d'impot.`;
+  const description = `Investissement locatif a ${ville.name} avec la loi Jeanbrun. Zone ${zoneLabel}, plafond ${plafond.toFixed(2)} EUR/m2. Simulez votre economie d'impot.`;
 
   // URL canonique
   const canonicalUrl = `${baseUrl}/villes/${slug}`;
@@ -125,7 +130,7 @@ export async function generateMetadata({
   // JSON-LD schemas pour Google Rich Snippets
   const breadcrumbJsonLd = getBreadcrumbJsonLdForMetadata([
     { label: "Villes", href: "/villes" },
-    { label: ville.name, href: `/villes/${ville.cSlug}` },
+    { label: ville.name, href: `/villes/${ville.slug}` },
   ]);
 
   const villeJsonLd = getVilleJsonLdForMetadata({
@@ -164,22 +169,11 @@ export async function generateMetadata({
       locale: "fr_FR",
       url: canonicalUrl,
       siteName: "Simulateur Loi Jeanbrun",
-      images: ville.cPhotoVille
-        ? [
-            {
-              url: ville.cPhotoVille,
-              width: 1200,
-              height: 630,
-              alt: ville.cPhotoVilleAlt ?? `Photo de ${ville.name}`,
-            },
-          ]
-        : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ville.cPhotoVille ? [ville.cPhotoVille] : undefined,
     },
     robots: {
       index: true,
@@ -235,22 +229,22 @@ function MetropoleLayout({
   // Transformer les villes proches pour le composant VillesProches
   const villesProchesMapped = villesProches.map((v) => ({
     nom: v.name,
-    slug: v.cSlug,
-    zoneFiscale: v.cZoneFiscale,
-    region: v.cRegion,
+    slug: v.slug,
+    zoneFiscale: (v.zoneFiscale ?? "B1") as ZoneFiscale,
+    region: v.regionName ?? null,
   }));
 
   // Transformer pour VillesPeripheriquesList
   const villesPeripheriquesFormatted = villesPeripheriques.map((v) => ({
     nom: v.name,
-    slug: v.cSlug,
-    zoneFiscale: v.cZoneFiscale,
+    slug: v.slug,
+    zoneFiscale: (v.zoneFiscale ?? "B1") as ZoneFiscale,
   }));
 
   // Breadcrumb items (sans Accueil, ajoute automatiquement par le composant)
   const breadcrumbItems = [
     { label: "Villes", href: "/villes" },
-    { label: ville.name, href: `/villes/${ville.cSlug}` },
+    { label: ville.name, href: `/villes/${ville.slug}` },
   ];
 
   return (
@@ -261,8 +255,8 @@ function MetropoleLayout({
 
         {/* Photo hero */}
         <PhotoVille
-          photoUrl={ville.cPhotoVille}
-          alt={ville.cPhotoVilleAlt}
+          photoUrl={null}
+          alt={null}
           villeNom={ville.name}
           shape="rectangle"
           priority
@@ -275,12 +269,12 @@ function MetropoleLayout({
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Investissement locatif loi Jeanbrun a {ville.name}
             </h1>
-            <ZoneBadge zone={ville.cZoneFiscale} />
+            <ZoneBadge zone="B1" />
           </div>
 
-          {ville.cRegion && (
+          {ville.regionName && (
             <p className="text-lg text-muted-foreground">
-              {ville.cDepartement} - {ville.cRegion}
+              {ville.departementName ?? ""} - {ville.regionName}
             </p>
           )}
         </div>
@@ -291,13 +285,13 @@ function MetropoleLayout({
         {/* Colonne principale (2/3) */}
         <div className="space-y-8 lg:col-span-2">
           {/* Contenu editorial */}
-          <ContenuEditorial contenu={ville.cContenuEditorial} villeNom={ville.name} />
+          <ContenuEditorial contenu={null} villeNom={ville.name} />
 
           {/* Donnees marche DVF */}
           <DonneesMarche ville={ville} />
 
           {/* Plafonds Jeanbrun */}
-          <PlafondsJeanbrun zoneFiscale={ville.cZoneFiscale} />
+          <PlafondsJeanbrun zoneFiscale="B1" />
 
           {/* Programmes neufs */}
           <ProgrammesList programmes={programmes} maxItems={6} />
@@ -329,14 +323,14 @@ function MetropoleLayout({
           <div className="lg:sticky lg:top-4">
             <SimulateurPreRempli
               villeNom={ville.name}
-              villeSlug={ville.cSlug}
-              zoneFiscale={ville.cZoneFiscale}
+              villeSlug={ville.slug}
+              zoneFiscale="B1"
             />
 
             {/* Barometre si disponible (avec lien vers page barometre) */}
             {barometre && (
               <div className="mt-6">
-                <BarometreSidebar barometre={barometre} villeSlug={ville.cSlug} />
+                <BarometreSidebar barometre={barometre} villeSlug={ville.slug} />
               </div>
             )}
 
@@ -378,15 +372,15 @@ function PeripheriqueLayout({
   // Transformer les villes proches pour le composant VillesProches
   const villesProchesMapped = villesProches.map((v) => ({
     nom: v.name,
-    slug: v.cSlug,
-    zoneFiscale: v.cZoneFiscale,
-    region: v.cRegion,
+    slug: v.slug,
+    zoneFiscale: (v.zoneFiscale ?? "B1") as ZoneFiscale,
+    region: v.regionName ?? null,
   }));
 
   // Breadcrumb items (sans Accueil, ajoute automatiquement par le composant)
   const breadcrumbItems = [
     { label: "Villes", href: "/villes" },
-    { label: ville.name, href: `/villes/${ville.cSlug}` },
+    { label: ville.name, href: `/villes/${ville.slug}` },
   ];
 
   return (
@@ -400,15 +394,15 @@ function PeripheriqueLayout({
           <div className="mb-4">
             <LienMetropoleParent
               metropoleNom={metropoleParent.name}
-              metropoleSlug={metropoleParent.cSlug}
+              metropoleSlug={metropoleParent.slug}
             />
           </div>
         )}
 
         {/* Photo hero */}
         <PhotoVille
-          photoUrl={ville.cPhotoVille}
-          alt={ville.cPhotoVilleAlt}
+          photoUrl={null}
+          alt={null}
           villeNom={ville.name}
           shape="rectangle"
           priority
@@ -421,12 +415,12 @@ function PeripheriqueLayout({
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Investissement locatif loi Jeanbrun a {ville.name}
             </h1>
-            <ZoneBadge zone={ville.cZoneFiscale} />
+            <ZoneBadge zone="B1" />
           </div>
 
-          {ville.cRegion && (
+          {ville.regionName && (
             <p className="text-lg text-muted-foreground">
-              {ville.cDepartement} - {ville.cRegion}
+              {ville.departementName ?? ""} - {ville.regionName}
               {metropoleParent && (
                 <span className="ml-2">
                   (aire metropolitaine de {metropoleParent.name})
@@ -444,25 +438,27 @@ function PeripheriqueLayout({
           {/* Arguments d'investissement (PERIPHERIQUES only) */}
           {argumentsItems.length > 0 && (
             <ArgumentsInvestissement
-              arguments={argumentsItems}
+              arguments={argumentsItems.map((arg) =>
+                typeof arg === "string" ? { titre: arg } : arg
+              )}
               villeNom={ville.name}
             />
           )}
 
           {/* Contenu editorial */}
-          <ContenuEditorial contenu={ville.cContenuEditorial} villeNom={ville.name} />
+          <ContenuEditorial contenu={null} villeNom={ville.name} />
 
           {/* Donnees marche DVF */}
           <DonneesMarche ville={ville} />
 
           {/* Plafonds Jeanbrun */}
-          <PlafondsJeanbrun zoneFiscale={ville.cZoneFiscale} />
+          <PlafondsJeanbrun zoneFiscale="B1" />
 
           {/* Programmes neufs */}
           <ProgrammesList
             programmes={programmes}
             maxItems={6}
-            villeSlug={ville.cSlug}
+            villeSlug={ville.slug}
             villeNom={ville.name}
           />
 
@@ -484,13 +480,13 @@ function PeripheriqueLayout({
           <div className="lg:sticky lg:top-4">
             <SimulateurPreRempli
               villeNom={ville.name}
-              villeSlug={ville.cSlug}
-              zoneFiscale={ville.cZoneFiscale}
+              villeSlug={ville.slug}
+              zoneFiscale="B1"
             />
 
             {/* Barometre sidebar (PERIPHERIQUES: plus visible, avec lien) */}
             <div className="mt-6">
-              <BarometreSidebar barometre={barometre} villeSlug={ville.cSlug} />
+              <BarometreSidebar barometre={barometre} villeSlug={ville.slug} />
             </div>
 
             {/* Lien retour metropole en sidebar aussi */}
@@ -498,7 +494,7 @@ function PeripheriqueLayout({
               <div className="mt-6">
                 <LienMetropoleParent
                   metropoleNom={metropoleParent.name}
-                  metropoleSlug={metropoleParent.cSlug}
+                  metropoleSlug={metropoleParent.slug}
                 />
               </div>
             )}
@@ -529,7 +525,7 @@ export default async function VillePage({ params }: PageParams) {
   return (
     <main className="container mx-auto px-4 py-8 md:py-12">
       {/* Layout conditionnel selon type de ville */}
-      {ville.cIsMetropole ? (
+      {ville.isMetropole ? (
         <MetropoleLayout
           ville={ville}
           programmes={programmes}

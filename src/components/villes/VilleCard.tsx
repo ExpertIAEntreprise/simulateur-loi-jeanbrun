@@ -58,23 +58,23 @@ function formatPrixM2(value: number | null): string {
  * Affiche: image, nom, badge zone, population, prix m2, lien
  */
 export function VilleCard({ ville }: VilleCardProps) {
-  const zoneLabel = ZONE_SHORT_LABELS[ville.cZoneFiscale];
-  const badgeClasses = ZONE_BADGE_CLASSES[ville.cZoneFiscale];
+  const zoneLabel = ville.zoneFiscale ? ZONE_SHORT_LABELS[ville.zoneFiscale] : "Zone N/A";
+  const badgeClasses = ville.zoneFiscale ? ZONE_BADGE_CLASSES[ville.zoneFiscale] : "";
 
   // Image placeholder si pas de photo
-  const imageUrl = ville.cPhotoVille || "/images/ville-placeholder.jpg";
-  const imageAlt = ville.cPhotoVilleAlt || `Vue de ${ville.name}`;
+  const imageUrl = ville.photoVille || "/images/ville-placeholder.jpg";
+  const imageAlt = ville.photoVilleAlt || `Vue de ${ville.name}`;
 
   return (
     <Link
-      href={`/villes/${ville.cSlug}`}
+      href={`/villes/${ville.slug}`}
       className="group block h-full"
       aria-label={`Decouvrir ${ville.name} - ${zoneLabel}`}
     >
       <Card className="flex h-full flex-col overflow-hidden transition-all duration-200 hover:border-primary/50 hover:shadow-lg group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2">
         {/* Image de la ville */}
         <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-          {ville.cPhotoVille ? (
+          {ville.photoVille ? (
             <Image
               src={imageUrl}
               alt={imageAlt}
@@ -96,7 +96,7 @@ export function VilleCard({ ville }: VilleCardProps) {
           </Badge>
 
           {/* Badge metropole si applicable */}
-          {ville.cIsMetropole && (
+          {ville.isMetropole && (
             <Badge
               variant="secondary"
               className="absolute left-2 top-2 bg-background/80 backdrop-blur-sm"
@@ -114,7 +114,7 @@ export function VilleCard({ ville }: VilleCardProps) {
               {ville.name}
             </h3>
             <p className="text-sm text-muted-foreground">
-              {ville.cDepartement} - {ville.cRegion ?? "France"}
+              {ville.departementName} - {ville.regionName ?? "France"}
             </p>
           </div>
 
@@ -124,7 +124,7 @@ export function VilleCard({ ville }: VilleCardProps) {
             <div className="flex items-center gap-2 text-sm">
               <Users className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">
-                {formatNumber(ville.cPopulationCommune)} hab.
+                {formatNumber(ville.population)} hab.
               </span>
             </div>
 
@@ -132,7 +132,7 @@ export function VilleCard({ ville }: VilleCardProps) {
             <div className="flex items-center gap-2 text-sm">
               <Euro className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">
-                {formatPrixM2(ville.cPrixM2Moyen)}
+                {formatPrixM2(ville.prixM2Moyen)}
               </span>
             </div>
           </div>

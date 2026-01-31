@@ -199,10 +199,7 @@ export class EspoCRMClient {
     if (filters?.orderBy) {
       switch (filters.orderBy) {
         case "prix":
-          orderByField = "cPrixM2Moyen";
-          break;
-        case "population":
-          orderByField = "cPopulationCommune";
+          orderByField = "prixM2Moyen";
           break;
         default:
           orderByField = "name";
@@ -223,9 +220,9 @@ export class EspoCRMClient {
     // Ajouter filtres
     if (filters) {
       const whereParams = this.buildWhereParams({
-        cDepartement: filters.departement,
-        cZoneFiscale: filters.zoneFiscale,
-        cTensionLocative: filters.tensionLocative,
+        departementId: filters.departementId,
+        regionId: filters.regionId,
+        isMetropole: filters.isMetropole,
       });
 
       Object.assign(params, whereParams);
@@ -244,7 +241,7 @@ export class EspoCRMClient {
       // Filtre prix minimum
       if (filters.prixMin !== undefined) {
         params[`where[${whereIndex}][type]`] = "greaterThanOrEquals";
-        params[`where[${whereIndex}][attribute]`] = "cPrixM2Moyen";
+        params[`where[${whereIndex}][attribute]`] = "prixM2Moyen";
         params[`where[${whereIndex}][value]`] = filters.prixMin;
         whereIndex++;
       }
@@ -252,7 +249,7 @@ export class EspoCRMClient {
       // Filtre prix maximum
       if (filters.prixMax !== undefined) {
         params[`where[${whereIndex}][type]`] = "lessThanOrEquals";
-        params[`where[${whereIndex}][attribute]`] = "cPrixM2Moyen";
+        params[`where[${whereIndex}][attribute]`] = "prixM2Moyen";
         params[`where[${whereIndex}][value]`] = filters.prixMax;
       }
     }
@@ -266,7 +263,7 @@ export class EspoCRMClient {
    * Récupère une ville par son slug
    */
   async getVilleBySlug(slug: string): Promise<EspoVille | null> {
-    const params = this.buildWhereParams({ cSlug: slug });
+    const params = this.buildWhereParams({ slug: slug });
 
     const url = this.buildUrl("/CJeanbrunVille", {
       maxSize: 1,
@@ -297,7 +294,7 @@ export class EspoCRMClient {
       order: "asc",
     };
 
-    const whereParams = this.buildWhereParams({ cIsMetropole: true });
+    const whereParams = this.buildWhereParams({ isMetropole: true });
     Object.assign(params, whereParams);
 
     const url = this.buildUrl("/CJeanbrunVille", params);
@@ -319,7 +316,7 @@ export class EspoCRMClient {
       order: "asc",
     };
 
-    const whereParams = this.buildWhereParams({ cMetropoleParentId: metropoleId });
+    const whereParams = this.buildWhereParams({ metropoleParentId: metropoleId });
     Object.assign(params, whereParams);
 
     const url = this.buildUrl("/CJeanbrunVille", params);
@@ -355,11 +352,11 @@ export class EspoCRMClient {
     const [programmesResponse, barometre, villesLiees, metropoleParent, villesProches] = await Promise.all([
       this.getProgrammes({ villeId: ville.id, actif: true }, { limit: 10 }),
       this.getLatestBarometre(ville.id),
-      ville.cIsMetropole
+      ville.isMetropole
         ? this.getVillesPeripheriques(ville.id, { limit: 8 })
         : Promise.resolve({ total: 0, list: [] }),
-      ville.cMetropoleParentId
-        ? this.getVilleById(ville.cMetropoleParentId)
+      ville.metropoleParentId
+        ? this.getVilleById(ville.metropoleParentId)
         : Promise.resolve(null),
       this.getVillesProches(ville, 6),
     ]);
@@ -385,7 +382,7 @@ export class EspoCRMClient {
 
     while (hasMore) {
       const response = await this.getVilles(undefined, { limit, offset });
-      slugs.push(...response.list.map((v) => v.cSlug));
+      slugs.push(...response.list.map((v) => v.slug));
 
       if (response.list.length < limit) {
         hasMore = false;
@@ -571,26 +568,26 @@ export class EspoCRMClient {
   /**
    * Récupère les villes de la même région (pour maillage interne)
    */
-  async getVillesByRegion(
-    region: string,
+  async getVillesByRegionId(
+    regionId: string,
     excludeSlug?: string,
     options?: PaginationOptions
   ): Promise<EspoListResponse<EspoVille>> {
     const params: Record<string, string | number> = {
       maxSize: options?.limit ?? 10,
       offset: options?.offset ?? 0,
-      orderBy: "cPopulationCommune",
+      orderBy: "prixM2Moyen",
       order: "desc",
     };
 
-    const whereParams = this.buildWhereParams({ cRegion: region });
+    const whereParams = this.buildWhereParams({ regionId: regionId });
     Object.assign(params, whereParams);
 
     // Exclure la ville actuelle si spécifiée
     if (excludeSlug) {
       const whereIndex = Object.keys(whereParams).length / 3;
       params[`where[${whereIndex}][type]`] = "notEquals";
-      params[`where[${whereIndex}][attribute]`] = "cSlug";
+      params[`where[${whereIndex}][attribute]`] = "slug";
       params[`where[${whereIndex}][value]`] = excludeSlug;
     }
 
@@ -608,22 +605,22 @@ export class EspoCRMClient {
     limit: number = 6
   ): Promise<EspoVille[]> {
     // Si c'est une périphérique, récupérer les autres périphériques de la même métropole
-    if (!ville.cIsMetropole && ville.cMetropoleParentId) {
+    if (!ville.isMetropole && ville.metropoleParentId) {
       const peripheriques = await this.getVillesPeripheriques(
-        ville.cMetropoleParentId,
+        ville.metropoleParentId,
         { limit: limit + 1 }
       );
       // Exclure la ville actuelle
       return peripheriques.list
-        .filter((v) => v.cSlug !== ville.cSlug)
+        .filter((v) => v.slug !== ville.slug)
         .slice(0, limit);
     }
 
     // Si c'est une métropole, récupérer d'autres métropoles de la même région
-    if (ville.cRegion) {
-      const villesRegion = await this.getVillesByRegion(
-        ville.cRegion,
-        ville.cSlug,
+    if (ville.regionId) {
+      const villesRegion = await this.getVillesByRegionId(
+        ville.regionId,
+        ville.slug,
         { limit: limit }
       );
       return villesRegion.list;
@@ -632,7 +629,7 @@ export class EspoCRMClient {
     // Fallback: retourner les métropoles les plus populaires
     const metropoles = await this.getMetropoles({ limit: limit + 1 });
     return metropoles.list
-      .filter((v) => v.cSlug !== ville.cSlug)
+      .filter((v) => v.slug !== ville.slug)
       .slice(0, limit);
   }
 

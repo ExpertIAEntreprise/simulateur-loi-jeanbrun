@@ -46,12 +46,12 @@ async function main() {
 
   // Test 3: Filtrer villes par département
   console.log("3️⃣ Filtrage villes département 75 (Paris)...");
-  const villesParis = await client.getVilles({ departement: "75" });
+  const villesParis = await client.getVilles({ departementId: "75" });
   console.log(`✅ ${villesParis.total} ville(s) trouvée(s)`);
   if (villesParis.list.length > 0) {
     console.log(`   Ville: ${villesParis.list[0]?.name}`);
-    console.log(`   Zone fiscale: ${villesParis.list[0]?.cZoneFiscale}`);
-    console.log(`   Prix m²: ${villesParis.list[0]?.cPrixM2Moyen}€`);
+    console.log(`   Zone fiscale: ${villesParis.list[0]?.zoneFiscale}`);
+    console.log(`   Prix m²: ${villesParis.list[0]?.prixM2Moyen}€`);
   }
   console.log();
 
@@ -60,8 +60,8 @@ async function main() {
   const paris = await client.getVilleBySlug("paris");
   if (paris) {
     console.log(`✅ Ville trouvée: ${paris.name}`);
-    console.log(`   Code INSEE: ${paris.cCodeInsee}`);
-    console.log(`   Population: ${paris.cPopulationCommune}`);
+    console.log(`   Code INSEE: ${paris.codeInsee}`);
+    console.log(`   Population: ${paris.population}`);
   } else {
     console.log("❌ Ville non trouvée");
   }

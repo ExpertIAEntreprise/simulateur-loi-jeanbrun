@@ -277,7 +277,7 @@ async function VillesData({
   }
 
   if (departement && departement !== "all") {
-    filters.departement = departement;
+    filters.departementId = departement;
   }
 
   if (search) {
@@ -388,7 +388,7 @@ async function VillesFiltersWrapper({
       filters.zoneFiscale = zone as ZoneFiscale;
     }
     if (departement && departement !== "all") {
-      filters.departement = departement;
+      filters.departementId = departement;
     }
     if (search) {
       filters.search = search;

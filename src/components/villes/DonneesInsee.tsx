@@ -1,8 +1,8 @@
 "use client";
 
+import { Users, Euro, Building2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EspoVille } from "@/lib/espocrm/types";
-import { Users, Euro, Building2 } from "lucide-react";
 
 interface DonneesInseeProps {
   ville: EspoVille;
@@ -37,7 +37,7 @@ function formatCurrency(value: number | null | undefined): string {
  */
 export function DonneesInsee({ ville }: DonneesInseeProps) {
   const hasNoData =
-    ville.cPopulationCommune === null && ville.cRevenuMedian === null;
+    ville.population === null && ville.revenuMedian === null;
 
   if (hasNoData) {
     return (
@@ -74,9 +74,9 @@ export function DonneesInsee({ ville }: DonneesInseeProps) {
               <span className="text-sm font-medium">Population</span>
             </div>
             <p className="mt-2 text-2xl font-bold">
-              {formatNumber(ville.cPopulationCommune)}
+              {formatNumber(ville.population)}
             </p>
-            {ville.cPopulationCommune !== null && (
+            {ville.population !== null && (
               <p className="text-muted-foreground mt-1 text-xs">
                 habitants (recensement INSEE)
               </p>
@@ -90,9 +90,9 @@ export function DonneesInsee({ ville }: DonneesInseeProps) {
               <span className="text-sm font-medium">Revenu median</span>
             </div>
             <p className="mt-2 text-2xl font-bold">
-              {formatCurrency(ville.cRevenuMedian)}
+              {formatCurrency(ville.revenuMedian)}
             </p>
-            {ville.cRevenuMedian !== null && (
+            {ville.revenuMedian !== null && (
               <p className="text-muted-foreground mt-1 text-xs">
                 par unite de consommation/an
               </p>

@@ -60,13 +60,13 @@ function formatMoisUrl(moisIso: string): string {
  * Card de barometre pour la liste index
  */
 export function BarometreCard({ ville, barometre }: BarometreCardProps) {
-  const zoneLabel = ZONE_LABELS[ville.cZoneFiscale] ?? ville.cZoneFiscale;
+  const zoneLabel = ville.zoneFiscale ? (ZONE_LABELS[ville.zoneFiscale] ?? ville.zoneFiscale) : "N/A";
 
   // URL du barometre detail
   const moisUrl = barometre ? formatMoisUrl(barometre.cMois) : "";
   const barometreUrl = barometre
-    ? `/barometre/${ville.cSlug}/${moisUrl}`
-    : `/villes/${ville.cSlug}`;
+    ? `/barometre/${ville.slug}/${moisUrl}`
+    : `/villes/${ville.slug}`;
 
   return (
     <Card className="group transition-shadow hover:shadow-md">
@@ -84,8 +84,8 @@ export function BarometreCard({ ville, barometre }: BarometreCardProps) {
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <MapPin className="h-3 w-3" aria-hidden="true" />
               <span>
-                {ville.cDepartement}
-                {ville.cRegion ? ` - ${ville.cRegion}` : ""}
+                {ville.departementName}
+                {ville.regionName ? ` - ${ville.regionName}` : ""}
               </span>
             </div>
           </div>
