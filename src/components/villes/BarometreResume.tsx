@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { TrendingUp, TrendingDown, Minus, BarChart3, Building2, Percent, Euro, ArrowRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { EspoBarometre } from "@/lib/espocrm/types";
 

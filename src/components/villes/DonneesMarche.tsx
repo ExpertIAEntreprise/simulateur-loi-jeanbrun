@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import type { EspoVille } from "@/lib/espocrm/types";
 import { TrendingUp, TrendingDown, Minus, Home, Euro, BarChart3 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { EspoVille } from "@/lib/espocrm/types";
 
 interface DonneesMarcheProps {
   ville: EspoVille;
@@ -87,13 +87,13 @@ function getEvolutionStyle(value: number | null | undefined): {
  * Affiche les donnees DVF du marche immobilier (prix m2, evolution, transactions)
  */
 export function DonneesMarche({ ville }: DonneesMarcheProps) {
-  const evolutionStyle = getEvolutionStyle(ville.cEvolutionPrix1An);
+  const evolutionStyle = getEvolutionStyle(ville.evolutionPrix1An);
   const EvolutionIcon = evolutionStyle.Icon;
 
   const hasNoData =
-    ville.cPrixM2Moyen === null &&
-    ville.cEvolutionPrix1An === null &&
-    ville.cNbTransactions12Mois === null;
+    ville.prixM2Moyen === null &&
+    ville.evolutionPrix1An === null &&
+    ville.nbTransactions12Mois === null;
 
   if (hasNoData) {
     return (
@@ -130,11 +130,11 @@ export function DonneesMarche({ ville }: DonneesMarcheProps) {
               <span className="text-sm font-medium">Prix moyen au m2</span>
             </div>
             <p className="mt-2 text-2xl font-bold">
-              {ville.cPrixM2Moyen !== null
-                ? formatPrice(ville.cPrixM2Moyen)
+              {ville.prixM2Moyen !== null
+                ? formatPrice(ville.prixM2Moyen)
                 : "N/A"}
             </p>
-            {ville.cPrixM2Moyen !== null && (
+            {ville.prixM2Moyen !== null && (
               <p className="text-muted-foreground mt-1 text-xs">
                 Source: DVF (12 derniers mois)
               </p>
@@ -149,17 +149,17 @@ export function DonneesMarche({ ville }: DonneesMarcheProps) {
             </div>
             <div className="mt-2 flex items-center gap-2">
               <p className={`text-2xl font-bold ${evolutionStyle.color}`}>
-                {formatPercent(ville.cEvolutionPrix1An)}
+                {formatPercent(ville.evolutionPrix1An)}
               </p>
-              {ville.cEvolutionPrix1An !== null && (
+              {ville.evolutionPrix1An !== null && (
                 <Badge
                   className={`${evolutionStyle.bgColor} ${evolutionStyle.color} border-0`}
                 >
-                  {ville.cEvolutionPrix1An > 0 ? "Hausse" : ville.cEvolutionPrix1An < 0 ? "Baisse" : "Stable"}
+                  {ville.evolutionPrix1An > 0 ? "Hausse" : ville.evolutionPrix1An < 0 ? "Baisse" : "Stable"}
                 </Badge>
               )}
             </div>
-            {ville.cEvolutionPrix1An !== null && (
+            {ville.evolutionPrix1An !== null && (
               <p className="text-muted-foreground mt-1 text-xs">
                 Glissement annuel
               </p>
@@ -173,9 +173,9 @@ export function DonneesMarche({ ville }: DonneesMarcheProps) {
               <span className="text-sm font-medium">Transactions (12 mois)</span>
             </div>
             <p className="mt-2 text-2xl font-bold">
-              {formatNumber(ville.cNbTransactions12Mois)}
+              {formatNumber(ville.nbTransactions12Mois)}
             </p>
-            {ville.cNbTransactions12Mois !== null && (
+            {ville.nbTransactions12Mois !== null && (
               <p className="text-muted-foreground mt-1 text-xs">
                 Ventes enregistrees
               </p>

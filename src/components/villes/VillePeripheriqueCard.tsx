@@ -5,8 +5,8 @@
 
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import type { ZoneFiscale } from "@/types/ville";
 
 interface VillePeripherique {

@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -11,6 +10,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface HistoriquePrixDataPoint {
   mois: string;

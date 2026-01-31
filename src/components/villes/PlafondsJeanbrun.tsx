@@ -1,7 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Scale } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -11,7 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { ZoneFiscale } from "@/types/ville";
-import { Scale } from "lucide-react";
 
 interface PlafondsJeanbrunProps {
   zoneFiscale: ZoneFiscale;
