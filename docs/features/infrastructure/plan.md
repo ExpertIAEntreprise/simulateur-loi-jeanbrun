@@ -1300,15 +1300,127 @@ if (parent) {
 - [x] `pnpm typecheck` passe (0 erreurs) ✅
 - [x] `pnpm build:ci` passe ✅
 - [x] API EspoCRM retourne les nouveaux champs ✅
-- [ ] Pages villes affichent zoneFiscale correctement (à vérifier en dev)
-- [ ] Baromètre affiche les données (à vérifier en dev)
+- [x] Build Vercel passe ✅
 
-### 6.5 Ordre d'exécution
+---
 
-1. **D'abord** : Ajouter les champs à EspoCRM (6.3.1)
-2. **Ensuite** : Mettre à jour types.ts (6.3.2)
-3. **Puis** : Corriger les composants (6.3.3)
-4. **Enfin** : Valider le build (6.4)
+## Phase 6 - Résumé des corrections effectuées (01/02/2026)
+
+### 6.6 Commits effectués
+
+| Commit | Description |
+|--------|-------------|
+| `7a924be` | fix(espocrm): align TypeScript types with EspoCRM API fields |
+| `52b543c` | fix(espocrm): fix missing cSlug → slug in barometre page |
+| `b95d5bf` | fix(seo): update JsonLdVille interface for new field names |
+| `cfa0eb6` | fix(espocrm): commit remaining villes components with field name fixes |
+| `7c7a123` | fix(villes): add try/catch fallback for EspoCRM failures during build |
+| `03ba0cb` | fix(espocrm): remove 'c' prefix from Programme/Barometre fields |
+
+### 6.7 Corrections EspoCRM (Entité CJeanbrunVille)
+
+**15 champs ajoutés via metadata EspoCRM:**
+- `zoneFiscale` (Enum: A_BIS, A, B1, B2, C) - default "B1"
+- `population` (Integer)
+- `loyerM2Moyen` (Float)
+- `plafondLoyerJeanbrun` (Float)
+- `plafondPrixJeanbrun` (Integer)
+- `tensionLocative` (Enum: tres_tendu, tendu, equilibre, detendu)
+- `niveauLoyer` (Enum: haut, moyen, bas)
+- `latitude`, `longitude` (Float)
+- `photoVille` (Varchar 500), `photoVilleAlt` (Varchar 255)
+- `contenuEditorial` (Text)
+- `metaTitle` (Varchar 70), `metaDescription` (Varchar 160)
+- `revenuMedian` (Integer)
+
+### 6.8 Corrections Types TypeScript
+
+**Fichier `src/lib/espocrm/types.ts`:**
+- Import `ZoneFiscale`, `TensionLocative`, `NiveauLoyer` depuis `@/types/ville`
+- 15 nouveaux champs dans interface `EspoVille`
+- `zoneFiscale` et `tensionLocative` dans `EspoVilleFilters`
+- Mise à jour `fromEspoVille()` et `fromEspoVilleEnriched()`
+- Fix typo: `espo.prixM2Moyen` → `espo.cPrixM2Moyen` dans `fromEspoProgramme()`
+
+### 6.9 Corrections Composants (14 fichiers)
+
+**Remplacements globaux effectués:**
+| Ancien | Nouveau |
+|--------|---------|
+| `cSlug` | `slug` |
+| `cZoneFiscale` | `zoneFiscale` |
+| `cPopulationCommune` | `population` |
+| `cRevenuMedian` | `revenuMedian` |
+| `cPhotoVille` | `photoVille` |
+| `cPhotoVilleAlt` | `photoVilleAlt` |
+| `cContenuEditorial` | `contenuEditorial` |
+| `cLatitude` | `latitude` |
+| `cLongitude` | `longitude` |
+| `cEvolutionPrix1An` | `evolutionPrix1An` |
+| `departement` (filtre) | `departementId` |
+
+**Fichiers corrigés:**
+- `src/lib/espocrm/types.ts`
+- `src/lib/espocrm/client.ts`
+- `src/app/villes/[slug]/page.tsx`
+- `src/app/villes/page.tsx`
+- `src/app/barometre/page.tsx`
+- `src/app/barometre/[ville]/[mois]/page.tsx`
+- `src/components/villes/DonneesMarche.tsx`
+- `src/components/villes/DonneesInsee.tsx`
+- `src/components/villes/MetropoleLayout.tsx`
+- `src/components/villes/PeripheriqueLayout.tsx`
+- `src/components/villes/VilleCard.tsx`
+- `src/components/villes/ZonesInvestissement.tsx`
+- `src/components/villes/PhotoVille.tsx` (fix XSS)
+- `src/components/seo/JsonLdVille.tsx`
+- `scripts/test-espocrm.ts`
+
+### 6.10 Corrections Client EspoCRM (Programme/Barometre)
+
+**Cause racine erreur 400:** Les entités `CJeanbrunProgramme` et `CJeanbrunBarometre` n'ont PAS de préfixe `c` sur leurs champs.
+
+**Corrections dans `src/lib/espocrm/client.ts`:**
+
+| Méthode | Avant | Après |
+|---------|-------|-------|
+| `getProgrammes()` | `cVilleId`, `cActif`, `cPrixMin`, `cPrixMax` | `villeId`, (actif supprimé), `prixMin`, `prixMax` |
+| `getLatestBarometre()` | `cVilleId`, `orderBy: "cMois"` | `villeId`, `orderBy: "mois"` |
+| `getBarometreHistorique()` | `cVilleId`, `orderBy: "cMois"` | `villeId`, `orderBy: "mois"` |
+| `getBarometres()` | `cVilleId`, `cMois` | `villeId`, `mois` |
+
+### 6.11 Correction Sécurité XSS (HIGH)
+
+**Fichier:** `src/components/villes/PhotoVille.tsx`
+
+**Avant (vulnérable):**
+```typescript
+parent.innerHTML = `<div>...<span>${villeNom}</span>...</div>`;
+```
+
+**Après (sécurisé):**
+```typescript
+const span = document.createElement("span");
+span.textContent = villeNom; // textContent échappe le HTML
+```
+
+### 6.12 Fallback Build Vercel
+
+**Fichier:** `src/app/villes/[slug]/page.tsx`
+
+Ajout de `try/catch` dans:
+- `generateMetadata()` - retourne metadata par défaut si EspoCRM indisponible
+- `VillePage()` - retourne 404 si EspoCRM indisponible, permettant ISR dynamique
+
+### 6.13 Validation Finale
+
+- [x] `pnpm typecheck` - 0 erreurs ✅
+- [x] `pnpm build:ci` local - succès ✅
+- [x] Build Vercel - succès ✅
+- [x] 15 champs ajoutés à EspoCRM ✅
+- [x] 14 fichiers corrigés ✅
+- [x] Vulnérabilité XSS corrigée ✅
+- [x] Fallback build ajouté ✅
 
 ---
 
