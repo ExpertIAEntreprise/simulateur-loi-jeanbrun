@@ -410,10 +410,11 @@ export class EspoCRMClient {
 
     // Ajouter filtres
     if (filters) {
+      // Note: les champs EspoCRM n'ont PAS de prefixe 'c'
       const whereParams = this.buildWhereParams({
-        cVilleId: filters.villeId,
-        cPromoteur: filters.promoteur,
-        cActif: filters.actif,
+        villeId: filters.villeId,
+        promoteur: filters.promoteur,
+        // actif n'existe pas, utiliser statut si necessaire
       });
 
       Object.assign(params, whereParams);
@@ -423,14 +424,14 @@ export class EspoCRMClient {
 
       if (filters.prixMin !== undefined) {
         params[`where[${whereIndex}][type]`] = "greaterThanOrEquals";
-        params[`where[${whereIndex}][attribute]`] = "cPrixMin";
+        params[`where[${whereIndex}][attribute]`] = "prixMin";
         params[`where[${whereIndex}][value]`] = filters.prixMin;
         whereIndex++;
       }
 
       if (filters.prixMax !== undefined) {
         params[`where[${whereIndex}][type]`] = "lessThanOrEquals";
-        params[`where[${whereIndex}][attribute]`] = "cPrixMax";
+        params[`where[${whereIndex}][attribute]`] = "prixMax";
         params[`where[${whereIndex}][value]`] = filters.prixMax;
         whereIndex++;
       }
@@ -486,11 +487,12 @@ export class EspoCRMClient {
   async getLatestBarometre(villeId: string): Promise<EspoBarometre | null> {
     const params: Record<string, string | number> = {
       maxSize: 1,
-      orderBy: "cMois",
+      orderBy: "mois",
       order: "desc",
     };
 
-    const whereParams = this.buildWhereParams({ cVilleId: villeId });
+    // Note: les champs EspoCRM n'ont PAS de prefixe 'c'
+    const whereParams = this.buildWhereParams({ villeId: villeId });
     Object.assign(params, whereParams);
 
     const url = this.buildUrl("/CJeanbrunBarometre", params);
@@ -509,11 +511,12 @@ export class EspoCRMClient {
   ): Promise<EspoBarometre[]> {
     const params: Record<string, string | number> = {
       maxSize: months,
-      orderBy: "cMois",
+      orderBy: "mois",
       order: "desc",
     };
 
-    const whereParams = this.buildWhereParams({ cVilleId: villeId });
+    // Note: les champs EspoCRM n'ont PAS de prefixe 'c'
+    const whereParams = this.buildWhereParams({ villeId: villeId });
     Object.assign(params, whereParams);
 
     const url = this.buildUrl("/CJeanbrunBarometre", params);
@@ -533,13 +536,14 @@ export class EspoCRMClient {
     const params: Record<string, string | number> = {
       maxSize: options?.limit ?? 50,
       offset: options?.offset ?? 0,
-      orderBy: "cMois",
+      orderBy: "mois",
       order: "desc",
     };
 
     if (filters) {
+      // Note: les champs EspoCRM n'ont PAS de prefixe 'c'
       const whereParams = this.buildWhereParams({
-        cVilleId: filters.villeId,
+        villeId: filters.villeId,
       });
       Object.assign(params, whereParams);
 
@@ -548,14 +552,14 @@ export class EspoCRMClient {
 
       if (filters.moisMin) {
         params[`where[${whereIndex}][type]`] = "greaterThanOrEquals";
-        params[`where[${whereIndex}][attribute]`] = "cMois";
+        params[`where[${whereIndex}][attribute]`] = "mois";
         params[`where[${whereIndex}][value]`] = filters.moisMin;
         whereIndex++;
       }
 
       if (filters.moisMax) {
         params[`where[${whereIndex}][type]`] = "lessThanOrEquals";
-        params[`where[${whereIndex}][attribute]`] = "cMois";
+        params[`where[${whereIndex}][attribute]`] = "mois";
         params[`where[${whereIndex}][value]`] = filters.moisMax;
       }
     }
