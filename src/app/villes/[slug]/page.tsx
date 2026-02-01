@@ -103,8 +103,19 @@ export async function generateMetadata({
   params,
 }: PageParams): Promise<Metadata> {
   const { slug } = await params;
-  const client = getEspoCRMClient();
-  const ville = await client.getVilleBySlug(slug);
+
+  let ville;
+  try {
+    const client = getEspoCRMClient();
+    ville = await client.getVilleBySlug(slug);
+  } catch (error) {
+    console.error(`Erreur EspoCRM metadata pour ${slug}:`, error);
+    // Retourner metadata par defaut si EspoCRM indisponible
+    return {
+      title: `Loi Jeanbrun - Simulateur`,
+      description: "Simulez votre investissement immobilier avec la loi Jeanbrun.",
+    };
+  }
 
   if (!ville) {
     return {
@@ -511,11 +522,24 @@ function PeripheriqueLayout({
  */
 export default async function VillePage({ params }: PageParams) {
   const { slug } = await params;
-  const client = getEspoCRMClient();
 
-  // Recuperer toutes les donnees en une seule requete enrichie
-  const { ville, programmes, barometre, villesPeripheriques, metropoleParent, villesProches } =
-    await client.getVilleBySlugEnriched(slug);
+  let ville, programmes, barometre, villesPeripheriques, metropoleParent, villesProches;
+
+  try {
+    const client = getEspoCRMClient();
+    // Recuperer toutes les donnees en une seule requete enrichie
+    const result = await client.getVilleBySlugEnriched(slug);
+    ville = result.ville;
+    programmes = result.programmes;
+    barometre = result.barometre;
+    villesPeripheriques = result.villesPeripheriques;
+    metropoleParent = result.metropoleParent;
+    villesProches = result.villesProches;
+  } catch (error) {
+    // En cas d'erreur EspoCRM, permettre ISR dynamique
+    console.error(`Erreur EspoCRM pour ville ${slug}:`, error);
+    notFound();
+  }
 
   // 404 si ville non trouvee
   if (!ville) {
