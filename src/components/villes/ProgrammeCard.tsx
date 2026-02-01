@@ -34,8 +34,16 @@ function formatPrice(price: number): string {
 /**
  * Format ISO date string to French locale (month + year)
  */
-function formatDeliveryDate(dateString: string): string {
+function formatDeliveryDate(dateString: string | null | undefined): string {
+  if (!dateString) return "Date non communiquée";
+
   const date = new Date(dateString);
+
+  // Vérifier si la date est valide
+  if (isNaN(date.getTime())) {
+    return "Date non communiquée";
+  }
+
   return new Intl.DateTimeFormat("fr-FR", {
     month: "long",
     year: "numeric",
