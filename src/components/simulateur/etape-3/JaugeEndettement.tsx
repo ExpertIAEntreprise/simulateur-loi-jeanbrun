@@ -1,7 +1,8 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { useMemo } from "react"
 import { TrendingUp, AlertTriangle, CheckCircle } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 // ============================================================================
 // Types
@@ -73,20 +74,23 @@ export function JaugeEndettement({
   autresCredits = 0,
   className,
 }: JaugeEndettementProps) {
-  const tauxEndettement = calculerTauxEndettement(
-    revenuMensuel,
-    mensualiteCredit,
-    autresCredits
-  )
-  const resteAVivre = calculerResteAVivre(
-    revenuMensuel,
-    mensualiteCredit,
-    autresCredits
-  )
-  const niveauRisque = getNiveauRisque(tauxEndettement)
+  // Memoize calculations for performance
+  const { tauxEndettement, resteAVivre, niveauRisque, tauxAffiche, mensualitesTotales } =
+    useMemo(() => {
+      const taux = calculerTauxEndettement(revenuMensuel, mensualiteCredit, autresCredits)
+      const reste = calculerResteAVivre(revenuMensuel, mensualiteCredit, autresCredits)
+      const niveau = getNiveauRisque(taux)
+      const affiche = Math.min(taux, 50)
+      const totales = mensualiteCredit + autresCredits
 
-  // Clamp le taux a 50% pour l'affichage visuel
-  const tauxAffiche = Math.min(tauxEndettement, 50)
+      return {
+        tauxEndettement: taux,
+        resteAVivre: reste,
+        niveauRisque: niveau,
+        tauxAffiche: affiche,
+        mensualitesTotales: totales,
+      }
+    }, [revenuMensuel, mensualiteCredit, autresCredits])
 
   // Position du seuil 35% sur la jauge
   const positionSeuil35 = 70 // 35% sur une echelle de 0-50% = 70%
@@ -124,8 +128,6 @@ export function JaugeEndettement({
     }
   }
 
-  const mensualitesTotales = mensualiteCredit + autresCredits
-
   return (
     <div className={cn("space-y-6", className)}>
       {/* Titre */}
@@ -139,7 +141,15 @@ export function JaugeEndettement({
       {/* Jauge visuelle */}
       <div className="space-y-3">
         {/* Barre de progression */}
-        <div className="relative h-6 rounded-full bg-muted overflow-hidden">
+        <div
+          className="relative h-6 rounded-full bg-muted overflow-hidden"
+          role="progressbar"
+          aria-valuenow={Math.round(tauxEndettement)}
+          aria-valuemin={0}
+          aria-valuemax={50}
+          aria-label={`Taux d'endettement: ${tauxEndettement.toFixed(1)}%`}
+          aria-describedby="endettement-status"
+        >
           {/* Barre de remplissage */}
           <div
             className={cn(
@@ -147,12 +157,14 @@ export function JaugeEndettement({
               getBarColor()
             )}
             style={{ width: `${(tauxAffiche / 50) * 100}%` }}
+            aria-hidden="true"
           />
 
           {/* Marqueur 35% */}
           <div
             className="absolute top-0 bottom-0 w-0.5 bg-foreground/70"
             style={{ left: `${positionSeuil35}%` }}
+            aria-hidden="true"
           >
             <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium text-muted-foreground whitespace-nowrap">
               Seuil 35%
@@ -181,12 +193,15 @@ export function JaugeEndettement({
 
       {/* Message contextuel */}
       <div
+        id="endettement-status"
         className={cn(
           "p-4 rounded-lg border",
           niveauRisque === "ok" && "bg-emerald-500/10 border-emerald-500/30",
           niveauRisque === "attention" && "bg-amber-500/10 border-amber-500/30",
           niveauRisque === "danger" && "bg-red-500/10 border-red-500/30"
         )}
+        role={niveauRisque === "danger" ? "alert" : "status"}
+        aria-live="polite"
       >
         <p
           className={cn(

@@ -178,12 +178,12 @@ function CustomLegend({ payload }: CustomLegendProps) {
   };
 
   return (
-    <div className="flex flex-wrap justify-center gap-4 mt-4">
+    <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-3 sm:mt-4">
       {payload.map((entry) => (
-        <div key={entry.dataKey} className="flex items-center gap-2">
+        <div key={entry.dataKey} className="flex items-center gap-1.5 sm:gap-2">
           <span
             className={cn(
-              "w-3 h-3 rounded-sm",
+              "w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm shrink-0",
               colorMap[entry.dataKey] || "bg-muted"
             )}
           />
@@ -242,21 +242,21 @@ export function GraphiquePatrimoine({
         className
       )}
     >
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg flex items-center gap-2">
+      <CardHeader className="pb-2 px-3 sm:px-6">
+        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
           <span className="text-[oklch(0.78_0.18_75)]">📈</span>
           Evolution du patrimoine
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-[300px] sm:h-[350px] w-full">
+      <CardContent className="px-2 sm:px-6">
+        <div className="h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={data}
               margin={{
                 top: 10,
-                right: 10,
-                left: 0,
+                right: 5,
+                left: -10,
                 bottom: 0,
               }}
             >
@@ -320,18 +320,19 @@ export function GraphiquePatrimoine({
               />
               <XAxis
                 dataKey="annee"
-                tick={{ fill: "oklch(0.65 0.015 265)", fontSize: 12 }}
+                tick={{ fill: "oklch(0.65 0.015 265)", fontSize: 10 }}
                 tickLine={{ stroke: "oklch(0.22 0.005 285)" }}
                 axisLine={{ stroke: "oklch(0.22 0.005 285)" }}
                 tickFormatter={(value) => `${value}`}
+                interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fill: "oklch(0.65 0.015 265)", fontSize: 12 }}
+                tick={{ fill: "oklch(0.65 0.015 265)", fontSize: 10 }}
                 tickLine={{ stroke: "oklch(0.22 0.005 285)" }}
                 axisLine={{ stroke: "oklch(0.22 0.005 285)" }}
                 tickFormatter={formatCompact}
                 domain={[0, maxValue]}
-                width={50}
+                width={45}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend content={<CustomLegend />} />

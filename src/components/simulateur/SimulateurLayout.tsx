@@ -43,14 +43,14 @@ export function SimulateurLayout({
           "supports-[backdrop-filter]:bg-background/80"
         )}
       >
-        <div className="container max-w-4xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-4">
+        <div className="container max-w-full lg:max-w-4xl xl:max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-2 sm:py-3">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
             {/* Logo / Home link */}
             <Link
               href="/"
               className="flex items-center gap-2 text-foreground hover:text-foreground/80 transition-colors"
             >
-              <span className="font-display font-semibold text-lg">
+              <span className="font-display font-semibold text-base sm:text-lg">
                 Jeanbrun
               </span>
             </Link>
@@ -91,12 +91,12 @@ export function SimulateurLayout({
       <main
         className={cn(
           "flex-1 overflow-y-auto",
-          "py-6 sm:py-8 md:py-12",
-          "px-4",
+          "py-4 sm:py-6 md:py-8 lg:py-12",
+          "px-3 sm:px-4 md:px-6",
           className
         )}
       >
-        <div className="container max-w-2xl mx-auto">
+        <div className="container max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
           {children}
         </div>
       </main>
@@ -110,7 +110,7 @@ export function SimulateurLayout({
           "supports-[backdrop-filter]:bg-background/80"
         )}
       >
-        <div className="container max-w-2xl mx-auto px-4 py-4">
+        <div className="container max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4">
           <StepNavigation
             onBack={canGoBack ? onBack : undefined}
             onNext={onNext}

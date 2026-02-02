@@ -1,8 +1,9 @@
 "use client"
 
-import { cn } from "@/lib/utils"
-import { Card, CardContent } from "@/components/ui/card"
+import { useCallback, useRef } from "react"
 import { Receipt, Wallet, Building2, CalendarClock } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 import type { LucideIcon } from "lucide-react"
 
 export type ObjectifType = "reduire_impots" | "revenus" | "patrimoine" | "retraite"
@@ -52,16 +53,60 @@ export function ObjectifSelector({
   onChange,
   className,
 }: ObjectifSelectorProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentIndex = OBJECTIFS.findIndex((o) => o.id === value)
+      let nextIndex = currentIndex
+
+      switch (e.key) {
+        case "ArrowDown":
+        case "ArrowRight":
+          e.preventDefault()
+          nextIndex = currentIndex < OBJECTIFS.length - 1 ? currentIndex + 1 : 0
+          break
+        case "ArrowUp":
+        case "ArrowLeft":
+          e.preventDefault()
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : OBJECTIFS.length - 1
+          break
+        case "Home":
+          e.preventDefault()
+          nextIndex = 0
+          break
+        case "End":
+          e.preventDefault()
+          nextIndex = OBJECTIFS.length - 1
+          break
+        default:
+          return
+      }
+
+      const nextOption = OBJECTIFS[nextIndex]
+      if (nextOption) {
+        onChange(nextOption.id)
+        // Focus the new button
+        const buttons = containerRef.current?.querySelectorAll('[role="radio"]')
+        const nextButton = buttons?.[nextIndex] as HTMLButtonElement | undefined
+        nextButton?.focus()
+      }
+    },
+    [value, onChange]
+  )
+
   return (
     <div
+      ref={containerRef}
       className={cn(
-        "grid grid-cols-1 gap-3 sm:grid-cols-2",
+        "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-2",
         className
       )}
       role="radiogroup"
       aria-label="Selectionnez votre objectif principal"
+      onKeyDown={handleKeyDown}
     >
-      {OBJECTIFS.map((objectif) => {
+      {OBJECTIFS.map((objectif, index) => {
         const Icon = objectif.icon
         const isSelected = value === objectif.id
 
@@ -71,6 +116,7 @@ export function ObjectifSelector({
             type="button"
             role="radio"
             aria-checked={isSelected}
+            tabIndex={isSelected || (value === undefined && index === 0) ? 0 : -1}
             onClick={() => onChange(objectif.id)}
             className="text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
           >
@@ -85,21 +131,21 @@ export function ObjectifSelector({
                 !isSelected && "border border-border hover:bg-accent/5"
               )}
             >
-              <CardContent className="flex items-center gap-4 p-4">
+              <CardContent className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4">
                 <div
                   className={cn(
-                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-lg transition-colors duration-200",
+                    "flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg transition-colors duration-200",
                     isSelected
                       ? "bg-accent/20 text-accent"
                       : "bg-muted text-muted-foreground"
                   )}
                 >
-                  <Icon className="h-6 w-6" />
+                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-                <div className="flex flex-col gap-0.5">
+                <div className="flex flex-col gap-0.5 min-w-0">
                   <span
                     className={cn(
-                      "font-medium transition-colors duration-200",
+                      "font-medium transition-colors duration-200 text-sm sm:text-base",
                       isSelected ? "text-accent" : "text-foreground"
                     )}
                   >

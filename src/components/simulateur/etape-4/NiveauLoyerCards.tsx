@@ -1,8 +1,9 @@
 "use client"
 
+import { useCallback, useRef } from "react"
 import { Home, Users, Heart, Info } from "lucide-react"
-import { cn } from "@/lib/utils"
 import type { WizardStep4 } from "@/contexts/SimulationContext"
+import { cn } from "@/lib/utils"
 
 // ============================================================================
 // Types
@@ -124,10 +125,51 @@ export function NiveauLoyerCards({
   surface = 50,
   className,
 }: NiveauLoyerCardsProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const getPlafondForOption = (option: NiveauOption): number => {
     const plafondZone = option.plafonds[zoneFiscale]
     return plafondZone ?? option.plafonds.B1 ?? 10
   }
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentIndex = options.findIndex((o) => o.id === value)
+      let nextIndex = currentIndex
+
+      switch (e.key) {
+        case "ArrowDown":
+        case "ArrowRight":
+          e.preventDefault()
+          nextIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0
+          break
+        case "ArrowUp":
+        case "ArrowLeft":
+          e.preventDefault()
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1
+          break
+        case "Home":
+          e.preventDefault()
+          nextIndex = 0
+          break
+        case "End":
+          e.preventDefault()
+          nextIndex = options.length - 1
+          break
+        default:
+          return
+      }
+
+      const nextOption = options[nextIndex]
+      if (nextOption) {
+        onChange(nextOption.id)
+        const buttons = containerRef.current?.querySelectorAll('[role="radio"]')
+        const nextButton = buttons?.[nextIndex] as HTMLButtonElement | undefined
+        nextButton?.focus()
+      }
+    },
+    [value, onChange]
+  )
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -150,8 +192,14 @@ export function NiveauLoyerCards({
       </div>
 
       {/* Options */}
-      <div className="grid gap-4">
-        {options.map((option) => {
+      <div
+        ref={containerRef}
+        className="grid gap-3 sm:gap-4"
+        role="radiogroup"
+        aria-label="Niveau de loyer"
+        onKeyDown={handleKeyDown}
+      >
+        {options.map((option, index) => {
           const isSelected = value === option.id
           const Icon = option.icon
           const plafondM2 = getPlafondForOption(option)
@@ -161,10 +209,13 @@ export function NiveauLoyerCards({
             <button
               key={option.id}
               type="button"
+              role="radio"
+              aria-checked={isSelected}
+              tabIndex={isSelected || (value === undefined && index === 0) ? 0 : -1}
               onClick={() => onChange(option.id)}
               className={cn(
                 // Base styles
-                "relative flex items-start gap-4 p-5",
+                "relative flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 sm:p-5",
                 "rounded-lg border-2 text-left",
                 "transition-all duration-300 ease-out",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -176,7 +227,6 @@ export function NiveauLoyerCards({
                   "shadow-glow",
                 ]
               )}
-              aria-pressed={isSelected}
             >
               {/* Radio indicator */}
               <div
@@ -188,6 +238,7 @@ export function NiveauLoyerCards({
                     ? "border-accent bg-accent"
                     : "border-muted-foreground/40 bg-transparent"
                 )}
+                aria-hidden="true"
               >
                 {isSelected && (
                   <div className="h-2 w-2 rounded-full bg-accent-foreground" />
@@ -197,25 +248,25 @@ export function NiveauLoyerCards({
               {/* Icon */}
               <div
                 className={cn(
-                  "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
+                  "flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full",
                   "transition-colors duration-200",
                   isSelected ? "bg-accent/20" : "bg-muted"
                 )}
               >
                 <Icon
                   className={cn(
-                    "h-6 w-6 transition-colors duration-200",
+                    "h-5 w-5 sm:h-6 sm:w-6 transition-colors duration-200",
                     isSelected ? "text-accent" : "text-muted-foreground"
                   )}
                 />
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0 pr-8">
+              <div className="flex-1 min-w-0 pr-6 sm:pr-8">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h4
                     className={cn(
-                      "text-base font-semibold transition-colors duration-200",
+                      "text-sm sm:text-base font-semibold transition-colors duration-200",
                       isSelected ? "text-accent" : "text-foreground"
                     )}
                   >
@@ -233,14 +284,14 @@ export function NiveauLoyerCards({
                   </span>
                 </div>
 
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                   {option.description}
                 </p>
 
                 {/* Loyer max */}
-                <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-sm text-muted-foreground">Loyer max :</span>
-                  <span className="text-lg font-bold text-foreground">
+                <div className="mt-2 sm:mt-3 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Loyer max :</span>
+                  <span className="text-base sm:text-lg font-bold text-foreground">
                     {formatNumber(loyerMax)} EUR/mois
                   </span>
                   <span className="text-xs text-muted-foreground">

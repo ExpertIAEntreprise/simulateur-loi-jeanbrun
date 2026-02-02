@@ -26,7 +26,7 @@ export function StepNavigation({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4",
+        "flex items-center justify-between gap-2 sm:gap-4",
         className
       )}
     >
@@ -37,7 +37,8 @@ export function StepNavigation({
           variant="ghost"
           onClick={onBack}
           disabled={isSubmitting}
-          className="gap-2"
+          className="gap-1 sm:gap-2 px-2 sm:px-4"
+          size="sm"
         >
           <ChevronLeft className="h-4 w-4" />
           <span className="hidden sm:inline">Retour</span>
@@ -51,8 +52,9 @@ export function StepNavigation({
         type="button"
         onClick={onNext}
         disabled={!canGoNext || isSubmitting}
+        size="sm"
         className={cn(
-          "gap-2 min-w-[140px]",
+          "gap-1 sm:gap-2 flex-1 sm:flex-initial sm:min-w-[140px] md:min-w-[160px]",
           canGoNext &&
             !isSubmitting && [
               "shadow-[0_0_20px_var(--step-current,oklch(0.78_0.18_75))/0.3]",
@@ -64,16 +66,16 @@ export function StepNavigation({
         {isSubmitting ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Calcul en cours...</span>
+            <span className="text-sm sm:text-base">Calcul en cours...</span>
           </>
         ) : isLastStep ? (
           <>
-            <span>Voir les résultats</span>
+            <span className="text-sm sm:text-base">Voir les résultats</span>
             <ChevronRight className="h-4 w-4" />
           </>
         ) : (
           <>
-            <span>Continuer</span>
+            <span className="text-sm sm:text-base">Continuer</span>
             <ChevronRight className="h-4 w-4" />
           </>
         )}

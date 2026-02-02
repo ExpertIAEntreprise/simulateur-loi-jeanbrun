@@ -1,5 +1,6 @@
 "use client"
 
+import { useCallback, useRef } from "react"
 import { Building2, Home, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -38,10 +39,56 @@ export function TypeBienSelector({
   onChange,
   className,
 }: TypeBienSelectorProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentIndex = options.findIndex((o) => o.id === value)
+      let nextIndex = currentIndex
+
+      switch (e.key) {
+        case "ArrowDown":
+        case "ArrowRight":
+          e.preventDefault()
+          nextIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0
+          break
+        case "ArrowUp":
+        case "ArrowLeft":
+          e.preventDefault()
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1
+          break
+        case "Home":
+          e.preventDefault()
+          nextIndex = 0
+          break
+        case "End":
+          e.preventDefault()
+          nextIndex = options.length - 1
+          break
+        default:
+          return
+      }
+
+      const nextOption = options[nextIndex]
+      if (nextOption) {
+        onChange(nextOption.id)
+        const buttons = containerRef.current?.querySelectorAll('[role="radio"]')
+        const nextButton = buttons?.[nextIndex] as HTMLButtonElement | undefined
+        nextButton?.focus()
+      }
+    },
+    [value, onChange]
+  )
+
   return (
-    <div className={cn("space-y-4", className)}>
-      <div className="grid gap-4 md:grid-cols-2">
-        {options.map((option) => {
+    <div
+      className={cn("space-y-4", className)}
+      role="radiogroup"
+      aria-label="Type de bien immobilier"
+      onKeyDown={handleKeyDown}
+    >
+      <div ref={containerRef} className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2">
+        {options.map((option, index) => {
           const isSelected = value === option.id
           const Icon = option.icon
 
@@ -49,11 +96,14 @@ export function TypeBienSelector({
             <button
               key={option.id}
               type="button"
+              role="radio"
+              aria-checked={isSelected}
+              tabIndex={isSelected || (value === undefined && index === 0) ? 0 : -1}
               onClick={() => onChange(option.id)}
               className={cn(
                 // Base styles
-                "relative flex flex-col items-center gap-4 p-6",
-                "min-h-[180px] rounded-lg border-2 text-left",
+                "relative flex flex-col items-center gap-3 sm:gap-4 p-4 sm:p-6",
+                "min-h-[160px] sm:min-h-[180px] rounded-lg border-2 text-left",
                 "transition-all duration-300 ease-out",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 // Default state
@@ -64,7 +114,6 @@ export function TypeBienSelector({
                   "shadow-glow",
                 ]
               )}
-              aria-pressed={isSelected}
             >
               {/* Radio indicator */}
               <div
@@ -85,7 +134,7 @@ export function TypeBienSelector({
               {/* Icon */}
               <div
                 className={cn(
-                  "flex h-14 w-14 items-center justify-center rounded-full",
+                  "flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full",
                   "transition-colors duration-200",
                   isSelected
                     ? "bg-accent/20"
@@ -94,7 +143,7 @@ export function TypeBienSelector({
               >
                 <Icon
                   className={cn(
-                    "h-7 w-7 transition-colors duration-200",
+                    "h-6 w-6 sm:h-7 sm:w-7 transition-colors duration-200",
                     isSelected ? "text-accent" : "text-muted-foreground"
                   )}
                 />
@@ -104,13 +153,13 @@ export function TypeBienSelector({
               <div className="flex flex-col items-center gap-2 text-center">
                 <h3
                   className={cn(
-                    "text-lg font-semibold transition-colors duration-200",
+                    "text-base sm:text-lg font-semibold transition-colors duration-200",
                     isSelected ? "text-accent" : "text-foreground"
                   )}
                 >
                   {option.title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   {option.description}
                 </p>
               </div>

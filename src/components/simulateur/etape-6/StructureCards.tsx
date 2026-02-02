@@ -1,7 +1,7 @@
 "use client"
 
+import { useCallback, useRef } from "react"
 import { User, Building2, Building, Info } from "lucide-react"
-
 import type { WizardStep6 } from "@/contexts/SimulationContext"
 import { cn } from "@/lib/utils"
 
@@ -99,6 +99,47 @@ export function StructureCards({
   onChange,
   className,
 }: StructureCardsProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentIndex = STRUCTURES.findIndex((s) => s.id === value)
+      let nextIndex = currentIndex
+
+      switch (e.key) {
+        case "ArrowDown":
+        case "ArrowRight":
+          e.preventDefault()
+          nextIndex = currentIndex < STRUCTURES.length - 1 ? currentIndex + 1 : 0
+          break
+        case "ArrowUp":
+        case "ArrowLeft":
+          e.preventDefault()
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : STRUCTURES.length - 1
+          break
+        case "Home":
+          e.preventDefault()
+          nextIndex = 0
+          break
+        case "End":
+          e.preventDefault()
+          nextIndex = STRUCTURES.length - 1
+          break
+        default:
+          return
+      }
+
+      const nextOption = STRUCTURES[nextIndex]
+      if (nextOption) {
+        onChange(nextOption.id)
+        const buttons = containerRef.current?.querySelectorAll('[role="radio"]')
+        const nextButton = buttons?.[nextIndex] as HTMLButtonElement | undefined
+        nextButton?.focus()
+      }
+    },
+    [value, onChange]
+  )
+
   return (
     <div className={cn("space-y-6", className)}>
       {/* Header */}
@@ -110,8 +151,14 @@ export function StructureCards({
       </div>
 
       {/* Options */}
-      <div className="grid gap-4">
-        {STRUCTURES.map((structure) => {
+      <div
+        ref={containerRef}
+        className="grid gap-3 sm:gap-4"
+        role="radiogroup"
+        aria-label="Mode de detention"
+        onKeyDown={handleKeyDown}
+      >
+        {STRUCTURES.map((structure, index) => {
           const isSelected = value === structure.id
           const Icon = structure.icon
           const isNotEligible = structure.id === "sci_is"
@@ -120,10 +167,13 @@ export function StructureCards({
             <button
               key={structure.id}
               type="button"
+              role="radio"
+              aria-checked={isSelected}
+              tabIndex={isSelected || (value === undefined && index === 0) ? 0 : -1}
               onClick={() => onChange(structure.id)}
               className={cn(
                 // Base styles
-                "relative flex flex-col p-5",
+                "relative flex flex-col p-4 sm:p-5",
                 "rounded-lg border-2 text-left",
                 "transition-all duration-300 ease-out",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -137,7 +187,6 @@ export function StructureCards({
                 // Not eligible
                 isNotEligible && !isSelected && "opacity-70"
               )}
-              aria-pressed={isSelected}
             >
               {/* Radio indicator */}
               <div
@@ -149,6 +198,7 @@ export function StructureCards({
                     ? "border-accent bg-accent"
                     : "border-muted-foreground/40 bg-transparent"
                 )}
+                aria-hidden="true"
               >
                 {isSelected && (
                   <div className="h-2 w-2 rounded-full bg-accent-foreground" />
@@ -156,53 +206,53 @@ export function StructureCards({
               </div>
 
               {/* Header */}
-              <div className="flex items-start gap-4 pr-8">
+              <div className="flex items-start gap-3 sm:gap-4 pr-6 sm:pr-8">
                 {/* Icon */}
                 <div
                   className={cn(
-                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
+                    "flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full",
                     "transition-colors duration-200",
                     isSelected ? "bg-accent/20" : "bg-muted"
                   )}
                 >
                   <Icon
                     className={cn(
-                      "h-6 w-6 transition-colors duration-200",
+                      "h-5 w-5 sm:h-6 sm:w-6 transition-colors duration-200",
                       isSelected ? "text-accent" : "text-muted-foreground"
                     )}
                   />
                 </div>
 
                 {/* Title */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h4
                       className={cn(
-                        "text-base font-semibold transition-colors duration-200",
+                        "text-sm sm:text-base font-semibold transition-colors duration-200",
                         isSelected ? "text-accent" : "text-foreground"
                       )}
                     >
                       {structure.title}
                     </h4>
                     {isNotEligible && (
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning whitespace-nowrap">
                         Non eligible Jeanbrun
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {structure.subtitle}
                   </p>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-sm text-muted-foreground mt-4">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
                 {structure.description}
               </p>
 
               {/* Avantages / Inconvenients */}
-              <div className="grid sm:grid-cols-2 gap-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-3 sm:mt-4">
                 <div>
                   <p className="text-xs font-medium text-success mb-2">Avantages</p>
                   <ul className="space-y-1">

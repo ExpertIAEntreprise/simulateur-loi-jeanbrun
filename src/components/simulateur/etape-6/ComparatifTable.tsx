@@ -1,7 +1,6 @@
 "use client"
 
 import { Check, X, Minus } from "lucide-react"
-
 import type { WizardStep6 } from "@/contexts/SimulationContext"
 import { cn } from "@/lib/utils"
 
@@ -158,138 +157,147 @@ export function ComparatifTable({
   }
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("space-y-3 sm:space-y-4", className)}>
       {/* Header */}
-      <h3 className="text-base font-medium text-foreground">
+      <h3 className="text-sm sm:text-base font-medium text-foreground">
         Comparatif des structures
       </h3>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-muted/50">
-              <th scope="col" className="px-4 py-3 text-left font-medium text-foreground">
-                Critere
-              </th>
-              <th
-                scope="col"
-                className={cn(
-                  "px-4 py-3 text-center font-medium transition-colors",
-                  getColumnHighlight("nom_propre")
-                    ? "bg-accent/10 text-accent"
-                    : "text-foreground"
-                )}
-              >
-                Nom propre
-              </th>
-              <th
-                scope="col"
-                className={cn(
-                  "px-4 py-3 text-center font-medium transition-colors",
-                  getColumnHighlight("sci_ir")
-                    ? "bg-accent/10 text-accent"
-                    : "text-foreground"
-                )}
-              >
-                SCI IR
-              </th>
-              <th
-                scope="col"
-                className={cn(
-                  "px-4 py-3 text-center font-medium transition-colors",
-                  getColumnHighlight("sci_is")
-                    ? "bg-accent/10 text-accent"
-                    : "text-foreground"
-                )}
-              >
-                SCI IS
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {CRITERIA.map((criteria, index) => (
-              <tr
-                key={criteria.label}
-                className={cn(
-                  "border-t border-border",
-                  index % 2 === 0 ? "bg-card" : "bg-muted/20",
-                  criteria.important && "bg-info-subtle/50"
-                )}
-              >
-                <td
-                  className={cn(
-                    "px-4 py-3 text-left",
-                    criteria.important
-                      ? "font-medium text-foreground"
-                      : "text-muted-foreground"
-                  )}
+      {/* Table - Horizontal scroll on mobile with sticky first column */}
+      <div className="overflow-x-auto rounded-lg border border-border -mx-3 sm:mx-0">
+        <div className="inline-block min-w-full align-middle">
+          <table className="min-w-full text-xs sm:text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-muted/50">
+                <th
+                  scope="col"
+                  className="sticky left-0 z-20 bg-muted/50 px-2 sm:px-4 py-2 sm:py-3 text-left font-medium text-foreground whitespace-nowrap"
                 >
-                  {criteria.label}
-                  {criteria.important && (
-                    <span className="ml-2 text-xs text-info">*</span>
-                  )}
-                </td>
-                <td
+                  Critere
+                </th>
+                <th
+                  scope="col"
                   className={cn(
-                    "px-4 py-3 text-center transition-colors",
-                    getColumnHighlight("nom_propre") && "bg-accent/5"
-                  )}
-                >
-                  {renderValue(
-                    criteria.nomPropre,
+                    "px-2 sm:px-4 py-2 sm:py-3 text-center font-medium transition-colors whitespace-nowrap",
                     getColumnHighlight("nom_propre")
-                  )}
-                </td>
-                <td
-                  className={cn(
-                    "px-4 py-3 text-center transition-colors",
-                    getColumnHighlight("sci_ir") && "bg-accent/5"
+                      ? "bg-accent/10 text-accent"
+                      : "text-foreground"
                   )}
                 >
-                  {renderValue(
-                    criteria.sciIr,
+                  Nom propre
+                </th>
+                <th
+                  scope="col"
+                  className={cn(
+                    "px-2 sm:px-4 py-2 sm:py-3 text-center font-medium transition-colors whitespace-nowrap",
                     getColumnHighlight("sci_ir")
-                  )}
-                </td>
-                <td
-                  className={cn(
-                    "px-4 py-3 text-center transition-colors",
-                    getColumnHighlight("sci_is") && "bg-accent/5"
+                      ? "bg-accent/10 text-accent"
+                      : "text-foreground"
                   )}
                 >
-                  {renderValue(
-                    criteria.sciIs,
+                  SCI IR
+                </th>
+                <th
+                  scope="col"
+                  className={cn(
+                    "px-2 sm:px-4 py-2 sm:py-3 text-center font-medium transition-colors whitespace-nowrap",
                     getColumnHighlight("sci_is")
+                      ? "bg-accent/10 text-accent"
+                      : "text-foreground"
                   )}
-                </td>
+                >
+                  SCI IS
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {CRITERIA.map((criteria, index) => (
+                <tr
+                  key={criteria.label}
+                  className={cn(
+                    "border-t border-border",
+                    index % 2 === 0 ? "bg-card" : "bg-muted/20",
+                    criteria.important && "bg-info-subtle/50"
+                  )}
+                >
+                  <td
+                    className={cn(
+                      "sticky left-0 z-10 px-2 sm:px-4 py-2 sm:py-3 text-left",
+                      index % 2 === 0 ? "bg-card" : "bg-muted/20",
+                      criteria.important && "bg-info-subtle/50",
+                      criteria.important
+                        ? "font-medium text-foreground"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    <span className="block whitespace-nowrap">
+                      {criteria.label}
+                      {criteria.important && (
+                        <span className="ml-1 sm:ml-2 text-xs text-info">*</span>
+                      )}
+                    </span>
+                  </td>
+                  <td
+                    className={cn(
+                      "px-2 sm:px-4 py-2 sm:py-3 text-center transition-colors",
+                      getColumnHighlight("nom_propre") && "bg-accent/5"
+                    )}
+                  >
+                    {renderValue(
+                      criteria.nomPropre,
+                      getColumnHighlight("nom_propre")
+                    )}
+                  </td>
+                  <td
+                    className={cn(
+                      "px-2 sm:px-4 py-2 sm:py-3 text-center transition-colors",
+                      getColumnHighlight("sci_ir") && "bg-accent/5"
+                    )}
+                  >
+                    {renderValue(
+                      criteria.sciIr,
+                      getColumnHighlight("sci_ir")
+                    )}
+                  </td>
+                  <td
+                    className={cn(
+                      "px-2 sm:px-4 py-2 sm:py-3 text-center transition-colors",
+                      getColumnHighlight("sci_is") && "bg-accent/5"
+                    )}
+                  >
+                    {renderValue(
+                      criteria.sciIs,
+                      getColumnHighlight("sci_is")
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center h-5 w-5 rounded-full bg-success/10">
-            <Check className="h-3 w-3 text-success" />
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-muted-foreground px-3 sm:px-0">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-center h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-success/10">
+            <Check className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-success" />
           </div>
           <span>Oui</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center h-5 w-5 rounded-full bg-destructive/10">
-            <X className="h-3 w-3 text-destructive" />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-center h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-destructive/10">
+            <X className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-destructive" />
           </div>
           <span>Non</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center h-5 w-5 rounded-full bg-warning/10">
-            <Minus className="h-3 w-3 text-warning" />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-center h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-warning/10">
+            <Minus className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-warning" />
           </div>
           <span>Partiel</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <span className="text-info">*</span>
           <span>Critere important</span>
         </div>

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { CONSENTEMENTS_FINANCEMENT } from "@/types/lead-financement";
 
 // Schema de validation du formulaire
@@ -190,9 +190,10 @@ export function LeadCourtierModal({
                 placeholder="Jean"
                 {...register("prenom")}
                 aria-invalid={!!errors.prenom}
+                aria-describedby={errors.prenom ? "prenom-error" : undefined}
               />
               {errors.prenom && (
-                <p className="text-xs text-destructive">{errors.prenom.message}</p>
+                <p id="prenom-error" className="text-xs text-destructive" role="alert">{errors.prenom.message}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -202,9 +203,10 @@ export function LeadCourtierModal({
                 placeholder="Dupont"
                 {...register("nom")}
                 aria-invalid={!!errors.nom}
+                aria-describedby={errors.nom ? "nom-error" : undefined}
               />
               {errors.nom && (
-                <p className="text-xs text-destructive">{errors.nom.message}</p>
+                <p id="nom-error" className="text-xs text-destructive" role="alert">{errors.nom.message}</p>
               )}
             </div>
           </div>
@@ -218,9 +220,10 @@ export function LeadCourtierModal({
               placeholder="jean.dupont@email.fr"
               {...register("email")}
               aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "email-error" : undefined}
             />
             {errors.email && (
-              <p className="text-xs text-destructive">{errors.email.message}</p>
+              <p id="email-error" className="text-xs text-destructive" role="alert">{errors.email.message}</p>
             )}
           </div>
 
@@ -233,9 +236,10 @@ export function LeadCourtierModal({
               placeholder="06 12 34 56 78"
               {...register("telephone")}
               aria-invalid={!!errors.telephone}
+              aria-describedby={errors.telephone ? "telephone-error" : undefined}
             />
             {errors.telephone && (
-              <p className="text-xs text-destructive">{errors.telephone.message}</p>
+              <p id="telephone-error" className="text-xs text-destructive" role="alert">{errors.telephone.message}</p>
             )}
           </div>
 
@@ -248,6 +252,7 @@ export function LeadCourtierModal({
                 onCheckedChange={(checked) =>
                   setValue("consentementRgpd", checked as true)
                 }
+                aria-describedby={errors.consentementRgpd ? "consentementRgpd-error" : undefined}
               />
               <label
                 htmlFor="consentementRgpd"
@@ -257,7 +262,7 @@ export function LeadCourtierModal({
               </label>
             </div>
             {errors.consentementRgpd && (
-              <p className="text-xs text-destructive ml-6">
+              <p id="consentementRgpd-error" className="text-xs text-destructive ml-6" role="alert">
                 {errors.consentementRgpd.message}
               </p>
             )}
@@ -269,6 +274,7 @@ export function LeadCourtierModal({
                 onCheckedChange={(checked) =>
                   setValue("consentementCourtier", checked as true)
                 }
+                aria-describedby={errors.consentementCourtier ? "consentementCourtier-error" : undefined}
               />
               <label
                 htmlFor="consentementCourtier"
@@ -278,7 +284,7 @@ export function LeadCourtierModal({
               </label>
             </div>
             {errors.consentementCourtier && (
-              <p className="text-xs text-destructive ml-6">
+              <p id="consentementCourtier-error" className="text-xs text-destructive ml-6" role="alert">
                 {errors.consentementCourtier.message}
               </p>
             )}

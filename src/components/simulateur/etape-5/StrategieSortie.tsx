@@ -1,7 +1,7 @@
 "use client"
 
+import { useCallback, useRef } from "react"
 import { Store, TrendingUp, Gift, Info } from "lucide-react"
-
 import type { WizardStep5 } from "@/contexts/SimulationContext"
 import { cn } from "@/lib/utils"
 
@@ -91,8 +91,48 @@ export function StrategieSortie({
   dureeDetention = 12,
   className,
 }: StrategieSortieProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const abattement = getAbattementPlusValue(dureeDetention)
   const isExonere = abattement >= 100
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentIndex = STRATEGIES.findIndex((s) => s.id === value)
+      let nextIndex = currentIndex
+
+      switch (e.key) {
+        case "ArrowDown":
+        case "ArrowRight":
+          e.preventDefault()
+          nextIndex = currentIndex < STRATEGIES.length - 1 ? currentIndex + 1 : 0
+          break
+        case "ArrowUp":
+        case "ArrowLeft":
+          e.preventDefault()
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : STRATEGIES.length - 1
+          break
+        case "Home":
+          e.preventDefault()
+          nextIndex = 0
+          break
+        case "End":
+          e.preventDefault()
+          nextIndex = STRATEGIES.length - 1
+          break
+        default:
+          return
+      }
+
+      const nextOption = STRATEGIES[nextIndex]
+      if (nextOption) {
+        onChange(nextOption.id)
+        const buttons = containerRef.current?.querySelectorAll('[role="radio"]')
+        const nextButton = buttons?.[nextIndex] as HTMLButtonElement | undefined
+        nextButton?.focus()
+      }
+    },
+    [value, onChange]
+  )
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -135,8 +175,14 @@ export function StrategieSortie({
       </div>
 
       {/* Options */}
-      <div className="grid gap-4">
-        {STRATEGIES.map((strategie) => {
+      <div
+        ref={containerRef}
+        className="grid gap-4"
+        role="radiogroup"
+        aria-label="Strategie de sortie"
+        onKeyDown={handleKeyDown}
+      >
+        {STRATEGIES.map((strategie, index) => {
           const isSelected = value === strategie.id
           const Icon = strategie.icon
 
@@ -144,6 +190,9 @@ export function StrategieSortie({
             <button
               key={strategie.id}
               type="button"
+              role="radio"
+              aria-checked={isSelected}
+              tabIndex={isSelected || (value === undefined && index === 0) ? 0 : -1}
               onClick={() => onChange(strategie.id)}
               className={cn(
                 // Base styles
@@ -159,7 +208,6 @@ export function StrategieSortie({
                   "shadow-glow",
                 ]
               )}
-              aria-pressed={isSelected}
             >
               {/* Radio indicator */}
               <div
@@ -171,6 +219,7 @@ export function StrategieSortie({
                     ? "border-accent bg-accent"
                     : "border-muted-foreground/40 bg-transparent"
                 )}
+                aria-hidden="true"
               >
                 {isSelected && (
                   <div className="h-2 w-2 rounded-full bg-accent-foreground" />

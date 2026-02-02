@@ -2,12 +2,12 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { ArrowLeft, Download, Lock, Phone, Share2 } from "lucide-react";
+// Lightweight components - static import
 import {
   SyntheseCard,
-  GraphiquePatrimoine,
   TableauAnnuel,
-  ComparatifLMNP,
   EncartFinancement,
 } from "@/components/simulateur/resultats";
 import type {
@@ -15,11 +15,38 @@ import type {
   TableauAnnuelData,
   RegimeData,
 } from "@/components/simulateur/resultats";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Heavy components (Recharts) - dynamic import for better performance
+const GraphiquePatrimoine = dynamic(
+  () =>
+    import("@/components/simulateur/resultats/GraphiquePatrimoine").then(
+      (mod) => mod.GraphiquePatrimoine
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <Skeleton className="h-[400px] w-full rounded-lg bg-zinc-800/50" />
+    ),
+  }
+);
+
+const ComparatifLMNP = dynamic(
+  () =>
+    import("@/components/simulateur/resultats/ComparatifLMNP").then(
+      (mod) => mod.ComparatifLMNP
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <Skeleton className="h-96 w-full rounded-lg bg-zinc-800/50" />
+    ),
+  }
+);
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { orchestrerSimulation, JEANBRUN_NEUF } from "@/lib/calculs";
 import type { SimulationCalculInput, ZoneFiscale, NiveauLoyerJeanbrun, TypeBien } from "@/lib/calculs";
 import { analyserFinancement } from "@/lib/calculs/analyse-financement";
@@ -323,7 +350,10 @@ function calculateResults(state: WizardState): SimulationResults | null {
       financement,
     };
   } catch (error) {
-    console.error("Error calculating results:", error);
+    // Log only in development to avoid noise in production
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error calculating results:", error);
+    }
     return null;
   }
 }
