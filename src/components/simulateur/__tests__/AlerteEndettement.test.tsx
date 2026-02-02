@@ -5,7 +5,7 @@
  * Verifie les differents niveaux d'alerte et l'affichage du bouton courtier.
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { AlerteEndettement } from "../etape-3/AlerteEndettement";
 

@@ -529,17 +529,18 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ## Definition of Done (Phase G)
 
-- [ ] Tous fichiers loading.tsx/error.tsx crees
-- [ ] useTransition implemente pour calculs
+- [x] Tous fichiers loading.tsx/error.tsx crees ✅
+- [x] useTransition implemente pour calculs ✅
 - [ ] Couleurs hardcodees remplacees par tokens
 - [ ] Validation localStorage avec Zod
 - [ ] Securite API renforcee (CORS, rate limiting)
 - [ ] Types unifies (pas de duplication)
-- [ ] Code DRY (helpers extraits)
+- [x] Code DRY (helpers extraits) ✅ (calculatePrixTotal)
 - [ ] Tests coverage >= 80%
 - [ ] Aucune alerte security-reviewer
 
-**PHASE G A EFFECTUER - Prochaine session**
+**PHASE G EN COURS - G.1.1 et G.1.2 termines (02/02/2026)**
+**Prochaine tache:** G.1.3 - Remplacer couleurs OKLCH par tokens
 
 ---
 
@@ -547,6 +548,7 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 **Objectif:** Corriger les problemes identifies par l'audit multi-agents (02/02/2026)
 **Date audit:** 02 fevrier 2026
+**Derniere MAJ:** 02 fevrier 2026 (G.1.1 et G.1.2 termines)
 **Agents utilises:** code-reviewer, security-reviewer, ui-expert, architect, frontend-developer, tdd-guide
 
 ### Synthese Audit
@@ -1105,8 +1107,19 @@ src/app/simulateur/resultat/[id]/
 
 ### Checklist Phase G
 
-- [ ] **G.1.1** Creer loading.tsx et error.tsx
-- [ ] **G.1.2** Ajouter useTransition aux calculs
+- [x] **G.1.1** Creer loading.tsx et error.tsx ✅ FAIT (02/02/2026)
+  - `src/app/simulateur/resultat/loading.tsx` - Skeleton loading state
+  - `src/app/simulateur/resultat/error.tsx` - Error boundary avec retry
+  - `src/app/simulateur/avance/loading.tsx` - Skeleton wizard loading
+  - `src/app/simulateur/avance/error.tsx` - Error boundary avec retry
+- [x] **G.1.2** Ajouter useTransition aux calculs ✅ FAIT (02/02/2026)
+  - `src/app/simulateur/resultat/[id]/page.tsx` modifie:
+    - Import useTransition de React
+    - Import toast de sonner (remplace alert)
+    - Constantes fiscales ajoutees (JEANBRUN_ENGAGEMENT_YEARS, etc.)
+    - Helper calculatePrixTotal() extrait
+    - useTransition pour calculs non-bloquants
+    - alert() remplace par toast.info/toast.success
 - [ ] **G.1.3** Remplacer couleurs OKLCH par tokens
 - [ ] **G.2.1** Validation localStorage avec Zod
 - [ ] **G.2.2** Ajouter CORS a /api/simulation/avancee

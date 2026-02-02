@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { toast } from "sonner";
 import { ArrowLeft, Download, Lock, Phone, Share2 } from "lucide-react";
 // Lightweight components - static import
 import {
@@ -125,6 +126,15 @@ const STORAGE_KEY = "simulation-wizard-state";
 // Helper Functions
 // ============================================================================
 
+/**
+ * Calculate total project price (acquisition + travaux for ancien)
+ */
+function calculatePrixTotal(step2: WizardState['step2']): number {
+  return step2.typeBien === "ancien" && step2.montantTravaux
+    ? step2.prixAcquisition! + step2.montantTravaux
+    : step2.prixAcquisition!;
+}
+
 function loadWizardState(): WizardState | null {
   if (typeof window === "undefined") return null;
 
@@ -201,10 +211,7 @@ function calculateResults(state: WizardState): SimulationResults | null {
     // Estimate resale price
     if (step5.strategieSortie === "revente" && step5.dureeDetention) {
       const revalorisation = 1 + (step5.revalorisation ?? 2) / 100;
-      const prixTotal =
-        step2.typeBien === "ancien" && step2.montantTravaux
-          ? step2.prixAcquisition! + step2.montantTravaux
-          : step2.prixAcquisition!;
+      const prixTotal = calculatePrixTotal(step2);
       input.prixReventeEstime = Math.round(
         prixTotal * Math.pow(revalorisation, step5.dureeDetention)
       );
@@ -224,10 +231,7 @@ function calculateResults(state: WizardState): SimulationResults | null {
 
     // Calculate financing
     const revenuMensuel = step1.revenuNet! / 12;
-    const montantProjet =
-      step2.typeBien === "ancien" && step2.montantTravaux
-        ? step2.prixAcquisition! + step2.montantTravaux
-        : step2.prixAcquisition!;
+    const montantProjet = calculatePrixTotal(step2);
 
     const financement = analyserFinancement({
       revenuMensuel,
@@ -241,10 +245,7 @@ function calculateResults(state: WizardState): SimulationResults | null {
     // Generate graphique data
     const dureeAns = step5.dureeDetention!;
     const revalorisation = 1 + (step5.revalorisation ?? 2) / 100;
-    const prixInitial =
-      step2.typeBien === "ancien" && step2.montantTravaux
-        ? step2.prixAcquisition! + step2.montantTravaux
-        : step2.prixAcquisition!;
+    const prixInitial = calculatePrixTotal(step2);
     const economieAnnuelle = calcResult.economieImpot.economieTotaleAnnuelle;
     const montantEmprunt = prixInitial - (step3.apport ?? 0);
     const capitalRembourseAnnuel = montantEmprunt / step3.dureeCredit!;
@@ -407,6 +408,7 @@ export default function ResultatPage(_props: ResultatPageProps) {
   const [isPremium] = useState(false); // TODO: Check user subscription
   const [, setShowPremiumModal] = useState(false);
   const hasInitialized = useRef(false);
+  const [isPending, startTransition] = useTransition();
 
   // Load wizard state from localStorage
   useEffect(() => {
@@ -414,18 +416,18 @@ export default function ResultatPage(_props: ResultatPageProps) {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    // Use requestAnimationFrame to avoid synchronous setState in effect
-    requestAnimationFrame(() => {
-      const state = loadWizardState();
-      setWizardState(state);
+    const state = loadWizardState();
+    setWizardState(state);
 
-      if (isValidWizardState(state)) {
+    if (isValidWizardState(state)) {
+      // Use startTransition for non-blocking calculation
+      startTransition(() => {
         const calculatedResults = calculateResults(state);
         setResults(calculatedResults);
-      }
+      });
+    }
 
-      setIsLoading(false);
-    });
+    setIsLoading(false);
   }, []);
 
   // Redirect if no valid data
@@ -439,8 +441,9 @@ export default function ResultatPage(_props: ResultatPageProps) {
   const handleUnlock = () => {
     // TODO: Implement Stripe checkout
     setShowPremiumModal(true);
-    // For now, just show an alert
-    alert("Fonctionnalite premium - Paiement Stripe a venir (9,90 EUR)");
+    toast.info("Fonctionnalite premium", {
+      description: "Paiement Stripe a venir (9,90 EUR)",
+    });
   };
 
   // Handle share
@@ -453,23 +456,27 @@ export default function ResultatPage(_props: ResultatPageProps) {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Lien copie dans le presse-papiers !");
+      toast.success("Lien copie dans le presse-papiers !");
     }
   };
 
   // Handle export (placeholder)
   const handleExport = () => {
-    alert("Export PDF a venir - Fonctionnalite premium");
+    toast.info("Export PDF", {
+      description: "Fonctionnalite premium a venir",
+    });
   };
 
   // Handle callback request
   const handleCallbackRequest = () => {
     // TODO: Open Calendly or contact form
-    alert("Formulaire de rappel a venir");
+    toast.info("Demande de rappel", {
+      description: "Formulaire Calendly a venir",
+    });
   };
 
-  // Loading state
-  if (isLoading) {
+  // Loading state (including calculation pending)
+  if (isLoading || isPending) {
     return <ResultatLoadingSkeleton />;
   }
 

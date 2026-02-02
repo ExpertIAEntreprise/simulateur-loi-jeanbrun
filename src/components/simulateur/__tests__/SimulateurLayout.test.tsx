@@ -314,12 +314,11 @@ describe("SimulateurLayout", () => {
       expect(screen.getByText("Contenu")).toBeInTheDocument();
     });
 
-    it("gere onBack undefined quand canGoBack est false", () => {
+    it("gere onBack non fourni quand canGoBack est false", () => {
       render(
         <SimulateurLayout
-          {...defaultProps}
           currentStep={2}
-          onBack={undefined}
+          onNext={defaultProps.onNext}
           canGoBack={false}
         >
           <div>Contenu</div>
