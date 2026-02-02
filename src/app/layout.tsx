@@ -90,8 +90,7 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
-            enableSystem
+            defaultTheme="light"
             disableTransitionOnChange
           >
             {children}
