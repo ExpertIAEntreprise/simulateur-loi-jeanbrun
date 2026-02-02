@@ -1,7 +1,7 @@
 # Plan d'Implementation - Landing Page
 
 **Feature:** Landing Page Simulateur Loi Jeanbrun
-**Statut:** Phase 2 Sprint 1 termine
+**Statut:** Phase 2 Sprint 2 termine
 **Estimation:** 5.5 jours
 
 ---
@@ -104,11 +104,12 @@ pnpm check  # ✅ 0 errors, warnings only pre-existing
 
 ---
 
-## Phase 2 : Composants Landing - Sprint 2 (HAUTES)
+## Phase 2 : Composants Landing - Sprint 2 (HAUTES) ✅
 
 **Objectif:** Creer les composants de contenu principal
+**Statut:** TERMINE (2 fevrier 2026)
 
-### Fichiers a creer
+### Fichiers crees
 
 | Fichier | Description |
 |---------|-------------|
@@ -120,36 +121,38 @@ pnpm check  # ✅ 0 errors, warnings only pre-existing
 
 ### Taches
 
-- [ ] Creer `FeatureCards.tsx`
-  - 4 cards avec icones
+- [x] Creer `FeatureCards.tsx`
+  - 4 cards avec icones (Wallet, TrendingUp, Shield, Coins)
   - Angle retraite (50k, hors plafond, 0 impot, amortissements)
   - Grid responsive 2x2
+  - Badge "Offre limitee" sur card bonification 2027
 
-- [ ] Creer `RetirementSection.tsx`
+- [x] Creer `RetirementSection.tsx`
   - Timeline verticale : 9 ans → 22 ans → 30 ans
-  - Highlight sur 22 ans et 30 ans
+  - Highlight sur 22 ans et 30 ans avec glow effect
   - Avantages retraite (3 items)
   - `aria-labelledby` pour accessibilite
 
-- [ ] Creer `ProcessSteps.tsx`
+- [x] Creer `ProcessSteps.tsx`
   - 3 etapes : Simulez, Recevez, Contactez
-  - Connecteurs visuels
-  - Icones numerotees
+  - Connecteurs visuels (horizontal desktop, vertical mobile)
+  - Icones numerotees avec badges
 
-- [ ] Creer `ComparisonTable.tsx`
+- [x] Creer `ComparisonTable.tsx`
   - Tableau accessible (`scope`, `aria-label`)
   - Highlight colonne Jeanbrun
-  - Icones check/cross avec `sr-only`
+  - Icones check/cross/partial avec `sr-only`
 
-- [ ] Creer `ExampleCalculation.tsx`
+- [x] Creer `ExampleCalculation.tsx`
   - Profil : TMI 45%, 30 000EUR revenus fonciers
   - Investissement : 300 000EUR
   - Calcul detaille avec animation chiffres
+  - Respect prefers-reduced-motion
 
 ### Validation Phase 2 Sprint 2
 
 ```bash
-pnpm check
+pnpm check  # ✅ 0 errors, warnings only pre-existing
 ```
 
 ---
