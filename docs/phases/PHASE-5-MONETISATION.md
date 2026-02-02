@@ -1,148 +1,101 @@
-# Phase 5 - Monétisation
+# Phase 5 - Monetisation
 
 **Sprint:** 5
 **Semaines:** S9-S10 (31 Mars - 11 Avril 2026)
-**Effort estimé:** 15,5 jours
+**Effort estime:** 8 jours
 **Objectif:** Paiement Stripe + Export PDF fonctionnels
 
 ---
 
-## 1. Livrables
+## 1. Decisions techniques
 
-| Livrable | Critère validation |
-|----------|-------------------|
-| Stripe Checkout | Paiement test OK |
-| Webhook Stripe | checkout.session.completed traité |
-| Gestion quotas | Décrémentation après simulation |
-| Overlay premium | Sections masquées |
-| Export PDF | Génération + téléchargement |
-| Email confirmation | Envoi après achat |
+### Modele economique
+
+| Decision | Choix | Justification |
+|----------|-------|---------------|
+| Processeur paiement | Stripe Checkout | Integration simple, reputation, support EU |
+| Mode paiement | One-time (pas d'abo) | MVP simple, conversion directe |
+| Stockage quotas | EspoCRM | Deja utilise pour leads, centralise |
+| Generation PDF | @react-pdf/renderer | React natif, SSR compatible |
+| Email transactionnel | Mailjet | Deja configure, deliverabilite FR |
+
+### Produits
+
+| Produit | Prix TTC | Simulations | Validite |
+|---------|----------|-------------|----------|
+| Pack 3 | 9,90 EUR | 3 avancees | Illimite |
+| Pack Duo | 14,90 EUR | Illimite | 30 jours |
+
+### Architecture
+
+| Composant | Route/Fichier | Responsabilite |
+|-----------|---------------|----------------|
+| Checkout API | `/api/checkout/create-session` | Creer session Stripe |
+| Webhook | `/api/webhooks/stripe` | Traiter paiements |
+| Quota API | `/api/quota` | CRUD quotas utilisateur |
+| PDF API | `/api/pdf/download` | Generer rapport |
+| PremiumOverlay | `components/simulateur/resultats/` | Blur sections premium |
 
 ---
 
-## 2. Produits Stripe
+## 2. Sections Premium vs Free
 
-| ID | Nom | Prix TTC | Simulations |
-|----|-----|----------|-------------|
-| price_pack3 | Pack 3 | 9,90€ | 3 avancées |
-| price_duo30 | Pack Duo | 14,90€ | Illimité 30j |
+| Section | Acces |
+|---------|-------|
+| Synthese KPIs (4 cards) | Free |
+| Graphique patrimoine | Free (limite) |
+| Tableau annuel detaille | Premium |
+| Comparatif LMNP | Premium |
+| Export PDF | Premium |
+| Conseil personnalise | Premium |
 
 ---
 
-## 3. Tâches clés
+## 3. Flux paiement
 
-### 3.1 Endpoint checkout (1j)
-
-```typescript
-// src/app/api/checkout/create-session/route.ts
-import Stripe from 'stripe'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
-
-export async function POST(request: Request) {
-  const { priceId, email, simulationId } = await request.json()
-
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: [{ price: priceId, quantity: 1 }],
-    mode: 'payment',
-    customer_email: email,
-    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/compte/succes?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/simulateur/resultat/${simulationId}`,
-    metadata: { email, simulationId },
-  })
-
-  return Response.json({ sessionUrl: session.url })
-}
 ```
-
-### 3.2 Webhook Stripe (1,5j)
-
-```typescript
-// src/app/api/webhooks/stripe/route.ts
-import Stripe from 'stripe'
-import { headers } from 'next/headers'
-import { espocrm } from '@/lib/api/espocrm'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
-
-export async function POST(request: Request) {
-  const body = await request.text()
-  const signature = headers().get('stripe-signature')!
-
-  const event = stripe.webhooks.constructEvent(
-    body,
-    signature,
-    process.env.STRIPE_WEBHOOK_SECRET!
-  )
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session
-    const { email } = session.metadata!
-
-    // Mise à jour quota EspoCRM
-    const quota = session.amount_total === 990 ? 3 : 999
-    await espocrm.updateContactQuota(email, quota)
-
-    // Email confirmation
-    await sendConfirmationEmail(email, session)
-  }
-
-  return Response.json({ received: true })
-}
-```
-
-### 3.3 Overlay premium (1j)
-
-```tsx
-// src/components/simulateur/resultats/PremiumOverlay.tsx
-export function PremiumOverlay({ children, locked }) {
-  if (!locked) return children
-
-  return (
-    <div className="relative">
-      <div className="blur-sm pointer-events-none">{children}</div>
-      <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-        <Card className="p-6 text-center">
-          <Lock className="mx-auto h-8 w-8 text-muted-foreground" />
-          <h3 className="mt-2 font-semibold">Contenu Premium</h3>
-          <p className="text-sm text-muted-foreground">
-            Débloquez l'accès complet
-          </p>
-          <Button className="mt-4">Acheter (9,90€)</Button>
-        </Card>
-      </div>
-    </div>
-  )
-}
-```
-
-### 3.4 Export PDF (2j)
-
-```typescript
-// src/lib/pdf/generate-rapport.tsx
-import { renderToBuffer } from '@react-pdf/renderer'
-import { RapportPDF } from './RapportPDF'
-
-export async function generateRapportPDF(simulation: SimulationResult) {
-  const buffer = await renderToBuffer(
-    <RapportPDF simulation={simulation} />
-  )
-  return buffer
-}
+1. User clique "Debloquer (9,90 EUR)"
+2. Frontend POST /api/checkout/create-session
+3. Backend cree session Stripe avec metadata
+4. Redirect vers Stripe Checkout
+5. User paie avec carte
+6. Stripe POST webhook checkout.session.completed
+7. Backend verifie signature + met a jour quota EspoCRM
+8. Backend envoie email confirmation
+9. User redirige vers /compte/succes
+10. Page resultats detecte quota > 0, debloque sections
 ```
 
 ---
 
-## 4. Checklist
+## 4. Securite
+
+| Mesure | Implementation |
+|--------|----------------|
+| Signature webhook | `stripe.webhooks.constructEvent()` |
+| Idempotence | Stocker event.id traites |
+| HTTPS | Obligatoire pour checkout |
+| Rate limiting | 10 req/min sur endpoints sensibles |
+
+---
+
+## 5. Livrables
 
 - [ ] Stripe Checkout test OK
-- [ ] Webhook traite événements
-- [ ] Quota mis à jour dans EspoCRM
+- [ ] Webhook traite evenements
+- [ ] Quota mis a jour dans EspoCRM
 - [ ] Overlay sur sections premium
-- [ ] PDF généré correctement
-- [ ] Email confirmation envoyé
+- [ ] PDF genere correctement
+- [ ] Email confirmation envoye
 
 ---
 
-**Date:** 30 janvier 2026
+## 6. Feature details
+
+Implementation detaillee dans:
+- `docs/features/stripe-paiement/requirements.md`
+- `docs/features/stripe-paiement/plan.md`
+
+---
+
+**Date:** 02 fevrier 2026

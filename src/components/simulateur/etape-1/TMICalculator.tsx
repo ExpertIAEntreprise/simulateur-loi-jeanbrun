@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { HelpCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -113,6 +113,8 @@ export function TMICalculator({
 }: TMICalculatorProps) {
   const [showTooltip, setShowTooltip] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
+  const isFirstRender = useRef(true)
+  const prevTmi = useRef<TMITranche | null>(null)
 
   const tmi = useMemo(() => calculerTMI(revenuNet, parts), [revenuNet, parts])
   const quotient = useMemo(
@@ -128,11 +130,23 @@ export function TMICalculator({
     onTMIChange?.(tmi)
   }, [tmi, onTMIChange])
 
-  // Trigger animation on TMI change
+  // Trigger animation on TMI change (skip first render)
   useEffect(() => {
-    setIsAnimating(true)
-    const timer = setTimeout(() => setIsAnimating(false), 300)
-    return () => clearTimeout(timer)
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      prevTmi.current = tmi
+      return undefined
+    }
+
+    // Only animate if TMI actually changed
+    if (prevTmi.current !== tmi) {
+      prevTmi.current = tmi
+      setIsAnimating(true)
+      const timer = setTimeout(() => setIsAnimating(false), 300)
+      return () => clearTimeout(timer)
+    }
+
+    return undefined
   }, [tmi])
 
   return (

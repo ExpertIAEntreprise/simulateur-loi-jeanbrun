@@ -2,138 +2,106 @@
 
 **Sprint:** 6
 **Semaines:** S11-S12 (14-25 Avril 2026)
-**Effort estimé:** 13 jours
+**Effort estime:** 6 jours
 **Objectif:** Site live en production avec monitoring
 
 ---
 
-## 1. Livrables
+## 1. Decisions techniques
 
-| Livrable | Critère validation |
-|----------|-------------------|
-| Tests E2E | Parcours critiques passent |
-| Tests charge | k6 rapport OK |
-| Audit a11y | axe-core sans erreur critique |
-| Audit sécurité | OWASP vérifié |
-| SSL | HTTPS actif |
-| DNS | Domaine configuré |
-| Monitoring | Sentry + analytics actifs |
-| Go live | Site public |
+### Infrastructure
 
----
+| Decision | Choix | Justification |
+|----------|-------|---------------|
+| Hosting | Vercel | Integration Next.js native, Edge |
+| Region | CDG1 (Paris) | Proximite utilisateurs FR |
+| SSL | Let's Encrypt auto | Gratuit, auto-renouvele |
+| Monitoring erreurs | Sentry | Standard industrie, source maps |
+| Analytics | Plausible | RGPD-friendly, pas de cookies |
 
-## 2. Tests E2E critiques
+### Domaine
 
-```typescript
-// tests/e2e/simulation-complete.spec.ts
-import { test, expect } from '@playwright/test'
+| Element | Valeur |
+|---------|--------|
+| Principal | simuler-loi-fiscale-jeanbrun.fr |
+| Redirections | www, autres variantes → 301 |
+| DNS | A record → Vercel |
 
-test('simulation rapide Lyon', async ({ page }) => {
-  await page.goto('/villes/lyon')
-  await page.fill('[name="budget"]', '200000')
-  await page.selectOption('[name="revenus"]', '50000-80000')
-  await page.click('button:text("Calculer")')
-  await expect(page.locator('.economie-annuelle')).toBeVisible()
-})
+### Tests E2E
 
-test('simulation avancée 6 étapes', async ({ page }) => {
-  await page.goto('/simulateur/avance')
-  // Étape 1-6...
-  await expect(page.locator('.resultats')).toBeVisible()
-})
-
-test('paiement Stripe', async ({ page }) => {
-  // Mode test Stripe
-  await page.goto('/simulateur/resultat/xxx')
-  await page.click('button:text("Acheter")')
-  await page.fill('[name="cardNumber"]', '4242424242424242')
-  // ...
-})
-```
+| Framework | Playwright |
+|-----------|------------|
+| Navigateurs | Chrome, Firefox, Safari |
+| Viewports | Mobile (375px), Desktop (1280px) |
+| CI/CD | GitHub Actions |
 
 ---
 
-## 3. Configuration production
+## 2. Parcours E2E critiques
 
-### 3.1 SSL Let's Encrypt
-
-```bash
-certbot --nginx -d simuler-loi-fiscale-jeanbrun.fr \
-  -d www.simuler-loi-fiscale-jeanbrun.fr
-```
-
-### 3.2 DNS
-
-```
-A    simuler-loi-fiscale-jeanbrun.fr    147.93.53.108
-CNAME www                               simuler-loi-fiscale-jeanbrun.fr
-```
-
-### 3.3 Redirections 301
-
-```nginx
-# Domaines secondaires → principal
-server {
-    server_name simulateur-loi-fiscale-jeanbrun.fr
-                simulation-loi-fiscale-jeanbrun.fr
-                simulations-loi-jeanbrun.fr;
-    return 301 https://simuler-loi-fiscale-jeanbrun.fr$request_uri;
-}
-```
+| Parcours | Priorite |
+|----------|----------|
+| Simulation rapide (page ville) | CRITIQUE |
+| Wizard 6 etapes complet | CRITIQUE |
+| Paiement Stripe | CRITIQUE |
+| Export PDF | HAUTE |
+| Navigation generale | MOYENNE |
 
 ---
 
-## 4. Monitoring
+## 3. Cibles performance
 
-### 4.1 Sentry
-
-```typescript
-// sentry.client.config.ts
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 0.1,
-  environment: process.env.NODE_ENV,
-})
-```
-
-### 4.2 Analytics
-
-```typescript
-// src/components/Analytics.tsx
-// GA4 + Plausible (RGPD-friendly)
-```
+| Metrique | Mobile | Desktop |
+|----------|--------|---------|
+| PageSpeed | >= 90 | >= 95 |
+| LCP | < 2.5s | < 2s |
+| CLS | < 0.1 | < 0.1 |
+| INP | < 200ms | < 150ms |
 
 ---
 
-## 5. Checklist pré-production
+## 4. Headers securite
 
-- [ ] Tests E2E Chrome/Firefox/Safari OK
-- [ ] PageSpeed mobile >= 90
-- [ ] PageSpeed desktop >= 95
-- [ ] axe-core sans erreur critique
-- [ ] Headers sécurité (CSP, HSTS)
-- [ ] SSL valide
-- [ ] Redirections 301 OK
+| Header | Valeur |
+|--------|--------|
+| HSTS | max-age=31536000 |
+| X-Frame-Options | DENY |
+| X-Content-Type-Options | nosniff |
+| CSP | Restrictive (voir plan) |
+
+Cible: Note A+ sur SecurityHeaders.com
+
+---
+
+## 5. Livrables
+
+### Tests E2E
+- [ ] Parcours critiques passes
+- [ ] Multi-navigateurs OK
+- [ ] CI/CD GitHub Actions
+
+### Production
+- [ ] SSL actif
+- [ ] DNS configure
 - [ ] Sentry actif
 - [ ] Analytics actif
-- [ ] Stripe mode live
+- [ ] PageSpeed >= 90
+
+### Go live
+- [ ] Site public accessible
+- [ ] Stripe mode LIVE
+- [ ] Monitoring fonctionnel
 
 ---
 
-## 6. Commandes déploiement
+## 6. Feature details
 
-```bash
-# Build local (test)
-cd /root/simulateur_loi_Jeanbrun
-pnpm build
-
-# Deploy (Vercel - automatique via git push)
-git push origin main
-
-# Vérification
-curl -I https://simulateur-loi-jeanbrun.vercel.app
-```
+Implementation detaillee dans:
+- `docs/features/tests-e2e/requirements.md`
+- `docs/features/tests-e2e/plan.md`
+- `docs/features/production-deploy/requirements.md`
+- `docs/features/production-deploy/plan.md`
 
 ---
 
-**Date:** 30 janvier 2026
+**Date:** 02 fevrier 2026
