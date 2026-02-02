@@ -1,7 +1,7 @@
 # Plan d'Implementation - Landing Page
 
 **Feature:** Landing Page Simulateur Loi Jeanbrun
-**Statut:** Phase 1 terminee
+**Statut:** Phase 2 Sprint 1 termine
 **Estimation:** 5.5 jours
 
 ---
@@ -45,11 +45,12 @@ pnpm check  # ✅ 0 errors, warnings only pre-existing
 
 ---
 
-## Phase 2 : Composants Landing - Sprint 1 (CRITIQUES)
+## Phase 2 : Composants Landing - Sprint 1 (CRITIQUES) ✅
 
-**Objectif:** Creer les 4 composants critiques above-the-fold
+**Objectif:** Creer les 5 composants critiques above-the-fold
+**Statut:** TERMINE (2 fevrier 2026)
 
-### Fichiers a creer
+### Fichiers crees
 
 | Fichier | Description |
 |---------|-------------|
@@ -57,42 +58,48 @@ pnpm check  # ✅ 0 errors, warnings only pre-existing
 | `src/components/landing/SimulatorQuickForm.tsx` | Formulaire 4 etapes |
 | `src/components/landing/TrustSignalsBar.tsx` | 4 badges confiance |
 | `src/components/landing/AnimatedCounter.tsx` | Compteur anime |
+| `src/components/landing/UrgencyBanner.tsx` | Bandeau urgence 2027 |
+| `src/components/landing/index.ts` | Barrel export |
 
 ### Taches
 
-- [ ] Creer `AnimatedCounter.tsx`
-  - Animation de 0 a 50 000
+- [x] Creer `AnimatedCounter.tsx`
+  - Animation de 0 a 50 000 avec useSyncExternalStore
   - Respect `usePrefersReducedMotion`
-  - Format `50 000 EUR` (espace milliers)
+  - Format `50 000 EUR` (espace milliers, fr-FR locale)
+  - Glow effect avec --anchor-amount et --anchor-glow
 
-- [ ] Creer `HeroSection.tsx`
+- [x] Creer `HeroSection.tsx`
   - Titre : "Jusqu'a 50 000EUR d'economie d'impot avec la Loi Jeanbrun"
   - Sous-titre : "Le produit d'excellence pour preparer votre retraite"
   - Integrer `AnimatedCounter`
   - 2 CTAs (principal + secondaire)
-  - Background gradient hero
+  - Background gradient hero avec --hero-gradient
 
-- [ ] Creer `SimulatorQuickForm.tsx`
+- [x] Creer `SimulatorQuickForm.tsx`
   - 4 etapes : montant, TMI, type bien, niveau loyer
-  - Validation Zod
-  - Progress indicator accessible
+  - Validation Zod v4 avec messages FR
+  - Progress indicator accessible (role="progressbar")
   - Calcul client-side immediat
+  - React Hook Form integration
 
-- [ ] Creer `TrustSignalsBar.tsx`
-  - 4 badges avec icones Lucide
+- [x] Creer `TrustSignalsBar.tsx`
+  - 4 badges avec icones Lucide (Wallet, TrendingUp, Shield, Clock)
   - Layout responsive (2x2 mobile, 4x1 desktop)
+  - Accessibilite: aria-label, aria-hidden
 
-- [ ] Creer `UrgencyBanner.tsx` (NOUVEAU)
+- [x] Creer `UrgencyBanner.tsx`
   - Texte : "Offre bonifiee : 21 400EUR/an jusqu'au 31/12/2027"
-  - Background accent or avec icone calendrier
+  - Background accent or avec icone CalendarClock
   - Countdown optionnel (jours restants)
-  - Position : sous le hero ou sticky top
+  - Position : sous le hero
+
+- [x] Creer `index.ts` barrel export
 
 ### Validation Phase 2 Sprint 1
 
 ```bash
-pnpm check
-pnpm dev  # Verifier visuellement
+pnpm check  # ✅ 0 errors, warnings only pre-existing
 ```
 
 ---
