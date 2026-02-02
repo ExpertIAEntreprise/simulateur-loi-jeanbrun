@@ -4,3 +4,11 @@
 
 export { EncartFinancement } from "./EncartFinancement";
 export { LeadCourtierModal } from "./LeadCourtierModal";
+export { SyntheseCard, type SyntheseCardProps } from "./SyntheseCard";
+export {
+  GraphiquePatrimoine,
+  type GraphiquePatrimoineProps,
+  type PatrimoineDataPoint,
+} from "./GraphiquePatrimoine";
+export { TableauAnnuel, type TableauAnnuelProps, type TableauAnnuelData } from "./TableauAnnuel";
+export { ComparatifLMNP, type ComparatifLMNPProps, type RegimeData } from "./ComparatifLMNP";

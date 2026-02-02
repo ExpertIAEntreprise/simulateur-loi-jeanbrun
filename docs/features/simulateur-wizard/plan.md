@@ -346,23 +346,27 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ### Taches
 
-- [ ] **E.1** Creer `SyntheseCard.tsx` (0,5j)
+- [x] **E.1** Creer `SyntheseCard.tsx` (0,5j) ✅ FAIT
   - 4 KPIs: economie fiscale, cash-flow, rendement, effort
+  - Grid 2x2 responsive, animations fade-in
   - Fichier: `src/components/simulateur/resultats/SyntheseCard.tsx`
 
-- [ ] **E.2** Creer `GraphiquePatrimoine.tsx` (1j)
+- [x] **E.2** Creer `GraphiquePatrimoine.tsx` (1j) ✅ FAIT
   - AreaChart Recharts evolution patrimoine
-  - Legende: valeur bien, capital, economies
-  - Responsive mobile (points reduits)
+  - 3 series stackees: valeur bien, capital, economies
+  - Tooltip et legende custom, responsive mobile
   - Fichier: `src/components/simulateur/resultats/GraphiquePatrimoine.tsx`
 
-- [ ] **E.3** Creer `TableauAnnuel.tsx` (0,5j)
-  - Tableau annee par annee (Premium)
-  - Scroll horizontal mobile
+- [x] **E.3** Creer `TableauAnnuel.tsx` (0,5j) ✅ FAIT
+  - Tableau 8 colonnes annee par annee (Premium)
+  - Header sticky, scroll horizontal mobile
+  - Blur overlay + CTA si non premium
   - Fichier: `src/components/simulateur/resultats/TableauAnnuel.tsx`
 
-- [ ] **E.4** Creer `ComparatifLMNP.tsx` (0,5j)
+- [x] **E.4** Creer `ComparatifLMNP.tsx` (0,5j) ✅ FAIT
   - Comparaison Jeanbrun vs LMNP (Premium)
+  - 6 criteres, meilleure valeur en surbrillance
+  - Verdict avec score et badge "Recommande"
   - Fichier: `src/components/simulateur/resultats/ComparatifLMNP.tsx`
 
 - [x] **E.4bis** Creer `EncartFinancement.tsx` (FAIT)
@@ -383,23 +387,41 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
   - Webhook courtier partenaire (configurable)
   - Fichier: `src/app/api/leads/financement/route.ts`
 
-- [ ] **E.5** Creer API `simulation/avancee` (0,5j)
+- [x] **E.5** Creer API `simulation/avancee` (0,5j) ✅ FAIT
   - Route: `/api/simulation/avancee`
-  - Validation Zod input
-  - Appel moteur calcul (Sprint 2)
+  - Validation Zod complete (6 steps)
+  - Appel orchestrateur + analyseFinancement
   - Fichier: `src/app/api/simulation/avancee/route.ts`
 
-- [ ] **E.6** Creer page resultats (0,5j)
+- [x] **E.6** Creer page resultats (0,5j) ✅ FAIT
   - Route: `/simulateur/resultat/[id]`
-  - Sections Free vs Premium
-  - CTA capture email/paiement
+  - Sections Free vs Premium avec blur overlay
+  - CTA debloquer (9,90 EUR) + conseiller
   - Fichier: `src/app/simulateur/resultat/[id]/page.tsx`
 
 ### Livrables
 
-- Page resultats complete
-- Graphique patrimoine interactif
-- Sections Premium masquees
+- Page resultats complete ✅
+- Graphique patrimoine interactif ✅
+- Sections Premium masquees ✅
+
+### Fichiers crees (Phase E) - 02/02/2026
+
+| Fichier | Description |
+|---------|-------------|
+| `src/components/simulateur/resultats/SyntheseCard.tsx` | 4 KPIs grid 2x2, animations, tendances |
+| `src/components/simulateur/resultats/GraphiquePatrimoine.tsx` | Recharts AreaChart 3 series, tooltip custom |
+| `src/components/simulateur/resultats/TableauAnnuel.tsx` | Tableau 8 colonnes, Premium blur overlay |
+| `src/components/simulateur/resultats/ComparatifLMNP.tsx` | Comparatif 6 criteres, verdict score |
+| `src/components/simulateur/resultats/index.ts` | Barrel exports tous composants resultats |
+| `src/app/api/simulation/avancee/route.ts` | POST API validation Zod + calculs |
+| `src/app/simulateur/resultat/page.tsx` | Redirect vers /resultat/[id] |
+| `src/app/simulateur/resultat/[id]/page.tsx` | Page resultats complete avec Premium |
+
+**Routes:**
+- `/api/simulation/avancee` - POST API calcul simulation
+- `/simulateur/resultat` - Redirect vers resultat avec ID
+- `/simulateur/resultat/[id]` - Page resultats dynamique
 
 ---
 
