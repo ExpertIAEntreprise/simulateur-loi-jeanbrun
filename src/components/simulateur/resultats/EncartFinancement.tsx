@@ -46,12 +46,12 @@ export function EncartFinancement({ analyse, simulationData }: EncartFinancement
   // Couleur de la jauge selon le seuil
   const couleurJauge =
     analyse.tauxEndettement <= 0.33
-      ? "bg-green-500"
+      ? "bg-gauge-safe"
       : analyse.tauxEndettement <= 0.35
-        ? "bg-yellow-500"
+        ? "bg-gauge-warning"
         : analyse.tauxEndettement <= 0.4
-          ? "bg-orange-500"
-          : "bg-red-500";
+          ? "bg-gauge-warning"
+          : "bg-gauge-danger";
 
   // Badge de verdict
   const badgeVariant =
@@ -70,11 +70,11 @@ export function EncartFinancement({ analyse, simulationData }: EncartFinancement
 
   return (
     <>
-      <Card className="border-dashed border-amber-500/50 bg-gradient-to-br from-amber-950/20 to-background">
+      <Card className="border-dashed border-primary/50 bg-gradient-to-br from-primary/10 to-background">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <span className="text-amber-500">💰</span>
+              <span className="text-primary">💰</span>
               Analyse de votre financement
             </CardTitle>
             <Badge variant={badgeVariant}>{badgeLabel}</Badge>
@@ -146,7 +146,7 @@ export function EncartFinancement({ analyse, simulationData }: EncartFinancement
             </p>
             <Button
               onClick={() => setShowModal(true)}
-              className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+              className="w-full bg-primary hover:bg-primary/90"
               size="lg"
             >
               Être rappelé par un courtier

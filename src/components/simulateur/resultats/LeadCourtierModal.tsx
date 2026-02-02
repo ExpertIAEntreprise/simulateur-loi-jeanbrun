@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -110,12 +110,7 @@ export function LeadCourtierModal({
 
       setSubmitSuccess(true);
       reset();
-
-      // Fermer le modal après 3 secondes
-      setTimeout(() => {
-        setSubmitSuccess(false);
-        onOpenChange(false);
-      }, 3000);
+      // Auto-close handled by useEffect below
     } catch (error) {
       setSubmitError(
         error instanceof Error ? error.message : "Une erreur est survenue"
@@ -124,6 +119,18 @@ export function LeadCourtierModal({
       setIsSubmitting(false);
     }
   };
+
+  // Auto-close modal after successful submission
+  useEffect(() => {
+    if (!submitSuccess) return;
+
+    const timer = setTimeout(() => {
+      setSubmitSuccess(false);
+      onOpenChange(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [submitSuccess, onOpenChange]);
 
   // Affichage succès
   if (submitSuccess) {

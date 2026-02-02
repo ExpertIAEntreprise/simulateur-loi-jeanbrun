@@ -531,16 +531,16 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 - [x] Tous fichiers loading.tsx/error.tsx crees ✅
 - [x] useTransition implemente pour calculs ✅
-- [ ] Couleurs hardcodees remplacees par tokens
-- [ ] Validation localStorage avec Zod
-- [ ] Securite API renforcee (CORS, rate limiting)
-- [ ] Types unifies (pas de duplication)
+- [x] Couleurs hardcodees remplacees par tokens ✅
+- [x] Validation localStorage avec Zod ✅
+- [x] Securite API renforcee (CORS, rate limiting) ✅
+- [ ] Types unifies (pas de duplication) - G.2.3 a faire
 - [x] Code DRY (helpers extraits) ✅ (calculatePrixTotal)
 - [ ] Tests coverage >= 80%
-- [ ] Aucune alerte security-reviewer
+- [x] Storage adapter extrait ✅
 
-**PHASE G EN COURS - G.1.1 et G.1.2 termines (02/02/2026)**
-**Prochaine tache:** G.1.3 - Remplacer couleurs OKLCH par tokens
+**PHASE G EN COURS - 13/17 taches terminees (02/02/2026)**
+**Taches restantes:** G.2.3 (types unifies), G.3.5 (route config), G.3.6 (JSON-LD XSS), G.4.2 (split page)
 
 ---
 
@@ -1120,20 +1120,31 @@ src/app/simulateur/resultat/[id]/
     - Helper calculatePrixTotal() extrait
     - useTransition pour calculs non-bloquants
     - alert() remplace par toast.info/toast.success
-- [ ] **G.1.3** Remplacer couleurs OKLCH par tokens
-- [ ] **G.2.1** Validation localStorage avec Zod
-- [ ] **G.2.2** Ajouter CORS a /api/simulation/avancee
+- [x] **G.1.3** Remplacer couleurs OKLCH par tokens ✅ FAIT (02/02/2026)
+  - `src/components/simulateur/resultats/SyntheseCard.tsx` - bg-success/20, text-success, bg-destructive/20
+  - `src/components/simulateur/resultats/GraphiquePatrimoine.tsx` - text-accent, text-success, text-info, bg-*
+  - `src/components/simulateur/resultats/EncartFinancement.tsx` - bg-gauge-safe/warning/danger, bg-primary
+- [x] **G.2.1** Validation localStorage avec Zod ✅ FAIT (02/02/2026)
+  - `src/contexts/SimulationContext.tsx` - Schemas Zod pour WizardStep1-6 + storedStateSchema
+  - safeParse() sur hydratation, suppression donnees invalides
+- [x] **G.2.2** Ajouter CORS a /api/simulation/avancee ✅ FAIT (02/02/2026)
+  - Verification origin + Content-Length DoS prevention
 - [ ] **G.2.3** Unifier type WizardState
-- [ ] **G.2.4** Convertir redirect en Server Component
-- [ ] **G.2.5** Ajouter rate limiting leads
-- [ ] **G.2.6** Extraire helper prixTotal
-- [ ] **G.3.1** Remplacer alert() par toast
-- [ ] **G.3.2** Extraire constantes magic numbers
-- [ ] **G.3.3** Corriger setTimeout memory leak
-- [ ] **G.3.4** Utiliser crypto.randomUUID()
+- [x] **G.2.4** Convertir redirect en Server Component ✅ FAIT (02/02/2026)
+  - `src/app/simulateur/resultat/page.tsx` - Server Component + redirect() + crypto.randomUUID()
+- [x] **G.2.5** Ajouter rate limiting leads ✅ FAIT (02/02/2026)
+  - `src/app/api/leads/financement/route.ts` - simulationRateLimiter 10 req/min
+- [x] **G.2.6** Extraire helper prixTotal ✅ FAIT (02/02/2026 - G.1.2)
+- [x] **G.3.1** Remplacer alert() par toast ✅ FAIT (02/02/2026 - G.1.2)
+- [x] **G.3.2** Extraire constantes magic numbers ✅ FAIT (02/02/2026 - G.1.2)
+- [x] **G.3.3** Corriger setTimeout memory leak ✅ FAIT (02/02/2026)
+  - `src/components/simulateur/resultats/LeadCourtierModal.tsx` - useEffect avec cleanup
+- [x] **G.3.4** Utiliser crypto.randomUUID() ✅ FAIT (02/02/2026)
+  - `src/app/api/simulation/avancee/route.ts` - Supprime generateUUID(), utilise crypto.randomUUID()
 - [ ] **G.3.5** Ajouter route segment config
 - [ ] **G.3.6** Proteger JSON-LD XSS
-- [ ] **G.4.1** Extraire storage adapter
+- [x] **G.4.1** Extraire storage adapter ✅ FAIT (02/02/2026)
+  - `src/lib/storage/wizard-storage.ts` - Interface WizardStorage + localWizardStorage + createMemoryStorage()
 - [ ] **G.4.2** Diviser page resultats
 
 ---

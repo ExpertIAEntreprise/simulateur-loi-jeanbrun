@@ -8,6 +8,90 @@ import {
   useReducer,
   type ReactNode,
 } from "react"
+import { z } from "zod"
+
+// ============================================================================
+// Zod Schemas for localStorage validation (Security: prevent bypass of business validation)
+// ============================================================================
+
+const wizardStep1Schema = z.object({
+  situation: z.enum(["celibataire", "marie", "pacse"]).optional(),
+  parts: z.number().min(1).max(10).optional(),
+  revenuNet: z.number().min(0).max(10_000_000).optional(),
+  revenusFonciers: z.number().min(0).max(10_000_000).optional(),
+  objectif: z
+    .enum(["reduire_impots", "revenus", "patrimoine", "retraite"])
+    .optional(),
+})
+
+const wizardStep2Schema = z.object({
+  typeBien: z.enum(["neuf", "ancien"]).optional(),
+  villeId: z.string().max(100).optional(),
+  villeNom: z.string().max(200).optional(),
+  zoneFiscale: z.enum(["A_BIS", "A", "B1", "B2", "C"]).optional(),
+  surface: z.number().min(0).max(10_000).optional(),
+  prixAcquisition: z.number().min(0).max(100_000_000).optional(),
+  montantTravaux: z.number().min(0).max(50_000_000).optional(),
+  dpeActuel: z.enum(["A", "B", "C", "D", "E", "F", "G"]).optional(),
+  dpeApres: z.enum(["A", "B"]).optional(),
+})
+
+const wizardStep3Schema = z.object({
+  apport: z.number().min(0).max(100_000_000).optional(),
+  dureeCredit: z.number().min(1).max(30).optional(),
+  tauxCredit: z.number().min(0).max(20).optional(),
+  differe: z.union([z.literal(0), z.literal(12), z.literal(24)]).optional(),
+  autresCredits: z.number().min(0).max(100_000_000).optional(),
+})
+
+const wizardStep4Schema = z.object({
+  niveauLoyer: z
+    .enum(["intermediaire", "social", "tres_social"])
+    .optional(),
+  loyerMensuel: z.number().min(0).max(1_000_000).optional(),
+  chargesAnnuelles: z.number().min(0).max(10_000_000).optional(),
+  taxeFonciere: z.number().min(0).max(1_000_000).optional(),
+  vacance: z.number().min(0).max(100).optional(),
+})
+
+const wizardStep5Schema = z.object({
+  dureeDetention: z.number().min(1).max(50).optional(),
+  revalorisation: z.number().min(-20).max(50).optional(),
+  strategieSortie: z.enum(["revente", "conservation", "donation"]).optional(),
+})
+
+const wizardStep6Schema = z.object({
+  structure: z.enum(["nom_propre", "sci_ir", "sci_is"]).optional(),
+})
+
+const storedStateSchema = z.object({
+  currentStep: z.number().min(1).max(6),
+  step1: wizardStep1Schema,
+  step2: wizardStep2Schema,
+  step3: wizardStep3Schema,
+  step4: wizardStep4Schema,
+  step5: wizardStep5Schema,
+  step6: wizardStep6Schema,
+  tmiCalcule: z.number().min(0).max(100).optional(),
+  isLoading: z.boolean().optional(),
+  isDirty: z.boolean().optional(),
+})
+
+/**
+ * Remove undefined values from an object to comply with exactOptionalPropertyTypes.
+ * This ensures that optional properties are either present with a value or absent entirely.
+ */
+function removeUndefinedValues<T extends Record<string, unknown>>(
+  obj: T
+): Partial<T> {
+  const result: Partial<T> = {}
+  for (const key of Object.keys(obj) as (keyof T)[]) {
+    if (obj[key] !== undefined) {
+      result[key] = obj[key]
+    }
+  }
+  return result
+}
 
 // ============================================================================
 // Types pour le wizard 6 étapes
@@ -310,28 +394,48 @@ export function SimulationProvider({ children }: SimulationProviderProps) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) {
-        const parsed = JSON.parse(saved) as unknown
+        const jsonParsed: unknown = JSON.parse(saved)
 
-        // Validate structure before hydrating
-        if (
-          parsed &&
-          typeof parsed === "object" &&
-          "currentStep" in parsed &&
-          "step1" in parsed
-        ) {
+        // Use Zod safeParse to validate localStorage data (Security: prevent malicious data injection)
+        const result = storedStateSchema.safeParse(jsonParsed)
+
+        if (result.success) {
+          // Remove undefined values to comply with exactOptionalPropertyTypes
           dispatch({
             type: "HYDRATE",
             state: {
-              ...(parsed as SimulationWizardState),
+              currentStep: result.data.currentStep,
+              step1: removeUndefinedValues(result.data.step1) as Partial<WizardStep1>,
+              step2: removeUndefinedValues(result.data.step2) as Partial<WizardStep2>,
+              step3: removeUndefinedValues(result.data.step3) as Partial<WizardStep3>,
+              step4: removeUndefinedValues(result.data.step4) as Partial<WizardStep4>,
+              step5: removeUndefinedValues(result.data.step5) as Partial<WizardStep5>,
+              step6: removeUndefinedValues(result.data.step6) as Partial<WizardStep6>,
+              tmiCalcule: result.data.tmiCalcule,
               isLoading: false,
               isDirty: false,
             },
           })
           return
+        } else {
+          // Invalid data structure, remove corrupted localStorage entry
+          localStorage.removeItem(STORAGE_KEY)
+          // Log validation errors in development for debugging
+          if (process.env.NODE_ENV === "development") {
+            console.warn(
+              "SimulationContext: Invalid localStorage data removed",
+              result.error.issues
+            )
+          }
         }
       }
     } catch {
-      // Invalid JSON or structure, start fresh
+      // Invalid JSON, remove corrupted entry
+      try {
+        localStorage.removeItem(STORAGE_KEY)
+      } catch {
+        // Ignore localStorage errors
+      }
     }
 
     dispatch({ type: "SET_LOADING", isLoading: false })

@@ -154,13 +154,7 @@ export interface SimulationResponse {
 // Helper Functions
 // ============================================================================
 
-function generateUUID(): string {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
+
 
 /**
  * Transform wizard input to orchestrator input
@@ -369,6 +363,26 @@ function generateComparatifLMNP(
  */
 export async function POST(request: NextRequest) {
   try {
+    // CORS: Verify request origin
+    const origin = request.headers.get("origin");
+    const allowedOrigins = [process.env.NEXT_PUBLIC_APP_URL];
+    if (origin && !allowedOrigins.includes(origin)) {
+      return NextResponse.json(
+        { success: false, error: "Origin not allowed" },
+        { status: 403 }
+      );
+    }
+
+    // Content-Length check for DoS prevention
+    const contentLength = request.headers.get("content-length");
+    const MAX_BODY_SIZE = 10 * 1024; // 10KB
+    if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
+      return NextResponse.json(
+        { success: false, error: "Request body too large" },
+        { status: 413 }
+      );
+    }
+
     // Rate limiting
     const ip = getClientIP(request);
     const rateLimitResponse = await checkRateLimit(simulationRateLimiter, ip);
@@ -464,7 +478,7 @@ export async function POST(request: NextRequest) {
       economieAnnuelle / 12;
 
     const response: SimulationResponse = {
-      id: generateUUID(),
+      id: crypto.randomUUID(),
       synthese: {
         economieFiscale: calculResult.economieImpot.economieTotale9ans,
         cashFlowMensuel: calculResult.cashflowMensuel,

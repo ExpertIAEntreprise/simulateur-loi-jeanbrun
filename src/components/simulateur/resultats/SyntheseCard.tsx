@@ -146,8 +146,8 @@ export function SyntheseCard({
               className={cn(
                 "flex items-center justify-center w-10 h-10 rounded-lg shrink-0",
                 kpi.isPositive
-                  ? "bg-[oklch(0.20_0.08_145)] text-[oklch(0.72_0.20_145)]"
-                  : "bg-[oklch(0.20_0.10_25)] text-[oklch(0.63_0.24_25)]"
+                  ? "bg-success/20 text-success"
+                  : "bg-destructive/20 text-destructive"
               )}
             >
               {kpi.icon}
@@ -163,8 +163,8 @@ export function SyntheseCard({
                   className={cn(
                     "text-2xl sm:text-3xl font-bold tabular-nums truncate",
                     kpi.isPositive
-                      ? "text-[oklch(0.72_0.20_145)]"
-                      : "text-[oklch(0.63_0.24_25)]"
+                      ? "text-success"
+                      : "text-destructive"
                   )}
                 >
                   {kpi.value}
@@ -172,12 +172,12 @@ export function SyntheseCard({
                 {/* Trend indicator */}
                 {kpi.isPositive ? (
                   <TrendingUp
-                    className="h-4 w-4 text-[oklch(0.72_0.20_145)] shrink-0"
+                    className="h-4 w-4 text-success shrink-0"
                     aria-hidden="true"
                   />
                 ) : (
                   <TrendingDown
-                    className="h-4 w-4 text-[oklch(0.63_0.24_25)] shrink-0"
+                    className="h-4 w-4 text-destructive shrink-0"
                     aria-hidden="true"
                   />
                 )}

@@ -106,9 +106,9 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   };
 
   const colorMap: Record<string, string> = {
-    valeurBien: "text-[oklch(0.78_0.18_75)]",
-    capitalRembourse: "text-[oklch(0.72_0.20_145)]",
-    economiesFiscales: "text-[oklch(0.62_0.22_260)]",
+    valeurBien: "text-accent",
+    capitalRembourse: "text-success",
+    economiesFiscales: "text-info",
   };
 
   return (
@@ -172,9 +172,9 @@ function CustomLegend({ payload }: CustomLegendProps) {
   };
 
   const colorMap: Record<string, string> = {
-    valeurBien: "bg-[oklch(0.78_0.18_75)]",
-    capitalRembourse: "bg-[oklch(0.72_0.20_145)]",
-    economiesFiscales: "bg-[oklch(0.62_0.22_260)]",
+    valeurBien: "bg-accent",
+    capitalRembourse: "bg-success",
+    economiesFiscales: "bg-info",
   };
 
   return (

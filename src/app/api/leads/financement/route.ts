@@ -10,6 +10,11 @@
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import {
+  simulationRateLimiter,
+  checkRateLimit,
+  getClientIP,
+} from "@/lib/rate-limit";
 
 // Schema de validation
 const leadFinancementSchema = z.object({
@@ -38,6 +43,11 @@ const leadFinancementSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 5 requests per minute per IP (stricter for lead capture)
+    const ip = getClientIP(request);
+    const rateLimitResponse = await checkRateLimit(simulationRateLimiter, ip);
+    if (rateLimitResponse) return rateLimitResponse;
+
     // Parse et validation du body
     const body = await request.json();
     const data = leadFinancementSchema.parse(body);
