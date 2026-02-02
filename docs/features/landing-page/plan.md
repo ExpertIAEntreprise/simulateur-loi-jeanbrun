@@ -1,7 +1,7 @@
 # Plan d'Implementation - Landing Page
 
 **Feature:** Landing Page Simulateur Loi Jeanbrun
-**Statut:** Phase 2 Sprint 2 termine
+**Statut:** Phase 2 Sprint 3 termine
 **Estimation:** 5.5 jours
 
 ---
@@ -157,15 +157,16 @@ pnpm check  # ✅ 0 errors, warnings only pre-existing
 
 ---
 
-## Phase 2 : Composants Landing - Sprint 3 (MOYENNES)
+## Phase 2 : Composants Landing - Sprint 3 (MOYENNES) ✅
 
 **Objectif:** Creer les composants footer et FAQ
+**Statut:** TERMINE (2 fevrier 2026)
 
-### Fichiers a creer
+### Fichiers crees
 
 | Fichier | Description |
 |---------|-------------|
-| `src/components/landing/FAQAccordion.tsx` | 7 questions |
+| `src/components/landing/FAQAccordion.tsx` | 8 questions |
 | `src/components/landing/CTASection.tsx` | CTA final |
 | `src/components/landing/LandingHeader.tsx` | Header simplifie |
 | `src/components/landing/LandingFooter.tsx` | Footer liens |
@@ -173,33 +174,37 @@ pnpm check  # ✅ 0 errors, warnings only pre-existing
 
 ### Taches
 
-- [ ] Creer `FAQAccordion.tsx`
-  - 7 questions avec reponses
-  - Utiliser shadcn/ui Accordion
+- [x] Creer `FAQAccordion.tsx`
+  - 8 questions avec reponses detaillees
+  - Utiliser shadcn/ui Accordion (Radix)
   - `aria-label="Questions frequentes"`
-  - Navigation clavier (Enter, Space, Arrow)
+  - Navigation clavier complete (Radix native)
+  - Export faqItems pour JSON-LD
 
-- [ ] Creer `CTASection.tsx`
-  - Background noir avec glow
-  - Titre angle retraite
-  - Bouton avec effet pulse
+- [x] Creer `CTASection.tsx`
+  - Background noir avec gradient
+  - Glow effect radial
+  - Titre angle retraite avec textShadow
+  - Bouton avec effet animate-glow
 
-- [ ] Creer `LandingHeader.tsx`
-  - Logo
-  - Nav simplifiee (Simulateur, Avantages, FAQ)
-  - Bouton connexion
+- [x] Creer `LandingHeader.tsx`
+  - Logo avec Calculator icon
+  - Nav simplifiee (Simulateur, Avantages, Comparatif, FAQ)
+  - Bouton connexion + Bouton Simuler
+  - Menu hamburger mobile avec aria-expanded
 
-- [ ] Creer `LandingFooter.tsx`
-  - Copyright
+- [x] Creer `LandingFooter.tsx`
+  - Copyright dynamique
   - Liens legaux (CGU, mentions, confidentialite)
-  - Liens sociaux
+  - Liens navigation + contact
+  - Grid responsive 4 colonnes
 
-- [ ] Creer `index.ts` barrel export
+- [x] Mettre a jour `index.ts` barrel export
 
 ### Validation Phase 2 Sprint 3
 
 ```bash
-pnpm check
+pnpm check  # ✅ 0 errors, warnings only pre-existing
 ```
 
 ---

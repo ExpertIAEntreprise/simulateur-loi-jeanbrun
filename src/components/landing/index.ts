@@ -14,6 +14,12 @@
  * - ProcessSteps: 3-step process visualization
  * - ComparisonTable: Jeanbrun vs Pinel vs LMNP
  * - ExampleCalculation: TMI 45% concrete example
+ *
+ * Phase 2 Sprint 3 Components (footer & FAQ):
+ * - FAQAccordion: 8 questions with shadcn/ui Accordion
+ * - CTASection: Final CTA with glow effect
+ * - LandingHeader: Simplified header with mobile menu
+ * - LandingFooter: Footer with legal links
  */
 
 // Sprint 1 - Above the fold
@@ -29,3 +35,9 @@ export { RetirementSection } from "./RetirementSection";
 export { ProcessSteps } from "./ProcessSteps";
 export { ComparisonTable } from "./ComparisonTable";
 export { ExampleCalculation } from "./ExampleCalculation";
+
+// Sprint 3 - Footer & FAQ
+export { FAQAccordion, faqItems } from "./FAQAccordion";
+export { CTASection } from "./CTASection";
+export { LandingHeader } from "./LandingHeader";
+export { LandingFooter } from "./LandingFooter";
