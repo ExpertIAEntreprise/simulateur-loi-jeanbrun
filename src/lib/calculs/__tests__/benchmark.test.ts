@@ -17,12 +17,12 @@
 import { describe, it, expect } from "vitest";
 import { calculerIR } from "../ir";
 import { calculerJeanbrunNeuf } from "../jeanbrun-neuf";
-import { calculerPlusValue } from "../plus-value";
 import { orchestrerSimulation } from "../orchestrateur";
-import type { SimulationCalculInput } from "../types/simulation";
+import { calculerPlusValue } from "../plus-value";
 import type { IRInput } from "../types/ir";
 import type { JeanbrunNeufInput } from "../types/jeanbrun";
 import type { PlusValueInput } from "../types/plus-value";
+import type { SimulationCalculInput } from "../types/simulation";
 
 // ============================================
 // DONNEES DE TEST POUR BENCHMARKS

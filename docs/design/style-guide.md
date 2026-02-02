@@ -458,8 +458,54 @@ TRANSITION DURATIONS
 
 ---
 
+---
+
+## 14. Analyse Concurrentielle (V2)
+
+### Sites Analyses
+
+1. **la-loi-pinel.com** - Bleu marine + Rouge, institutionnel
+2. **loi-pinel.fr** - Orange + Bleu ciel, dynamique
+3. **la-loi-denormandie.immo** - Bleu + Rouge, premium
+4. **loipinel.fr** - Vert + Blanc + Gris, moderne
+
+### Patterns a Adopter
+
+| Pattern | Priorite | Fichier Reference |
+|---------|----------|-------------------|
+| Compteurs animes | Haute | `components-trust-signals.tsx` |
+| Trust Signals Bar | Haute | `components-trust-signals.tsx` |
+| Rating Stars | Moyenne | `components-trust-signals.tsx` |
+| Certification Badges | Moyenne | `components-trust-signals.tsx` |
+| Guarantees Bar | Haute | `components-trust-signals.tsx` |
+
+### Differentiation Jeanbrun
+
+| Critere | Concurrence | Notre Approche |
+|---------|-------------|----------------|
+| Mode | Light classique | **Dark mode premium** |
+| Accent | Bleu/Rouge | **Or patrimonial** |
+| Style | Corporate | **Wireframe technique** |
+| Typo titres | Sans-serif generique | **Serif distinctif (DM Serif)** |
+
+---
+
+## 15. Fichiers de Reference
+
+| Fichier | Contenu |
+|---------|---------|
+| `design-tokens.css` | Tokens CSS v1 (base) |
+| `design-tokens-v2.css` | Tokens CSS v2 (enrichi) |
+| `component-specs.md` | Specifications composants |
+| `motion-presets.ts` | Presets Framer Motion |
+| `components-trust-signals.tsx` | Composants Trust Signals |
+| `DESIGN-SYSTEM-V2.md` | Documentation complete V2 |
+
+---
+
 ## Changelog
 
 | Version | Date | Modifications |
 |---------|------|---------------|
-| 1.0 | 30/01/2026 | Version initiale basée sur wireframes et références |
+| 1.0 | 30/01/2026 | Version initiale basee sur wireframes et references |
+| 1.1 | 01/02/2026 | Ajout section analyse concurrentielle, fichiers reference |

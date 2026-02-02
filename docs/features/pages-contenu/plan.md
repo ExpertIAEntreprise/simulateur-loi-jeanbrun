@@ -206,7 +206,7 @@ featured: true
 - [x] 4.4 Rédiger article "Calculer sa réduction" (1861 mots)
 - [x] 4.5 Rédiger article "Top 10 villes" (2367 mots)
 - [x] 4.6 Rédiger 5 articles supplémentaires
-- [ ] 4.7 Créer images header pour chaque article (Phase 5)
+- [x] 4.7 Créer images header pour chaque article (10 images créées)
 - [x] 4.8 Optimiser SEO chaque article
 - [x] 4.9 Ajouter CTA simulateur
 - [x] 4.10 Ajouter liens internes
@@ -229,7 +229,7 @@ featured: true
 ### Validation
 
 - [x] 10 articles rédigés
-- [ ] Images créées (Phase 5)
+- [x] Images créées (10 headers dans /public/images/blog/)
 - [x] Liens internes ajoutés
 - [x] CTA présents
 

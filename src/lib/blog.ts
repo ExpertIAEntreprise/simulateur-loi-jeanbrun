@@ -129,7 +129,7 @@ function readMDXFile(filePath: string): BlogPost | null {
  * Convert BlogPost to BlogPostMeta (without content)
  */
 function toMeta(post: BlogPost): BlogPostMeta {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const { content: _, ...meta } = post;
   return meta;
 }
