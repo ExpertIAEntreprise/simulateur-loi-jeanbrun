@@ -1,9 +1,9 @@
 # Simulateur Wizard - Plan d'implementation
 
 **Feature:** Simulateur Loi Jeanbrun 6 etapes
-**Estimation totale:** 18,5 jours
+**Estimation totale:** 21 jours (18,5j + 2,5j corrections)
 **Date:** 30 janvier 2026
-**Derniere MAJ:** 02 fevrier 2026
+**Derniere MAJ:** 02 fevrier 2026 (ajout Phase G - Corrections Post-Audit)
 
 ---
 
@@ -43,14 +43,15 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ## Vue d'ensemble des phases
 
-| Phase | Description | Effort | Dependances |
-|-------|-------------|--------|-------------|
-| A | Layout + Navigation | 1,5j | - |
-| B | Etapes 1-2 (Profil + Projet) | 4,5j | Phase A |
-| C | Etapes 3-4 (Financement + Location) | 4j | Phase B |
-| D | Etapes 5-6 (Sortie + Structure) | 3j | Phase C |
-| E | Page Resultats | 3,5j | Phase D |
-| F | Tests + Polish | 2j | Phase E |
+| Phase | Description | Effort | Dependances | Statut |
+|-------|-------------|--------|-------------|--------|
+| A | Layout + Navigation | 1,5j | - | ✅ FAIT |
+| B | Etapes 1-2 (Profil + Projet) | 4,5j | Phase A | ✅ FAIT |
+| C | Etapes 3-4 (Financement + Location) | 4j | Phase B | ✅ FAIT |
+| D | Etapes 5-6 (Sortie + Structure) | 3j | Phase C | ✅ FAIT |
+| E | Page Resultats | 3,5j | Phase D | ✅ FAIT |
+| F | Tests + Polish | 2j | Phase E | ✅ FAIT |
+| **G** | **Corrections Post-Audit** | **2,5j** | Phase F | ⏳ A FAIRE |
 
 ---
 
@@ -489,14 +490,15 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ## Calendrier suggere
 
-| Semaine | Phases | Jours |
-|---------|--------|-------|
-| S5 - J1-J2 | Phase A (Layout) | 1,5j |
-| S5 - J3-J5 | Phase B (Etapes 1-2) | 4,5j |
-| S6 - J1-J4 | Phase C (Etapes 3-4) | 4j |
-| S6 - J4-J5 | Phase D (Etapes 5-6) | 3j |
-| S6 - J5 + S7 | Phase E (Resultats) | 3,5j |
-| S7 | Phase F (Tests) | 2j |
+| Semaine | Phases | Jours | Statut |
+|---------|--------|-------|--------|
+| S5 - J1-J2 | Phase A (Layout) | 1,5j | ✅ |
+| S5 - J3-J5 | Phase B (Etapes 1-2) | 4,5j | ✅ |
+| S6 - J1-J4 | Phase C (Etapes 3-4) | 4j | ✅ |
+| S6 - J4-J5 | Phase D (Etapes 5-6) | 3j | ✅ |
+| S6 - J5 + S7 | Phase E (Resultats) | 3,5j | ✅ |
+| S7 | Phase F (Tests) | 2j | ✅ |
+| **S8** | **Phase G (Corrections)** | **2,5j** | ⏳ |
 
 ---
 
@@ -511,10 +513,10 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ---
 
-## Definition of Done
+## Definition of Done (Phase F)
 
 - [x] Code TypeScript strict sans erreurs ✅
-- [x] Tests unitaires >= 70% coverage (70.69%) ✅
+- [x] Tests unitaires >= 70% coverage (70.69% → 79.12%) ✅
 - [x] Responsive verifie sur 4 breakpoints ✅
 - [x] Accessibilite WCAG 2.1 AA ✅
 - [x] Performance optimisee (dynamic imports) ✅
@@ -522,6 +524,625 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 - [x] Documentation mise a jour ✅
 
 **PHASE F TERMINEE - 02/02/2026**
+
+---
+
+## Definition of Done (Phase G)
+
+- [ ] Tous fichiers loading.tsx/error.tsx crees
+- [ ] useTransition implemente pour calculs
+- [ ] Couleurs hardcodees remplacees par tokens
+- [ ] Validation localStorage avec Zod
+- [ ] Securite API renforcee (CORS, rate limiting)
+- [ ] Types unifies (pas de duplication)
+- [ ] Code DRY (helpers extraits)
+- [ ] Tests coverage >= 80%
+- [ ] Aucune alerte security-reviewer
+
+**PHASE G A EFFECTUER - Prochaine session**
+
+---
+
+## Phase G - Corrections Post-Audit (2,5j)
+
+**Objectif:** Corriger les problemes identifies par l'audit multi-agents (02/02/2026)
+**Date audit:** 02 fevrier 2026
+**Agents utilises:** code-reviewer, security-reviewer, ui-expert, architect, frontend-developer, tdd-guide
+
+### Synthese Audit
+
+| Agent | Critique | Haute | Moyenne | Basse |
+|-------|----------|-------|---------|-------|
+| Code Reviewer | 0 | 3 | 8 | 5 |
+| Security Reviewer | 0 | 2 | 5 | 4 |
+| UI Expert | 3 | 3 | 4 | 2 |
+| Architect | - | 4 | 6 | - |
+| Frontend Developer | 2 | 5 | 5 | 1 |
+
+**Coverage tests apres audit:** 79.12% (+5.7%)
+
+---
+
+### G.1 - Corrections Critiques (P0) - 0,5j
+
+#### G.1.1 Ajouter loading.tsx et error.tsx (Next.js Best Practice)
+
+**Issue:** Aucun fichier de chargement/erreur dans `/simulateur/resultat/`
+**Impact:** Mauvaise UX pendant navigation, pas de gestion erreurs
+**Source:** frontend-developer agent
+
+**Fichiers a creer:**
+
+```
+src/app/simulateur/resultat/loading.tsx
+src/app/simulateur/resultat/error.tsx
+src/app/simulateur/avance/loading.tsx
+src/app/simulateur/avance/error.tsx
+```
+
+**Implementation loading.tsx:**
+```typescript
+import { Skeleton } from "@/components/ui/skeleton"
+
+export default function ResultatLoading() {
+  return (
+    <div className="container max-w-5xl mx-auto px-4 py-8 space-y-8">
+      <Skeleton className="h-8 w-64" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-32 w-full" />
+        ))}
+      </div>
+      <Skeleton className="h-[400px] w-full" />
+    </div>
+  )
+}
+```
+
+**Implementation error.tsx:**
+```typescript
+"use client"
+
+import { useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { AlertCircle } from "lucide-react"
+
+export default function ResultatError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    console.error("Resultat error:", error)
+  }, [error])
+
+  return (
+    <div className="container max-w-5xl mx-auto px-4 py-8">
+      <div className="text-center space-y-4">
+        <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
+        <h2 className="text-2xl font-bold">Une erreur est survenue</h2>
+        <p className="text-muted-foreground">{error.message}</p>
+        <Button onClick={reset}>Reessayer</Button>
+      </div>
+    </div>
+  )
+}
+```
+
+---
+
+#### G.1.2 Ajouter useTransition pour calculs lourds (React 19)
+
+**Issue:** Calculs bloquent le thread principal dans `resultat/[id]/page.tsx:412-428`
+**Impact:** UI freeze pendant calcul (~700ms)
+**Source:** frontend-developer agent
+
+**Fichier:** `src/app/simulateur/resultat/[id]/page.tsx`
+
+**Avant:**
+```typescript
+useEffect(() => {
+  requestAnimationFrame(() => {
+    const calculatedResults = calculateResults(state);
+    setResults(calculatedResults);
+  });
+}, []);
+```
+
+**Apres:**
+```typescript
+import { useTransition } from "react"
+
+const [isPending, startTransition] = useTransition()
+
+useEffect(() => {
+  const state = loadWizardState()
+  setWizardState(state)
+
+  if (isValidWizardState(state)) {
+    startTransition(() => {
+      const calculatedResults = calculateResults(state)
+      setResults(calculatedResults)
+    })
+  }
+  setIsLoading(false)
+}, [])
+
+// Utiliser isPending pour afficher skeleton
+if (isLoading || isPending) {
+  return <ResultatLoadingSkeleton />
+}
+```
+
+---
+
+#### G.1.3 Remplacer couleurs OKLCH hardcodees par tokens (UI)
+
+**Issue:** Couleurs OKLCH hardcodees dans composants resultats
+**Impact:** Themes impossibles, dark mode fragile
+**Source:** ui-expert agent
+
+**Fichiers concernes:**
+- `src/components/simulateur/resultats/SyntheseCard.tsx` (lignes 148-175)
+- `src/components/simulateur/resultats/GraphiquePatrimoine.tsx` (lignes 68-81, 108-128)
+- `src/components/simulateur/resultats/EncartFinancement.tsx` (lignes 47-54, 73, 149)
+
+**Remplacements a effectuer:**
+
+| Avant (hardcode) | Apres (token) |
+|------------------|---------------|
+| `bg-[oklch(0.20_0.08_145)]` | `bg-success/20` |
+| `text-[oklch(0.72_0.20_145)]` | `text-success` |
+| `bg-[oklch(0.20_0.10_25)]` | `bg-destructive/20` |
+| `text-[oklch(0.63_0.24_25)]` | `text-destructive` |
+| `bg-green-500` | `bg-gauge-safe` |
+| `bg-amber-500` | `bg-gauge-warning` |
+| `bg-red-500` | `bg-gauge-danger` |
+| `bg-amber-600 hover:bg-amber-700` | `bg-primary hover:bg-primary/90` |
+
+**Ajouter dans globals.css @theme inline:**
+```css
+@theme inline {
+  --color-gauge-safe: var(--gauge-safe);
+  --color-gauge-warning: var(--gauge-warning);
+  --color-gauge-danger: var(--gauge-danger);
+}
+
+:root {
+  --gauge-safe: oklch(0.72 0.20 145);
+  --gauge-warning: oklch(0.75 0.18 75);
+  --gauge-danger: oklch(0.63 0.24 25);
+}
+```
+
+---
+
+### G.2 - Corrections Haute Priorite (P1) - 1j
+
+#### G.2.1 Validation localStorage avec Zod (Security)
+
+**Issue:** Donnees localStorage cast sans validation profonde
+**Impact:** Donnees manipulees peuvent bypass validation metier
+**Source:** security-reviewer agent
+
+**Fichier:** `src/contexts/SimulationContext.tsx` (lignes 310-335)
+
+**Implementation:**
+```typescript
+import { z } from "zod"
+
+const wizardStep1Schema = z.object({
+  situation: z.enum(["celibataire", "marie", "pacse"]).optional(),
+  parts: z.number().min(1).max(10).optional(),
+  revenuNet: z.number().min(0).max(10_000_000).optional(),
+  revenusFonciers: z.number().min(0).optional(),
+  objectif: z.enum(["reduire_impots", "revenus", "patrimoine", "retraite"]).optional(),
+})
+
+// Schemas similaires pour steps 2-6...
+
+const storedStateSchema = z.object({
+  currentStep: z.number().min(1).max(6),
+  step1: wizardStep1Schema,
+  step2: wizardStep2Schema,
+  step3: wizardStep3Schema,
+  step4: wizardStep4Schema,
+  step5: wizardStep5Schema,
+  step6: wizardStep6Schema,
+  tmiCalcule: z.number().optional(),
+})
+
+// Dans hydratation:
+const parsed = storedStateSchema.safeParse(JSON.parse(saved))
+if (parsed.success) {
+  dispatch({ type: "HYDRATE", state: parsed.data })
+} else {
+  localStorage.removeItem(STORAGE_KEY) // Donnees invalides
+}
+```
+
+---
+
+#### G.2.2 Ajouter CORS a /api/simulation/avancee (Security)
+
+**Issue:** Endpoint manque validation origin (presente dans /calcul)
+**Impact:** Requetes cross-site possibles
+**Source:** security-reviewer agent
+
+**Fichier:** `src/app/api/simulation/avancee/route.ts`
+
+**Ajouter au debut du handler:**
+```typescript
+// CORS: Verify request origin
+const origin = request.headers.get("origin")
+const allowedOrigins = [process.env.NEXT_PUBLIC_APP_URL]
+if (origin && !allowedOrigins.includes(origin)) {
+  return NextResponse.json(
+    { success: false, error: "Origin not allowed" },
+    { status: 403 }
+  )
+}
+
+// Content-Length check for DoS prevention
+const contentLength = request.headers.get("content-length")
+const MAX_BODY_SIZE = 10 * 1024 // 10KB
+if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
+  return NextResponse.json(
+    { success: false, error: "Request body too large" },
+    { status: 413 }
+  )
+}
+```
+
+---
+
+#### G.2.3 Unifier type WizardState (Code Quality)
+
+**Issue:** Type WizardState duplique entre page resultats et context
+**Impact:** Risque de drift, moins strict dans page
+**Source:** code-reviewer agent
+
+**Fichier:** `src/app/simulateur/resultat/[id]/page.tsx` (lignes 59-100)
+
+**Fix:** Supprimer la definition locale et importer:
+```typescript
+import type {
+  SimulationWizardState,
+  WizardStep1,
+  WizardStep2,
+  WizardStep3,
+  WizardStep4,
+  WizardStep5,
+  WizardStep6,
+} from "@/contexts/SimulationContext"
+
+// Supprimer l'interface WizardState locale (lignes 59-100)
+// Utiliser SimulationWizardState a la place
+```
+
+---
+
+#### G.2.4 Convertir redirect en Server Component (Next.js)
+
+**Issue:** Redirect client-side avec useEffect anti-pattern
+**Impact:** Flash de contenu, mauvais SEO
+**Source:** frontend-developer agent
+
+**Fichier:** `src/app/simulateur/resultat/page.tsx`
+
+**Avant (client-side):**
+```typescript
+"use client"
+export default function ResultatRedirectPage() {
+  useEffect(() => {
+    const uuid = "xxx".replace(/[xy]/g, ...);
+    router.replace(`/simulateur/resultat/${uuid}`);
+  }, []);
+}
+```
+
+**Apres (server-side):**
+```typescript
+import { redirect } from "next/navigation"
+
+export default function ResultatRedirectPage() {
+  const uuid = crypto.randomUUID()
+  redirect(`/simulateur/resultat/${uuid}`)
+}
+```
+
+---
+
+#### G.2.5 Ajouter rate limiting a /api/leads/financement (Security)
+
+**Issue:** Endpoint sans rate limiting (spam possible)
+**Impact:** Abus formulaire, spam leads
+**Source:** security-reviewer agent
+
+**Fichier:** `src/app/api/leads/financement/route.ts`
+
+**Ajouter:**
+```typescript
+import { simulationRateLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit"
+
+export async function POST(request: NextRequest) {
+  // Rate limiting: 5 requests per minute per IP
+  const ip = getClientIP(request)
+  const rateLimitResponse = await checkRateLimit(simulationRateLimiter, ip)
+  if (rateLimitResponse) return rateLimitResponse
+
+  // ... reste du handler
+}
+```
+
+---
+
+#### G.2.6 Extraire helper prixTotal (Code Quality)
+
+**Issue:** Calcul prixTotal duplique 3 fois dans calculateResults
+**Impact:** Code duplication, maintenance difficile
+**Source:** code-reviewer agent
+
+**Fichier:** `src/app/simulateur/resultat/[id]/page.tsx` (lignes 204, 228, 244)
+
+**Fix:** Extraire fonction:
+```typescript
+function calculatePrixTotal(step2: WizardState['step2']): number {
+  return step2.typeBien === "ancien" && step2.montantTravaux
+    ? step2.prixAcquisition! + step2.montantTravaux
+    : step2.prixAcquisition!
+}
+
+// Utiliser partout:
+const prixTotal = calculatePrixTotal(step2)
+```
+
+---
+
+### G.3 - Corrections Moyenne Priorite (P2) - 0,75j
+
+#### G.3.1 Remplacer alert() par toast (UX)
+
+**Issue:** Native alert() bloque UI et UX mediocre
+**Source:** code-reviewer agent
+
+**Fichiers:**
+- `src/app/simulateur/resultat/[id]/page.tsx` (lignes 442, 461, 466)
+
+**Fix:**
+```typescript
+import { toast } from "sonner"
+
+// Au lieu de:
+alert("Fonctionnalite premium...")
+
+// Utiliser:
+toast.info("Fonctionnalite premium", {
+  description: "Paiement Stripe a venir (9,90 EUR)"
+})
+```
+
+---
+
+#### G.3.2 Extraire constantes magic numbers (Code Quality)
+
+**Issue:** Nombres magiques sans constantes nommees
+**Source:** code-reviewer agent
+
+**Fichier:** `src/app/simulateur/resultat/[id]/page.tsx`
+
+**Ajouter en haut du fichier:**
+```typescript
+const JEANBRUN_ENGAGEMENT_YEARS = 9
+const LMNP_MICRO_BIC_ABATTEMENT = 0.5
+const SEUIL_EXONERATION_TOTALE_IR = 22
+const ABATTEMENT_ANNUEL_PLUS_VALUE = 6
+```
+
+---
+
+#### G.3.3 Corriger setTimeout memory leak (Code Quality)
+
+**Issue:** setTimeout non clear si component unmount
+**Source:** code-reviewer agent
+
+**Fichier:** `src/components/simulateur/resultats/LeadCourtierModal.tsx` (lignes 114-118)
+
+**Fix:**
+```typescript
+useEffect(() => {
+  if (!submitSuccess) return
+
+  const timer = setTimeout(() => {
+    setSubmitSuccess(false)
+    onOpenChange(false)
+  }, 3000)
+
+  return () => clearTimeout(timer)
+}, [submitSuccess, onOpenChange])
+```
+
+---
+
+#### G.3.4 Utiliser crypto.randomUUID() (Security)
+
+**Issue:** UUID genere avec Math.random() (previsible)
+**Source:** security-reviewer agent
+
+**Fichiers:**
+- `src/app/simulateur/resultat/page.tsx`
+- `src/app/api/simulation/avancee/route.ts`
+
+**Fix:** Remplacer:
+```typescript
+// Avant
+const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, ...)
+
+// Apres
+const uuid = crypto.randomUUID()
+```
+
+---
+
+#### G.3.5 Ajouter route segment config (Next.js)
+
+**Issue:** Pas de config cache/revalidation pour page resultats
+**Source:** frontend-developer agent
+
+**Fichier:** `src/app/simulateur/resultat/[id]/page.tsx`
+
+**Ajouter en haut:**
+```typescript
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+```
+
+---
+
+#### G.3.6 Proteger JSON-LD contre XSS (Security)
+
+**Issue:** dangerouslySetInnerHTML avec JSON.stringify sans escape
+**Source:** security-reviewer agent
+
+**Fichiers:**
+- `src/components/villes/FaqVille.tsx`
+- `src/components/villes/Breadcrumb.tsx`
+
+**Fix:**
+```typescript
+function safeJsonLd(data: object): string {
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+}
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLdData) }}
+/>
+```
+
+---
+
+### G.4 - Refactoring Architecture (P3) - 0,25j
+
+#### G.4.1 Extraire storage adapter (Testabilite)
+
+**Issue:** localStorage accede directement dans context
+**Impact:** Impossible de tester sans mock global
+**Source:** architect agent
+
+**Creer:** `src/lib/storage/wizard-storage.ts`
+```typescript
+export interface WizardStorage {
+  load(): SimulationWizardState | null
+  save(state: SimulationWizardState): void
+  clear(): void
+}
+
+export const localWizardStorage: WizardStorage = {
+  load() {
+    if (typeof window === "undefined") return null
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      return saved ? JSON.parse(saved) : null
+    } catch { return null }
+  },
+  save(state) {
+    if (typeof window === "undefined") return
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  },
+  clear() {
+    if (typeof window === "undefined") return
+    localStorage.removeItem(STORAGE_KEY)
+  }
+}
+
+// Modifier SimulationProvider pour accepter storage en prop
+interface SimulationProviderProps {
+  children: ReactNode
+  storage?: WizardStorage
+}
+```
+
+---
+
+#### G.4.2 Diviser page resultats (Maintenabilite)
+
+**Issue:** Page resultats fait 695 lignes (proche limite 800)
+**Source:** code-reviewer, architect agents
+
+**Refactoring suggere:**
+```
+src/app/simulateur/resultat/[id]/
+├── page.tsx                    # Server Component wrapper (~50 lignes)
+├── resultat-client.tsx         # Client Component principal (~200 lignes)
+├── loading-skeleton.tsx        # Skeleton (~30 lignes)
+├── helpers/
+│   ├── load-wizard-state.ts   # Chargement localStorage
+│   ├── validate-state.ts      # Validation state
+│   └── calculate-results.ts   # Transformation resultats
+└── types.ts                    # Types locaux
+```
+
+---
+
+### G.5 - Tests supplementaires (P3)
+
+**Fichiers de tests a creer:**
+- `src/lib/calculs/__tests__/analyse-financement.test.ts` ✅ FAIT (37 tests)
+- `src/components/simulateur/__tests__/AlerteEndettement.test.tsx` ✅ FAIT (26 tests)
+- `src/components/simulateur/__tests__/SimulateurLayout.test.tsx` ✅ FAIT (25 tests)
+
+**Fichiers de tests manquants (a creer):**
+- `src/components/simulateur/etape-1/__tests__/ProfilForm.test.tsx` (coverage 0%)
+- `src/components/simulateur/etape-2/__tests__/VilleAutocomplete.test.tsx` (coverage 30%)
+- `src/app/api/simulation/__tests__/avancee.test.ts` (API route non testee)
+
+---
+
+### Checklist Phase G
+
+- [ ] **G.1.1** Creer loading.tsx et error.tsx
+- [ ] **G.1.2** Ajouter useTransition aux calculs
+- [ ] **G.1.3** Remplacer couleurs OKLCH par tokens
+- [ ] **G.2.1** Validation localStorage avec Zod
+- [ ] **G.2.2** Ajouter CORS a /api/simulation/avancee
+- [ ] **G.2.3** Unifier type WizardState
+- [ ] **G.2.4** Convertir redirect en Server Component
+- [ ] **G.2.5** Ajouter rate limiting leads
+- [ ] **G.2.6** Extraire helper prixTotal
+- [ ] **G.3.1** Remplacer alert() par toast
+- [ ] **G.3.2** Extraire constantes magic numbers
+- [ ] **G.3.3** Corriger setTimeout memory leak
+- [ ] **G.3.4** Utiliser crypto.randomUUID()
+- [ ] **G.3.5** Ajouter route segment config
+- [ ] **G.3.6** Proteger JSON-LD XSS
+- [ ] **G.4.1** Extraire storage adapter
+- [ ] **G.4.2** Diviser page resultats
+
+---
+
+### Livrables Phase G
+
+- Fichiers loading.tsx et error.tsx pour toutes routes simulateur
+- Calculs non-bloquants avec useTransition
+- Tokens semantiques pour toutes couleurs
+- Securite renforcee (validation, CORS, rate limiting)
+- Code DRY (types unifies, helpers extraits)
+- Architecture testable (storage adapter)
+
+---
+
+### Sources Documentation Consultees (Audit)
+
+- [Next.js Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components)
+- [Next.js 15 App Router Guide](https://medium.com/@livenapps/next-js-15-app-router-a-complete-senior-level-guide-0554a2b820f7)
+- [React 19 Best Practices](https://dev.to/jay_sarvaiya_reactjs/react-19-best-practices-write-clean-modern-and-efficient-react-code-1beb)
+- [React 19 New Hooks](https://www.freecodecamp.org/news/react-19-new-hooks-explained-with-examples/)
+- [React Stack Patterns 2026](https://www.patterns.dev/react/react-2026/)
 
 ---
 
