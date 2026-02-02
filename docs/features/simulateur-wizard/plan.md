@@ -197,23 +197,23 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ### Taches Etape 3 - Financement (2j)
 
-- [ ] **C.1** Creer `FinancementForm.tsx` (0,75j)
+- [x] **C.1** Creer `FinancementForm.tsx` (0,75j) ✅ FAIT
   - Formulaire: apport, duree, taux, differe
   - Calcul mensualite temps reel
   - Fichier: `src/components/simulateur/etape-3/FinancementForm.tsx`
 
-- [ ] **C.2** Creer `JaugeEndettement.tsx` (0,5j)
+- [x] **C.2** Creer `JaugeEndettement.tsx` (0,5j) ✅ FAIT
   - Jauge 0-100% avec zones couleurs
   - Marqueurs 33% et 35%
   - Alerte si depassement
   - Fichier: `src/components/simulateur/etape-3/JaugeEndettement.tsx`
 
-- [ ] **C.3** Creer `DiffereSelector.tsx` (0,25j)
+- [x] **C.3** Creer `DiffereSelector.tsx` (0,25j) ✅ FAIT
   - Select 0/12/24 mois
   - Info contextuelle VEFA
   - Fichier: `src/components/simulateur/etape-3/DiffereSelector.tsx`
 
-- [ ] **C.4** Creer page `etape-3` (0,5j)
+- [x] **C.4** Creer page `etape-3` (0,5j) ✅ FAIT
   - Route: `/simulateur/avance/etape-3`
   - Fichier: `src/app/simulateur/avance/etape-3/page.tsx`
 
@@ -225,21 +225,21 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ### Taches Etape 4 - Location (2j)
 
-- [ ] **C.5** Creer `NiveauLoyerCards.tsx` (0,75j)
+- [x] **C.5** Creer `NiveauLoyerCards.tsx` (0,75j) ✅ FAIT
   - 3 cards avec loyer max, taux, description
   - Calcul coefficient surface
   - Fichier: `src/components/simulateur/etape-4/NiveauLoyerCards.tsx`
 
-- [ ] **C.6** Creer `PerteGainVisualisation.tsx` (0,5j)
+- [x] **C.6** Creer `PerteGainVisualisation.tsx` (0,5j) ✅ FAIT
   - Balance perte loyer vs economie fiscale
   - Gain net annuel
   - Fichier: `src/components/simulateur/etape-4/PerteGainVisualisation.tsx`
 
-- [ ] **C.7** Creer `ChargesForm.tsx` (0,25j)
+- [x] **C.7** Creer `ChargesForm.tsx` (0,25j) ✅ FAIT
   - Inputs: charges, taxe fonciere, vacance
   - Fichier: `src/components/simulateur/etape-4/ChargesForm.tsx`
 
-- [ ] **C.8** Creer page `etape-4` (0,5j)
+- [x] **C.8** Creer page `etape-4` (0,5j) ✅ FAIT
   - Route: `/simulateur/avance/etape-4`
   - Fichier: `src/app/simulateur/avance/etape-4/page.tsx`
 
@@ -249,6 +249,25 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 - Etape 4 complete avec visualisation gain/perte
 - Navigation fonctionnelle etapes 1-4
 
+### Fichiers crees (Phase C) - 02/02/2026
+
+| Fichier | Description |
+|---------|-------------|
+| `src/components/simulateur/etape-3/FinancementForm.tsx` | Formulaire apport/duree/taux avec calcul mensualite temps reel |
+| `src/components/simulateur/etape-3/JaugeEndettement.tsx` | Jauge visuelle 0-50%+ avec seuils 33%/35%, reste a vivre |
+| `src/components/simulateur/etape-3/DiffereSelector.tsx` | Select 0/12/24 mois avec info contextuelle VEFA |
+| `src/components/simulateur/etape-3/index.ts` | Barrel exports etape-3 |
+| `src/components/simulateur/etape-4/NiveauLoyerCards.tsx` | 3 cards avec loyer max par zone, coefficient surface |
+| `src/components/simulateur/etape-4/ChargesForm.tsx` | Charges, taxe fonciere, vacance avec recapitulatif |
+| `src/components/simulateur/etape-4/PerteGainVisualisation.tsx` | Balance perte loyer vs economie fiscale avec barres comparatives |
+| `src/components/simulateur/etape-4/index.ts` | Barrel exports etape-4 |
+| `src/app/simulateur/avance/etape-3/page.tsx` | Page etape 3 avec integration composants |
+| `src/app/simulateur/avance/etape-4/page.tsx` | Page etape 4 avec integration composants |
+
+**Routes:**
+- `/simulateur/avance/etape-3` - Etape 3 (Configuration financement)
+- `/simulateur/avance/etape-4` - Etape 4 (Strategie locative)
+
 ---
 
 ## Phase D - Etapes 5-6 (3j)
@@ -257,43 +276,67 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ### Taches Etape 5 - Sortie (1,5j)
 
-- [ ] **D.1** Creer `DureeSlider.tsx` (0,5j)
-  - Slider 9-30 ans avec marqueurs
+- [x] **D.1** Creer `DureeSlider.tsx` (0,5j) ✅ FAIT
+  - Slider 9-25 ans avec marqueurs
   - Infos abattements PV contextuelles
   - Fichier: `src/components/simulateur/etape-5/DureeSlider.tsx`
 
-- [ ] **D.2** Creer `RevalorisationInput.tsx` (0,25j)
-  - Input 0-5% avec aide
+- [x] **D.2** Creer `RevalorisationInput.tsx` (0,25j) ✅ FAIT
+  - Slider 0-5% avec scenarios predefinits
+  - Calcul valeur future estimee
   - Fichier: `src/components/simulateur/etape-5/RevalorisationInput.tsx`
 
-- [ ] **D.3** Creer `StrategieSortie.tsx` (0,25j)
-  - Radio: revente, conservation, donation
+- [x] **D.3** Creer `StrategieSortie.tsx` (0,25j) ✅ FAIT
+  - 3 cards: revente, conservation, donation
+  - Affichage abattement PV selon duree
   - Fichier: `src/components/simulateur/etape-5/StrategieSortie.tsx`
 
-- [ ] **D.4** Creer page `etape-5` (0,5j)
+- [x] **D.4** Creer page `etape-5` (0,5j) ✅ FAIT
   - Route: `/simulateur/avance/etape-5`
   - Fichier: `src/app/simulateur/avance/etape-5/page.tsx`
 
 ### Taches Etape 6 - Structure (1,5j)
 
-- [ ] **D.5** Creer `StructureCards.tsx` (0,75j)
+- [x] **D.5** Creer `StructureCards.tsx` (0,75j) ✅ FAIT
   - 3 cards avec avantages/inconvenients
-  - Badge recommandation
+  - Badge recommande sur Nom Propre
+  - Alerte orange si SCI IS (pas de Jeanbrun)
   - Fichier: `src/components/simulateur/etape-6/StructureCards.tsx`
 
-- [ ] **D.6** Creer `ComparatifTable.tsx` (0,25j)
-  - Tableau comparatif detaille
+- [x] **D.6** Creer `ComparatifTable.tsx` (0,25j) ✅ FAIT
+  - Tableau comparatif 9 criteres
+  - Colonne selectionnee mise en surbrillance
+  - Legende avec icones
   - Fichier: `src/components/simulateur/etape-6/ComparatifTable.tsx`
 
-- [ ] **D.7** Creer page `etape-6` (0,5j)
+- [x] **D.7** Creer page `etape-6` (0,5j) ✅ FAIT
   - Route: `/simulateur/avance/etape-6`
+  - isLastStep=true, redirection vers resultats
   - Fichier: `src/app/simulateur/avance/etape-6/page.tsx`
 
 ### Livrables
 
-- Etape 5 complete avec slider duree
-- Etape 6 complete avec recommandation structure
-- Parcours 6 etapes complet fonctionnel
+- Etape 5 complete avec slider duree ✅
+- Etape 6 complete avec recommandation structure ✅
+- Parcours 6 etapes complet fonctionnel ✅
+
+### Fichiers crees (Phase D) - 02/02/2026
+
+| Fichier | Description |
+|---------|-------------|
+| `src/components/simulateur/etape-5/DureeSlider.tsx` | Slider 9-25 ans, 4 milestones, info abattements PV |
+| `src/components/simulateur/etape-5/RevalorisationInput.tsx` | Slider 0-5%, 5 scenarios, calcul valeur future |
+| `src/components/simulateur/etape-5/StrategieSortie.tsx` | 3 cards radio, abattement PV dynamique, avantages/inconvenients |
+| `src/components/simulateur/etape-5/index.ts` | Barrel exports etape-5 |
+| `src/components/simulateur/etape-6/StructureCards.tsx` | 3 cards structure juridique, badge recommande, alerte SCI IS |
+| `src/components/simulateur/etape-6/ComparatifTable.tsx` | Tableau 9 criteres, surbrillance colonne, legende |
+| `src/components/simulateur/etape-6/index.ts` | Barrel exports etape-6 |
+| `src/app/simulateur/avance/etape-5/page.tsx` | Page etape 5 complete avec validation |
+| `src/app/simulateur/avance/etape-6/page.tsx` | Page etape 6 avec isLastStep, redirect resultats |
+
+**Routes:**
+- `/simulateur/avance/etape-5` - Etape 5 (Strategie de sortie)
+- `/simulateur/avance/etape-6` - Etape 6 (Structure juridique)
 
 ---
 
