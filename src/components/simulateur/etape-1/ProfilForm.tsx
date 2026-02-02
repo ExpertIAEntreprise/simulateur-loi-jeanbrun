@@ -91,7 +91,7 @@ export function ProfilForm({ className }: ProfilFormProps) {
 
   const form = useForm<ProfilFormData>({
     resolver: zodResolver(profilFormSchema),
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
       situation: state.step1.situation ?? "celibataire",
       parts: state.step1.parts ?? 1,
@@ -121,12 +121,27 @@ export function ProfilForm({ className }: ProfilFormProps) {
     }
   }, [situation, setValue])
 
-  // Sync avec le context global à chaque changement validé
+  // Sync initial des valeurs par défaut vers le context (une seule fois au montage)
+  useEffect(() => {
+    const defaults = form.getValues()
+    if (defaults.situation && defaults.parts !== undefined) {
+      updateStep1({
+        situation: defaults.situation,
+        parts: defaults.parts,
+        revenuNet: defaults.revenuNet,
+        ...(defaults.revenusFonciers !== undefined && { revenusFonciers: defaults.revenusFonciers }),
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Volontairement vide pour ne s'exécuter qu'au montage
+
+  // Sync avec le context global à chaque changement
+  // La validation finale est faite par isStep1Valid dans le context
   useEffect(() => {
     const subscription = form.watch((values) => {
-      const isValid = form.formState.isValid
-
-      if (isValid && values.situation && values.parts && values.revenuNet) {
+      // Toujours synchroniser les valeurs avec le context
+      // La validation de l'étape est gérée par isStepValid dans SimulationContext
+      if (values.situation && values.parts !== undefined && values.revenuNet !== undefined) {
         updateStep1({
           situation: values.situation as WizardStep1["situation"],
           parts: values.parts,
