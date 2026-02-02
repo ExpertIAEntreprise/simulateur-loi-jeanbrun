@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { useSimulation } from "@/lib/hooks/useSimulation"
+import {
+  FinancementForm,
+  JaugeEndettement,
+  DiffereSelector,
+  AlerteEndettement,
+} from "@/components/simulateur/etape-3"
 import { SimulateurLayout } from "@/components/simulateur/SimulateurLayout"
 import {
   Card,
@@ -12,14 +17,9 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useSimulation } from "@/lib/hooks/useSimulation"
 
 // Composants etape 3
-import {
-  FinancementForm,
-  JaugeEndettement,
-  DiffereSelector,
-  AlerteEndettement,
-} from "@/components/simulateur/etape-3"
 
 // ============================================================================
 // Helper Functions

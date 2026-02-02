@@ -9,9 +9,9 @@
  * @date 31 janvier 2026
  */
 
-import { calculerTauxEndettement, calculerCredit } from "./credit";
 import type { AnalyseFinancement } from "@/types/lead-financement";
 import { SEUILS_ENDETTEMENT } from "@/types/lead-financement";
+import { calculerTauxEndettement, calculerCredit } from "./credit";
 
 interface AnalyseFinancementInput {
   /** Revenus mensuels nets du foyer */

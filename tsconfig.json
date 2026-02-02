@@ -44,5 +44,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "create-agentic-app", "docs"]
+  "exclude": ["node_modules", "create-agentic-app", "docs", "playwright.config.ts", "e2e"]
 }

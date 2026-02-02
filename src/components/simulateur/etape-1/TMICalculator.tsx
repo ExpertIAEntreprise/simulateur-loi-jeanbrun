@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { HelpCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { PARAMETRES_JEANBRUN } from "@/types/simulation"
-import { HelpCircle } from "lucide-react"
 
 interface TMICalculatorProps {
   revenuNet: number

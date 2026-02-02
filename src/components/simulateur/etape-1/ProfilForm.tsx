@@ -1,12 +1,10 @@
 "use client"
 
 import { useEffect } from "react"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { Info } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useSimulation } from "@/lib/hooks/useSimulation"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -17,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import type { WizardStep1 } from "@/contexts/SimulationContext"
+import { useSimulation } from "@/lib/hooks/useSimulation"
+import { cn } from "@/lib/utils"
 
 // ============================================================================
 // Validation Schema
@@ -156,6 +156,8 @@ export function ProfilForm({ className }: ProfilFormProps) {
         >
           <SelectTrigger
             id="situation"
+            aria-describedby={errors.situation ? "situation-error" : undefined}
+            aria-invalid={!!errors.situation}
             className={cn(
               "bg-background border-border",
               errors.situation && "border-destructive ring-2 ring-destructive/20"
@@ -170,8 +172,8 @@ export function ProfilForm({ className }: ProfilFormProps) {
           </SelectContent>
         </Select>
         {errors.situation && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="situation-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.situation.message}
           </p>
         )}
@@ -196,6 +198,8 @@ export function ProfilForm({ className }: ProfilFormProps) {
           max={10}
           step={0.5}
           {...register("parts", { valueAsNumber: true })}
+          aria-describedby={errors.parts ? "parts-error" : "parts-hint"}
+          aria-invalid={!!errors.parts}
           className={cn(
             "bg-background border-border",
             "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -204,12 +208,12 @@ export function ProfilForm({ className }: ProfilFormProps) {
           placeholder="Ex: 2"
         />
         {errors.parts && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="parts-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.parts.message}
           </p>
         )}
-        <p className="text-xs text-muted-foreground/70">
+        <p id="parts-hint" className="text-xs text-muted-foreground/70">
           1 part pour célibataire, 2 parts pour couple, + 0.5 par enfant
         </p>
       </div>
@@ -232,6 +236,8 @@ export function ProfilForm({ className }: ProfilFormProps) {
           min={0}
           step={1000}
           {...register("revenuNet", { valueAsNumber: true })}
+          aria-describedby={errors.revenuNet ? "revenuNet-error" : undefined}
+          aria-invalid={!!errors.revenuNet}
           className={cn(
             "bg-background border-border",
             "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -240,8 +246,8 @@ export function ProfilForm({ className }: ProfilFormProps) {
           placeholder="Ex: 50 000"
         />
         {errors.revenuNet && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="revenuNet-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.revenuNet.message}
           </p>
         )}
@@ -264,6 +270,8 @@ export function ProfilForm({ className }: ProfilFormProps) {
           min={0}
           step={1000}
           {...register("revenusFonciers", { valueAsNumber: true })}
+          aria-describedby={errors.revenusFonciers ? "revenusFonciers-error" : "revenusFonciers-hint"}
+          aria-invalid={!!errors.revenusFonciers}
           className={cn(
             "bg-background border-border",
             "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -272,8 +280,8 @@ export function ProfilForm({ className }: ProfilFormProps) {
           placeholder="Ex: 10 000"
         />
         {errors.revenusFonciers && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="revenusFonciers-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.revenusFonciers.message}
           </p>
         )}
@@ -282,7 +290,7 @@ export function ProfilForm({ className }: ProfilFormProps) {
             Montant saisi : {formatNumber(revenusFonciers)} €
           </p>
         )}
-        <p className="text-xs text-muted-foreground/70">
+        <p id="revenusFonciers-hint" className="text-xs text-muted-foreground/70">
           Si vous percevez déjà des loyers d'autres biens
         </p>
       </div>

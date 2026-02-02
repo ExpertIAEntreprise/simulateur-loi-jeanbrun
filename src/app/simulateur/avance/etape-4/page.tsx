@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { useSimulation } from "@/lib/hooks/useSimulation"
+import {
+  NiveauLoyerCards,
+  ChargesForm,
+  PerteGainVisualisation,
+} from "@/components/simulateur/etape-4"
 import { SimulateurLayout } from "@/components/simulateur/SimulateurLayout"
 import {
   Card,
@@ -13,13 +17,9 @@ import {
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { WizardStep4 } from "@/contexts/SimulationContext"
+import { useSimulation } from "@/lib/hooks/useSimulation"
 
 // Composants etape 4
-import {
-  NiveauLoyerCards,
-  ChargesForm,
-  PerteGainVisualisation,
-} from "@/components/simulateur/etape-4"
 
 // ============================================================================
 // Constants

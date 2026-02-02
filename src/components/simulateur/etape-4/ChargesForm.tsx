@@ -1,10 +1,10 @@
 "use client"
 
 import { Info, Euro, Percent, Calendar } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
+import { cn } from "@/lib/utils"
 
 // ============================================================================
 // Types
@@ -90,6 +90,8 @@ export function ChargesForm({
           step={100}
           value={chargesAnnuelles || ""}
           onChange={handleChargesChange}
+          aria-describedby={errors?.chargesAnnuelles ? "chargesAnnuelles-error" : "chargesAnnuelles-hint"}
+          aria-invalid={!!errors?.chargesAnnuelles}
           className={cn(
             "bg-background border-border h-12 max-w-xs",
             "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -99,13 +101,13 @@ export function ChargesForm({
         />
 
         {errors?.chargesAnnuelles && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="chargesAnnuelles-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.chargesAnnuelles}
           </p>
         )}
 
-        <p className="text-xs text-muted-foreground">
+        <p id="chargesAnnuelles-hint" className="text-xs text-muted-foreground">
           Estimation moyenne : 30 EUR/m2/an pour un appartement
         </p>
       </div>
@@ -126,6 +128,8 @@ export function ChargesForm({
           step={100}
           value={taxeFonciere || ""}
           onChange={handleTaxeFonciereChange}
+          aria-describedby={errors?.taxeFonciere ? "taxeFonciere-error" : "taxeFonciere-hint"}
+          aria-invalid={!!errors?.taxeFonciere}
           className={cn(
             "bg-background border-border h-12 max-w-xs",
             "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -135,13 +139,13 @@ export function ChargesForm({
         />
 
         {errors?.taxeFonciere && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="taxeFonciere-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.taxeFonciere}
           </p>
         )}
 
-        <p className="text-xs text-muted-foreground">
+        <p id="taxeFonciere-hint" className="text-xs text-muted-foreground">
           Variable selon la commune. Consultez le simulateur des impots ou demandez au vendeur.
         </p>
       </div>
@@ -158,7 +162,7 @@ export function ChargesForm({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">0%</span>
-            <span className="text-lg font-semibold text-foreground">
+            <span className="text-lg font-semibold text-foreground" aria-live="polite">
               {vacance}%
             </span>
             <span className="text-sm text-muted-foreground">10%</span>
@@ -171,12 +175,13 @@ export function ChargesForm({
             max={10}
             step={1}
             className="w-full"
+            aria-label={`Taux de vacance locative: ${vacance}%`}
           />
         </div>
 
         {errors?.vacance && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="vacance-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.vacance}
           </p>
         )}

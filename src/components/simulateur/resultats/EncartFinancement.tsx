@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { AnalyseFinancement } from "@/types/lead-financement";
 import { getCouleurEndettement } from "@/lib/calculs/analyse-financement";
+import type { AnalyseFinancement } from "@/types/lead-financement";
 import { LeadCourtierModal } from "./LeadCourtierModal";
 
 interface EncartFinancementProps {

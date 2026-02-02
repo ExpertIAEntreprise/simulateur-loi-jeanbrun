@@ -1,7 +1,6 @@
 "use client"
 
 import { Calendar, Info } from "lucide-react"
-
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 
@@ -84,10 +83,14 @@ export function DureeSlider({
           max={max}
           step={1}
           className="w-full"
+          aria-label={`Duree de detention: ${value} ans`}
         />
 
         {/* Progress indicator */}
-        <div className="relative h-2 rounded-full bg-muted overflow-hidden">
+        <div
+          className="relative h-2 rounded-full bg-muted overflow-hidden"
+          aria-hidden="true"
+        >
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent/80 to-accent transition-all duration-300"
             style={{ width: `${percentComplete}%` }}

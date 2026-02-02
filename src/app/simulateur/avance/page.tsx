@@ -1,16 +1,16 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useSimulation } from "@/lib/hooks/useSimulation"
-import { SimulateurLayout } from "@/components/simulateur/SimulateurLayout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Label } from "@/components/ui/label"
-
-// Étape 1 composants
+import { ObjectifSelector, type ObjectifType } from "@/components/simulateur/etape-1/ObjectifSelector"
 import { ProfilForm } from "@/components/simulateur/etape-1/ProfilForm"
 import { TMICalculator } from "@/components/simulateur/etape-1/TMICalculator"
-import { ObjectifSelector, type ObjectifType } from "@/components/simulateur/etape-1/ObjectifSelector"
+import { SimulateurLayout } from "@/components/simulateur/SimulateurLayout"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useSimulation } from "@/lib/hooks/useSimulation"
+
+// Étape 1 composants
 
 export default function SimulateurAvancePage() {
   const router = useRouter()

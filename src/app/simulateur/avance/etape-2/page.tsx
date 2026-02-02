@@ -2,10 +2,16 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Info } from "lucide-react"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useSimulation } from "@/lib/hooks/useSimulation"
+import {
+  TypeBienSelector,
+  TravauxValidator,
+  VilleAutocomplete,
+  RecapProjet,
+} from "@/components/simulateur/etape-2"
 import { SimulateurLayout } from "@/components/simulateur/SimulateurLayout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -18,18 +24,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Info } from "lucide-react"
-import { cn } from "@/lib/utils"
 import type { WizardStep2 } from "@/contexts/SimulationContext"
+import { useSimulation } from "@/lib/hooks/useSimulation"
+import { cn } from "@/lib/utils"
 import type { ZoneFiscale } from "@/types/ville"
 
 // Étape 2 composants
-import {
-  TypeBienSelector,
-  TravauxValidator,
-  VilleAutocomplete,
-  RecapProjet,
-} from "@/components/simulateur/etape-2"
 
 // ============================================================================
 // Validation Schema

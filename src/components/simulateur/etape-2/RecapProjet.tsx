@@ -1,6 +1,8 @@
 "use client"
 
 import { useMemo } from "react"
+import { AlertTriangle, CheckCircle2, Calculator } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import {
   Card,
   CardContent,
@@ -14,9 +16,7 @@ import {
   TableFooter,
   TableRow,
 } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { AlertTriangle, CheckCircle2, Calculator } from "lucide-react"
 import { PARAMETRES_JEANBRUN } from "@/types/simulation"
 import type { ZoneFiscale } from "@/types/ville"
 

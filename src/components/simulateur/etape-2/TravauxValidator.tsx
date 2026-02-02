@@ -1,8 +1,8 @@
 "use client"
 
 import { AlertTriangle, CheckCircle2 } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 export interface TravauxValidatorProps {
   montantTravaux: number
@@ -112,7 +112,14 @@ export function TravauxValidator({
 
       {/* Progress bar */}
       <div className="space-y-2">
-        <div className="relative h-4 rounded-full overflow-hidden bg-muted">
+        <div
+          className="relative h-4 rounded-full overflow-hidden bg-muted"
+          role="progressbar"
+          aria-valuenow={Math.round(pourcentage)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Part des travaux: ${pourcentage.toFixed(1)}% - ${isEligible ? "Eligible" : "Non eligible"} Jeanbrun`}
+        >
           {/* Progress fill */}
           <div
             className={cn(
@@ -120,6 +127,7 @@ export function TravauxValidator({
               progressColor
             )}
             style={{ width: `${Math.min(pourcentage, 100)}%` }}
+            aria-hidden="true"
           />
 
           {/* 30% threshold marker */}
@@ -138,7 +146,7 @@ export function TravauxValidator({
         </div>
 
         {/* Scale labels */}
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="flex justify-between text-xs text-muted-foreground" aria-hidden="true">
           <span>0%</span>
           <span className="text-accent font-medium">30% min</span>
           <span>50%</span>

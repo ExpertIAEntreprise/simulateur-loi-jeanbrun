@@ -1,10 +1,10 @@
 "use client"
 
 import { Info, Euro, Clock, Percent } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
+import { cn } from "@/lib/utils"
 
 // ============================================================================
 // Types
@@ -130,6 +130,8 @@ export function FinancementForm({
               step={1000}
               value={apport || ""}
               onChange={handleApportChange}
+              aria-describedby={errors?.apport ? "apport-error" : undefined}
+              aria-invalid={!!errors?.apport}
               className={cn(
                 "bg-background border-border h-12",
                 "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -138,8 +140,8 @@ export function FinancementForm({
               placeholder="Ex: 50 000"
             />
             {errors?.apport && (
-              <p className="text-sm text-destructive flex items-center gap-1">
-                <Info className="size-4" />
+              <p id="apport-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+                <Info className="size-4" aria-hidden="true" />
                 {errors.apport}
               </p>
             )}
@@ -152,6 +154,7 @@ export function FinancementForm({
               max={prixTotal}
               step={1000}
               className="flex-1"
+              aria-label={`Apport personnel: ${apport} euros sur ${prixTotal} euros`}
             />
             <span className="text-sm font-medium text-muted-foreground w-16 text-right">
               {pourcentageApport.toFixed(0)}%
@@ -197,7 +200,7 @@ export function FinancementForm({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">10 ans</span>
-            <span className="text-lg font-semibold text-foreground">
+            <span className="text-lg font-semibold text-foreground" aria-live="polite">
               {dureeCredit} ans
             </span>
             <span className="text-sm text-muted-foreground">25 ans</span>
@@ -210,12 +213,13 @@ export function FinancementForm({
             max={25}
             step={1}
             className="w-full"
+            aria-label={`Duree du credit: ${dureeCredit} ans`}
           />
         </div>
 
         {errors?.dureeCredit && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="dureeCredit-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.dureeCredit}
           </p>
         )}
@@ -253,6 +257,8 @@ export function FinancementForm({
           step={0.01}
           value={tauxCredit || ""}
           onChange={handleTauxChange}
+          aria-describedby={errors?.tauxCredit ? "tauxCredit-error" : "tauxCredit-hint"}
+          aria-invalid={!!errors?.tauxCredit}
           className={cn(
             "bg-background border-border h-12 max-w-xs",
             "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -262,13 +268,13 @@ export function FinancementForm({
         />
 
         {errors?.tauxCredit && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="tauxCredit-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.tauxCredit}
           </p>
         )}
 
-        <p className="text-xs text-muted-foreground">
+        <p id="tauxCredit-hint" className="text-xs text-muted-foreground">
           Taux moyen actuel : environ 3.5% (hors assurance)
         </p>
       </div>
@@ -290,6 +296,8 @@ export function FinancementForm({
           step={50}
           value={autresCredits || ""}
           onChange={handleAutresCreditsChange}
+          aria-describedby={errors?.autresCredits ? "autresCredits-error" : "autresCredits-hint"}
+          aria-invalid={!!errors?.autresCredits}
           className={cn(
             "bg-background border-border h-12 max-w-xs",
             "focus-visible:ring-2 focus-visible:ring-amber-500/50",
@@ -299,13 +307,13 @@ export function FinancementForm({
         />
 
         {errors?.autresCredits && (
-          <p className="text-sm text-destructive flex items-center gap-1">
-            <Info className="size-4" />
+          <p id="autresCredits-error" className="text-sm text-destructive flex items-center gap-1" role="alert">
+            <Info className="size-4" aria-hidden="true" />
             {errors.autresCredits}
           </p>
         )}
 
-        <p className="text-xs text-muted-foreground">
+        <p id="autresCredits-hint" className="text-xs text-muted-foreground">
           Credit auto, credit conso, autres prets immobiliers...
         </p>
       </div>

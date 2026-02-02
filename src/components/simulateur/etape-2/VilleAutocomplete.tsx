@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react"
-import { Input } from "@/components/ui/input"
+import { Search, MapPin, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
-import { Search, MapPin, X } from "lucide-react"
 import type { ZoneFiscale } from "@/types/ville"
 
 interface VilleData {

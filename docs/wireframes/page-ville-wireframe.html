@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe - Page Ville Loi Jeanbrun</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Fiscal Clarity Palette */
+      --blue-institutional: #1e3a5f;
+      --blue-dark: #0f2942;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --amber-500: #f59e0b;
+      --amber-400: #fbbf24;
+      --emerald-500: #10b981;
+      --emerald-400: #34d399;
+      --red-500: #ef4444;
+      --white: #ffffff;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      /* Border Radius */
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --radius-xl: 12px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    /* ========================================
+       LAYOUT STRUCTURE
+       ======================================== */
+
+    .wireframe-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      background: var(--white);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: var(--space-4) var(--space-8);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--blue-institutional);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--blue-institutional);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 14px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: var(--space-8);
+    }
+
+    .nav-link {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--blue-institutional);
+    }
+
+    .cta-button {
+      background: var(--blue-institutional);
+      color: var(--white);
+      padding: var(--space-2) var(--space-5);
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .cta-button:hover {
+      background: var(--blue-dark);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-section {
+      background: var(--gray-50);
+      padding: var(--space-4) var(--space-8);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .breadcrumb {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+    .breadcrumb a {
+      color: var(--gray-500);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--blue-institutional);
+      text-decoration: underline;
+    }
+
+    .breadcrumb-separator {
+      color: var(--gray-400);
+    }
+
+    .breadcrumb-current {
+      color: var(--gray-800);
+      font-weight: 500;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, var(--blue-institutional) 0%, var(--blue-dark) 100%);
+      padding: var(--space-12) var(--space-8);
+      color: var(--white);
+    }
+
+    .hero-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-8);
+    }
+
+    .hero-text {
+      flex: 1;
+    }
+
+    .hero-title {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-subtitle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .zone-badge {
+      background: rgba(255,255,255,0.15);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .hero-score {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: conic-gradient(var(--amber-500) 0% 78%, rgba(255,255,255,0.2) 78% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .score-inner {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--blue-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber-500);
+    }
+
+    .score-label {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .score-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
+
+    /* Main Content Layout */
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-8);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-8);
+    }
+
+    /* Main Column */
+    .main-column {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    /* Section Headers */
+    .section {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-header {
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--gray-100);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-institutional);
+      font-size: 18px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+
+    .section-content {
+      padding: var(--space-6);
+    }
+
+    /* Stats Cards Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    .stat-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--blue-institutional);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-value.positive {
+      color: var(--emerald-500);
+    }
+
+    .stat-value.negative {
+      color: var(--red-500);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: var(--space-1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      margin-top: var(--space-2);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--emerald-500);
+    }
+
+    .stat-change.negative {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--red-500);
+    }
+
+    /* Chart Placeholder */
+    .chart-container {
+      height: 250px;
+      background: var(--gray-50);
+      border: 1px dashed var(--gray-300);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding: var(--space-4);
+    }
+
+    .chart-y-axis {
+      position: absolute;
+      left: var(--space-2);
+      top: var(--space-4);
+      bottom: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--gray-400);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart-area {
+      flex: 1;
+      margin-left: var(--space-10);
+      margin-right: var(--space-4);
+      margin-bottom: var(--space-6);
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .chart-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue-institutional), var(--emerald-500));
+      border-radius: 2px;
+      bottom: 60%;
+      transform-origin: left;
+      clip-path: polygon(
+        0% 100%,
+        5% 90%,
+        15% 85%,
+        25% 70%,
+        35% 65%,
+        45% 55%,
+        55% 50%,
+        65% 45%,
+        75% 40%,
+        85% 35%,
+        95% 30%,
+        100% 25%,
+        100% 100%
+      );
+      height: 80%;
+      background: linear-gradient(180deg, rgba(30, 58, 95, 0.3) 0%, rgba(30, 58, 95, 0.05) 100%);
+      border-top: 2px solid var(--blue-institutional);
+    }
+
+    .chart-x-axis {
+      position: absolute;
+      bottom: 0;
+      left: var(--space-10);
+      right: var(--space-4);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    /* Portrait Section */
+    .portrait-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+
+    .portrait-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-3) var(--space-4);
+      background: var(--gray-50);
+      border-radius: var(--radius-md);
+    }
+
+    .portrait-label {
+      color: var(--gray-600);
+      font-size: 13px;
+    }
+
+    .portrait-value {
+      font-weight: 600;
+      color: var(--gray-900);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Plafonds Loyer */
+    .plafonds-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    .plafond-card {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .plafond-header {
+      padding: var(--space-3) var(--space-4);
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .plafond-standard .plafond-header {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .plafond-intermediaire .plafond-header {
+      background: linear-gradient(135deg, var(--blue-institutional), #2d4a6f);
+      color: var(--white);
+    }
+
+    .plafond-social .plafond-header {
+      background: var(--emerald-500);
+      color: var(--white);
+    }
+
+    .plafond-body {
+      padding: var(--space-4);
+      background: var(--white);
+    }
+
+    .plafond-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gray-900);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .plafond-unit {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--gray-500);
+    }
+
+    .plafond-detail {
+      font-size: 12px;
+      color: var(--gray-500);
+      text-align: center;
+      margin-top: var(--space-2);
+    }
+
+    .plafond-taux {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-2) var(--space-4);
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      font-size: 12px;
+    }
+
+    .plafond-taux-value {
+      font-weight: 600;
+      color: var(--amber-500);
+    }
+
+    /* Editorial Content */
+    .editorial-content {
+      line-height: 1.7;
+      color: var(--gray-700);
+    }
+
+    .editorial-content h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: var(--space-3);
+    }
+
+    .editorial-content p {
+      margin-bottom: var(--space-4);
+    }
+
+    .editorial-placeholder {
+      background: repeating-linear-gradient(
+        0deg,
+        var(--gray-100),
+        var(--gray-100) 12px,
+        transparent 12px,
+        transparent 20px
+      );
+      height: 200px;
+      border-radius: var(--radius-md);
+      opacity: 0.7;
+    }
+
+    /* Programmes Grid */
+    .programmes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    .programme-card {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .programme-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .programme-image {
+      height: 140px;
+      background: linear-gradient(135deg, var(--gray-200), var(--gray-300));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-400);
+      font-size: 24px;
+    }
+
+    .programme-body {
+      padding: var(--space-4);
+    }
+
+    .programme-promoteur {
+      font-size: 11px;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .programme-name {
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-top: var(--space-1);
+    }
+
+    .programme-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--blue-institutional);
+      margin-top: var(--space-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .programme-details {
+      display: flex;
+      gap: var(--space-3);
+      margin-top: var(--space-2);
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .programme-badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--emerald-500);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      margin-top: var(--space-2);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    /* Barometre Card */
+    .barometre-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .barometre-header {
+      background: linear-gradient(135deg, var(--blue-institutional), var(--blue-dark));
+      padding: var(--space-5);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .barometre-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    .barometre-score {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--amber-500);
+      line-height: 1;
+    }
+
+    .barometre-score span {
+      font-size: 20px;
+      opacity: 0.7;
+    }
+
+    .barometre-rating {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-top: var(--space-2);
+    }
+
+    .star {
+      width: 16px;
+      height: 16px;
+      background: var(--amber-500);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    .star.empty {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .barometre-body {
+      padding: var(--space-5);
+    }
+
+    .barometre-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .metric-label {
+      color: var(--gray-600);
+    }
+
+    .metric-value {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .metric-bar {
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: var(--space-1);
+    }
+
+    .metric-fill {
+      height: 100%;
+      background: var(--emerald-500);
+      border-radius: var(--radius-full);
+    }
+
+    .barometre-link {
+      display: block;
+      text-align: center;
+      color: var(--blue-institutional);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      padding: var(--space-3);
+      margin-top: var(--space-3);
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .barometre-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Simulateur Card (Sticky) */
+    .simulateur-card {
+      background: var(--white);
+      border: 2px solid var(--blue-institutional);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 100px;
+    }
+
+    .simulateur-header {
+      background: var(--blue-institutional);
+      padding: var(--space-4) var(--space-5);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .simulateur-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .simulateur-subtitle {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .simulateur-body {
+      padding: var(--space-5);
+    }
+
+    .form-group {
+      margin-bottom: var(--space-4);
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: var(--space-2);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      background: var(--gray-50);
+      color: var(--gray-900);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--blue-institutional);
+      box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+    }
+
+    .form-input-readonly {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      cursor: not-allowed;
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    .simulateur-cta {
+      width: 100%;
+      padding: var(--space-4);
+      background: var(--amber-500);
+      color: var(--gray-900);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .simulateur-cta:hover {
+      background: var(--amber-400);
+      transform: translateY(-1px);
+    }
+
+    .simulateur-note {
+      font-size: 11px;
+      color: var(--gray-500);
+      text-align: center;
+      margin-top: var(--space-3);
+    }
+
+    /* Footer Cities */
+    .footer-cities {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      padding: var(--space-8);
+    }
+
+    .footer-cities-content {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .footer-cities-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: var(--space-5);
+    }
+
+    .cities-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .city-chip {
+      display: inline-block;
+      padding: var(--space-2) var(--space-4);
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      color: var(--gray-700);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .city-chip:hover {
+      background: var(--blue-institutional);
+      border-color: var(--blue-institutional);
+      color: var(--white);
+    }
+
+    /* Wireframe Annotations */
+    .annotation {
+      position: absolute;
+      background: var(--amber-500);
+      color: var(--gray-900);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    /* Page Title Banner */
+    .page-title-banner {
+      background: var(--gray-100);
+      padding: var(--space-2) var(--space-8);
+      border-bottom: 1px solid var(--gray-200);
+      text-align: center;
+    }
+
+    .wireframe-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wireframe-container">
+    <!-- Wireframe Label -->
+    <div class="page-title-banner">
+      <span class="wireframe-title">Wireframe - Page Ville SEO - Simulateur Loi Jeanbrun</span>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">LJ</div>
+          <span>Loi Jeanbrun</span>
+        </div>
+        <nav class="nav-links">
+          <a href="#" class="nav-link">Simulateur</a>
+          <a href="#" class="nav-link">Comment ca marche</a>
+          <a href="#" class="nav-link">Villes eligibles</a>
+          <a href="#" class="nav-link">FAQ</a>
+        </nav>
+        <a href="#" class="cta-button">Simuler mon projet</a>
+      </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-section">
+      <nav class="breadcrumb">
+        <a href="#">Accueil</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="#">Villes eligibles</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="#">Rhone (69)</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Lyon</span>
+      </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">Loi Jeanbrun a Lyon</h1>
+          <div class="hero-subtitle">
+            <span class="zone-badge">Zone A</span>
+            <span>Rhone (69)</span>
+            <span>|</span>
+            <span>Auvergne-Rhone-Alpes</span>
+          </div>
+        </div>
+        <div class="hero-score">
+          <div class="score-circle">
+            <div class="score-inner">
+              <span class="score-value">78</span>
+              <span class="score-label">/100</span>
+            </div>
+          </div>
+          <span class="score-title">Score Attractivite</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Main Column (2/3) -->
+      <div class="main-column">
+
+        <!-- Section: Marche Immobilier -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-icon">&#128200;</div>
+            <div>
+              <h2 class="section-title">Marche immobilier a Lyon</h2>
+              <p class="section-subtitle">Donnees DVF actualisees - Janvier 2026</p>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-value">5 420 EUR</div>
+                <div class="stat-label">Prix median / m2</div>
+                <div class="stat-change">+3.2% / 12 mois</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value positive">+4.8%</div>
+                <div class="stat-label">Evolution annuelle</div>
+                <div class="stat-change">Tendance haussiere</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">2 847</div>
+                <div class="stat-label">Transactions / an</div>
+                <div class="stat-change negative">-12% vs 2024</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Evolution des Prix -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-icon">&#128202;</div>
+            <div>
+              <h2 class="section-title">Evolution des prix sur 12 mois</h2>
+              <p class="section-subtitle">Prix median au m2 - Appartements neufs</p>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="chart-container">
+              <div class="chart-y-axis">
+                <span>6 000 EUR</span>
+                <span>5 500 EUR</span>
+                <span>5 000 EUR</span>
+                <span>4 500 EUR</span>
+                <span>4 000 EUR</span>
+              </div>
+              <div class="chart-area">
+                <div class="chart-line"></div>
+              </div>
+              <div class="chart-x-axis">
+                <span>Fev</span>
+                <span>Mar</span>
+                <span>Avr</span>
+                <span>Mai</span>
+                <span>Juin</span>
+                <span>Juil</span>
+                <span>Aout</span>
+                <span>Sep</span>
+                <span>Oct</span>
+                <span>Nov</span>
+                <span>Dec</span>
+                <span>Jan</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Portrait de la Ville -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-icon">&#127968;</div>
+            <div>
+              <h2 class="section-title">Portrait de Lyon</h2>
+              <p class="section-subtitle">Donnees INSEE 2024</p>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="portrait-grid">
+              <div class="portrait-item">
+                <span class="portrait-label">Population</span>
+                <span class="portrait-value">522 969 hab.</span>
+              </div>
+              <div class="portrait-item">
+                <span class="portrait-label">Densite</span>
+                <span class="portrait-value">10 835 hab/km2</span>
+              </div>
+              <div class="portrait-item">
+                <span class="portrait-label">Revenu median</span>
+                <span class="portrait-value">25 890 EUR/an</span>
+              </div>
+              <div class="portrait-item">
+                <span class="portrait-label">Taux chomage</span>
+                <span class="portrait-value">7.2%</span>
+              </div>
+              <div class="portrait-item">
+                <span class="portrait-label">Part locataires</span>
+                <span class="portrait-value">64%</span>
+              </div>
+              <div class="portrait-item">
+                <span class="portrait-label">Croissance demo.</span>
+                <span class="portrait-value">+0.8%/an</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Plafonds de Loyer -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-icon">&#128176;</div>
+            <div>
+              <h2 class="section-title">Plafonds de loyer Loi Jeanbrun</h2>
+              <p class="section-subtitle">Zone A - Applicables en 2026</p>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="plafonds-grid">
+              <div class="plafond-card plafond-standard">
+                <div class="plafond-header">Standard</div>
+                <div class="plafond-body">
+                  <div class="plafond-value">13.56 <span class="plafond-unit">EUR/m2</span></div>
+                  <p class="plafond-detail">Loyer libre dans la limite</p>
+                </div>
+                <div class="plafond-taux">
+                  <span>Amortissement</span>
+                  <span class="plafond-taux-value">4% / an</span>
+                </div>
+              </div>
+              <div class="plafond-card plafond-intermediaire">
+                <div class="plafond-header">Intermediaire</div>
+                <div class="plafond-body">
+                  <div class="plafond-value">10.85 <span class="plafond-unit">EUR/m2</span></div>
+                  <p class="plafond-detail">-20% vs marche</p>
+                </div>
+                <div class="plafond-taux">
+                  <span>Amortissement</span>
+                  <span class="plafond-taux-value">6% / an</span>
+                </div>
+              </div>
+              <div class="plafond-card plafond-social">
+                <div class="plafond-header">Social</div>
+                <div class="plafond-body">
+                  <div class="plafond-value">8.14 <span class="plafond-unit">EUR/m2</span></div>
+                  <p class="plafond-detail">-40% vs marche</p>
+                </div>
+                <div class="plafond-taux">
+                  <span>Amortissement</span>
+                  <span class="plafond-taux-value">8% / an</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Contenu Editorial -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-icon">&#128221;</div>
+            <div>
+              <h2 class="section-title">Investir a Lyon avec la Loi Jeanbrun</h2>
+              <p class="section-subtitle">Guide complet 2026</p>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="editorial-content">
+              <h3>Pourquoi Lyon est une ville ideale pour la Loi Jeanbrun ?</h3>
+              <p>
+                Lyon, capitale de la region Auvergne-Rhone-Alpes, se positionne comme l'une des villes les plus attractives de France pour l'investissement immobilier locatif. Avec une population en croissance constante, une economie diversifiee et une forte demande locative, la metropole lyonnaise offre des perspectives particulierement interessantes dans le cadre de la Loi Jeanbrun 2026.
+              </p>
+              <p>
+                Classee en zone A, Lyon beneficie de plafonds de loyers adaptes au marche local tout en permettant une optimisation fiscale significative grace aux mecanismes d'amortissement de la Loi Jeanbrun. Les quartiers de la Part-Dieu, Confluence et Gerland concentrent notamment de nombreux programmes neufs eligibles.
+              </p>
+              <h3>Les atouts de Lyon pour les investisseurs</h3>
+              <div class="editorial-placeholder" style="margin-bottom: var(--space-4);"></div>
+              <p>
+                La presence de grandes entreprises, d'universites renommees et d'infrastructures de transport excellentes (TGV, aeroport international, metros) garantit un vivier locatif stable compose d'etudiants, de jeunes actifs et de cadres...
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Programmes Neufs -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-icon">&#127970;</div>
+            <div>
+              <h2 class="section-title">Programmes neufs eligibles a Lyon</h2>
+              <p class="section-subtitle">3 programmes disponibles - Livraison 2026-2027</p>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="programmes-grid">
+              <div class="programme-card">
+                <div class="programme-image">&#127961;</div>
+                <div class="programme-body">
+                  <span class="programme-promoteur">Bouygues Immobilier</span>
+                  <h3 class="programme-name">Rive Gauche</h3>
+                  <div class="programme-price">A partir de 245 000 EUR</div>
+                  <div class="programme-details">
+                    <span>T2 au T4</span>
+                    <span>|</span>
+                    <span>Lyon 7eme</span>
+                  </div>
+                  <span class="programme-badge">Eligible Jeanbrun</span>
+                </div>
+              </div>
+              <div class="programme-card">
+                <div class="programme-image">&#127963;</div>
+                <div class="programme-body">
+                  <span class="programme-promoteur">Nexity</span>
+                  <h3 class="programme-name">Confluence Gardens</h3>
+                  <div class="programme-price">A partir de 289 000 EUR</div>
+                  <div class="programme-details">
+                    <span>T2 au T5</span>
+                    <span>|</span>
+                    <span>Lyon 2eme</span>
+                  </div>
+                  <span class="programme-badge">Eligible Jeanbrun</span>
+                </div>
+              </div>
+              <div class="programme-card">
+                <div class="programme-image">&#128215;</div>
+                <div class="programme-body">
+                  <span class="programme-promoteur">Vinci Immobilier</span>
+                  <h3 class="programme-name">Part-Dieu Horizon</h3>
+                  <div class="programme-price">A partir de 312 000 EUR</div>
+                  <div class="programme-details">
+                    <span>T1 au T4</span>
+                    <span>|</span>
+                    <span>Lyon 3eme</span>
+                  </div>
+                  <span class="programme-badge">Eligible Jeanbrun</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Sidebar (1/3) -->
+      <aside class="sidebar">
+
+        <!-- Barometre Resume -->
+        <div class="barometre-card">
+          <div class="barometre-header">
+            <div class="barometre-title">Barometre Attractivite</div>
+            <div class="barometre-score">78<span>/100</span></div>
+            <div class="barometre-rating">
+              <div class="star"></div>
+              <div class="star"></div>
+              <div class="star"></div>
+              <div class="star"></div>
+              <div class="star empty"></div>
+            </div>
+          </div>
+          <div class="barometre-body">
+            <div class="barometre-metrics">
+              <div>
+                <div class="metric-row">
+                  <span class="metric-label">Dynamisme economique</span>
+                  <span class="metric-value">85/100</span>
+                </div>
+                <div class="metric-bar">
+                  <div class="metric-fill" style="width: 85%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="metric-row">
+                  <span class="metric-label">Tension locative</span>
+                  <span class="metric-value">82/100</span>
+                </div>
+                <div class="metric-bar">
+                  <div class="metric-fill" style="width: 82%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="metric-row">
+                  <span class="metric-label">Rendement potentiel</span>
+                  <span class="metric-value">68/100</span>
+                </div>
+                <div class="metric-bar">
+                  <div class="metric-fill" style="width: 68%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="metric-row">
+                  <span class="metric-label">Plus-value estimee</span>
+                  <span class="metric-value">75/100</span>
+                </div>
+                <div class="metric-bar">
+                  <div class="metric-fill" style="width: 75%"></div>
+                </div>
+              </div>
+            </div>
+            <a href="#" class="barometre-link">Voir le barometre complet &#8594;</a>
+          </div>
+        </div>
+
+        <!-- Simulateur Pre-rempli (Sticky) -->
+        <div class="simulateur-card">
+          <div class="simulateur-header">
+            <div class="simulateur-title">Simulez votre investissement</div>
+            <div class="simulateur-subtitle">Estimation personnalisee en 2 min</div>
+          </div>
+          <div class="simulateur-body">
+            <div class="form-group">
+              <label class="form-label">Ville selectionnee</label>
+              <input type="text" class="form-input form-input-readonly" value="Lyon (69)" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Type de bien</label>
+              <select class="form-input form-select">
+                <option>Appartement neuf</option>
+                <option>Appartement ancien + travaux</option>
+                <option>Maison neuve</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Budget estime</label>
+              <input type="text" class="form-input" placeholder="Ex: 250 000 EUR">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Revenus annuels</label>
+              <input type="text" class="form-input" placeholder="Ex: 60 000 EUR">
+            </div>
+            <button class="simulateur-cta">Calculer mon economie d'impot &#8594;</button>
+            <p class="simulateur-note">&#128274; 100% gratuit - Sans engagement</p>
+          </div>
+        </div>
+
+      </aside>
+    </main>
+
+    <!-- Footer Cities -->
+    <section class="footer-cities">
+      <div class="footer-cities-content">
+        <h2 class="footer-cities-title">Villes proches en Auvergne-Rhone-Alpes</h2>
+        <div class="cities-chips">
+          <a href="#" class="city-chip">Villeurbanne</a>
+          <a href="#" class="city-chip">Venissieux</a>
+          <a href="#" class="city-chip">Saint-Etienne</a>
+          <a href="#" class="city-chip">Grenoble</a>
+          <a href="#" class="city-chip">Annecy</a>
+          <a href="#" class="city-chip">Clermont-Ferrand</a>
+          <a href="#" class="city-chip">Valence</a>
+          <a href="#" class="city-chip">Chambery</a>
+          <a href="#" class="city-chip">Bourg-en-Bresse</a>
+          <a href="#" class="city-chip">Roanne</a>
+          <a href="#" class="city-chip">Annemasse</a>
+          <a href="#" class="city-chip">Vaulx-en-Velin</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

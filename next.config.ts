@@ -1,5 +1,10 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const nextConfig: NextConfig = {
   // Enable MDX pages
@@ -25,10 +30,27 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
+    // Optimize image loading
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
 
   // Enable compression
   compress: true,
+
+  // Optimize bundle
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "recharts",
+      "@radix-ui/react-accordion",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-select",
+      "@radix-ui/react-slider",
+    ],
+  },
 
   // Security headers
   async headers() {
@@ -67,6 +89,16 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Preload fonts for LCP optimization
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Link",
+            value: "</fonts/DMSerifDisplay-Regular.woff2>; rel=preload; as=font; type=font/woff2; crossorigin",
+          },
+        ],
+      },
     ];
   },
 };
@@ -79,4 +111,4 @@ const withMDX = createMDX({
   },
 });
 
-export default withMDX(nextConfig);
+export default withBundleAnalyzer(withMDX(nextConfig));

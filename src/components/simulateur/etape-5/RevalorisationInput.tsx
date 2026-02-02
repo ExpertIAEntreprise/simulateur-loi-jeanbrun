@@ -1,7 +1,6 @@
 "use client"
 
 import { TrendingUp, Info, AlertTriangle } from "lucide-react"
-
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 
@@ -128,10 +127,11 @@ export function RevalorisationInput({
           max={5}
           step={0.5}
           className="w-full"
+          aria-label={`Taux de revalorisation annuel: ${value.toFixed(1)}%`}
         />
 
         {/* Range labels */}
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="flex justify-between text-xs text-muted-foreground" aria-hidden="true">
           <span>0%</span>
           <span>5%</span>
         </div>

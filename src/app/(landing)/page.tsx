@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 
 import {
   HeroSection,
@@ -15,13 +14,13 @@ import {
   LandingHeader,
   LandingFooter,
 } from "@/components/landing";
-
 import {
   JsonLdWebPage,
   JsonLdSoftwareApp,
   JsonLdFaq,
   JsonLdOrganization,
 } from "@/components/seo";
+import type { Metadata } from "next";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
 

@@ -7,9 +7,9 @@
  * POST /api/leads/financement
  */
 
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { headers } from "next/headers";
 
 // Schema de validation
 const leadFinancementSchema = z.object({

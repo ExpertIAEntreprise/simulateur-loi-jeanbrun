@@ -39,8 +39,8 @@ import {
   type EspoProgramme,
   type EspoVille,
 } from "@/lib/espocrm";
-import type { Metadata } from "next";
 import type { ZoneFiscale } from "@/types/ville";
+import type { Metadata } from "next";
 
 /**
  * Configuration ISR: revalidation toutes les heures

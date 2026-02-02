@@ -44,6 +44,12 @@ coverage/
 .nyc_output/
 /.playwright-mcp
 
+# Playwright
+playwright-report/
+playwright-results.json
+test-results/
+/blob-report/
+
 # Vercel
 .vercel
 
