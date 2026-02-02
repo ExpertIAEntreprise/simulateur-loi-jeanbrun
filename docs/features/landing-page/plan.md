@@ -1,7 +1,7 @@
 # Plan d'Implementation - Landing Page
 
 **Feature:** Landing Page Simulateur Loi Jeanbrun
-**Statut:** Phase 3 termine
+**Statut:** Phase 4 terminee
 **Estimation:** 5.5 jours
 
 ---
@@ -262,42 +262,49 @@ pnpm build:ci # ✅ Build successful
 
 ---
 
-## Phase 4 : SEO Technique
+## Phase 4 : SEO Technique ✅
 
 **Objectif:** Optimiser pour les moteurs de recherche
+**Statut:** TERMINE (2 fevrier 2026)
 
-### Fichiers a modifier
+### Fichiers modifies
 
 | Fichier | Action |
 |---------|--------|
-| `src/app/sitemap.ts` | Priority 1.0 pour landing |
-| `src/app/robots.ts` | Rules optimisees |
+| `src/app/sitemap.ts` | changeFrequency: 'weekly' pour landing |
+| `src/app/robots.ts` | Rules optimisees avec allow/disallow explicites |
 
-### Assets a creer
+### Assets crees
 
 | Fichier | Description |
 |---------|-------------|
-| `public/og-image-jeanbrun.jpg` | Image OG 1200x630 avec chiffre 50k |
-| `public/logo.png` | Logo transparent |
-| `public/apple-touch-icon.png` | Icone iOS |
+| `public/og-image-jeanbrun.svg` | Source SVG 1200x630 avec chiffre 50k |
+| `public/og-image-jeanbrun.jpg` | Image OG convertie (66 KB) |
+| `public/logo.svg` | Source SVG logo |
+| `public/logo.png` | Logo transparent converti (34 KB) |
+| `public/apple-touch-icon.svg` | Source SVG icone iOS |
+| `public/apple-touch-icon.png` | Icone iOS convertie 180x180 (6 KB) |
 
 ### Taches
 
-- [ ] Modifier `src/app/sitemap.ts`
-  - Ajouter `/` avec priority 1.0
-  - changeFrequency: 'weekly'
+- [x] Modifier `src/app/sitemap.ts`
+  - Landing `/` avait deja priority 1.0
+  - changeFrequency: 'weekly' (au lieu de 'monthly')
 
-- [ ] Modifier `src/app/robots.ts`
-  - Allow all pour landing
-  - Sitemap URL
+- [x] Modifier `src/app/robots.ts`
+  - Allow explicite pour pages publiques (/loi-jeanbrun, /a-propos, /blog, /villes, /barometre)
+  - Disallow elargi (auth pages: /login, /register, /forgot-password, etc.)
+  - Sitemap URL configure
 
-- [ ] Creer assets SEO (placeholder si necessaire)
+- [x] Creer assets SEO
+  - SVG sources professionnels (design dark premium + accent or)
+  - Conversion ImageMagick vers JPG/PNG
+  - OG image avec chiffre 50 000EUR et CTA
 
 ### Validation Phase 4
 
 ```bash
-pnpm build:ci
-# Verifier sitemap.xml et robots.txt
+pnpm check  # ✅ 0 errors, warnings only pre-existing
 ```
 
 ---
