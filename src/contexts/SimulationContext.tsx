@@ -1,0 +1,469 @@
+"use client"
+
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  type ReactNode,
+} from "react"
+
+// ============================================================================
+// Types pour le wizard 6 étapes
+// ============================================================================
+
+export interface WizardStep1 {
+  situation: "celibataire" | "marie" | "pacse"
+  parts: number
+  revenuNet: number
+  revenusFonciers?: number
+  objectif: "reduire_impots" | "revenus" | "patrimoine" | "retraite"
+}
+
+export interface WizardStep2 {
+  typeBien: "neuf" | "ancien"
+  villeId: string
+  villeNom?: string
+  zoneFiscale?: "A_BIS" | "A" | "B1" | "B2" | "C"
+  surface: number
+  prixAcquisition: number
+  montantTravaux?: number
+  dpeActuel?: "A" | "B" | "C" | "D" | "E" | "F" | "G"
+  dpeApres?: "A" | "B"
+}
+
+export interface WizardStep3 {
+  apport: number
+  dureeCredit: number
+  tauxCredit: number
+  differe: 0 | 12 | 24
+  autresCredits?: number
+}
+
+export interface WizardStep4 {
+  niveauLoyer: "intermediaire" | "social" | "tres_social"
+  loyerMensuel: number
+  chargesAnnuelles: number
+  taxeFonciere: number
+  vacance: number
+}
+
+export interface WizardStep5 {
+  dureeDetention: number
+  revalorisation: number
+  strategieSortie: "revente" | "conservation" | "donation"
+}
+
+export interface WizardStep6 {
+  structure: "nom_propre" | "sci_ir" | "sci_is"
+}
+
+export interface SimulationWizardState {
+  currentStep: number
+  step1: Partial<WizardStep1>
+  step2: Partial<WizardStep2>
+  step3: Partial<WizardStep3>
+  step4: Partial<WizardStep4>
+  step5: Partial<WizardStep5>
+  step6: Partial<WizardStep6>
+  tmiCalcule: number | undefined
+  isLoading: boolean
+  isDirty: boolean
+}
+
+export interface SimulationContextValue {
+  state: SimulationWizardState
+  goToStep: (step: number) => void
+  nextStep: () => void
+  prevStep: () => void
+  updateStep1: (data: Partial<WizardStep1>) => void
+  updateStep2: (data: Partial<WizardStep2>) => void
+  updateStep3: (data: Partial<WizardStep3>) => void
+  updateStep4: (data: Partial<WizardStep4>) => void
+  updateStep5: (data: Partial<WizardStep5>) => void
+  updateStep6: (data: Partial<WizardStep6>) => void
+  setTMI: (tmi: number) => void
+  reset: () => void
+  isStepValid: (step: number) => boolean
+}
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const STORAGE_KEY = "simulation-wizard-state"
+const TOTAL_STEPS = 6
+
+const initialState: SimulationWizardState = {
+  currentStep: 1,
+  step1: {},
+  step2: {},
+  step3: {},
+  step4: {},
+  step5: {},
+  step6: {},
+  tmiCalcule: undefined,
+  isLoading: true,
+  isDirty: false,
+}
+
+// ============================================================================
+// Reducer
+// ============================================================================
+
+type Action =
+  | { type: "SET_STEP"; step: number }
+  | { type: "UPDATE_STEP1"; data: Partial<WizardStep1> }
+  | { type: "UPDATE_STEP2"; data: Partial<WizardStep2> }
+  | { type: "UPDATE_STEP3"; data: Partial<WizardStep3> }
+  | { type: "UPDATE_STEP4"; data: Partial<WizardStep4> }
+  | { type: "UPDATE_STEP5"; data: Partial<WizardStep5> }
+  | { type: "UPDATE_STEP6"; data: Partial<WizardStep6> }
+  | { type: "SET_TMI"; tmi: number }
+  | { type: "RESET" }
+  | { type: "HYDRATE"; state: SimulationWizardState }
+  | { type: "SET_LOADING"; isLoading: boolean }
+
+function simulationReducer(
+  state: SimulationWizardState,
+  action: Action
+): SimulationWizardState {
+  switch (action.type) {
+    case "SET_STEP":
+      return {
+        ...state,
+        currentStep: Math.max(1, Math.min(action.step, TOTAL_STEPS)),
+      }
+
+    case "UPDATE_STEP1":
+      return {
+        ...state,
+        step1: { ...state.step1, ...action.data },
+        isDirty: true,
+      }
+
+    case "UPDATE_STEP2":
+      return {
+        ...state,
+        step2: { ...state.step2, ...action.data },
+        isDirty: true,
+      }
+
+    case "UPDATE_STEP3":
+      return {
+        ...state,
+        step3: { ...state.step3, ...action.data },
+        isDirty: true,
+      }
+
+    case "UPDATE_STEP4":
+      return {
+        ...state,
+        step4: { ...state.step4, ...action.data },
+        isDirty: true,
+      }
+
+    case "UPDATE_STEP5":
+      return {
+        ...state,
+        step5: { ...state.step5, ...action.data },
+        isDirty: true,
+      }
+
+    case "UPDATE_STEP6":
+      return {
+        ...state,
+        step6: { ...state.step6, ...action.data },
+        isDirty: true,
+      }
+
+    case "SET_TMI":
+      return {
+        ...state,
+        tmiCalcule: action.tmi,
+      }
+
+    case "RESET":
+      return {
+        ...initialState,
+        isLoading: false,
+      }
+
+    case "HYDRATE":
+      return {
+        ...action.state,
+        isLoading: false,
+      }
+
+    case "SET_LOADING":
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      }
+
+    default:
+      return state
+  }
+}
+
+// ============================================================================
+// Context
+// ============================================================================
+
+export const SimulationContext = createContext<SimulationContextValue | null>(
+  null
+)
+
+// ============================================================================
+// Validation helpers
+// ============================================================================
+
+function isStep1Valid(step: Partial<WizardStep1>): boolean {
+  return !!(
+    step.situation &&
+    step.parts !== undefined &&
+    step.parts >= 1 &&
+    step.revenuNet !== undefined &&
+    step.revenuNet > 0 &&
+    step.objectif
+  )
+}
+
+function isStep2Valid(step: Partial<WizardStep2>): boolean {
+  const baseValid = !!(
+    step.typeBien &&
+    step.villeId &&
+    step.surface !== undefined &&
+    step.surface >= 9 &&
+    step.prixAcquisition !== undefined &&
+    step.prixAcquisition > 0
+  )
+
+  if (step.typeBien === "ancien") {
+    return (
+      baseValid &&
+      step.montantTravaux !== undefined &&
+      step.montantTravaux > 0 &&
+      step.dpeActuel !== undefined &&
+      step.dpeApres !== undefined
+    )
+  }
+
+  return baseValid
+}
+
+function isStep3Valid(step: Partial<WizardStep3>): boolean {
+  return !!(
+    step.apport !== undefined &&
+    step.dureeCredit !== undefined &&
+    step.dureeCredit >= 10 &&
+    step.dureeCredit <= 25 &&
+    step.tauxCredit !== undefined &&
+    step.tauxCredit > 0 &&
+    step.differe !== undefined
+  )
+}
+
+function isStep4Valid(step: Partial<WizardStep4>): boolean {
+  return !!(
+    step.niveauLoyer &&
+    step.loyerMensuel !== undefined &&
+    step.loyerMensuel > 0 &&
+    step.chargesAnnuelles !== undefined &&
+    step.taxeFonciere !== undefined &&
+    step.vacance !== undefined
+  )
+}
+
+function isStep5Valid(step: Partial<WizardStep5>): boolean {
+  return !!(
+    step.dureeDetention !== undefined &&
+    step.dureeDetention >= 9 &&
+    step.revalorisation !== undefined &&
+    step.strategieSortie
+  )
+}
+
+function isStep6Valid(step: Partial<WizardStep6>): boolean {
+  return !!step.structure
+}
+
+// ============================================================================
+// Provider
+// ============================================================================
+
+interface SimulationProviderProps {
+  children: ReactNode
+}
+
+export function SimulationProvider({ children }: SimulationProviderProps) {
+  const [state, dispatch] = useReducer(simulationReducer, initialState)
+
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      dispatch({ type: "SET_LOADING", isLoading: false })
+      return
+    }
+
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved) as unknown
+
+        // Validate structure before hydrating
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          "currentStep" in parsed &&
+          "step1" in parsed
+        ) {
+          dispatch({
+            type: "HYDRATE",
+            state: {
+              ...(parsed as SimulationWizardState),
+              isLoading: false,
+              isDirty: false,
+            },
+          })
+          return
+        }
+      }
+    } catch {
+      // Invalid JSON or structure, start fresh
+    }
+
+    dispatch({ type: "SET_LOADING", isLoading: false })
+  }, [])
+
+  // Save to localStorage on state change
+  useEffect(() => {
+    if (typeof window === "undefined" || state.isLoading || !state.isDirty) {
+      return
+    }
+
+    const toSave: SimulationWizardState = {
+      ...state,
+      isLoading: false,
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave))
+  }, [state])
+
+  // Actions
+  const goToStep = useCallback((step: number) => {
+    dispatch({ type: "SET_STEP", step })
+  }, [])
+
+  const nextStep = useCallback(() => {
+    dispatch({ type: "SET_STEP", step: state.currentStep + 1 })
+  }, [state.currentStep])
+
+  const prevStep = useCallback(() => {
+    dispatch({ type: "SET_STEP", step: state.currentStep - 1 })
+  }, [state.currentStep])
+
+  const updateStep1 = useCallback((data: Partial<WizardStep1>) => {
+    dispatch({ type: "UPDATE_STEP1", data })
+  }, [])
+
+  const updateStep2 = useCallback((data: Partial<WizardStep2>) => {
+    dispatch({ type: "UPDATE_STEP2", data })
+  }, [])
+
+  const updateStep3 = useCallback((data: Partial<WizardStep3>) => {
+    dispatch({ type: "UPDATE_STEP3", data })
+  }, [])
+
+  const updateStep4 = useCallback((data: Partial<WizardStep4>) => {
+    dispatch({ type: "UPDATE_STEP4", data })
+  }, [])
+
+  const updateStep5 = useCallback((data: Partial<WizardStep5>) => {
+    dispatch({ type: "UPDATE_STEP5", data })
+  }, [])
+
+  const updateStep6 = useCallback((data: Partial<WizardStep6>) => {
+    dispatch({ type: "UPDATE_STEP6", data })
+  }, [])
+
+  const setTMI = useCallback((tmi: number) => {
+    dispatch({ type: "SET_TMI", tmi })
+  }, [])
+
+  const reset = useCallback(() => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(STORAGE_KEY)
+    }
+    dispatch({ type: "RESET" })
+  }, [])
+
+  const isStepValid = useCallback(
+    (step: number): boolean => {
+      switch (step) {
+        case 1:
+          return isStep1Valid(state.step1)
+        case 2:
+          return isStep2Valid(state.step2)
+        case 3:
+          return isStep3Valid(state.step3)
+        case 4:
+          return isStep4Valid(state.step4)
+        case 5:
+          return isStep5Valid(state.step5)
+        case 6:
+          return isStep6Valid(state.step6)
+        default:
+          return false
+      }
+    },
+    [
+      state.step1,
+      state.step2,
+      state.step3,
+      state.step4,
+      state.step5,
+      state.step6,
+    ]
+  )
+
+  const value = useMemo<SimulationContextValue>(
+    () => ({
+      state,
+      goToStep,
+      nextStep,
+      prevStep,
+      updateStep1,
+      updateStep2,
+      updateStep3,
+      updateStep4,
+      updateStep5,
+      updateStep6,
+      setTMI,
+      reset,
+      isStepValid,
+    }),
+    [
+      state,
+      goToStep,
+      nextStep,
+      prevStep,
+      updateStep1,
+      updateStep2,
+      updateStep3,
+      updateStep4,
+      updateStep5,
+      updateStep6,
+      setTMI,
+      reset,
+      isStepValid,
+    ]
+  )
+
+  return (
+    <SimulationContext.Provider value={value}>
+      {children}
+    </SimulationContext.Provider>
+  )
+}

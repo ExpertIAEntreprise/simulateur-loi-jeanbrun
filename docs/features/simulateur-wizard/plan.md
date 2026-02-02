@@ -3,7 +3,7 @@
 **Feature:** Simulateur Loi Jeanbrun 6 etapes
 **Estimation totale:** 18,5 jours
 **Date:** 30 janvier 2026
-**Derniere MAJ:** 31 janvier 2026
+**Derniere MAJ:** 02 fevrier 2026
 
 ---
 
@@ -60,35 +60,50 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ### Taches
 
-- [ ] **A.1** Creer `SimulateurLayout.tsx` (0,5j)
+- [x] **A.1** Creer `SimulateurLayout.tsx` (0,5j) ✅ FAIT
   - Header sticky avec logo et progress
   - Zone contenu centrale (max-w-2xl)
   - Footer sticky avec navigation
   - Fichier: `src/components/simulateur/SimulateurLayout.tsx`
 
-- [ ] **A.2** Creer `ProgressBar.tsx` (0,25j)
+- [x] **A.2** Creer `ProgressBar.tsx` (0,25j) ✅ FAIT
   - 6 dots avec labels etapes
   - Barre de progression animee
   - Etat actif/complete/pending
   - Fichier: `src/components/simulateur/ProgressBar.tsx`
 
-- [ ] **A.3** Creer `StepNavigation.tsx` (0,25j)
+- [x] **A.3** Creer `StepNavigation.tsx` (0,25j) ✅ FAIT
   - Boutons Retour/Continuer
   - Desactivation selon validation
   - Texte dynamique derniere etape
   - Fichier: `src/components/simulateur/StepNavigation.tsx`
 
-- [ ] **A.4** Creer hook `useSimulation.ts` (0,5j)
-  - State global simulation (Zustand ou Context)
+- [x] **A.4** Creer hook `useSimulation.ts` (0,5j) ✅ FAIT
+  - State global simulation (React Context)
   - Sauvegarde localStorage automatique
   - Navigation entre etapes
   - Fichier: `src/lib/hooks/useSimulation.ts`
+  - Fichier: `src/contexts/SimulationContext.tsx`
 
 ### Livrables
 
 - Layout fonctionnel avec navigation 6 etapes
 - Progress bar animee
 - Persistance localStorage
+
+### Fichiers crees (Phase A) - 02/02/2026
+
+| Fichier | Description |
+|---------|-------------|
+| `src/contexts/SimulationContext.tsx` | Provider + types WizardStep1-6, persistance localStorage |
+| `src/lib/hooks/useSimulation.ts` | Hook + useSimulationNavigation helper |
+| `src/components/simulateur/ProgressBar.tsx` | 6 dots, 3 etats, responsive (mobile dots + desktop labels) |
+| `src/components/simulateur/StepNavigation.tsx` | Retour/Continuer avec glow, loader, texte dynamique |
+| `src/components/simulateur/SimulateurLayout.tsx` | Layout sticky header/footer, max-w-2xl |
+| `src/app/simulateur/avance/layout.tsx` | Route layout avec SimulationProvider |
+| `src/app/simulateur/avance/page.tsx` | Page placeholder avec StepContent dynamique |
+
+**Route:** `/simulateur/avance` - Testable en local
 
 ---
 
@@ -98,52 +113,52 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 
 ### Taches Etape 1 - Profil (2j)
 
-- [ ] **B.1** Creer `ProfilForm.tsx` (0,75j)
+- [x] **B.1** Creer `ProfilForm.tsx` (0,75j) ✅ FAIT
   - Formulaire react-hook-form + Zod
   - Champs: situation, parts, revenus, objectif
   - Fichier: `src/components/simulateur/etape-1/ProfilForm.tsx`
 
-- [ ] **B.2** Creer `TMICalculator.tsx` (0,5j)
+- [x] **B.2** Creer `TMICalculator.tsx` (0,5j) ✅ FAIT
   - Calcul temps reel TMI
   - Badge colore selon tranche
   - Tooltip explicatif
   - Fichier: `src/components/simulateur/etape-1/TMICalculator.tsx`
 
-- [ ] **B.3** Creer `ObjectifSelector.tsx` (0,25j)
+- [x] **B.3** Creer `ObjectifSelector.tsx` (0,25j) ✅ FAIT
   - 4 cards avec icones
   - Selection unique
   - Fichier: `src/components/simulateur/etape-1/ObjectifSelector.tsx`
 
-- [ ] **B.4** Creer page `etape-1` (0,5j)
+- [x] **B.4** Creer page `etape-1` (0,5j) ✅ FAIT
   - Route: `/simulateur/avance`
   - Integration composants
   - Fichier: `src/app/simulateur/avance/page.tsx`
 
 ### Taches Etape 2 - Projet (2,5j)
 
-- [ ] **B.5** Creer `TypeBienSelector.tsx` (0,5j)
+- [x] **B.5** Creer `TypeBienSelector.tsx` (0,5j) ✅ FAIT
   - 2 cards Neuf/Ancien
   - Affichage conditionnel section travaux
   - Fichier: `src/components/simulateur/etape-2/TypeBienSelector.tsx`
 
-- [ ] **B.6** Creer `VilleAutocomplete.tsx` (0,75j)
+- [x] **B.6** Creer `VilleAutocomplete.tsx` (0,75j) ✅ FAIT
   - Combobox avec recherche API
   - Affichage zone fiscale
   - Debounce 300ms
   - Fichier: `src/components/simulateur/etape-2/VilleAutocomplete.tsx`
 
-- [ ] **B.7** Creer `TravauxValidator.tsx` (0,5j)
+- [x] **B.7** Creer `TravauxValidator.tsx` (0,5j) ✅ FAIT
   - Progress bar pourcentage travaux
   - Alerte si < 30%
   - Badge eligibilite
   - Fichier: `src/components/simulateur/etape-2/TravauxValidator.tsx`
 
-- [ ] **B.8** Creer `RecapProjet.tsx` (0,25j)
+- [x] **B.8** Creer `RecapProjet.tsx` (0,25j) ✅ FAIT
   - Tableau recapitulatif Neuf vs Ancien
   - Calcul frais notaire
   - Fichier: `src/components/simulateur/etape-2/RecapProjet.tsx`
 
-- [ ] **B.9** Creer page `etape-2` (0,5j)
+- [x] **B.9** Creer page `etape-2` (0,5j) ✅ FAIT
   - Route: `/simulateur/avance/etape-2`
   - Integration composants
   - Fichier: `src/app/simulateur/avance/etape-2/page.tsx`
@@ -153,6 +168,26 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 - Etape 1 complete avec TMI auto-calcule
 - Etape 2 complete avec validation travaux 30%
 - Navigation fonctionnelle entre etapes 1-2
+
+### Fichiers crees (Phase B) - 02/02/2026
+
+| Fichier | Description |
+|---------|-------------|
+| `src/components/simulateur/etape-1/ProfilForm.tsx` | Formulaire react-hook-form + Zod, sync context, validation |
+| `src/components/simulateur/etape-1/TMICalculator.tsx` | Calcul TMI temps reel, badge colore, tooltip bareme IR 2026 |
+| `src/components/simulateur/etape-1/ObjectifSelector.tsx` | 4 cards selectionnables avec icones et animations |
+| `src/components/simulateur/etape-1/index.ts` | Barrel exports etape-1 |
+| `src/components/simulateur/etape-2/TypeBienSelector.tsx` | 2 cards Neuf/Ancien avec radio indicator |
+| `src/components/simulateur/etape-2/VilleAutocomplete.tsx` | Combobox debounce 300ms, zones fiscales colorees |
+| `src/components/simulateur/etape-2/TravauxValidator.tsx` | Jauge 0-100%, seuils 30%/50%, alerte eligibilite |
+| `src/components/simulateur/etape-2/RecapProjet.tsx` | Tableau recap, frais notaire, plafonds zone |
+| `src/components/simulateur/etape-2/index.ts` | Barrel exports etape-2 |
+| `src/app/simulateur/avance/page.tsx` | Page etape-1 integree avec tous composants |
+| `src/app/simulateur/avance/etape-2/page.tsx` | Page etape-2 integree avec validation |
+
+**Routes:**
+- `/simulateur/avance` - Etape 1 (Profil investisseur)
+- `/simulateur/avance/etape-2` - Etape 2 (Projet immobilier)
 
 ---
 
