@@ -54,6 +54,7 @@ export function SimulatorQuickForm() {
     formState: { errors },
     watch,
     trigger,
+    setFocus,
   } = useForm<SimulatorFormData>({
     resolver: zodResolver(simulatorSchema),
     mode: "onBlur",
@@ -96,17 +97,24 @@ export function SimulatorQuickForm() {
 
   const handleNext = async () => {
     let isValid = false;
+    let fieldName: keyof SimulatorFormData | undefined;
 
     if (currentStep === 1) {
+      fieldName = "montant";
       isValid = await trigger("montant");
     } else if (currentStep === 2) {
+      fieldName = "tmi";
       isValid = await trigger("tmi");
     } else if (currentStep === 3) {
+      fieldName = "typeBien";
       isValid = await trigger("typeBien");
     }
 
     if (isValid) {
       setCurrentStep(currentStep + 1);
+    } else if (fieldName) {
+      // Focus management: focus the first field with error
+      setFocus(fieldName);
     }
   };
 
@@ -215,14 +223,20 @@ export function SimulatorQuickForm() {
           {currentStep === 2 && (
             <div className="space-y-4">
               <div>
-                <Label className="text-base font-semibold">
+                <Label id="tmi-label" className="text-base font-semibold">
                   Quelle est votre Tranche Marginale d'Imposition (TMI) ?
                 </Label>
-                <p className="text-xs text-muted-foreground mt-1 mb-3">
+                <p id="tmi-hint" className="text-xs text-muted-foreground mt-1 mb-3">
                   Si vous ne connaissez pas votre TMI, consultez votre dernier
                   avis d'imposition
                 </p>
-                <div className="grid grid-cols-2 gap-3">
+                <div
+                  role="radiogroup"
+                  aria-labelledby="tmi-label"
+                  aria-describedby={errors.tmi ? "tmi-error tmi-hint" : "tmi-hint"}
+                  aria-required="true"
+                  className="grid grid-cols-2 gap-3"
+                >
                   {TMI_OPTIONS.map((option) => (
                     <label
                       key={option}
@@ -238,6 +252,7 @@ export function SimulatorQuickForm() {
                       <input
                         type="radio"
                         value={option}
+                        aria-checked={tmi === option}
                         className="sr-only"
                         {...register("tmi")}
                       />
@@ -246,7 +261,7 @@ export function SimulatorQuickForm() {
                   ))}
                 </div>
                 {errors.tmi && (
-                  <p role="alert" className="text-sm text-destructive mt-2">
+                  <p id="tmi-error" role="alert" className="text-sm text-destructive mt-2">
                     {errors.tmi.message}
                   </p>
                 )}
@@ -258,10 +273,16 @@ export function SimulatorQuickForm() {
           {currentStep === 3 && (
             <div className="space-y-4">
               <div>
-                <Label className="text-base font-semibold">
+                <Label id="typeBien-label" className="text-base font-semibold">
                   Quel type de bien souhaitez-vous acquérir ?
                 </Label>
-                <div className="grid grid-cols-1 gap-3 mt-3">
+                <div
+                  role="radiogroup"
+                  aria-labelledby="typeBien-label"
+                  aria-describedby={errors.typeBien ? "typeBien-error" : undefined}
+                  aria-required="true"
+                  className="grid grid-cols-1 gap-3 mt-3"
+                >
                   {[
                     {
                       value: "neuf" as const,
@@ -291,6 +312,7 @@ export function SimulatorQuickForm() {
                         type="radio"
                         value={option.value}
                         aria-describedby={`${option.value}-description`}
+                        aria-checked={typeBien === option.value}
                         className="sr-only"
                         {...register("typeBien")}
                       />
@@ -309,7 +331,7 @@ export function SimulatorQuickForm() {
                   ))}
                 </div>
                 {errors.typeBien && (
-                  <p role="alert" className="text-sm text-destructive mt-2">
+                  <p id="typeBien-error" role="alert" className="text-sm text-destructive mt-2">
                     {errors.typeBien.message}
                   </p>
                 )}
@@ -321,13 +343,19 @@ export function SimulatorQuickForm() {
           {currentStep === 4 && !result && (
             <div className="space-y-4">
               <div>
-                <Label className="text-base font-semibold">
+                <Label id="niveauLoyer-label" className="text-base font-semibold">
                   Quel niveau de loyer souhaitez-vous pratiquer ?
                 </Label>
-                <p className="text-xs text-muted-foreground mt-1 mb-3">
+                <p id="niveauLoyer-hint" className="text-xs text-muted-foreground mt-1 mb-3">
                   Plus le loyer est bas, plus l'avantage fiscal est important
                 </p>
-                <div className="grid grid-cols-1 gap-3">
+                <div
+                  role="radiogroup"
+                  aria-labelledby="niveauLoyer-label"
+                  aria-describedby={errors.niveauLoyer ? "niveauLoyer-error niveauLoyer-hint" : "niveauLoyer-hint"}
+                  aria-required="true"
+                  className="grid grid-cols-1 gap-3"
+                >
                   {[
                     {
                       value: "intermediaire" as const,
@@ -362,6 +390,7 @@ export function SimulatorQuickForm() {
                       <input
                         type="radio"
                         value={option.value}
+                        aria-checked={niveauLoyer === option.value}
                         className="sr-only"
                         {...register("niveauLoyer")}
                       />
@@ -382,7 +411,7 @@ export function SimulatorQuickForm() {
                   ))}
                 </div>
                 {errors.niveauLoyer && (
-                  <p role="alert" className="text-sm text-destructive mt-2">
+                  <p id="niveauLoyer-error" role="alert" className="text-sm text-destructive mt-2">
                     {errors.niveauLoyer.message}
                   </p>
                 )}
