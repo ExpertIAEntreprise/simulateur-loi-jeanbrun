@@ -52,53 +52,20 @@ import { orchestrerSimulation, JEANBRUN_NEUF } from "@/lib/calculs";
 import type { SimulationCalculInput, ZoneFiscale, NiveauLoyerJeanbrun, TypeBien } from "@/lib/calculs";
 import { analyserFinancement } from "@/lib/calculs/analyse-financement";
 import type { AnalyseFinancement } from "@/types/lead-financement";
+import type { SimulationWizardState } from "@/contexts/SimulationContext";
 
 // ============================================================================
 // Types
 // ============================================================================
 
-interface WizardState {
-  step1: {
-    situation?: string;
-    parts?: number;
-    revenuNet?: number;
-    revenusFonciers?: number;
-    objectif?: string;
-  };
-  step2: {
-    typeBien?: string;
-    villeId?: string;
-    villeNom?: string;
-    zoneFiscale?: string;
-    surface?: number;
-    prixAcquisition?: number;
-    montantTravaux?: number;
-    dpeActuel?: string;
-    dpeApres?: string;
-  };
-  step3: {
-    apport?: number;
-    dureeCredit?: number;
-    tauxCredit?: number;
-    differe?: number;
-    autresCredits?: number;
-  };
-  step4: {
-    niveauLoyer?: string;
-    loyerMensuel?: number;
-    chargesAnnuelles?: number;
-    taxeFonciere?: number;
-    vacance?: number;
-  };
-  step5: {
-    dureeDetention?: number;
-    revalorisation?: number;
-    strategieSortie?: string;
-  };
-  step6: {
-    structure?: string;
-  };
-}
+/**
+ * Local alias for wizard state used in results page.
+ * Uses the unified type from SimulationContext to avoid duplication.
+ */
+type WizardState = Pick<
+  SimulationWizardState,
+  "step1" | "step2" | "step3" | "step4" | "step5" | "step6"
+>;
 
 interface SimulationResults {
   synthese: {

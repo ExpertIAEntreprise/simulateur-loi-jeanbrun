@@ -534,13 +534,13 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 - [x] Couleurs hardcodees remplacees par tokens ✅
 - [x] Validation localStorage avec Zod ✅
 - [x] Securite API renforcee (CORS, rate limiting) ✅
-- [ ] Types unifies (pas de duplication) - G.2.3 a faire
+- [x] Types unifies (pas de duplication) ✅
 - [x] Code DRY (helpers extraits) ✅ (calculatePrixTotal)
 - [ ] Tests coverage >= 80%
 - [x] Storage adapter extrait ✅
 
-**PHASE G EN COURS - 13/17 taches terminees (02/02/2026)**
-**Taches restantes:** G.2.3 (types unifies), G.3.5 (route config), G.3.6 (JSON-LD XSS), G.4.2 (split page)
+**PHASE G EN COURS - 14/17 taches terminees (02/02/2026)**
+**Taches restantes:** G.3.5 (route config), G.3.6 (JSON-LD XSS), G.4.2 (split page)
 
 ---
 
@@ -1129,7 +1129,8 @@ src/app/simulateur/resultat/[id]/
   - safeParse() sur hydratation, suppression donnees invalides
 - [x] **G.2.2** Ajouter CORS a /api/simulation/avancee ✅ FAIT (02/02/2026)
   - Verification origin + Content-Length DoS prevention
-- [ ] **G.2.3** Unifier type WizardState
+- [x] **G.2.3** Unifier type WizardState ✅ FAIT (02/02/2026)
+  - `src/app/simulateur/resultat/[id]/page.tsx` - Import SimulationWizardState, alias local WizardState
 - [x] **G.2.4** Convertir redirect en Server Component ✅ FAIT (02/02/2026)
   - `src/app/simulateur/resultat/page.tsx` - Server Component + redirect() + crypto.randomUUID()
 - [x] **G.2.5** Ajouter rate limiting leads ✅ FAIT (02/02/2026)
