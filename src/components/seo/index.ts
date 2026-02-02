@@ -22,3 +22,19 @@ export type { JsonLdRealEstateProps, RealEstateAddress, RealEstatePrice } from "
 // Ville - Place + LocalBusiness combine pour les pages villes
 export { JsonLdVille, getVilleJsonLdForMetadata } from "./JsonLdVille";
 export type { JsonLdVilleProps, EspoVille } from "./JsonLdVille";
+
+// WebPage - Schema WebPage pour la page d'accueil
+export { JsonLdWebPage, getWebPageJsonLdForMetadata } from "./JsonLdWebPage";
+export type { JsonLdWebPageProps } from "./JsonLdWebPage";
+
+// SoftwareApplication - Schema pour l'application
+export { JsonLdSoftwareApp, getSoftwareAppJsonLdForMetadata } from "./JsonLdSoftwareApp";
+export type { JsonLdSoftwareAppProps } from "./JsonLdSoftwareApp";
+
+// FAQPage - Schema pour la FAQ
+export { JsonLdFaq, getFaqJsonLdForMetadata } from "./JsonLdFaq";
+export type { JsonLdFaqProps, FaqItem } from "./JsonLdFaq";
+
+// Organization - Schema pour l'organisation
+export { JsonLdOrganization, getOrganizationJsonLdForMetadata } from "./JsonLdOrganization";
+export type { JsonLdOrganizationProps } from "./JsonLdOrganization";

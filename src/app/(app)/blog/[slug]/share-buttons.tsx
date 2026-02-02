@@ -1,8 +1,8 @@
 'use client'
 
 import { Facebook, Link2, Linkedin, Share2, Twitter } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 
 interface ShareButtonsProps {
   url: string

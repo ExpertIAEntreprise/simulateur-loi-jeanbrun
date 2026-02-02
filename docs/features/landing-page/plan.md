@@ -1,7 +1,7 @@
 # Plan d'Implementation - Landing Page
 
 **Feature:** Landing Page Simulateur Loi Jeanbrun
-**Statut:** Phase 2 Sprint 3 termine
+**Statut:** Phase 3 termine
 **Estimation:** 5.5 jours
 
 ---
@@ -209,65 +209,55 @@ pnpm check  # ✅ 0 errors, warnings only pre-existing
 
 ---
 
-## Phase 3 : Page Landing
+## Phase 3 : Page Landing ✅
 
 **Objectif:** Assembler la page et configurer le SEO
+**Statut:** TERMINE (2 fevrier 2026)
 
-### Fichiers a creer/modifier
+### Fichiers crees/modifies
 
 | Fichier | Action |
 |---------|--------|
-| `src/app/page.tsx` | Remplacer par landing |
-| `src/components/seo/JsonLdWebPage.tsx` | Creer |
-| `src/components/seo/JsonLdSoftwareApp.tsx` | Creer |
-| `src/components/seo/JsonLdFaq.tsx` | Creer |
-| `src/components/seo/JsonLdOrganization.tsx` | Creer |
+| `src/app/(landing)/page.tsx` | Landing page assemblee |
+| `src/app/(landing)/layout.tsx` | Layout landing (sans SiteHeader/Footer) |
+| `src/app/(app)/layout.tsx` | Layout app (avec SiteHeader/Footer) |
+| `src/components/seo/JsonLdWebPage.tsx` | Cree |
+| `src/components/seo/JsonLdSoftwareApp.tsx` | Cree |
+| `src/components/seo/JsonLdFaq.tsx` | Cree |
+| `src/components/seo/JsonLdOrganization.tsx` | Cree |
+| `src/components/seo/index.ts` | Mis a jour |
 
 ### Taches
 
-- [ ] Creer les 4 composants JSON-LD
+- [x] Creer les 4 composants JSON-LD
+  - JsonLdWebPage.tsx
+  - JsonLdSoftwareApp.tsx
+  - JsonLdFaq.tsx
+  - JsonLdOrganization.tsx
 
-- [ ] Modifier `src/app/page.tsx`
-  ```tsx
-  export default function LandingPage() {
-    return (
-      <>
-        <JsonLdWebPage />
-        <JsonLdSoftwareApp />
-        <JsonLdFaq faqItems={faqItems} />
-        <LandingHeader />
-        <UrgencyBanner />           {/* NOUVEAU: Bandeau bonification 2027 */}
-        <main id="main-content">
-          <HeroSection />
-          <TrustSignalsBar />
-          <FeatureCards />
-          <RetirementSection />
-          <ProcessSteps />
-          <ComparisonTable />
-          <ExampleCalculation />
-          <FAQAccordion />
-          <CTASection />
-        </main>
-        <LandingFooter />
-      </>
-    )
-  }
-  ```
+- [x] Reorganiser structure routes avec route groups
+  - (landing)/ - Landing page avec LandingHeader/LandingFooter
+  - (app)/ - Pages app avec SiteHeader/SiteFooter
+  - Routes deplacees: dashboard, chat, profile, villes, barometre, blog, etc.
 
-- [ ] Configurer metadata SEO
-  ```typescript
-  export const metadata: Metadata = {
-    title: "Simulateur Loi Jeanbrun 2026 - Jusqu'a 50 000EUR d'Economie d'Impot",
-    description: "Simulez gratuitement votre economie d'impot avec la Loi Jeanbrun. Jusqu'a 50 000EUR d'economie pour les TMI 45%. Le produit ideal pour preparer votre retraite.",
-    // ...
-  }
-  ```
+- [x] Creer `src/app/(landing)/page.tsx`
+  - JSON-LD schemas (WebPage, SoftwareApp, FAQ, Organization)
+  - LandingHeader + LandingFooter
+  - Toutes les sections landing assemblees
+  - UrgencyBanner sous le header
+
+- [x] Configurer metadata SEO optimisees
+  - Title: "Simulateur Loi Jeanbrun 2026 - Jusqu'a 50 000EUR d'Economie d'Impot"
+  - Description angle retraite
+  - Keywords cibles Loi Jeanbrun
+  - OpenGraph et Twitter cards
+  - Canonical URL
 
 ### Validation Phase 3
 
 ```bash
-pnpm check
-pnpm build:ci
+pnpm check    # ✅ 0 errors
+pnpm build:ci # ✅ Build successful
 ```
 
 ---
@@ -440,4 +430,4 @@ src/app/robots.ts      # Rules
 
 ---
 
-*Derniere mise a jour : 1er fevrier 2026*
+*Derniere mise a jour : 2 fevrier 2026*
