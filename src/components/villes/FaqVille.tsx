@@ -24,6 +24,16 @@ interface FaqVilleProps {
 }
 
 /**
+ * Escape JSON string for safe injection in script tags (XSS protection)
+ * Replaces < and > with Unicode escapes to prevent script injection
+ */
+function safeJsonLd(data: object): string {
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e');
+}
+
+/**
  * Genere le schema JSON-LD FAQPage pour Google Rich Snippets
  * @see https://developers.google.com/search/docs/appearance/structured-data/faqpage
  */
@@ -56,11 +66,11 @@ export function FaqVille({ faqItems, villeNom }: FaqVilleProps) {
 
   return (
     <section aria-labelledby="faq-heading">
-      {/* JSON-LD FAQPage pour Google Rich Snippets */}
+      {/* JSON-LD FAQPage pour Google Rich Snippets (XSS protected) */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLdData),
+          __html: safeJsonLd(jsonLdData),
         }}
       />
 

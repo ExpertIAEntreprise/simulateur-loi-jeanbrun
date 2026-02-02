@@ -51,7 +51,7 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 | D | Etapes 5-6 (Sortie + Structure) | 3j | Phase C | ✅ FAIT |
 | E | Page Resultats | 3,5j | Phase D | ✅ FAIT |
 | F | Tests + Polish | 2j | Phase E | ✅ FAIT |
-| **G** | **Corrections Post-Audit** | **2,5j** | Phase F | ⏳ A FAIRE |
+| **G** | **Corrections Post-Audit** | **2,5j** | Phase F | ✅ FAIT |
 
 ---
 
@@ -498,7 +498,7 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 | S6 - J4-J5 | Phase D (Etapes 5-6) | 3j | ✅ |
 | S6 - J5 + S7 | Phase E (Resultats) | 3,5j | ✅ |
 | S7 | Phase F (Tests) | 2j | ✅ |
-| **S8** | **Phase G (Corrections)** | **2,5j** | ⏳ |
+| **S8** | **Phase G (Corrections)** | **2,5j** | ✅ |
 
 ---
 
@@ -539,8 +539,7 @@ Ajout d'une fonctionnalite de capture de leads pour le financement immobilier.
 - [ ] Tests coverage >= 80%
 - [x] Storage adapter extrait ✅
 
-**PHASE G EN COURS - 14/17 taches terminees (02/02/2026)**
-**Taches restantes:** G.3.5 (route config), G.3.6 (JSON-LD XSS), G.4.2 (split page)
+**PHASE G TERMINEE - 17/17 taches terminees (02/02/2026)**
 
 ---
 
@@ -1135,18 +1134,28 @@ src/app/simulateur/resultat/[id]/
   - `src/app/simulateur/resultat/page.tsx` - Server Component + redirect() + crypto.randomUUID()
 - [x] **G.2.5** Ajouter rate limiting leads ✅ FAIT (02/02/2026)
   - `src/app/api/leads/financement/route.ts` - simulationRateLimiter 10 req/min
-- [x] **G.2.6** Extraire helper prixTotal ✅ FAIT (02/02/2026 - G.1.2)
+- [x] **G.2.6** Extraire helper prixTotal ✅ FAIT (02/02/2026 - intégré dans calculate-results.ts)
 - [x] **G.3.1** Remplacer alert() par toast ✅ FAIT (02/02/2026 - G.1.2)
 - [x] **G.3.2** Extraire constantes magic numbers ✅ FAIT (02/02/2026 - G.1.2)
 - [x] **G.3.3** Corriger setTimeout memory leak ✅ FAIT (02/02/2026)
   - `src/components/simulateur/resultats/LeadCourtierModal.tsx` - useEffect avec cleanup
 - [x] **G.3.4** Utiliser crypto.randomUUID() ✅ FAIT (02/02/2026)
   - `src/app/api/simulation/avancee/route.ts` - Supprime generateUUID(), utilise crypto.randomUUID()
-- [ ] **G.3.5** Ajouter route segment config
-- [ ] **G.3.6** Proteger JSON-LD XSS
+- [x] **G.3.5** Ajouter route segment config ✅ FAIT (02/02/2026)
+  - `src/app/simulateur/resultat/[id]/page.tsx` - `export const dynamic = "force-dynamic"` + `export const revalidate = 0`
+- [x] **G.3.6** Proteger JSON-LD XSS ✅ FAIT (02/02/2026)
+  - `src/components/villes/FaqVille.tsx` - safeJsonLd() helper avec escape < et >
+  - `src/components/villes/Breadcrumb.tsx` - safeJsonLd() helper avec escape < et >
 - [x] **G.4.1** Extraire storage adapter ✅ FAIT (02/02/2026)
   - `src/lib/storage/wizard-storage.ts` - Interface WizardStorage + localWizardStorage + createMemoryStorage()
-- [ ] **G.4.2** Diviser page resultats
+- [x] **G.4.2** Diviser page resultats ✅ FAIT (02/02/2026)
+  - `src/app/simulateur/resultat/[id]/types.ts` - Types locaux (~35 lignes)
+  - `src/app/simulateur/resultat/[id]/helpers/load-wizard-state.ts` - Chargement localStorage (~25 lignes)
+  - `src/app/simulateur/resultat/[id]/helpers/validate-state.ts` - Validation state (~25 lignes)
+  - `src/app/simulateur/resultat/[id]/helpers/calculate-results.ts` - Calculs resultats (~220 lignes)
+  - `src/app/simulateur/resultat/[id]/loading-skeleton.tsx` - Skeleton (~35 lignes)
+  - `src/app/simulateur/resultat/[id]/resultat-client.tsx` - Client component (~280 lignes)
+  - `src/app/simulateur/resultat/[id]/page.tsx` - Server component wrapper (~30 lignes)
 
 ---
 
