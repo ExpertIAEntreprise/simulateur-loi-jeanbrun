@@ -89,16 +89,6 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Preload fonts for LCP optimization
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Link",
-            value: "</fonts/DMSerifDisplay-Regular.woff2>; rel=preload; as=font; type=font/woff2; crossorigin",
-          },
-        ],
-      },
     ];
   },
 };

@@ -13,7 +13,7 @@ Simulateur Loi Jeanbrun - A fiscal simulation platform for the "Loi Jeanbrun" (P
 
 ```bash
 # Development
-pnpm dev              # Start dev server with Turbopack (localhost:3000)
+PORT=3001 pnpm dev    # Start dev server with Turbopack (port 3001 - Docker uses 3000)
 pnpm build:ci         # Build for CI (no migrations)
 pnpm check            # Run lint + typecheck together
 
@@ -68,6 +68,35 @@ src/
     ├── storage.ts         # File storage abstraction (local/Vercel Blob)
     └── env.ts             # Environment variable validation
 ```
+
+### Landing Page Structure
+
+The landing page (`src/app/(landing)/page.tsx`) uses Shadcn Studio premium blocks:
+
+**Sections (in order):**
+1. **Header** - Navigation with links to sections
+2. **Hero Section** - Main visual with CTA and eligibility form
+3. **Features Wrapper** - Product features and benefits
+4. **CTA Section 14** - Call-to-action block
+5. **CTA Section 02** - Guide download section
+6. **Personas Section** - Target audience tabs
+7. **CTA Section 07** - Secondary call-to-action
+8. **Testimonials Wrapper** - Customer reviews
+9. **Pricing Wrapper** - Pricing plans (2 plans: Gratuit & Premium)
+
+**Shadcn Studio Blocks Used:**
+- `hero-section-18` - Hero with background image
+- `cta-section-02`, `cta-section-07`, `cta-section-14` - Call-to-action blocks
+- `features-section-09` - Feature cards
+- `features-section-27` - Persona tabs
+- `testimonials-component-01`, `testimonials-component-03` - Reviews
+- `pricing-component-14` - Pricing cards (2 plans)
+
+**Custom Wrappers:**
+- `src/components/landing/pricing-wrapper.tsx` - Pricing data (Gratuit 0€, Premium 49€ HT)
+- `src/components/landing/features-wrapper.tsx` - Features data
+- `src/components/landing/personas-wrapper.tsx` - Persona tabs data
+- `src/components/landing/testimonials-wrapper.tsx` - Reviews data
 
 ### Authentication Pattern (Better Auth)
 

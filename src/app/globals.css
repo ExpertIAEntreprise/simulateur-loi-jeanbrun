@@ -8,6 +8,13 @@
 
 @import "tailwindcss";
 
+@import "tw-animate-css";
+
+/*---break---
+ */
+
+@custom-variant dark (&:is(.dark *));
+
 /* ==========================================================================
    1. TAILWIND CSS v4 @theme INTEGRATION
    ========================================================================== */
@@ -69,6 +76,24 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-marquee-horizontal: marquee-horizontal var(--marquee-duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--marquee-duration) infinite linear;
+  @keyframes marquee-horizontal {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--marquee-gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--marquee-gap)));
+    }
+  }
 }
 
 /* ==========================================================================
@@ -555,4 +580,40 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
+}
+
+/*---break---
+ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+a.link-animated {
+    position: relative;
+    text-decoration: none;
+}
+
+a.link-animated:before {
+    border-block-end: 1px solid;
+    content: '';
+    inset: 0;
+    position: absolute;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease-in-out;
+}
+
+a.link-animated:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+/* Masquer le SiteHeader "Starter Kit" sur les pages blog */
+body:has(.blog-layout) header[role="banner"] {
+    display: none !important;
 }

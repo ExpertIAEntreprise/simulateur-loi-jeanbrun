@@ -1,8 +1,34 @@
 # Landing Page - Simulateur Loi Jeanbrun
 
-**Version:** 1.0
-**Date:** 2 février 2026
+**Version:** 1.2
+**Date:** 3 février 2026 (mise à jour blog)
 **URL:** https://simulateur-loi-jeanbrun.vercel.app
+
+## 📝 Dernières modifications (3 février 2026 - session blog)
+
+### ✅ Articles de blog complets
+- 3 articles MDX avec contenu professionnel (6780 à 14461 mots)
+- 15 tableaux formatés de manière professionnelle
+- Auteur : Hervé Voirin avec photo et bio
+
+### 🖼️ Optimisation images blog
+- Conversion WebP : réduction de **86-94%** du poids
+- loi-jeanbrun-2026.webp : 47Ko (était 790Ko)
+- top-10-villes-investir-jeanbrun.webp : 51Ko (était 878Ko)
+- calculer-reduction-impot-jeanbrun.webp : 9.3Ko (était 66Ko)
+
+### 📊 Tableaux Markdown professionnels
+- Installation de **remark-gfm** pour GitHub Flavored Markdown
+- Composants ReactMarkdown personnalisés (table, thead, tbody, tr, th, td)
+- Alignements corrects (gauche, centre, droite)
+- Style moderne : bordures arrondies, hover effects, fond grisé
+- Émojis : 🥇🥈🥉 (podium), ✅❌ (éligibilité), 🚀 (performances)
+
+### 🔧 Corrections techniques
+- Better Auth : baseURL configuré
+- Environnement dev : URL localhost au lieu de production
+- Suppression preload police inexistante
+- Résolution erreurs CSP et hydration React
 
 ---
 
@@ -69,7 +95,13 @@ npx shadcn@latest add @ss-blocks/[nom-du-block]
 |-------|--------|-------|
 | `hero-section-18` | `src/components/shadcn-studio/blocks/hero-section-18/` | Hero avec image de fond |
 | `features-section-27` | `src/components/shadcn-studio/blocks/features-section-27/` | Section tabs (3 onglets) |
-| `cta-section-02` | `src/components/shadcn-studio/blocks/cta-section-02/` | Call to action |
+| `cta-section-02` | `src/components/shadcn-studio/blocks/cta-section-02/` | Call to action (guide) |
+| `cta-section-14` | `src/components/shadcn-studio/blocks/cta-section-14/` | Call to action secondaire |
+| `cta-section-07` | `src/components/shadcn-studio/blocks/cta-section-07/` | Présentation expert Hervé Voirin |
+| `features-section-09` | `src/components/shadcn-studio/blocks/features-section-09/` | Section personas avec tabs horizontaux |
+| `pricing-component-14` | `src/components/shadcn-studio/blocks/pricing-component-14/` | Tarifs (2 plans) |
+| `faq-component-15` | `src/components/shadcn-studio/blocks/faq-component-15/` | Questions fréquentes |
+| `blog-component-06` | `src/components/shadcn-studio/blocks/blog-component-06/` | Section blog/articles |
 
 ---
 
@@ -81,7 +113,14 @@ src/app/(landing)/page.tsx
 ├── Header (navigation)
 ├── HeroSection (image de fond + formulaire)
 ├── FeaturesWrapper (3 tabs: Dispositif, Fonctionnement, Conditions)
-└── CTASection (call to action)
+├── CTASection14 (call to action secondaire)
+├── CTASection (call to action guide)
+├── PersonasSection (tabs personas)
+├── CTASection07 (présentation expert Hervé Voirin)
+├── FAQWrapper (6 questions/réponses)
+├── TestimonialsWrapper (témoignages clients)
+├── PricingWrapper (2 plans: Gratuit, Premium)
+└── BlogWrapper (3 articles de blog)
 ```
 
 ### Fichiers principaux
@@ -94,6 +133,8 @@ src/app/(landing)/page.tsx
 | `src/components/shadcn-studio/blocks/hero-section-18/hero-section-18.tsx` | Composant Hero |
 | `src/components/shadcn-studio/blocks/features-section-27/features-section-27.tsx` | Composant Tabs |
 | `src/components/shadcn-studio/blocks/cta-section-02/cta-section-02.tsx` | Composant CTA |
+| `src/components/landing/personas-wrapper.tsx` | Données des 4 tabs personas |
+| `src/components/shadcn-studio/blocks/features-section-09/features-section-09.tsx` | Composant Personas Tabs |
 
 ---
 
@@ -167,6 +208,47 @@ Fichier : `src/components/landing/features-wrapper.tsx`
 
 ---
 
+## Section Personas (features-section-09)
+
+### Configuration
+
+Fichier : `src/components/landing/personas-wrapper.tsx`
+
+### Contenu actuel (générique - à personnaliser)
+
+**Titre principal:** "Features that you need."
+**Description:** "Discover a suite of essential features designed to enhance your experience. Enjoy customizable settings, real-time notifications, and integrated support tools to streamline your workflow and keep you productive."
+
+**Logo central:** Logo Shadcn Studio avec effet ping animé (à remplacer par logo Simulateur Jeanbrun)
+
+### Tabs actuels (4 tabs horizontaux)
+
+| Tab | Titre | Description | Image | État |
+|-----|-------|-------------|-------|------|
+| Upload Files | Upload files Easy-peasy | Drag-and-drop interface... | shadcnstudio.com CDN | ⚠️ À personnaliser |
+| Email Notifications | Email Notification Super simple! | User-friendly drag-and-drop... | shadcnstudio.com CDN | ⚠️ À personnaliser |
+| Field Validations | Validation Alert Please check all fields! | Drag-and-drop feature... | shadcnstudio.com CDN | ⚠️ À personnaliser |
+| Auto Responses | Check fields for accuracy! | Fast and secure upload... | shadcnstudio.com CDN | ⚠️ À personnaliser |
+
+### À faire pour ce bloc
+
+- [ ] Remplacer le titre "Features that you need" par un titre Jeanbrun pertinent
+- [ ] Adapter la description au contexte de la Loi Jeanbrun
+- [ ] Remplacer le logo Shadcn par le logo du simulateur
+- [ ] Personnaliser les 4 tabs avec du contenu Jeanbrun :
+  - Exemples : Profils investisseurs, Zones éligibles, Simulations types, Avantages fiscaux
+- [ ] Remplacer les images CDN par des images locales optimisées
+- [ ] Adapter les icônes Lucide aux nouveaux contenus
+
+### Style
+
+- Tabs horizontaux avec icônes
+- Image à droite, texte à gauche
+- Bouton "See Documentation" pour chaque tab
+- Animations : fade, blur, slide
+
+---
+
 ## Images Optimisées
 
 | Image | Dimensions | Poids | Usage |
@@ -175,6 +257,10 @@ Fichier : `src/components/landing/features-wrapper.tsx`
 | `loi-jeanbrun-dispositif-fiscal-salon.webp` | 800x600 | 22Ko | Tab 1 |
 | `loi-jeanbrun-fonctionnement-investissement.webp` | 800x600 | 30Ko | Tab 2 |
 | `loi-jeanbrun-conditions-location.webp` | 800x600 | 18Ko | Tab 3 |
+| **Images Blog (optimisées WebP)** | | | |
+| `images/blog/loi-jeanbrun-2026.webp` | 800x | 47Ko | Article principal (était 790Ko JPG) |
+| `images/blog/top-10-villes-investir-jeanbrun.webp` | 800x | 51Ko | Article top 10 villes (était 878Ko JPG) |
+| `images/blog/calculer-reduction-impot-jeanbrun.webp` | 800x | 9.3Ko | Article calcul (était 66Ko JPG) |
 
 ### Optimisation des images
 
@@ -189,6 +275,218 @@ convert source.webp -resize 800x600 -quality 75 output.webp
 ### Nommage SEO
 
 Format : `loi-jeanbrun-[contexte]-[description].webp`
+
+---
+
+## Section Pricing (pricing-component-14)
+
+### Configuration
+
+Fichier : `src/components/landing/pricing-wrapper.tsx`
+
+### Plans tarifaires
+
+| Plan | Prix | Période | Description |
+|------|------|---------|-------------|
+| **Gratuit** | 0€ | - | Simulation basique, rapport PDF, accès limité |
+| **Premium** | 49€ | HT | Analyse personnalisée, accompagnement expert, accès programmes |
+
+### Features incluses
+
+**Gratuit :**
+- ✅ Simulation fiscale basique
+- ✅ Rapport PDF simple
+- ✅ Calcul réduction d'impôt
+- ✅ Comparaison LMNP
+- ❌ Analyse personnalisée
+- ❌ Accompagnement expert
+- ❌ Accès aux programmes
+
+**Premium :**
+- ✅ Tout du gratuit +
+- ✅ Analyse personnalisée détaillée
+- ✅ Accompagnement expert (20+ ans)
+- ✅ Accès exclusif aux programmes
+- ✅ Suivi sur 9 ans
+- ✅ Réponse sous 24h
+- ✅ Premier rendez-vous inclus
+
+---
+
+## Section Expert (cta-section-07)
+
+### Configuration
+
+Fichier : `src/components/shadcn-studio/blocks/cta-section-07/cta-section-07.tsx`
+
+### Contenu
+
+**Badge :** "Expert certifié" (gradient ambre avec icône ShieldCheck)
+
+**Titre :** "Votre expert en défiscalisation immobilière Loi Jeanbrun"
+
+**Présentation :**
+> Avec plus de 20 ans d'expérience dans l'immobilier neuf et un Master en Gestion de Patrimoine, j'ai accompagné plus de 200 investisseurs dans l'optimisation de leur fiscalité.
+
+**Features (8 points) :**
+1. 20+ ans d'expertise immobilière
+2. 200+ investisseurs accompagnés
+3. Master en Gestion de Patrimoine
+4. Spécialiste immobilier neuf
+5. Simulation gratuite et sans engagement
+6. Analyse personnalisée de votre fiscalité
+7. Suivi de votre projet sur 9 ans
+8. Réponse rapide sous 24h
+
+**Stats bar (gradient bleu) :**
+- 20+ Années d'expérience
+- 200+ Clients accompagnés
+- 75k€ Gain fiscal moyen
+
+**Photo :** `/herve-voirin.avif`
+**Nom :** Hervé Voirin
+**Titre :** Conseiller en Gestion de Patrimoine
+
+**CTAs :**
+1. "Prendre rendez-vous" (primary)
+2. "Faire une demande" (secondary)
+
+### Personnalisation effectuée
+
+Ce bloc a été adapté depuis le design de Tom (OpenClaw) :
+- Intégration du contenu professionnel d'Hervé Voirin
+- Badge "Expert certifié" déplacé après le titre principal
+- Stats bar positionnée après les features
+- Photo avec nom et titre professionnel
+
+---
+
+## Section FAQ (faq-component-15)
+
+### Configuration
+
+Fichier : `src/components/landing/faq-wrapper.tsx`
+
+### Questions incluses (6)
+
+1. **Qu'est-ce que la Loi Jeanbrun ?**
+   - Définition du dispositif PLF 2026
+   - Avantages fiscaux jusqu'à 50 000€
+
+2. **Quel est le montant de la réduction d'impôt ?**
+   - Calcul selon TMI (45% → 50k€, 30% → 33k€)
+   - Rôle du simulateur
+
+3. **Quelles sont les conditions d'éligibilité ?**
+   - Zones tendues (A, A bis, B1)
+   - Engagement 6 ou 9 ans
+   - Résidence principale après location
+
+4. **Comment fonctionne le simulateur ?**
+   - Process : revenus, TMI, montant, durée
+   - Rapport détaillé par email
+
+5. **La simulation est-elle vraiment gratuite ?**
+   - Gratuit 100% sans CB
+   - Option Premium à 49€ HT
+
+6. **Puis-je être accompagné dans mon projet ?**
+   - Accompagnement A à Z
+   - Expérience 20+ ans
+   - Réponse sous 24h
+
+### Style
+
+- Accordéon avec animations MotionPreset
+- Image illustrative à gauche (avec pattern background)
+- Questions/réponses à droite
+- Premier item ouvert par défaut
+
+---
+
+## Section Blog (blog-component-06)
+
+### Configuration
+
+Fichier : `src/components/landing/blog-wrapper.tsx`
+
+### Articles publiés (3)
+
+1. **Loi Jeanbrun 2026 : Guide Complet pour Investir dans l'Immobilier**
+   - Slug : `loi-jeanbrun-2026-guide-complet`
+   - Tags : Loi Jeanbrun, PLF 2026, Défiscalisation
+   - Date : 15 janvier 2026
+   - Image : `/images/blog/loi-jeanbrun-2026.webp` (47Ko)
+   - Contenu : Conditions, avantages fiscaux, zones, simulation, comparaison Pinel
+   - **Tableaux** : 3 tableaux formatés (types de biens, taux de réduction, comparaison)
+
+2. **Top 10 des Villes où Investir avec la Loi Jeanbrun en 2026**
+   - Slug : `top-10-villes-investir-jeanbrun`
+   - Tags : Investissement locatif, Villes, Rendement
+   - Date : 31 janvier 2026
+   - Image : `/images/blog/top-10-villes-investir-jeanbrun.webp` (51Ko)
+   - Contenu : Classement 10 villes, méthodologie, quartiers recommandés
+   - **Tableaux** : 12 tableaux formatés (méthodologie + quartiers pour chaque ville + récapitulatif)
+
+3. **Comment Calculer sa Réduction d'Impôt avec la Loi Jeanbrun**
+   - Slug : `calculer-reduction-impot-jeanbrun`
+   - Tags : Calcul, Simulation, RE2020
+   - Date : 31 janvier 2026
+   - Image : `/images/blog/calculer-reduction-impot-jeanbrun.webp` (9.3Ko)
+
+### Éléments du bloc
+
+- **Titre principal :** "Get daily updates and inspiration from our team!" (à personnaliser)
+- **Newsletter card :** Formulaire d'inscription email
+- **Grille d'articles :** 3 colonnes responsive
+- **Bouton :** "See All Blogs"
+
+### Personnalisation effectuée (3 février 2026)
+
+- ✅ Titre principal → "Votre veille fiscale et immobilière"
+- ✅ Description → Analyses et conseils pour investissement locatif
+- ✅ 3 articles réels créés avec contenu MDX complet
+- ✅ Images optimisées en WebP (réduction 86-94%)
+- ✅ Newsletter card avec formulaire d'inscription
+- ✅ Auteur : Hervé Voirin (photo + bio)
+- ✅ **15 tableaux formatés** dans les articles (voir section détaillée ci-dessous)
+
+### Formatage des tableaux du blog
+
+**Fichiers concernés :**
+- `/content/blog/loi-jeanbrun-2026-guide-complet.mdx` (3 tableaux)
+- `/content/blog/top-10-villes-investir-jeanbrun.mdx` (12 tableaux)
+
+**Problématique résolue :**
+ReactMarkdown ne gérait pas nativement les alignements des tableaux Markdown (`:---:`, `---:`, `:---`)
+
+**Solution technique :**
+
+1. **Installation de remark-gfm** (plugin GitHub Flavored Markdown)
+   ```bash
+   pnpm add remark-gfm
+   ```
+
+2. **Modification de blog/[slug]/page.tsx**
+   - Import : `import remarkGfm from 'remark-gfm'`
+   - Ajout du plugin : `<ReactMarkdown remarkPlugins={[remarkGfm]}>`
+   - Composants personnalisés pour `table`, `thead`, `tbody`, `tr`, `th`, `td`
+   - Lecture de `style.textAlign` pour appliquer les classes d'alignement
+
+3. **Style moderne des tableaux**
+   - Bordure arrondie autour du tableau
+   - Header avec fond grisé (`bg-muted/50`)
+   - Lignes séparées (`divide-y divide-border`)
+   - Effet hover sur les lignes (`hover:bg-muted/30`)
+   - Meilleurs espacements (`px-4 py-3`)
+
+**Résultat visuel :**
+- ✅ Prix/m² alignés à droite (meilleure lisibilité des chiffres)
+- ✅ Rendements centrés et en gras
+- ✅ Quartiers/critères alignés à gauche
+- ✅ Médailles 🥇🥈🥉 dans le tableau récapitulatif
+- ✅ Émojis ✅/❌ pour éligibilité
+- ✅ Design professionnel et moderne
 
 ---
 
@@ -213,6 +511,98 @@ Format : `loi-jeanbrun-[contexte]-[description].webp`
 
 1. Ajout de l'image de fond avec next/image
 2. Overlay gradient pour lisibilité du texte
+
+### Modifications 3 février 2026
+
+1. **Installation pricing-component-14**
+   - Création de `pricing-wrapper.tsx`
+   - 2 plans : Gratuit (0€) et Premium (49€ HT)
+   - Features list complète pour chaque plan
+
+2. **Installation cta-section-07**
+   - Adaptation du design de Tom (OpenClaw)
+   - Badge "Expert certifié" après le titre
+   - 8 features + stats bar (20+, 200+, 75k€)
+   - Photo Hervé Voirin avec nom et titre
+   - 2 CTAs : Rendez-vous et Demande
+
+3. **Installation faq-component-15**
+   - Création de `faq-wrapper.tsx`
+   - 6 questions/réponses sur la Loi Jeanbrun
+   - Accordéon avec animations
+
+4. **Installation blog-component-06**
+   - Création de `blog-wrapper.tsx`
+   - 3 articles de blog
+   - Newsletter card intégrée
+
+5. **Suppression composant TomExpertSection**
+   - Retiré le composant avec styled-jsx (erreur Server Component)
+   - Contenu intégré dans cta-section-07
+
+### Modifications 3 février 2026 (suite - session blog)
+
+1. **Optimisation des images blog en WebP**
+   - `loi-jeanbrun-2026.jpg` (790Ko) → `loi-jeanbrun-2026.webp` (47Ko) - **94% de réduction**
+   - `top-10-villes-investir-jeanbrun.jpg` (878Ko) → `.webp` (51Ko) - **94% de réduction**
+   - `calculer-reduction-impot-jeanbrun.jpg` (66Ko) → `.webp` (9.3Ko) - **86% de réduction**
+   - Commande : `convert input.jpg -resize 800x -quality 85 output.webp`
+
+2. **Mise à jour des fichiers MDX**
+   - Modification des 3 fichiers dans `/content/blog/`
+   - Changement de l'attribut `image:` de `.jpg` vers `.webp`
+   - Images utilisées à la fois sur page d'accueil ET dans les articles
+
+3. **Formatage professionnel de 15 tableaux Markdown**
+
+   **Article "Guide complet" (3 tableaux) :**
+   - Tableau types de biens éligibles (avec ✅/❌)
+   - Tableau taux de réduction (6, 9, 12 ans)
+   - Tableau comparaison Pinel vs Jeanbrun (avec 🚀)
+
+   **Article "Top 10 villes" (12 tableaux) :**
+   - Tableau méthodologie (5 critères pondérés)
+   - 10 tableaux quartiers (Lyon, Bordeaux, Nantes, Toulouse, Montpellier, Lille, Rennes, Strasbourg, Nice, Marseille)
+   - Tableau récapitulatif final (avec médailles 🥇🥈🥉)
+
+   **Améliorations appliquées :**
+   - Alignements corrects : gauche (`:---`), centre (`:---:`), droite (`---:`)
+   - Symboles € au lieu de EUR
+   - Accents français corrigés (é, è, à, ô, etc.)
+   - Rendements et valeurs importantes en **gras**
+   - Émojis pour meilleure lisibilité (✅, ❌, 🥇, 🚀)
+   - Chiffres supérieurs (7ᵉ, 5ᵉ, 8ᵉ arrondissement)
+
+4. **Installation et configuration de remark-gfm**
+   - Plugin nécessaire pour GitHub Flavored Markdown (tableaux)
+   - `pnpm add remark-gfm`
+   - Import dans `blog/[slug]/page.tsx`
+   - Ajout du plugin à ReactMarkdown : `remarkPlugins={[remarkGfm]}`
+
+5. **Composants ReactMarkdown personnalisés pour tableaux**
+
+   **Nouveaux composants ajoutés :**
+   ```tsx
+   table: Wrapper avec bordure arrondie et overflow
+   thead: Header avec fond grisé
+   tbody: Corps avec séparation des lignes
+   tr: Lignes avec effet hover
+   th: Headers avec alignement dynamique (lecture de style.textAlign)
+   td: Cellules avec alignement dynamique
+   ```
+
+   **Classes CSS appliquées :**
+   - Bordure arrondie : `rounded-lg border border-border`
+   - Header : `bg-muted/50`
+   - Séparation lignes : `divide-y divide-border`
+   - Hover : `hover:bg-muted/30 transition-colors`
+   - Alignements : `text-left`, `text-center`, `text-right`
+
+6. **Corrections techniques environnement dev**
+   - Better Auth : Ajout de `baseURL: process.env.NEXT_PUBLIC_APP_URL`
+   - `.env.local` : Changement de `https://simuler-loi-fiscale-jeanbrun.fr` vers `http://147.93.53.108:3001`
+   - `next.config.ts` : Suppression du preload de la police `DMSerifDisplay-Regular.woff2` inexistante
+   - Résolution des erreurs : CSP violation, hydration error, 404 police
 
 ---
 
@@ -240,7 +630,49 @@ convert input.webp -resize 800x600 -quality 75 output.webp
 
 ## À faire
 
+### Priorité HAUTE
+
+- [x] **Personnaliser le bloc Blog (blog-component-06)** ✅ *Terminé 3 février 2026*
+  - ✅ Remplacer titre et description
+  - ✅ Créer vraies pages d'articles (3 articles MDX complets)
+  - ✅ Remplacer images par images locales optimisées WebP
+  - ✅ Formater 15 tableaux Markdown de manière professionnelle
+  - ✅ Installer remark-gfm et personnaliser composants ReactMarkdown
+  - ✅ Ajouter auteur Hervé Voirin avec photo et bio
+
+- [x] **Ajouter photo Hervé Voirin** ✅ *Terminé 3 février 2026*
+  - ✅ Photo ajoutée : `/herve-voirin.avif`
+  - ✅ Utilisée dans cta-section-07 et blog-component-06
+
+- [ ] **Personnaliser le bloc Personas (features-section-09)**
+  - Contenu 100% générique actuellement
+  - Remplacer le logo Shadcn par logo Simulateur Jeanbrun
+  - Créer 4 nouveaux tabs pertinents (ex: Profils investisseurs)
+  - Créer 4 nouvelles images optimisées
+
+### Priorité MOYENNE
+
 - [ ] Personnaliser le CTA section 02 avec texte Jeanbrun
-- [ ] Ajouter d'autres sections si nécessaire
+- [x] **Créer vraies pages de blog avec contenu détaillé** ✅ *Terminé 3 février 2026*
+  - ✅ Article 1 : Guide complet Loi Jeanbrun (6780 mots, 3 tableaux)
+  - ✅ Article 2 : Top 10 villes (14461 mots, 12 tableaux)
+  - ✅ Article 3 : Calcul réduction impôt (10129 mots)
+- [ ] Fonctionnaliser la newsletter (intégration Mailjet)
+- [ ] Ajouter liens fonctionnels aux CTAs (Calendly, formulaire contact)
+
+### Priorité BASSE
+
 - [ ] Vérifier le responsive mobile
 - [ ] Tester les performances (Lighthouse)
+- [x] **Optimiser les images du blog** ✅ *Terminé 3 février 2026*
+  - ✅ Conversion WebP avec réduction 86-94%
+  - ✅ Taille optimale 800px largeur
+- [ ] Ajouter meta descriptions SEO pour chaque section
+
+### Nouvelles tâches techniques
+
+- [x] **Corriger environnement dev** ✅ *Terminé 3 février 2026*
+  - ✅ Better Auth baseURL configuré
+  - ✅ NEXT_PUBLIC_APP_URL en localhost
+  - ✅ Suppression preload police inexistante
+  - ✅ Résolution erreurs CSP et hydration
