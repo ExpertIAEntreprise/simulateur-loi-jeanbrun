@@ -32,7 +32,7 @@ const featuresData = [
     icon: <TrendingUpIcon />,
     title: 'Comment fonctionne-t-il ?',
     description:
-      'Lorsqu\'un ménage achètera un appartement pour le mettre en location, il pourra déduire de ses revenus locatifs (c\'est-à-dire des loyers) :\n\n• une partie du prix d\'achat du bien ;\n• l\'intégralité des charges liées à la location : travaux, intérêts d\'emprunt, taxe foncière.\n\nLe dispositif permet :\n• jusqu\'à 12 000 euros d\'amortissement par an ;\n• jusqu\'à 10 700 euros de déduction des autres revenus (salaire, pension de retraite...).',
+      'Lorsqu\'un ménage achètera un appartement pour le mettre en location, il pourra déduire de ses revenus locatifs (c\'est-à-dire des loyers) :\n\n• une partie du prix d\'achat du bien ;\n• l\'intégralité des charges liées à la location : travaux, intérêts d\'emprunt, taxe foncière.\n\nLe dispositif permet :\n• jusqu\'à 12 000 euros d\'amortissement par an ;\n• jusqu\'à 21 400 euros de déduction des autres revenus (salaire, pension de retraite...).',
     link: '#',
     testimonials: [
       { id: '1', review: "Déduisez jusqu'à 100% de vos charges locatives." },

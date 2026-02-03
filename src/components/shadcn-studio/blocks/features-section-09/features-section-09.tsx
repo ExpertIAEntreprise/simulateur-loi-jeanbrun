@@ -52,31 +52,6 @@ const Features = ({ tabs }: { tabs: tabsData }) => {
               real-time notifications, and integrated support tools to streamline your workflow and keep you productive.
             </MotionPreset>
           </div>
-
-          {/* Logo */}
-          <MotionPreset
-            fade
-            blur
-            zoom={{ initialScale: 0.75 }}
-            delay={0.4}
-            transition={{ duration: 0.5 }}
-            className='mx-auto flex'
-          >
-            <div className='relative flex size-36 items-center justify-center'>
-              <div className='absolute inset-0 flex items-center justify-center'>
-                <img
-                  src='https://cdn.shadcnstudio.com/ss-assets/logo/logo-square.png'
-                  className='z-1 size-32 rounded-4xl dark:invert'
-                  alt='brand-logo'
-                />
-              </div>
-              <div className='absolute inset-0'>
-                <div className='border-primary absolute inset-12 animate-ping rounded-3xl border-2'></div>
-                <div className='border-primary/60 absolute inset-8 animate-ping rounded-3xl border-2'></div>
-                <div className='border-primary/40 absolute inset-6 animate-ping rounded-3xl border-2'></div>
-              </div>
-            </div>
-          </MotionPreset>
         </div>
 
         <Tabs defaultValue='upload-files' className='gap-8 sm:gap-16 lg:gap-24'>

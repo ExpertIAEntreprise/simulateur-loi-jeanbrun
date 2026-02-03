@@ -2,8 +2,15 @@ import type { Metadata } from "next";
 import HeroSection from "@/components/shadcn-studio/blocks/hero-section-18/hero-section-18";
 import Header from "@/components/shadcn-studio/blocks/hero-section-18/header";
 import FeaturesWrapper from "@/components/landing/features-wrapper";
-import CTASection from "@/components/shadcn-studio/blocks/cta-section-02/cta-section-02";
+import CTASection14 from "@/components/shadcn-studio/blocks/cta-section-14/cta-section-14";
 import PersonasSection from "@/components/landing/personas-wrapper";
+import CTASection07 from "@/components/shadcn-studio/blocks/cta-section-07/cta-section-07";
+import TestimonialsWrapperNew from "@/components/landing/testimonials-wrapper-new";
+import PricingWrapper from "@/components/landing/pricing-wrapper";
+import FAQWrapper from "@/components/landing/faq-wrapper";
+import BlogWrapper from "@/components/landing/blog-wrapper";
+import WhyInvestWrapper from "@/components/landing/why-invest-wrapper";
+import Footer from "@/components/shadcn-studio/blocks/footer-component-02/footer-component-02";
 import type { NavigationSection } from "@/components/shadcn-studio/blocks/menu-navigation";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
@@ -19,7 +26,7 @@ export const metadata: Metadata = {
 
 const navigationData: NavigationSection[] = [
   {
-    title: "La Loi Jeanbrun",
+    title: "Comprendre le dispositif",
     href: "#dispositif",
   },
   {
@@ -64,14 +71,35 @@ export default function LandingPage() {
       </main>
     </div>
 
-    {/* Features Section */}
+    {/* 1. Features Section - Bénéfices Loi Jeanbrun */}
     <FeaturesWrapper />
 
-    {/* CTA Section - Guide */}
-    <CTASection />
+    {/* 2. Expert Section - Crédibilité */}
+    <CTASection07 />
 
-    {/* Personas Section */}
+    {/* 3. Why Invest - Les 4 piliers */}
+    <WhyInvestWrapper />
+
+    {/* 4. Personas Section - Ciblage */}
     <PersonasSection />
+
+    {/* 5. Testimonials - Social Proof */}
+    <TestimonialsWrapperNew />
+
+    {/* 6. Pricing - Moment de décision */}
+    <PricingWrapper />
+
+    {/* 7. FAQ - Lever les objections */}
+    <FAQWrapper />
+
+    {/* 8. CTA Final - Call to Action fort */}
+    <CTASection14 />
+
+    {/* 9. Blog - Engagement/SEO */}
+    <BlogWrapper />
+
+    {/* 10. Footer */}
+    <Footer />
   </>
   );
 }

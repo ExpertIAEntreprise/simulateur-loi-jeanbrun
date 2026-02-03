@@ -26,39 +26,46 @@ const HeroSection = () => {
             {/* Texte titre + sous-titre */}
             <div className='flex-1'>
               <h1 className='text-3xl font-bold text-[#1e3a5f] lg:text-4xl'>
-                Helping You Find and Grow Your Dream Home
+                La révolution fiscale : l&apos;amortissement sur le revenu global
               </h1>
               <h2 className='mt-6 text-2xl font-bold text-[#1e3a5f] lg:text-3xl'>
-                Jusqu&apos;à 63 000€ de réduction d&apos;impôt
+                Jusqu&apos;à 12 000 euros de réduction du revenu imposable
               </h2>
               <p className='mt-6 text-lg text-[#1e3a5f]/80'>
-                Le nouveau dispositif de défiscalisation 2026 dédié aux Français. Calculez votre avantage fiscal en moins de 2 minutes.
+                Le nouveau dispositif de défiscalisation Relance Logement 2026 dédié aux Français.
+              </p>
+              <p className='mt-2 text-lg text-[#1e3a5f]/80'>
+                Calculez votre avantage fiscal en moins de 2 minutes.
               </p>
             </div>
 
             {/* Bouton rond rouge - pointe vers le formulaire à droite */}
             <Link
               href="/simulateur"
-              className='flex size-52 shrink-0 flex-col items-center justify-center rounded-full bg-[#c41e3a] text-white shadow-xl transition-transform hover:scale-105 lg:size-56'
+              className='flex size-56 shrink-0 flex-col items-center justify-center rounded-full bg-[#c41e3a] text-white shadow-xl transition-transform hover:scale-105 lg:size-64'
             >
               <span className='text-sm font-medium uppercase tracking-wide'>En quelques clics</span>
-              <span className='mt-1 text-center text-base font-bold uppercase leading-tight'>
+              <span className='mt-2 text-center text-base font-bold uppercase leading-tight'>
                 ESTIMEZ VOTRE<br />RÉDUCTION D&apos;IMPÔT
               </span>
-              <ChevronRight className='mt-1 size-6 animate-bounce' />
+              <span className='mt-2 text-xs font-medium uppercase tracking-wide'>Gratuit sans engagement</span>
+              <ChevronRight className='mt-2 size-8 animate-bounce' />
             </Link>
           </div>
 
           {/* Nouveau rectangle blanc (1/3) - aligné avec la barre de recherche */}
           <div className='flex w-1/3 flex-col max-md:mt-4 max-md:w-full'>
             {/* Bandeau au-dessus */}
-            <div className='w-full rounded-t-xl bg-[#1e3a5f] px-4 py-3 text-center'>
+            <div className='w-full rounded-t-xl bg-gradient-to-r from-[#1e3a5f] to-[#2c5f8d] px-4 py-3 text-center'>
               <p className='text-lg font-semibold text-white'>
                 Test d&apos;éligibilité à la loi Jeanbrun 2026
               </p>
             </div>
             {/* Contenu du rectangle */}
             <div className='flex flex-1 flex-col items-center justify-center gap-4 rounded-br-xl bg-white p-8 shadow-lg max-md:rounded-b-xl'>
+              <p className='text-center text-base font-medium text-[#1e3a5f]'>
+                Découvrez en 3 étapes si vous êtes éligible !
+              </p>
               <h3 className='text-center text-xl font-bold text-[#1e3a5f]'>
                 Quelle est votre situation matrimoniale ?
               </h3>
@@ -89,27 +96,23 @@ const HeroSection = () => {
             {/* Tuile 1 - Réduire mes impôts */}
             <div className='bg-background flex flex-col items-center justify-center gap-2 px-4 py-5'>
               <PiggyBank className='size-8 text-[#1e3a5f]' />
-              <p className='text-base font-semibold text-[#1e3a5f]'>Réduire mes impôts</p>
-              <p className='text-xs text-[#1e3a5f]/60'>Optimiser ma fiscalité</p>
+              <p className='text-center text-base font-semibold text-[#1e3a5f]'>Réduire mes impôts pendant 9 ans minimum</p>
             </div>
             {/* Tuile 2 - Générer des revenus */}
             <div className='bg-background flex flex-col items-center justify-center gap-2 px-4 py-5'>
               <TrendingUp className='size-8 text-[#1e3a5f]' />
-              <p className='text-base font-semibold text-[#1e3a5f]'>Générer des revenus</p>
-              <p className='text-xs text-[#1e3a5f]/60'>Revenus complémentaires</p>
+              <p className='text-center text-base font-semibold text-[#1e3a5f]'>Générer des revenus entièrement défiscalisés</p>
             </div>
             {/* Tuile 3 - Construire un patrimoine */}
             <div className='bg-background flex flex-col items-center justify-center gap-2 px-4 py-5'>
               <Building2 className='size-8 text-[#1e3a5f]' />
-              <p className='text-base font-semibold text-[#1e3a5f]'>Construire un patrimoine</p>
-              <p className='text-xs text-[#1e3a5f]/60'>Investir dans l&apos;immobilier</p>
+              <p className='text-center text-base font-semibold text-[#1e3a5f]'>Construire un patrimoine en utilisant l&apos;effet levier du crédit</p>
             </div>
           </div>
           {/* Tuile 4 - Préparer ma retraite (bleu - 1/3) */}
-          <div className='flex w-1/3 flex-col items-center justify-center gap-2 bg-[#1e3a5f] px-4 py-5 max-md:w-full'>
+          <div className='flex w-1/3 flex-col items-center justify-center gap-2 bg-gradient-to-r from-[#1e3a5f] to-[#2c5f8d] px-4 py-5 max-md:w-full'>
             <Clock className='size-8 text-white' />
-            <p className='text-base font-semibold text-white'>Préparer ma retraite</p>
-            <p className='text-xs text-white/80'>Anticiper l&apos;avenir</p>
+            <p className='text-center text-base font-semibold text-white'>Construire un patrimoine long terme compatible avec les objectifs retraite</p>
           </div>
         </div>
       </div>
