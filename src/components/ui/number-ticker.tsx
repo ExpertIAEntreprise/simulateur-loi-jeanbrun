@@ -45,6 +45,7 @@ function NumberTicker({
 
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [motionValue, isInView, delay, value, direction, startValue])
 
   React.useEffect(

@@ -1,12 +1,9 @@
-import { ArrowRightIcon } from 'lucide-react'
-
 import ProcessFlow from '@/components/shadcn-studio/blocks/features-section-23/process-flow'
 import type { Process } from '@/components/shadcn-studio/blocks/features-section-23/process-flow'
 
 import { Badge } from '@/components/ui/badge'
 
 import { MotionPreset } from '@/components/ui/motion-preset'
-import { PrimaryGrowButton, SecondaryGrowButton } from '@/components/ui/grow-button'
 
 const Features = ({ features }: { features: Process[] }) => {
   return (

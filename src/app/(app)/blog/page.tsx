@@ -67,160 +67,6 @@ const CATEGORIES = [
   { id: 'guides', label: 'Guides' },
 ] as const
 
-// Articles de demonstration - DEPRECATED - Utiliser getAllPostsMeta() a la place
-const DEMO_POSTS_BACKUP: BlogPost[] = [
-  {
-    slug: 'loi-jeanbrun-2026-guide-complet',
-    title: 'Loi Jeanbrun 2026 : Guide Complet pour les Investisseurs',
-    description:
-      'Decouvrez tout ce que vous devez savoir sur la loi Jeanbrun, le nouveau dispositif de defiscalisation immobiliere du PLF 2026.',
-    date: '2026-01-30',
-    author: 'Expert IA Entreprise',
-    category: 'defiscalisation',
-    tags: ['loi-jeanbrun', 'plf-2026', 'defiscalisation'],
-    image: '/images/blog/loi-jeanbrun-guide.webp',
-    imageAlt: 'Guide complet de la loi Jeanbrun 2026',
-    readingTime: 12,
-    featured: true,
-    content: '',
-  },
-  {
-    slug: 'loi-jeanbrun-vs-pinel-comparatif',
-    title: 'Loi Jeanbrun vs Pinel : Comparatif Detaille 2026',
-    description:
-      "Quel dispositif choisir entre la loi Jeanbrun et l'ancienne loi Pinel ? Comparatif complet des avantages fiscaux.",
-    date: '2026-01-28',
-    author: 'Expert IA Entreprise',
-    category: 'defiscalisation',
-    tags: ['loi-jeanbrun', 'pinel', 'comparatif'],
-    image: '/images/blog/jeanbrun-vs-pinel.webp',
-    imageAlt: 'Comparaison Jeanbrun vs Pinel',
-    readingTime: 8,
-    featured: true,
-    content: '',
-  },
-  {
-    slug: 'zones-eligibles-loi-jeanbrun',
-    title: 'Zones Eligibles a la Loi Jeanbrun : A bis, A et B1',
-    description:
-      'Quelles sont les zones geographiques eligibles au dispositif Jeanbrun ? Decouvrez la carte des zones tendues.',
-    date: '2026-01-25',
-    author: 'Expert IA Entreprise',
-    category: 'defiscalisation',
-    tags: ['zones', 'eligibilite', 'immobilier'],
-    image: '/images/blog/zones-eligibles.webp',
-    imageAlt: 'Carte des zones eligibles Jeanbrun',
-    readingTime: 6,
-    featured: false,
-    content: '',
-  },
-  {
-    slug: 'calculer-reduction-impot-jeanbrun',
-    title: "Comment Calculer sa Reduction d'Impot avec la Loi Jeanbrun",
-    description:
-      "Apprenez a calculer precisement votre reduction d'impot selon la duree d'engagement et le montant investi.",
-    date: '2026-01-22',
-    author: 'Expert IA Entreprise',
-    category: 'guides',
-    tags: ['calcul', 'impot', 'simulation'],
-    image: '/images/blog/calculer-reduction.webp',
-    imageAlt: "Calculer sa reduction d'impot Jeanbrun",
-    readingTime: 10,
-    featured: false,
-    content: '',
-  },
-  {
-    slug: 'top-10-villes-investir-jeanbrun',
-    title: 'Top 10 des Villes pour Investir en Loi Jeanbrun en 2026',
-    description:
-      'Decouvrez les meilleures villes francaises pour un investissement locatif en loi Jeanbrun : rentabilite, demande locative et perspectives.',
-    date: '2026-01-20',
-    author: 'Expert IA Entreprise',
-    category: 'investissement',
-    tags: ['villes', 'investissement', 'rentabilite'],
-    image: '/images/blog/top-villes.webp',
-    imageAlt: 'Top 10 villes investissement Jeanbrun',
-    readingTime: 15,
-    featured: true,
-    content: '',
-  },
-  {
-    slug: 'lmnp-ou-jeanbrun-que-choisir',
-    title: 'LMNP ou Jeanbrun : Quel Regime Fiscal Choisir en 2026 ?',
-    description:
-      'Comparez les avantages du LMNP et de la loi Jeanbrun pour optimiser votre fiscalite immobiliere.',
-    date: '2026-01-18',
-    author: 'Expert IA Entreprise',
-    category: 'defiscalisation',
-    tags: ['lmnp', 'comparatif', 'fiscalite'],
-    image: '/images/blog/lmnp-vs-jeanbrun.webp',
-    imageAlt: 'LMNP vs Jeanbrun comparatif',
-    readingTime: 9,
-    featured: false,
-    content: '',
-  },
-  {
-    slug: 'guide-investissement-locatif-debutants',
-    title: "Guide de l'Investissement Locatif pour Debutants",
-    description:
-      "Vous debutez dans l'investissement locatif ? Notre guide complet vous accompagne pas a pas.",
-    date: '2026-01-15',
-    author: 'Expert IA Entreprise',
-    category: 'guides',
-    tags: ['debutant', 'guide', 'investissement'],
-    image: '/images/blog/guide-debutants.webp',
-    imageAlt: 'Guide investissement locatif debutants',
-    readingTime: 18,
-    featured: false,
-    content: '',
-  },
-  {
-    slug: 'actualites-fiscales-2026',
-    title: "Actualites Fiscales 2026 : Ce qui Change pour l'Immobilier",
-    description:
-      'Toutes les nouveautes fiscales 2026 qui impactent vos investissements immobiliers.',
-    date: '2026-01-10',
-    author: 'Expert IA Entreprise',
-    category: 'actualites',
-    tags: ['actualites', 'fiscalite', '2026'],
-    image: '/images/blog/actualites-fiscales.webp',
-    imageAlt: 'Actualites fiscales immobilier 2026',
-    readingTime: 7,
-    featured: false,
-    content: '',
-  },
-  {
-    slug: 'erreurs-eviter-defiscalisation',
-    title: '10 Erreurs a Eviter en Defiscalisation Immobiliere',
-    description:
-      "Evitez les pieges classiques de la defiscalisation immobiliere avec nos conseils d'experts.",
-    date: '2026-01-08',
-    author: 'Expert IA Entreprise',
-    category: 'guides',
-    tags: ['erreurs', 'conseils', 'defiscalisation'],
-    image: '/images/blog/erreurs-eviter.webp',
-    imageAlt: 'Erreurs a eviter en defiscalisation',
-    readingTime: 11,
-    featured: false,
-    content: '',
-  },
-  {
-    slug: 'temoignage-premier-investissement-jeanbrun',
-    title: 'Temoignage : Mon Premier Investissement en Loi Jeanbrun',
-    description:
-      'Decouvrez le parcours de Marie, qui a realise son premier investissement locatif grace a la loi Jeanbrun.',
-    date: '2026-01-05',
-    author: 'Expert IA Entreprise',
-    category: 'temoignages',
-    tags: ['temoignage', 'experience', 'investissement'],
-    image: '/images/blog/temoignage.webp',
-    imageAlt: 'Temoignage investissement Jeanbrun',
-    readingTime: 5,
-    featured: false,
-    content: '',
-  },
-]
-
 // Fonctions utilitaires - Utilise les vrais articles MDX
 function getAllPosts(): BlogPost[] {
   return getAllPostsMeta()
@@ -253,8 +99,8 @@ function ArticleCard({ post, featured = false }: { post: BlogPost; featured?: bo
         )}
       >
         <Image
-          src={post.image}
-          alt={post.imageAlt}
+          src={post.image ?? '/images/blog/default.webp'}
+          alt={post.imageAlt ?? post.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes={featured ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'}
@@ -368,16 +214,19 @@ export default async function BlogPage({
       ? allPosts
       : allPosts.filter((post) => post.category === selectedCategory)
 
-  // Articles mis en avant
+  // Articles mis en avant (max 2)
   const featuredPosts =
     currentPage === 1 && selectedCategory === 'all'
       ? filteredPosts.filter((post) => post.featured).slice(0, 2)
       : []
 
-  // Articles pagines (sans les featured si on est sur la page 1)
+  // IDs des articles affichés dans la section "A la une"
+  const featuredSlugs = new Set(featuredPosts.map((post) => post.slug))
+
+  // Articles pagines (sans ceux déjà affichés en featured)
   const regularPosts =
     currentPage === 1 && selectedCategory === 'all'
-      ? filteredPosts.filter((post) => !post.featured)
+      ? filteredPosts.filter((post) => !featuredSlugs.has(post.slug))
       : filteredPosts
 
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE

@@ -88,6 +88,7 @@ const TestimonialContent = ({ testimonials }: { testimonials: Testimonial[] }) =
       </Carousel>
 
       {/* Testimonial Details */}
+      {testimonials[current] != null && (
       <Card className='shadow-none'>
         <CardContent className='flex gap-6 max-sm:flex-col sm:items-center'>
           <Avatar className='size-44 rounded-lg'>
@@ -120,6 +121,7 @@ const TestimonialContent = ({ testimonials }: { testimonials: Testimonial[] }) =
           </div>
         </CardContent>
       </Card>
+      )}
     </>
   )
 }

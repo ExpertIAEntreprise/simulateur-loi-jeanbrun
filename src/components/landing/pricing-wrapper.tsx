@@ -8,6 +8,7 @@ type Plan = {
   features: string[];
   buttonText: string;
   isPro?: boolean;
+  badge?: string;
 }[];
 
 const pricingPlans: Plan = [
