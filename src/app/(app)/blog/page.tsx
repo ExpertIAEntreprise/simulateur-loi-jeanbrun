@@ -13,23 +13,13 @@ import {
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { BlogFilters } from './blog-filters'
+import { getAllPostsMeta } from '@/lib/blog'
 import type { Metadata } from 'next'
+import type { BlogPostMeta } from '@/types/blog'
+import NavbarWrapper from '@/components/blog/navbar-wrapper'
 
 // Types
-interface BlogPost {
-  slug: string
-  title: string
-  description: string
-  date: string
-  author: string
-  category: string
-  tags: string[]
-  image: string
-  imageAlt: string
-  readingTime: number
-  featured: boolean
-  content: string
-}
+type BlogPost = BlogPostMeta
 
 // Configuration
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://simulateur-loi-jeanbrun.vercel.app'
@@ -71,15 +61,14 @@ export const metadata: Metadata = {
 // Categories disponibles
 const CATEGORIES = [
   { id: 'all', label: 'Tous les articles' },
-  { id: 'defiscalisation', label: 'Defiscalisation' },
+  { id: 'loi-jeanbrun', label: 'Loi Jeanbrun' },
   { id: 'investissement', label: 'Investissement' },
-  { id: 'actualites', label: 'Actualites' },
+  { id: 'fiscalite', label: 'Fiscalité' },
   { id: 'guides', label: 'Guides' },
-  { id: 'temoignages', label: 'Temoignages' },
 ] as const
 
-// Articles de demonstration (a remplacer par getAllPosts() de src/lib/blog.ts)
-const DEMO_POSTS: BlogPost[] = [
+// Articles de demonstration - DEPRECATED - Utiliser getAllPostsMeta() a la place
+const DEMO_POSTS_BACKUP: BlogPost[] = [
   {
     slug: 'loi-jeanbrun-2026-guide-complet',
     title: 'Loi Jeanbrun 2026 : Guide Complet pour les Investisseurs',
@@ -232,9 +221,9 @@ const DEMO_POSTS: BlogPost[] = [
   },
 ]
 
-// Fonctions utilitaires (a remplacer par imports de src/lib/blog.ts)
+// Fonctions utilitaires - Utilise les vrais articles MDX
 function getAllPosts(): BlogPost[] {
-  return DEMO_POSTS
+  return getAllPostsMeta()
 }
 
 // Formater la date en francais
@@ -400,6 +389,9 @@ export default async function BlogPage({
   return (
     <>
       <BlogJsonLd posts={allPosts} />
+
+      {/* Navbar */}
+      <NavbarWrapper />
 
       <div className="container mx-auto px-4">
         {/* Header */}

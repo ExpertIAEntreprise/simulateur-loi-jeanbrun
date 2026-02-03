@@ -10,6 +10,7 @@ import {
   User,
 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,6 +20,7 @@ import type { BlogPostMeta, BlogCategory } from '@/types/blog'
 import { ShareButtons } from './share-buttons'
 import type { Metadata } from 'next'
 import type { Components } from 'react-markdown'
+import NavbarWrapper from '@/components/blog/navbar-wrapper'
 
 // Configuration
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://simulateur-loi-jeanbrun.vercel.app'
@@ -91,17 +93,42 @@ const markdownComponents: Components = {
     <pre className="mb-4 overflow-x-auto rounded-lg bg-muted">{children}</pre>
   ),
   table: ({ children }) => (
-    <div className="mb-4 overflow-x-auto">
+    <div className="my-6 overflow-x-auto rounded-lg border border-border">
       <table className="w-full border-collapse text-sm">{children}</table>
     </div>
   ),
-  th: ({ children }) => (
-    <th className="border border-border bg-muted px-4 py-2 text-left font-semibold">
-      {children}
-    </th>
+  thead: ({ children }) => (
+    <thead className="bg-muted/50">{children}</thead>
   ),
-  td: ({ children }) => (
-    <td className="border border-border px-4 py-2">{children}</td>
+  tbody: ({ children }) => (
+    <tbody className="divide-y divide-border">{children}</tbody>
+  ),
+  th: ({ children, style }) => {
+    const alignment = style?.textAlign || 'left'
+    const alignClass =
+      alignment === 'center' ? 'text-center' :
+      alignment === 'right' ? 'text-right' :
+      'text-left'
+    return (
+      <th className={`px-4 py-3 font-semibold ${alignClass}`}>
+        {children}
+      </th>
+    )
+  },
+  td: ({ children, style }) => {
+    const alignment = style?.textAlign || 'left'
+    const alignClass =
+      alignment === 'center' ? 'text-center' :
+      alignment === 'right' ? 'text-right' :
+      'text-left'
+    return (
+      <td className={`px-4 py-3 ${alignClass}`}>
+        {children}
+      </td>
+    )
+  },
+  tr: ({ children }) => (
+    <tr className="hover:bg-muted/30 transition-colors">{children}</tr>
   ),
   a: ({ href, children }) => {
     const isInternal = href?.startsWith('/') || href?.startsWith('#')
@@ -328,6 +355,9 @@ export default async function BlogArticlePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
+      {/* Navbar */}
+      <NavbarWrapper />
+
       <article className="container mx-auto px-4">
         {/* Breadcrumb specifique article */}
         <nav aria-label="Fil d'Ariane article" className="mb-4 text-sm text-muted-foreground">
@@ -406,7 +436,7 @@ export default async function BlogArticlePage({
         <div className="mx-auto max-w-3xl">
           {/* Article Content - MDX rendered with ReactMarkdown */}
           <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:scroll-mt-20 prose-headings:font-semibold prose-a:text-primary prose-pre:bg-muted">
-            <ReactMarkdown components={markdownComponents}>
+            <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
               {post.content}
             </ReactMarkdown>
           </div>
