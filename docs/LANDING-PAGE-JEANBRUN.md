@@ -1,7 +1,7 @@
 # Landing Page - Simulateur Loi Jeanbrun
 
-**Version:** 1.2
-**Date:** 3 février 2026 (mise à jour blog)
+**Version:** 1.3
+**Date:** 3 février 2026 (audit responsive mobile + plan corrections)
 **URL:** https://simulateur-loi-jeanbrun.vercel.app
 
 ## 📝 Dernières modifications (3 février 2026 - session blog)
@@ -660,14 +660,187 @@ convert input.webp -resize 800x600 -quality 75 output.webp
 - [ ] Fonctionnaliser la newsletter (intégration Mailjet)
 - [ ] Ajouter liens fonctionnels aux CTAs (Calendly, formulaire contact)
 
-### Priorité BASSE
+### Priorité CRITIQUE - Responsive Mobile
 
-- [ ] Vérifier le responsive mobile
+- [ ] **Corriger le responsive mobile** (audit du 3 fevrier 2026 - voir section ci-dessous)
 - [ ] Tester les performances (Lighthouse)
 - [x] **Optimiser les images du blog** ✅ *Terminé 3 février 2026*
   - ✅ Conversion WebP avec réduction 86-94%
   - ✅ Taille optimale 800px largeur
 - [ ] Ajouter meta descriptions SEO pour chaque section
+
+### Priorité BASSE
+
+- [ ] Tester les performances (Lighthouse)
+- [ ] Ajouter meta descriptions SEO pour chaque section
+
+---
+
+## Audit Responsive Mobile (3 fevrier 2026)
+
+**Device emule :** iPhone 14 (390x844)
+**Verdict :** La page est inutilisable en mobile. Problemes critiques sur la majorite des sections.
+
+### Problemes identifies
+
+#### 1. Header (CRITIQUE)
+- Le logo affiche toujours **"shadcn/studio"** au lieu du nom du projet
+- Le header sticky recouvre du contenu en scrollant (z-index trop haut)
+- La barre de navigation masque les premiers pixels de chaque section
+
+#### 2. Hero Section (CRITIQUE)
+- **Le hero est completement casse en mobile** : le titre "La revolution fiscale", le sous-titre, le bouton CTA rouge et le formulaire d'eligibilite sont invisibles ou empiles de maniere incoherente
+- Le formulaire "Test d'eligibilite" est tronque en haut, seul le bandeau bleu est partiellement visible
+- Les 4 tuiles "objectifs" prennent tout l'ecran, empilees verticalement sans optimisation d'espacement
+- L'image de fond hero n'est plus visible, remplacee par un fond blanc
+
+#### 3. Section Tabs "Qu'est-ce que la loi Jeanbrun ?" (MOYEN)
+- Le contenu texte s'affiche correctement
+- Les tabs ne sont pas visibles (probablement caches ou hors ecran)
+- L'image associee au tab n'est pas visible
+
+#### 4. Section Expert Herve Voirin (OK)
+- La section s'affiche relativement bien en mobile
+- Les badges, features, stats bar et photo sont lisibles
+- Les CTAs "Prendre rendez-vous" et "Faire une demande" sont bien empiles
+
+#### 5. Section Personas / features-section-09 (CRITIQUE)
+- **Contenu 100% en anglais** : "Features that you need.", "Upload Files", "Email Notifications", "Field Validations", "Auto Responses"
+- Bouton "See Documentation" en anglais
+- Images venant du CDN shadcnstudio.com (contenu placeholder)
+- Maquette de paiement "$5,550/Year" avec "Platinum" et numeros de carte bancaire fictifs affiches
+
+#### 6. Section Testimonials (OK)
+- Les avis Google s'affichent correctement (Christophe P.)
+- Etoiles et contenu lisibles
+
+#### 7. Section Pricing (BON)
+- Les 2 plans (Gratuit / Premium 99 TTC) s'affichent bien empiles
+- Features lisibles avec checkmarks
+- Badge "Integralement rembourse" visible sur le plan Premium
+- CTAs fonctionnels
+
+#### 8. Section FAQ (BON)
+- Accordeon fonctionnel
+- Questions/reponses lisibles
+- CTA "Prendre rendez-vous" visible
+
+#### 9. Section CTA "Avantage Exceptionnel" (MOYEN)
+- Le bouton CTA est coupe sur le bord droit : "Simulez gratuitement votre avantage" tronque
+- L'image couple est bien affichee
+
+#### 10. Section Blog (BON)
+- Articles empiles verticalement, lisibles
+- Images, tags, auteur et dates affichees correctement
+- Newsletter "Restez informe" avec formulaire email fonctionne
+
+#### 11. Footer (CRITIQUE)
+- **Contenu 100% template shadcn/studio** non personnalise
+- Logo et description : "An open-source collection of copy-and-paste shadcn components..."
+- Liens en anglais : "About", "Features", "Works", "Career", "Customer Support", "Delivery Details", "Terms & Conditions", "Privacy Policy"
+- Copyright : "2026 shadcn/studio, Made with for better web."
+- Logos marques : bestofjs, Product Hunt, reddit, Medium, Y Combinator (non pertinents)
+- Newsletter dupliquee (deja presente dans la section blog)
+
+### Console et Performance
+
+- **Aucune erreur JavaScript** dans la console
+- **6 warnings** de preload d'images non utilisees (images dark mode du CDN shadcnstudio)
+- **Toutes les requetes reseau en 200** (aucun 404)
+- Fast Refresh : ~10 secondes (normal en dev avec Turbopack)
+
+### Plan de corrections responsive
+
+#### Phase 1 : Corrections rapides (branding + footer)
+
+**1.1 Remplacer le footer template par le footer custom**
+- Fichier : `src/app/(landing)/page.tsx`
+- Ligne 13 : Changer import `footer-component-02` → `site-footer`
+- Ligne 102 : `<Footer />` → `<SiteFooter />`
+- Le fichier `src/components/site-footer.tsx` existe deja avec contenu FR, liens legaux, copyright correct
+
+**1.2 Corriger le logo "shadcn/studio"**
+- Fichier : `src/components/shadcn-studio/logo.tsx`
+- Ligne 10 : `shadcn/studio` → `Loi Jeanbrun`
+- Ajouter responsive : `text-base sm:text-xl`
+
+**1.3 Traduire "Login" en "Connexion"**
+- Fichier : `src/components/shadcn-studio/blocks/hero-section-18/header.tsx`
+- Lignes 35 et 41 : `Login` → `Connexion`
+
+#### Phase 2 : Hero Section - refonte responsive (effort principal)
+
+**Fichier :** `src/components/shadcn-studio/blocks/hero-section-18/hero-section-18.tsx`
+
+**Cause racine :** Positionnement absolu avec valeurs hardcodees (`bottom-[320px]`, `bottom-[185px]`), bouton CTA de 224px de diametre, texte trop gros pour mobile.
+
+| Element | Ligne | Actuel | Cible |
+|---------|-------|--------|-------|
+| Section wrapper | 9 | `relative flex flex-1 justify-end` | `relative flex flex-col overflow-hidden min-h-[100svh] lg:flex-row lg:flex-1 lg:justify-end lg:min-h-0` |
+| Carte blanche | 22 | `absolute bottom-[320px]` | `relative z-10 mt-auto w-full px-4 sm:px-6 lg:absolute lg:bottom-[320px] lg:left-1/2 lg:max-w-7xl lg:-translate-x-1/2 lg:px-8` |
+| Barre tuiles | 92 | `absolute bottom-[185px]` | `relative z-10 mt-4 w-full px-4 sm:px-6 lg:absolute lg:bottom-[185px] lg:left-1/2 lg:max-w-7xl lg:-translate-x-1/2 lg:px-8` |
+| Bouton CTA rouge | 45 | `size-56 lg:size-64` | `size-28 sm:size-40 lg:size-56` |
+| Titre h1 | 28 | `text-3xl lg:text-4xl` | `text-xl sm:text-2xl md:text-3xl lg:text-4xl` |
+| Titre h2 | 31 | `text-2xl lg:text-3xl` | `text-lg sm:text-xl md:text-2xl lg:text-3xl` |
+| Espacement | 34,37 | `mt-6` | `mt-3 sm:mt-4 lg:mt-6` |
+| Flex parent | 23 | `flex w-full gap-0 max-md:flex-col` | `flex w-full gap-0 max-md:flex-col max-md:gap-4` |
+| Padding carte | 25 | `p-8` | `p-4 sm:p-6 lg:p-8` |
+
+Texte dans le bouton rouge : `text-xs sm:text-sm` pour labels, `text-sm sm:text-base font-bold` pour texte principal.
+
+#### Phase 3 : Corrections sections secondaires
+
+**3.1 CTA "Avantage Exceptionnel" - bouton tronque**
+- Fichier : `src/components/shadcn-studio/blocks/cta-section-14/cta-section-14.tsx`
+- Ligne 39-42 : Texte trop long pour mobile → texte court sur mobile, texte complet sur desktop
+- Ligne 51 : Image `max-lg:max-w-100` → `max-lg:max-w-full max-lg:px-4`
+
+**3.2 Expert Herve Voirin - stats bar + image**
+- Fichier : `src/components/shadcn-studio/blocks/cta-section-07/cta-section-07.tsx`
+- Ligne 49 stats bar : Ajouter `flex-col sm:flex-row gap-4 sm:gap-0 p-4 sm:p-6`
+- Lignes 53, 58 dividers : Ajouter `hidden sm:block`
+- Ligne 82 image : `h-[28rem]` → `h-[16rem] sm:h-[20rem] lg:h-[28rem]`
+- Ligne 22 gap : `gap-16` → `gap-8 sm:gap-12 lg:gap-16`
+
+**3.3 Blog - espacement header**
+- Fichier : `src/components/shadcn-studio/blocks/blog-component-06/blog-component-06.tsx`
+- Ligne 23 : `gap-16` → `gap-8 sm:gap-12 lg:gap-16`, `mb-12` → `mb-8`
+
+**3.4 Carousel temoignages - fleches hors ecran**
+- Fichier : `src/components/landing/testimonials-google.tsx`
+- Ligne 132 : `-left-12` → `left-2 sm:-left-12`
+- Ligne 133 : `-right-12` → `right-2 sm:-right-12`
+
+**3.5 Personas images overflow**
+- Fichier : `src/components/shadcn-studio/blocks/features-section-09/features-section-09.tsx`
+- Lignes 99-104 : Ajouter `max-w-full` aux images pour eviter overflow sur 390px
+
+**3.6 Blog - images au format 16:9**
+- Fichier : `src/components/shadcn-studio/blocks/blog-component-06/blog-component-06.tsx`
+- Les images d'articles doivent etre plus larges, au format 16:9
+- Remplacer `max-h-60 w-full` par `w-full aspect-video object-cover` sur les images des cartes blog
+- Ceci s'applique aussi a la page article individuelle (`src/app/blog/[slug]/page.tsx`)
+
+#### Hors scope (differe)
+
+- Contenu personas en anglais : Remplacement complet du contenu template → Tache de contenu separee
+- Images placeholder CDN : Remplacement par images Jeanbrun locales → Tache design
+- Preload warnings console : Images dark mode preloadees inutilement → Optimisation future
+
+#### Verification post-implementation
+
+Tester avec Chrome DevTools aux resolutions :
+- 390x844 (iPhone 14), 375x667 (iPhone SE), 768x1024 (iPad), 1440x900 (Desktop)
+
+Checklist :
+- [ ] Pas de scrollbar horizontal
+- [ ] Tout le texte lisible (pas de troncature, pas de chevauchement)
+- [ ] Boutons cliquables (min 44px zone tactile)
+- [ ] Contenu en francais (plus de "shadcn/studio", "Login")
+- [ ] Hero : titre + formulaire + CTA visibles sur mobile
+- [ ] Footer : liens legaux FR, copyright correct
+
+---
 
 ### Nouvelles tâches techniques
 
