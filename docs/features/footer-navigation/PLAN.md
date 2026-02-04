@@ -317,20 +317,149 @@ Note: le code dans `src/lib/espocrm/index.ts` accepte `ESPOCRM_URL` OU `ESPOCRM_
 ## Prochaines etapes (Etape 12)
 
 ### 12a. MOYEN - Recreer entites metropoles Paris/Marseille dans EspoCRM
-Les arrondissements affichent la page mais sans lien vers la metropole parent.
-Action: creer "Paris" et "Marseille" comme CJeanbrunVille isMetropole=true, puis mettre a jour les metropoleParentId des arrondissements.
+
+**Contexte:** Les arrondissements (20 Paris + 16 Marseille) ont un `metropoleParentId` qui pointe vers des enregistrements supprimes. Grace au fix 11b, les pages s'affichent mais sans le composant `LienMetropoleParent` (lien "Retour vers Lyon" par exemple).
+
+**Actions a faire via l'API EspoCRM:**
+
+1. Creer une entite `CJeanbrunVille` "Paris" :
+   ```bash
+   curl -X POST "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille" \
+     -H "X-Api-Key: $ESPOCRM_API_KEY" -H "Content-Type: application/json" \
+     -d '{
+       "name": "Paris",
+       "slug": "paris",
+       "isMetropole": true,
+       "zoneFiscale": "A_BIS",
+       "codeInsee": "75056",
+       "codePostal": "75000",
+       "population": 2161000,
+       "latitude": 48.8566,
+       "longitude": 2.3522
+     }'
+   ```
+   → Noter l'ID retourne (ex: `NEW_PARIS_ID`)
+
+2. Idem pour "Marseille" :
+   ```bash
+   curl -X POST "..." -d '{
+     "name": "Marseille",
+     "slug": "marseille",
+     "isMetropole": true,
+     "zoneFiscale": "A",
+     "codeInsee": "13055",
+     "codePostal": "13000",
+     "population": 873076,
+     "latitude": 43.2965,
+     "longitude": 5.3698
+   }'
+   ```
+
+3. Mettre a jour les 20 arrondissements Paris :
+   ```bash
+   # Pour chaque arrondissement (paris-1 a paris-20)
+   curl -X PUT "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille/$ARRONDISSEMENT_ID" \
+     -H "X-Api-Key: $ESPOCRM_API_KEY" -H "Content-Type: application/json" \
+     -d '{"metropoleParentId": "$NEW_PARIS_ID"}'
+   ```
+
+4. Idem pour les 16 arrondissements Marseille.
+
+5. Verifier les autres villes peripheriques: certaines peuvent aussi avoir un `metropoleParentId` orphelin.
+   ```bash
+   # Lister toutes les villes avec un metropoleParentId
+   # Pour chaque parent ID, verifier qu'il existe (GET /CJeanbrunVille/$ID)
+   # Si 404 → parent orphelin a corriger
+   ```
+
+**Fichiers concernes:** Aucune modification de code. Uniquement des donnees EspoCRM.
+
+**Verification:** Apres correction, les pages arrondissements doivent afficher le lien "Voir la metropole Paris" (composant `LienMetropoleParent` dans `PeripheriqueLayout`).
 
 ### 12b. CRITIQUE - Strategie scraping programmes
-Les 153 programmes actuels sont quasi vides. Il faut definir :
-1. Quelles donnees exactes on veut sur une fiche programme
-2. Quelles sources scraper (Nexity seul ne suffit pas)
-3. Comment enrichir les programmes existants
-4. Frequence de re-scraping
+
+**Contexte:** 153 programmes dans EspoCRM, quasi vides. Source unique: Nexity.
+
+**Etat des donnees (verifie):**
+- Champs remplis: `name`, `prixMin`, `prixMax`, `villeId`, `villeName`, `zoneFiscale`, `statut`, `sourceApi`
+- Champs vides: `promoteur`, `adresse`, `imagePrincipale`, `prixM2Moyen`, `nbLotsTotal`, `nbLotsDisponibles`, `typesLots`, `dateLivraison`, `latitude`, `longitude`
+- `prixMin` parfois 0 (donnee incorrecte)
+
+**Actions a definir:**
+1. Quelles sources scraper en plus de Nexity (ex: Bouygues Immo, Kaufman & Broad, Eiffage, programmes-neufs.com)
+2. Quels champs sont prioritaires pour l'affichage (`imagePrincipale`, `promoteur`, `adresse`, `typesLots`)
+3. Script de nettoyage: supprimer les programmes avec `prixMin=0` ou sans `villeId`
+4. Frequence de re-scraping (quotidien, hebdomadaire)
+5. Workflow n8n a creer pour automatiser le scraping
+
+**Fichiers concernes:**
+- `src/components/villes/ProgrammeCard.tsx` : affiche les cards programmes
+- `src/app/(app)/programmes/page.tsx` : page liste des programmes
+- Scripts scraping dans `/root/scripts/jeanbrun/` (a creer)
+
+**Impact:** Les cards programmes affichent actuellement "A partir de 0 €" et l'icone placeholder au lieu d'une image. Pas d'adresse, pas de promoteur.
 
 ### 12c. MOYEN - Enrichissement villes EspoCRM
-- Remplir regionId/departementId pour toutes les villes
-- Remplir population, revenuMedian, evolutionPrix1An
-- Ajouter contenuEditorial, photoVille pour le SEO
+
+**Contexte:** 311 villes dans EspoCRM mais donnees lacunaires.
+
+**Champs a remplir (par priorite):**
+
+1. **regionId / departementId** (PRIORITE 1)
+   - Actuellement NULL pour la plupart des villes
+   - Impact: la sidebar "Villes de la region" utilise le fallback par zoneFiscale au lieu de la region reelle
+   - Source: fichier officiel INSEE (code commune → departement → region)
+   - Action: script qui enrichit via l'API INSEE ou un CSV de mapping
+
+2. **contenuEditorial / photoVille** (PRIORITE 2)
+   - `contenuEditorial` rempli pour les villes peripheriques (genere par IA) mais vide pour les 52 metropoles
+   - `photoVille` pointe vers des images R2 mais beaucoup utilisent la photo de la metropole parent
+   - Action: generer du contenu editorial pour les metropoles, scraper des photos libres de droits
+
+3. **population / revenuMedian** (PRIORITE 3)
+   - Rempli pour certaines villes peripheriques, souvent NULL pour les metropoles
+   - Source: API INSEE / data.gouv.fr
+   - Action: script d'enrichissement en batch
+
+4. **plafondLoyerJeanbrun / plafondPrixJeanbrun** (PRIORITE 3)
+   - Plafonds specifiques ville (optionnel, les plafonds par zone existent dans le code)
+   - Source: BOFiP / textes officiels PLF 2026
+
+**Fichiers concernes:**
+- `src/components/villes/DonneesMarche.tsx` : affiche les donnees marche
+- `src/components/villes/DonneesInsee.tsx` : affiche population/revenu
+- `src/components/villes/BarometreSidebar.tsx` : sidebar barometre
+- `src/components/villes/ContenuEditorial.tsx` : contenu SEO
+- Scripts enrichissement dans `/root/scripts/jeanbrun/` (a creer)
 
 ### 12d. MINEUR - Preload images landing
-Identifier le composant qui cause le preload et le limiter au layout landing
+
+**Contexte:** 10 images de la landing sont preloadees sur TOUTES les pages app (warnings console).
+
+**Images concernees:**
+- `loi-jeanbrun-2026.webp`, `couple-investisseur`, `fonctionnement-investissement`
+- `conditions-location`, `herve-voirin.avif`
+- Images blog, `cdn.shadcnstudio.com/image-14`
+
+**Cause probable:** Composants landing importes dans un layout partage, ou `next/image` avec `priority` dans des composants visibles sur toutes les pages.
+
+**Action:**
+1. Identifier quel layout charge ces images (probablement `src/app/(landing)/layout.tsx` ou un composant partage)
+2. S'assurer que les composants landing ne sont importes QUE dans le layout `(landing)`, pas dans `(app)`
+3. Verifier les `priority` sur les `<Image>` de la landing
+
+**Fichiers a inspecter:**
+- `src/app/(app)/layout.tsx` : layout pages app
+- `src/app/(landing)/layout.tsx` : layout landing
+- `src/components/shadcn-studio/blocks/hero-section-18/` : hero avec images
+- `src/components/landing/` : wrappers landing
+
+### 12e. MOYEN - Verification post-deploy
+
+**Apres le deploy du fix 11b, verifier via DevTools:**
+1. `/villes/paris-15` → doit retourner 200 (plus 404)
+2. `/villes/marseille-8` → doit retourner 200
+3. `/villes/paris-10` → doit retourner 200
+4. Verifier que le header montre un NOUVEAU deployment ID (different de `dpl_EqqhTBcXimja3idePaLYdVKZwqZf`)
+5. Verifier que `x-vercel-cache` n'est plus `HIT` sur un ancien 404
+6. Verifier que les pages arrondissements affichent le contenu ville (meme sans lien metropole parent)
