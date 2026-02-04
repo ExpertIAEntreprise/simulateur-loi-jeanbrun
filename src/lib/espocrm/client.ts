@@ -4,6 +4,7 @@
  * Gère les requêtes vers EspoCRM avec retry automatique et gestion d'erreurs.
  */
 
+import type { ZoneFiscale } from "@/types/ville";
 import { espocrmLogger } from "@/lib/logger";
 import type {
   EspoVille,
@@ -631,8 +632,77 @@ export class EspoCRMClient {
   }
 
   /**
+   * Récupère les métropoles d'une zone fiscale donnée, triées par prix décroissant
+   */
+  private async getMetropolesByZoneFiscale(
+    zoneFiscale: ZoneFiscale,
+    excludeSlug?: string,
+    options?: PaginationOptions
+  ): Promise<EspoListResponse<EspoVille>> {
+    const params: Record<string, string | number> = {
+      maxSize: options?.limit ?? 10,
+      offset: options?.offset ?? 0,
+      orderBy: "prixM2Moyen",
+      order: "desc",
+    };
+
+    const whereParams = this.buildWhereParams({
+      isMetropole: true,
+      zoneFiscale,
+    });
+    Object.assign(params, whereParams);
+
+    if (excludeSlug) {
+      const whereIndex = Object.keys(whereParams).length / 3;
+      params[`where[${whereIndex}][type]`] = "notEquals";
+      params[`where[${whereIndex}][attribute]`] = "slug";
+      params[`where[${whereIndex}][value]`] = excludeSlug;
+    }
+
+    const url = this.buildUrl("/CJeanbrunVille", params);
+
+    return this.fetchWithRetry<EspoListResponse<EspoVille>>(url);
+  }
+
+  /**
+   * Récupère les métropoles triées par prix décroissant (fallback final)
+   */
+  private async getMetropolesByPrix(
+    excludeSlug?: string,
+    options?: PaginationOptions
+  ): Promise<EspoListResponse<EspoVille>> {
+    const params: Record<string, string | number> = {
+      maxSize: (options?.limit ?? 10) + 1,
+      offset: options?.offset ?? 0,
+      orderBy: "prixM2Moyen",
+      order: "desc",
+    };
+
+    const whereParams = this.buildWhereParams({ isMetropole: true });
+    Object.assign(params, whereParams);
+
+    if (excludeSlug) {
+      const whereIndex = Object.keys(whereParams).length / 3;
+      params[`where[${whereIndex}][type]`] = "notEquals";
+      params[`where[${whereIndex}][attribute]`] = "slug";
+      params[`where[${whereIndex}][value]`] = excludeSlug;
+    }
+
+    const url = this.buildUrl("/CJeanbrunVille", params);
+
+    const result =
+      await this.fetchWithRetry<EspoListResponse<EspoVille>>(url);
+
+    return {
+      ...result,
+      list: result.list.slice(0, options?.limit ?? 10),
+    };
+  }
+
+  /**
    * Récupère les villes proches pour le maillage interne
-   * Priorise les villes de la même région, puis du même département, puis les métropoles
+   * Priorise les villes de la même région, puis du même département,
+   * puis la même zone fiscale, puis les métropoles par prix
    */
   async getVillesProches(
     ville: EspoVille,
@@ -674,11 +744,23 @@ export class EspoCRMClient {
       }
     }
 
-    // Dernier fallback: métropoles triées par population
-    const metropoles = await this.getMetropoles({ limit: limit + 1 });
-    return metropoles.list
-      .filter((v) => v.slug !== ville.slug)
-      .slice(0, limit);
+    // Fallback par zone fiscale: villes de la même zone triées par prix
+    if (ville.zoneFiscale) {
+      const villesZone = await this.getMetropolesByZoneFiscale(
+        ville.zoneFiscale,
+        ville.slug,
+        { limit }
+      );
+      if (villesZone.list.length > 0) {
+        return villesZone.list;
+      }
+    }
+
+    // Dernier fallback: métropoles triées par prix (grandes villes avec du marché)
+    const metropoles = await this.getMetropolesByPrix(ville.slug, {
+      limit,
+    });
+    return metropoles.list;
   }
 
   /**

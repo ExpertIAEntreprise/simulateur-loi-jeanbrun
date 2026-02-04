@@ -1,4 +1,5 @@
 import { MenuIcon } from 'lucide-react'
+import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
@@ -20,9 +21,9 @@ const Header = ({ navigationData, className }: HeaderProps) => {
     <header className={cn('fixed top-0 left-0 right-0 z-50 flex justify-center', className)}>
       <div className='relative flex h-full w-full items-center bg-white/70 px-4 py-2.5 antialiased shadow-sm backdrop-blur-md transition-all duration-300 select-none lg:px-8 lg:py-3.5'>
         {/* Logo */}
-        <a href='/' className='shrink-0'>
+        <Link href='/' className='shrink-0'>
           <Logo className='gap-3 text-[#1e3a5f] [&>svg]:size-8' />
-        </a>
+        </Link>
 
         {/* Navigation - centré */}
         <div className='flex flex-1 justify-center max-md:hidden'>
@@ -34,7 +35,7 @@ const Header = ({ navigationData, className }: HeaderProps) => {
 
         {/* Login Button */}
         <Button className='shrink-0 rounded-full bg-neutral-900 text-neutral-50 hover:bg-neutral-900/90 max-md:hidden' asChild>
-          <a href='/login'>Connexion</a>
+          <Link href='/login'>Connexion</Link>
         </Button>
 
         {/* Navigation for small screens */}

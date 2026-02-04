@@ -85,12 +85,12 @@ function getProgrammesJsonLd(programmes: EspoProgramme[]) {
       item: {
         "@type": "RealEstateListing",
         name: prog.name,
-        description: `Programme neuf ${prog.name} a ${prog.cVilleName ?? ""}`,
-        ...(prog.cPrixMin !== null
+        description: `Programme neuf ${prog.name} a ${prog.villeName ?? ""}`,
+        ...(prog.prixMin !== null
           ? {
               offers: {
                 "@type": "Offer",
-                price: prog.cPrixMin,
+                price: prog.prixMin,
                 priceCurrency: "EUR",
               },
             }

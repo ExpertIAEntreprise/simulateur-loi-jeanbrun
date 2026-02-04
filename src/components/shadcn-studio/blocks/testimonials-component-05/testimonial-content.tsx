@@ -35,11 +35,19 @@ const TestimonialContent = ({ testimonials }: { testimonials: Testimonial[] }) =
       return
     }
 
-    setCurrent(api.selectedScrollSnap())
-
-    api.on('select', () => {
+    const onSelect = () => {
       setCurrent(api.selectedScrollSnap())
-    })
+    }
+
+    api.on('select', onSelect)
+
+    // Defer initial sync to avoid synchronous setState in effect body
+    const frame = requestAnimationFrame(onSelect)
+
+    return () => {
+      api.off('select', onSelect)
+      cancelAnimationFrame(frame)
+    }
   }, [api])
 
   return (

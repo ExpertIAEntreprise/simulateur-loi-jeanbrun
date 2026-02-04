@@ -74,8 +74,8 @@ async function main() {
     console.log(`✅ ${programmes.total} programme(s) trouvé(s)`);
     if (programmes.list.length > 0) {
       console.log(`   Premier programme: ${programmes.list[0]?.name}`);
-      console.log(`   Promoteur: ${programmes.list[0]?.cPromoteur}`);
-      console.log(`   Prix: ${programmes.list[0]?.cPrixMin}€ - ${programmes.list[0]?.cPrixMax}€`);
+      console.log(`   Promoteur: ${programmes.list[0]?.promoteur}`);
+      console.log(`   Prix: ${programmes.list[0]?.prixMin}€ - ${programmes.list[0]?.prixMax}€`);
     }
     console.log();
   }

@@ -71,35 +71,35 @@ export function ProgrammeCard({
 }: ProgrammeCardProps) {
   const {
     name,
-    cPromoteur,
-    cPrixMin,
-    cPrixMax,
-    cPrixM2Moyen,
-    cSurfaceMin,
-    cSurfaceMax,
-    cDateLivraison,
-    cImagePrincipale,
-    cImageAlt,
-    cNbLotsTotal,
-    cNbLotsDisponibles,
-    cTypesLots,
-    cAdresse,
-    cVilleName,
-    cCodePostal,
+    promoteur,
+    prixMin,
+    prixMax,
+    prixM2Moyen,
+    surfaceMin,
+    surfaceMax,
+    dateLivraison,
+    imagePrincipale,
+    imageAlt,
+    nbLotsTotal,
+    nbLotsDisponibles,
+    typesLots: typesLotsRaw,
+    adresse,
+    villeName,
+    codePostal,
   } = programme;
 
-  const hasImage = cImagePrincipale != null && cImagePrincipale !== "";
-  const hasSurface = cSurfaceMin != null || cSurfaceMax != null;
-  const hasPrice = cPrixMin != null;
-  const hasPriceRange = cPrixMin != null && cPrixMax != null;
-  const hasDeliveryDate = cDateLivraison != null && cDateLivraison !== "";
-  const hasLocation = cVilleName != null || cCodePostal != null;
+  const hasImage = imagePrincipale != null && imagePrincipale !== "";
+  const hasSurface = surfaceMin != null || surfaceMax != null;
+  const hasPrice = prixMin != null;
+  const hasPriceRange = prixMin != null && prixMax != null;
+  const hasDeliveryDate = dateLivraison != null && dateLivraison !== "";
+  const hasLocation = villeName != null || codePostal != null;
 
   // Parse types de lots
   const typesLots: string[] = (() => {
-    if (!cTypesLots) return [];
+    if (!typesLotsRaw) return [];
     try {
-      return JSON.parse(cTypesLots) as string[];
+      return JSON.parse(typesLotsRaw) as string[];
     } catch {
       return [];
     }
@@ -107,42 +107,42 @@ export function ProgrammeCard({
 
   // Lots texte (5/12 lots disponibles)
   const lotsText = (() => {
-    if (cNbLotsDisponibles != null && cNbLotsTotal != null && cNbLotsTotal > 0) {
-      return `${cNbLotsDisponibles}/${cNbLotsTotal} lots disponibles`;
+    if (nbLotsDisponibles != null && nbLotsTotal != null && nbLotsTotal > 0) {
+      return `${nbLotsDisponibles}/${nbLotsTotal} lots disponibles`;
     }
-    if (cNbLotsDisponibles != null && cNbLotsDisponibles > 0) {
-      return `${cNbLotsDisponibles} lot${cNbLotsDisponibles > 1 ? "s" : ""} disponible${cNbLotsDisponibles > 1 ? "s" : ""}`;
+    if (nbLotsDisponibles != null && nbLotsDisponibles > 0) {
+      return `${nbLotsDisponibles} lot${nbLotsDisponibles > 1 ? "s" : ""} disponible${nbLotsDisponibles > 1 ? "s" : ""}`;
     }
     return null;
   })();
 
   // Build surface text
   const surfaceText = (() => {
-    if (cSurfaceMin != null && cSurfaceMax != null) {
-      if (cSurfaceMin === cSurfaceMax) {
-        return `${cSurfaceMin} m²`;
+    if (surfaceMin != null && surfaceMax != null) {
+      if (surfaceMin === surfaceMax) {
+        return `${surfaceMin} m²`;
       }
-      return `De ${cSurfaceMin} à ${cSurfaceMax} m²`;
+      return `De ${surfaceMin} à ${surfaceMax} m²`;
     }
-    if (cSurfaceMin != null) {
-      return `À partir de ${cSurfaceMin} m²`;
+    if (surfaceMin != null) {
+      return `À partir de ${surfaceMin} m²`;
     }
-    if (cSurfaceMax != null) {
-      return `Jusqu'à ${cSurfaceMax} m²`;
+    if (surfaceMax != null) {
+      return `Jusqu'à ${surfaceMax} m²`;
     }
     return null;
   })();
 
   // Build location text
   const locationText = (() => {
-    if (cVilleName != null && cCodePostal != null) {
-      return `${cVilleName} (${cCodePostal})`;
+    if (villeName != null && codePostal != null) {
+      return `${villeName} (${codePostal})`;
     }
-    if (cVilleName != null) {
-      return cVilleName;
+    if (villeName != null) {
+      return villeName;
     }
-    if (cCodePostal != null) {
-      return cCodePostal;
+    if (codePostal != null) {
+      return codePostal;
     }
     return null;
   })();
@@ -158,8 +158,8 @@ export function ProgrammeCard({
       <div className="relative aspect-video overflow-hidden bg-muted">
         {hasImage ? (
           <Image
-            src={cImagePrincipale}
-            alt={cImageAlt ?? `Programme immobilier ${name}`}
+            src={imagePrincipale}
+            alt={imageAlt ?? `Programme immobilier ${name}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -179,10 +179,10 @@ export function ProgrammeCard({
         )}
 
         {/* Promoter badge overlay */}
-        {cPromoteur != null && cPromoteur !== "" && (
+        {promoteur != null && promoteur !== "" && (
           <div className="absolute left-3 top-3">
             <Badge variant="secondary" className="bg-white/90 text-foreground">
-              {cPromoteur}
+              {promoteur}
             </Badge>
           </div>
         )}
@@ -212,10 +212,10 @@ export function ProgrammeCard({
         )}
 
         {/* Adresse */}
-        {cAdresse != null && cAdresse !== "" && (
+        {adresse != null && adresse !== "" && (
           <CardDescription className="flex items-center gap-1.5 text-xs">
             <MapPin className="size-3 shrink-0" aria-hidden="true" />
-            <span>{cAdresse}</span>
+            <span>{adresse}</span>
           </CardDescription>
         )}
       </CardHeader>
@@ -225,13 +225,13 @@ export function ProgrammeCard({
         {hasPrice && (
           <div>
             <div className="text-lg font-semibold text-primary">
-              {hasPriceRange && cPrixMax > cPrixMin
-                ? `${formatPrice(cPrixMin)} - ${formatPrice(cPrixMax)}`
-                : `A partir de ${formatPrice(cPrixMin)}`}
+              {hasPriceRange && prixMax > prixMin
+                ? `${formatPrice(prixMin)} - ${formatPrice(prixMax)}`
+                : `A partir de ${formatPrice(prixMin)}`}
             </div>
-            {cPrixM2Moyen != null && (
+            {prixM2Moyen != null && (
               <p className="text-xs text-muted-foreground">
-                soit ~{formatPrice(cPrixM2Moyen)}/m2
+                soit ~{formatPrice(prixM2Moyen)}/m2
               </p>
             )}
           </div>
@@ -251,7 +251,7 @@ export function ProgrammeCard({
           {hasDeliveryDate && (
             <div className="flex items-center gap-1.5">
               <Calendar className="size-3.5 shrink-0" aria-hidden="true" />
-              <span>Livraison {formatDeliveryDate(cDateLivraison)}</span>
+              <span>Livraison {formatDeliveryDate(dateLivraison)}</span>
             </div>
           )}
         </div>

@@ -141,9 +141,15 @@ export function TMICalculator({
     // Only animate if TMI actually changed
     if (prevTmi.current !== tmi) {
       prevTmi.current = tmi
-      setIsAnimating(true)
+      // Defer setState to avoid synchronous setState in effect body
+      const frame = requestAnimationFrame(() => {
+        setIsAnimating(true)
+      })
       const timer = setTimeout(() => setIsAnimating(false), 300)
-      return () => clearTimeout(timer)
+      return () => {
+        cancelAnimationFrame(frame)
+        clearTimeout(timer)
+      }
     }
 
     return undefined

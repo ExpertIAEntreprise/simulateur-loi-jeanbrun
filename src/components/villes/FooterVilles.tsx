@@ -14,14 +14,14 @@ import { MapPin } from "lucide-react";
  */
 const VILLES_PAR_ZONE: Record<string, Array<{ nom: string; slug: string }>> = {
   "A bis": [
-    { nom: "Paris", slug: "paris" },
-    { nom: "Boulogne-Billancourt", slug: "boulogne-billancourt" },
+    { nom: "Paris 15e", slug: "paris-15" },
+    { nom: "Argenteuil", slug: "argenteuil" },
     { nom: "Saint-Denis", slug: "saint-denis" },
     { nom: "Montreuil", slug: "montreuil" },
   ],
   A: [
     { nom: "Lyon", slug: "lyon" },
-    { nom: "Marseille", slug: "marseille" },
+    { nom: "Marseille 8e", slug: "marseille-8" },
     { nom: "Nice", slug: "nice" },
     { nom: "Toulouse", slug: "toulouse" },
     { nom: "Montpellier", slug: "montpellier" },
@@ -81,9 +81,9 @@ export function FooterVilles() {
 export function FooterVillesCompact() {
   // Juste les top villes toutes zones confondues
   const topVilles = [
-    { nom: "Paris", slug: "paris" },
+    { nom: "Paris 15e", slug: "paris-15" },
     { nom: "Lyon", slug: "lyon" },
-    { nom: "Marseille", slug: "marseille" },
+    { nom: "Marseille 8e", slug: "marseille-8" },
     { nom: "Toulouse", slug: "toulouse" },
     { nom: "Bordeaux", slug: "bordeaux" },
     { nom: "Nantes", slug: "nantes" },

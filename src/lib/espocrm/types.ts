@@ -123,35 +123,53 @@ export interface EspoBarometreFilters {
 
 /**
  * Programme immobilier EspoCRM (entité CJeanbrunProgramme)
+ *
+ * Note: Les noms de champs correspondent à l'API EspoCRM (sans préfixe c)
  */
 export interface EspoProgramme {
   id: string;
   name: string; // Nom du programme
-  cPromoteur: string | null; // Nom du promoteur
-  cAdresse: string | null; // Adresse
-  cCodePostal: string | null; // Code postal
-  cVilleId: string; // ID de la ville (relation)
-  cVilleName?: string; // Nom de la ville (expand)
-  cPrixMin: number | null; // Prix minimum (en euros)
-  cPrixMax: number | null; // Prix maximum (en euros)
-  cPrixM2Moyen: number | null; // Prix moyen au m²
-  cSurfaceMin: number | null; // Surface minimale (en m²)
-  cSurfaceMax: number | null; // Surface maximale (en m²)
-  cDateLivraison: string | null; // Date de livraison prévue (ISO date string)
-  cActif: boolean; // Programme actif/inactif
+  promoteur: string | null; // Nom du promoteur
+  adresse: string | null; // Adresse
+  codePostal: string | null; // Code postal
+  villeId: string; // ID de la ville (relation)
+  villeName?: string; // Nom de la ville (expand)
+  prixMin: number | null; // Prix minimum (en euros)
+  prixMax: number | null; // Prix maximum (en euros)
+  prixM2Moyen: number | null; // Prix moyen au m²
+  surfaceMin: number | null; // Surface minimale (en m²)
+  surfaceMax: number | null; // Surface maximale (en m²)
+  dateLivraison: string | null; // Date de livraison prévue (ISO date string)
 
   // Images SEO
-  cImagePrincipale: string | null; // URL image principale
-  cImageAlt: string | null; // Alt text SEO
+  imagePrincipale: string | null; // URL image principale
+  imageAlt: string | null; // Alt text SEO
 
   // Géolocalisation
-  cLatitude: number | null;
-  cLongitude: number | null;
+  latitude: number | null;
+  longitude: number | null;
 
   // Lots disponibles
-  cNbLotsTotal: number | null;
-  cNbLotsDisponibles: number | null;
-  cTypesLots: string | null; // JSON array: ["T1", "T2", "T3", "T4"]
+  nbLotsTotal: number | null;
+  nbLotsDisponibles: number | null;
+  typesLots: string | null; // JSON array: ["T1", "T2", "T3", "T4"]
+
+  // Statut et éligibilité
+  statut: string | null; // Ex: "disponible", "en_commercialisation"
+  zoneFiscale: string | null; // Zone fiscale (A_BIS, A, B1, B2, C)
+  eligibleJeanbrun: boolean | null; // Éligible à la loi Jeanbrun
+
+  // URLs et identifiants externes
+  slug: string | null; // Slug URL
+  urlExterne: string | null; // URL vers le site du promoteur
+  sourceApi: string | null; // Source de l'API (ex: "nexity")
+  idExterne: string | null; // ID externe du programme
+
+  // Informations complémentaires
+  isLocal: boolean | null; // Programme local
+  siteWeb: string | null; // Site web du promoteur
+  telephone: string | null; // Téléphone contact
+  images: string | null; // JSON array d'URLs d'images supplémentaires
 
   createdAt: string; // ISO date string
   modifiedAt: string; // ISO date string
@@ -294,26 +312,32 @@ export function fromEspoVille(espo: EspoVille) {
 export function fromEspoProgramme(espo: EspoProgramme) {
   return {
     id: espo.id, // On utilise l'ID EspoCRM comme ID local pour sync
-    villeId: espo.cVilleId,
-    villeName: espo.cVilleName ?? null,
+    villeId: espo.villeId,
+    villeName: espo.villeName ?? null,
     nom: espo.name,
-    promoteur: espo.cPromoteur,
-    adresse: espo.cAdresse,
-    codePostal: espo.cCodePostal,
-    prixMin: espo.cPrixMin,
-    prixMax: espo.cPrixMax,
-    prixM2Moyen: espo.cPrixM2Moyen,
-    surfaceMin: espo.cSurfaceMin,
-    surfaceMax: espo.cSurfaceMax,
-    dateLivraison: espo.cDateLivraison,
-    actif: espo.cActif,
-    imagePrincipale: espo.cImagePrincipale,
-    imageAlt: espo.cImageAlt,
-    latitude: espo.cLatitude,
-    longitude: espo.cLongitude,
-    nbLotsTotal: espo.cNbLotsTotal,
-    nbLotsDisponibles: espo.cNbLotsDisponibles,
-    typesLots: parseJsonField<string[]>(espo.cTypesLots, []),
+    promoteur: espo.promoteur,
+    adresse: espo.adresse,
+    codePostal: espo.codePostal,
+    prixMin: espo.prixMin,
+    prixMax: espo.prixMax,
+    prixM2Moyen: espo.prixM2Moyen,
+    surfaceMin: espo.surfaceMin,
+    surfaceMax: espo.surfaceMax,
+    dateLivraison: espo.dateLivraison,
+    statut: espo.statut,
+    imagePrincipale: espo.imagePrincipale,
+    imageAlt: espo.imageAlt,
+    latitude: espo.latitude,
+    longitude: espo.longitude,
+    nbLotsTotal: espo.nbLotsTotal,
+    nbLotsDisponibles: espo.nbLotsDisponibles,
+    typesLots: parseJsonField<string[]>(espo.typesLots, []),
+    zoneFiscale: espo.zoneFiscale,
+    eligibleJeanbrun: espo.eligibleJeanbrun,
+    slug: espo.slug,
+    urlExterne: espo.urlExterne,
+    sourceApi: espo.sourceApi,
+    idExterne: espo.idExterne,
     espoId: espo.id,
     createdAt: new Date(espo.createdAt),
     updatedAt: new Date(espo.modifiedAt),

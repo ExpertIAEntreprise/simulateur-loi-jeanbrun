@@ -1,4 +1,5 @@
 import { MailIcon, ClockIcon, ArrowRightIcon } from 'lucide-react'
+import Link from 'next/link'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -74,10 +75,10 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
               Analyses, conseils et actualités pour optimiser votre investissement locatif et réduire vos impôts.
             </p>
             <Button className='group rounded-lg text-base has-[>svg]:px-6' size='lg' asChild>
-              <a href='/blog'>
+              <Link href='/blog'>
                 Découvrir tous les articles
                 <ArrowRightIcon className='transition-transform duration-200 group-hover:translate-x-0.5' />
-              </a>
+              </Link>
             </Button>
           </div>
 
