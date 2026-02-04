@@ -20,7 +20,7 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
     <section className='py-8 sm:py-16 lg:py-24'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Header */}
-        <div className='mb-12 grid grid-cols-1 gap-16 sm:mb-16 md:grid-cols-2 lg:mb-24'>
+        <div className='mb-8 grid grid-cols-1 gap-8 sm:mb-12 sm:gap-12 md:grid-cols-2 lg:mb-24 lg:gap-16'>
           <div className='space-y-4'>
             <p className='text-primary text-sm font-medium uppercase'>Blog Loi Jeanbrun</p>
             <h2 className='text-2xl font-semibold md:text-3xl lg:text-4xl'>
@@ -73,7 +73,7 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
             <a href={card.blogLink} key={index}>
               <Card className='py-0 shadow-none max-lg:last:col-span-full'>
                 <CardContent className='px-0'>
-                  <img src={card.image} alt={card.alt} className='max-h-60 w-full rounded-t-xl object-cover' />
+                  <img src={card.image} alt={card.alt} className='w-full aspect-video rounded-t-xl object-cover' />
                   <div className='gap-4 space-y-4 p-6'>
                     <div className='mb-2 flex flex-wrap gap-2'>
                       {card.tags.map((tag, index) => (

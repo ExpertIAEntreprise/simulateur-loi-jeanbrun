@@ -96,11 +96,11 @@ const Features = ({ tabs }: { tabs: tabsData }) => {
                   </MotionPreset>
 
                   <MotionPreset fade blur zoom={{ initialScale: 0.75 }} transition={{ duration: 0.7 }}>
-                    <img src={tab.content.image} alt={tab.name} className='h-103 w-118 object-contain dark:hidden' />
+                    <img src={tab.content.image} alt={tab.name} className='h-auto max-w-full object-contain dark:hidden sm:h-103 sm:w-118' />
                     <img
                       src={`${tab.content.image.replace('.png', '-dark.png')}`}
                       alt={tab.name}
-                      className='hidden h-103 w-118 object-contain dark:inline-block'
+                      className='hidden h-auto max-w-full object-contain dark:inline-block sm:h-103 sm:w-118'
                     />
                   </MotionPreset>
                 </div>

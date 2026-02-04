@@ -19,7 +19,7 @@ const CTASection = () => {
     <section className='bg-muted py-4 sm:py-8 lg:py-12'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <Card className='rounded-3xl border-none py-4 shadow-none sm:py-8 lg:py-12'>
-          <CardContent className='flex flex-col items-center justify-between gap-16 px-4 sm:px-8 lg:flex-row lg:px-12'>
+          <CardContent className='flex flex-col items-center justify-between gap-8 px-4 sm:gap-12 sm:px-8 lg:flex-row lg:gap-16 lg:px-12'>
             <div className='flex grow flex-col gap-8'>
               <div className='flex flex-col gap-3'>
                 <h2 className='text-foreground text-2xl font-semibold md:text-3xl lg:text-4xl'>
@@ -46,17 +46,17 @@ const CTASection = () => {
               </div>
 
               {/* Stats bar */}
-              <div className='flex items-center justify-around bg-gradient-to-r from-[#1e3a5f] to-[#2c5f8d] rounded-xl p-6'>
+              <div className='flex flex-col items-center justify-around bg-gradient-to-r from-[#1e3a5f] to-[#2c5f8d] rounded-xl p-4 sm:flex-row sm:p-6'>
                 <div className='text-center flex-1'>
                   <div className='text-3xl font-bold text-white'>20+</div>
                   <div className='text-sm text-white/80'>Années d&apos;expérience</div>
                 </div>
-                <div className='w-px h-12 bg-white/20'></div>
+                <div className='hidden w-px h-12 bg-white/20 sm:block'></div>
                 <div className='text-center flex-1'>
                   <div className='text-3xl font-bold text-white'>200+</div>
                   <div className='text-sm text-white/80'>Clients accompagnés</div>
                 </div>
-                <div className='w-px h-12 bg-white/20'></div>
+                <div className='hidden w-px h-12 bg-white/20 sm:block'></div>
                 <div className='text-center flex-1'>
                   <div className='text-3xl font-bold text-white'>75k€</div>
                   <div className='text-sm text-white/80'>Gain fiscal moyen</div>
@@ -79,7 +79,7 @@ const CTASection = () => {
               <img
                 src='/herve-voirin.avif'
                 alt='Hervé Voirin'
-                className='h-[28rem] w-auto rounded-xl object-cover shadow-lg'
+                className='h-[16rem] w-auto rounded-xl object-cover shadow-lg sm:h-[20rem] lg:h-[28rem]'
               />
               <div className='text-center'>
                 <h3 className='text-xl font-bold text-foreground'>Hervé Voirin</h3>

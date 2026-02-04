@@ -19,19 +19,19 @@ const HeroSection = () => {
       <div className='absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-transparent' />
 
       {/* Cadre blanc avec bouton rouge + texte - aligné avec le contenu en bas */}
-      <div className='absolute bottom-[320px] left-1/2 z-10 w-full max-w-7xl -translate-x-1/2 px-4 sm:px-6 lg:px-8'>
-        <div className='flex w-full gap-0 max-md:flex-col'>
+      <div className='relative z-10 mt-auto w-full px-4 sm:px-6 lg:absolute lg:bottom-[320px] lg:left-1/2 lg:max-w-7xl lg:-translate-x-1/2 lg:px-8'>
+        <div className='flex w-full gap-0 max-md:flex-col max-md:gap-4'>
           {/* Rectangle principal (2/3) avec cercle rouge */}
-          <div className='flex w-2/3 items-center gap-8 rounded-l-xl bg-white/65 p-8 shadow-lg backdrop-blur-sm max-md:w-full max-md:rounded-xl'>
+          <div className='flex w-2/3 items-center gap-8 rounded-l-xl bg-white/65 p-4 shadow-lg backdrop-blur-sm sm:p-6 lg:p-8 max-md:w-full max-md:rounded-xl'>
             {/* Texte titre + sous-titre */}
             <div className='flex-1'>
-              <h1 className='text-3xl font-bold text-[#1e3a5f] lg:text-4xl'>
+              <h1 className='text-xl font-bold text-[#1e3a5f] sm:text-2xl md:text-3xl lg:text-4xl'>
                 La révolution fiscale : l&apos;amortissement sur le revenu global
               </h1>
-              <h2 className='mt-6 text-2xl font-bold text-[#1e3a5f] lg:text-3xl'>
+              <h2 className='mt-3 text-lg font-bold text-[#1e3a5f] sm:mt-4 sm:text-xl md:text-2xl lg:mt-6 lg:text-3xl'>
                 Jusqu&apos;à 12 000 euros de réduction du revenu imposable
               </h2>
-              <p className='mt-6 text-lg text-[#1e3a5f]/80'>
+              <p className='mt-3 text-lg text-[#1e3a5f]/80 sm:mt-4 lg:mt-6'>
                 Le nouveau dispositif de défiscalisation Relance Logement 2026 dédié aux Français.
               </p>
               <p className='mt-2 text-lg text-[#1e3a5f]/80'>
@@ -42,14 +42,14 @@ const HeroSection = () => {
             {/* Bouton rond rouge - pointe vers le formulaire à droite */}
             <Link
               href="/simulateur"
-              className='flex size-56 shrink-0 flex-col items-center justify-center rounded-full bg-[#c41e3a] text-white shadow-xl transition-transform hover:scale-105 lg:size-64'
+              className='flex size-28 shrink-0 flex-col items-center justify-center rounded-full bg-[#c41e3a] text-white shadow-xl transition-transform hover:scale-105 sm:size-40 lg:size-56'
             >
-              <span className='text-sm font-medium uppercase tracking-wide'>En quelques clics</span>
-              <span className='mt-2 text-center text-base font-bold uppercase leading-tight'>
+              <span className='text-xs font-medium uppercase tracking-wide sm:text-sm'>En quelques clics</span>
+              <span className='mt-2 text-center text-sm font-bold uppercase leading-tight sm:text-base'>
                 ESTIMEZ VOTRE<br />RÉDUCTION D&apos;IMPÔT
               </span>
-              <span className='mt-2 text-xs font-medium uppercase tracking-wide'>Gratuit sans engagement</span>
-              <ChevronRight className='mt-2 size-8 animate-bounce' />
+              <span className='mt-2 text-[10px] font-medium uppercase tracking-wide sm:text-xs'>Gratuit sans engagement</span>
+              <ChevronRight className='mt-2 size-5 animate-bounce sm:size-8' />
             </Link>
           </div>
 
@@ -89,7 +89,7 @@ const HeroSection = () => {
       </div>
 
       {/* NOUVELLE Barre du bas - 4 tuiles objectifs */}
-      <div className='absolute bottom-[185px] left-1/2 z-10 w-full max-w-7xl -translate-x-1/2 px-4 sm:px-6 lg:px-8'>
+      <div className='relative z-10 mt-4 w-full px-4 sm:px-6 lg:absolute lg:bottom-[185px] lg:left-1/2 lg:max-w-7xl lg:-translate-x-1/2 lg:px-8'>
         <div className='flex w-full overflow-hidden rounded-xl max-md:flex-col'>
           {/* 3 tuiles blanches (2/3) */}
           <div className='grid w-2/3 grid-cols-3 max-md:w-full max-md:grid-cols-1'>

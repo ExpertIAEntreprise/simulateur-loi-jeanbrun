@@ -129,8 +129,8 @@ export default function TestimonialsGoogle({ testimonials }: TestimonialsProps) 
           </CarouselContent>
 
           {/* Flèches de navigation */}
-          <CarouselPrevious className='-left-12' />
-          <CarouselNext className='-right-12' />
+          <CarouselPrevious className='left-2 sm:-left-12' />
+          <CarouselNext className='right-2 sm:-right-12' />
         </Carousel>
       </div>
     </section>

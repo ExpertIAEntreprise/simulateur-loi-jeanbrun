@@ -10,7 +10,7 @@ import PricingWrapper from "@/components/landing/pricing-wrapper";
 import FAQWrapper from "@/components/landing/faq-wrapper";
 import BlogWrapper from "@/components/landing/blog-wrapper";
 import WhyInvestWrapper from "@/components/landing/why-invest-wrapper";
-import Footer from "@/components/shadcn-studio/blocks/footer-component-02/footer-component-02";
+import { SiteFooter } from "@/components/site-footer";
 import type { NavigationSection } from "@/components/shadcn-studio/blocks/menu-navigation";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
@@ -99,7 +99,7 @@ export default function LandingPage() {
     <BlogWrapper />
 
     {/* 10. Footer */}
-    <Footer />
+    <SiteFooter />
   </>
   );
 }

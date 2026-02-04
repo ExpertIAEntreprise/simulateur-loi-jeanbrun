@@ -37,7 +37,8 @@ const CTA = () => {
 
                   <div>
                     <MatterButton size='lg'>
-                      Simulez gratuitement votre avantage fiscal personnalisé
+                      <span className='sm:hidden'>Simuler mon avantage</span>
+                      <span className='hidden sm:inline'>Simulez gratuitement votre avantage fiscal personnalisé</span>
                       <ArrowRightIcon className='h-4 w-4 -rotate-45' />
                     </MatterButton>
                   </div>
@@ -48,7 +49,7 @@ const CTA = () => {
                   <img
                     src='/couple-investisseur-loi-jeanbrun.webp'
                     alt='Couple investisseur avec guide Loi Jeanbrun 2026'
-                    className='w-full object-cover transition-transform duration-300 group-hover:scale-105 max-lg:mx-auto max-lg:max-w-100'
+                    className='w-full object-cover transition-transform duration-300 group-hover:scale-105 max-lg:mx-auto max-lg:max-w-full max-lg:px-4'
                   />
                 </div>
               </div>
