@@ -338,28 +338,29 @@ Note: le code dans `src/lib/espocrm/index.ts` accepte `ESPOCRM_URL` OU `ESPOCRM_
 
 **Verification requise:** Redeploy Vercel (sans build cache) pour que `/villes/paris` et `/villes/marseille` soient generes, et que les arrondissements affichent le lien "Voir la metropole".
 
-### 12b. CRITIQUE - Strategie scraping programmes
+### 12b. EN COURS - Enrichissement programmes EspoCRM (scraping Tom)
 
-**Contexte:** 153 programmes dans EspoCRM, quasi vides. Source unique: Nexity.
+**Decisions validees (4 fevrier 2026) :**
 
-**Etat des donnees (verifie):**
-- Champs remplis: `name`, `prixMin`, `prixMax`, `villeId`, `villeName`, `zoneFiscale`, `statut`, `sourceApi`
-- Champs vides: `promoteur`, `adresse`, `imagePrincipale`, `prixM2Moyen`, `nbLotsTotal`, `nbLotsDisponibles`, `typesLots`, `dateLivraison`, `latitude`, `longitude`
-- `prixMin` parfois 0 (donnee incorrecte)
+- **Modele eco :** On vend des lots. Aucune reference promoteur (pas de tel, site, lien externe).
+- **Images :** Re-hebergees sur R2, pas d'URLs Nexity directes.
+- **lotsDetails :** Nouveau champ JSON avec prix par typologie (T2, T3, T4...). A creer dans EspoCRM.
+- **Existants :** Enrichir les 153 programmes, pas purger. Marquer `epuise` les invalides.
+- **Sources :** Nexity uniquement pour l'instant.
 
-**Actions a definir:**
-1. Quelles sources scraper en plus de Nexity (ex: Bouygues Immo, Kaufman & Broad, Eiffage, programmes-neufs.com)
-2. Quels champs sont prioritaires pour l'affichage (`imagePrincipale`, `promoteur`, `adresse`, `typesLots`)
-3. Script de nettoyage: supprimer les programmes avec `prixMin=0` ou sans `villeId`
-4. Frequence de re-scraping (quotidien, hebdomadaire)
-5. Workflow n8n a creer pour automatiser le scraping
+**Champs a remplir par Tom :**
+description, imagePrincipale, imageAlt, images, typesLots, prixMin, prixMax, prixM2Moyen,
+nbLotsTotal, nbLotsDisponibles, adresse (non affichee), dateLivraison, latitude, longitude,
+promoteur (non affiche), urlExterne (non affiche), lotsDetails
 
-**Fichiers concernes:**
-- `src/components/villes/ProgrammeCard.tsx` : affiche les cards programmes
-- `src/app/(app)/programmes/page.tsx` : page liste des programmes
-- Scripts scraping dans `/root/scripts/jeanbrun/` (a creer)
+**Champs interdits :** telephone, siteWeb (NE PAS remplir)
 
-**Impact:** Les cards programmes affichent actuellement "A partir de 0 €" et l'icone placeholder au lieu d'une image. Pas d'adresse, pas de promoteur.
+**Instructions detaillees :** `docs/features/pages-contenu/INSTRUCTIONS-TOM-SCRAPING-PROGRAMMES.md`
+
+**Cote code (apres enrichissement Tom) :**
+- `src/lib/espocrm/types.ts` : ajouter lotsDetails dans EspoProgramme
+- `src/components/villes/ProgrammeCard.tsx` : retirer promoteur/urlExterne, ajouter lotsDetails
+- `src/app/(app)/programmes/page.tsx` : pagination + filtres
 
 ### 12c. MOYEN - Enrichissement villes EspoCRM
 
