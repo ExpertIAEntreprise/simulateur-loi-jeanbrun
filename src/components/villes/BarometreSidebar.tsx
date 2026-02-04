@@ -4,8 +4,11 @@
  * Inclut un lien vers la page barometre detaillee (maillage interne SEO)
  */
 
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { TrendingUp, TrendingDown, Minus, Star, Activity, ArrowRight } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Star, Activity, ArrowRight, Euro, ChevronDown, ChevronUp, Sparkles, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EspoBarometre } from "@/lib/espocrm/types";
@@ -78,7 +81,20 @@ function formatPercent(value: number | null): string {
   return `${sign}${value.toFixed(1)}%`;
 }
 
+/**
+ * Formate un prix en euros
+ */
+function formatEuros(value: number | null): string {
+  if (value === null) return "N/A";
+  return new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export function BarometreSidebar({ barometre, villeSlug }: BarometreSidebarProps) {
+  const [showAnalyse, setShowAnalyse] = useState(false);
   if (!barometre) {
     return (
       <Card className="bg-muted/30">
@@ -157,6 +173,25 @@ export function BarometreSidebar({ barometre, villeSlug }: BarometreSidebarProps
           </span>
         </div>
 
+        {/* Prix m2 du mois */}
+        {barometre.cPrixM2 !== null && (
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Prix m2</span>
+            <div className="flex items-center gap-1">
+              <Euro className="size-3.5 text-muted-foreground" />
+              <span className="font-semibold">{formatEuros(barometre.cPrixM2)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Loyer m2 du mois */}
+        {barometre.cLoyerM2 !== null && (
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Loyer m2</span>
+            <span className="font-semibold">{formatEuros(barometre.cLoyerM2)}/mois</span>
+          </div>
+        )}
+
         {/* Programmes actifs */}
         {barometre.cNbProgrammesActifs > 0 && (
           <div className="border-t pt-2">
@@ -165,6 +200,45 @@ export function BarometreSidebar({ barometre, villeSlug }: BarometreSidebarProps
               {barometre.cNbProgrammesActifs > 1 ? "s" : ""} actif
               {barometre.cNbProgrammesActifs > 1 ? "s" : ""}
             </span>
+          </div>
+        )}
+
+        {/* Meilleure opportunite */}
+        {barometre.cMeilleureOpportuniteName && (
+          <div className="border-t pt-2">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Trophy className="size-3.5 text-yellow-500" />
+              <span>Meilleure opportunite :</span>
+            </div>
+            <p className="mt-1 text-sm font-medium text-primary">
+              {barometre.cMeilleureOpportuniteName}
+            </p>
+          </div>
+        )}
+
+        {/* Analyse IA expandable */}
+        {barometre.cAnalyseIA && (
+          <div className="border-t pt-2">
+            <button
+              onClick={() => setShowAnalyse((prev) => !prev)}
+              className="flex w-full items-center justify-between text-left text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+              aria-expanded={showAnalyse}
+            >
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="size-3.5 text-blue-500" />
+                <span>Analyse IA du marche</span>
+              </div>
+              {showAnalyse ? (
+                <ChevronUp className="size-3.5" />
+              ) : (
+                <ChevronDown className="size-3.5" />
+              )}
+            </button>
+            {showAnalyse && (
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                {barometre.cAnalyseIA}
+              </p>
+            )}
           </div>
         )}
       </CardContent>

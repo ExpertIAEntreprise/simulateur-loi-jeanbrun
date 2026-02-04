@@ -1,9 +1,10 @@
 "use client";
 
-import { TrendingUp, TrendingDown, Minus, Home, Euro, BarChart3 } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Home, Euro, BarChart3, KeyRound, Building } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EspoVille } from "@/lib/espocrm/types";
+import { TENSION_LOCATIVE_LABELS, NIVEAU_LOYER_LABELS } from "@/types/ville";
 
 interface DonneesMarcheProps {
   ville: EspoVille;
@@ -92,8 +93,10 @@ export function DonneesMarche({ ville }: DonneesMarcheProps) {
 
   const hasNoData =
     ville.prixM2Moyen === null &&
+    ville.prixM2Median === null &&
     ville.evolutionPrix1An === null &&
-    ville.nbTransactions12Mois === null;
+    ville.nbTransactions12Mois === null &&
+    ville.loyerM2Moyen === null;
 
   if (hasNoData) {
     return (
@@ -121,7 +124,7 @@ export function DonneesMarche({ ville }: DonneesMarcheProps) {
           Donnees marche immobilier
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {/* Prix moyen au m2 */}
           <div className="rounded-lg border p-4">
@@ -134,7 +137,12 @@ export function DonneesMarche({ ville }: DonneesMarcheProps) {
                 ? formatPrice(ville.prixM2Moyen)
                 : "N/A"}
             </p>
-            {ville.prixM2Moyen !== null && (
+            {ville.prixM2Median !== null && (
+              <p className="text-muted-foreground mt-1 text-xs">
+                Median : {formatPrice(ville.prixM2Median)}
+              </p>
+            )}
+            {ville.prixM2Moyen !== null && ville.prixM2Median === null && (
               <p className="text-muted-foreground mt-1 text-xs">
                 Source: DVF (12 derniers mois)
               </p>
@@ -182,6 +190,58 @@ export function DonneesMarche({ ville }: DonneesMarcheProps) {
             )}
           </div>
         </div>
+
+        {/* Ligne 2 : Loyer + Tension locative + Niveau loyer */}
+        {(ville.loyerM2Moyen !== null || ville.tensionLocative !== null || ville.niveauLoyer !== null) && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {/* Loyer moyen au m2 */}
+            <div className="rounded-lg border p-4">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <KeyRound className="h-4 w-4" aria-hidden="true" />
+                <span className="text-sm font-medium">Loyer moyen au m2</span>
+              </div>
+              <p className="mt-2 text-2xl font-bold">
+                {ville.loyerM2Moyen !== null
+                  ? `${formatPrice(ville.loyerM2Moyen)}/mois`
+                  : "N/A"}
+              </p>
+            </div>
+
+            {/* Tension locative */}
+            <div className="rounded-lg border p-4">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Building className="h-4 w-4" aria-hidden="true" />
+                <span className="text-sm font-medium">Tension locative</span>
+              </div>
+              <div className="mt-2">
+                {ville.tensionLocative !== null ? (
+                  <Badge variant={ville.tensionLocative === "tres_tendu" || ville.tensionLocative === "tendu" ? "default" : "secondary"}>
+                    {TENSION_LOCATIVE_LABELS[ville.tensionLocative]}
+                  </Badge>
+                ) : (
+                  <p className="text-2xl font-bold">N/A</p>
+                )}
+              </div>
+            </div>
+
+            {/* Niveau de loyer */}
+            <div className="rounded-lg border p-4">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Euro className="h-4 w-4" aria-hidden="true" />
+                <span className="text-sm font-medium">Niveau de loyer</span>
+              </div>
+              <div className="mt-2">
+                {ville.niveauLoyer !== null ? (
+                  <Badge variant="outline">
+                    {NIVEAU_LOYER_LABELS[ville.niveauLoyer]}
+                  </Badge>
+                ) : (
+                  <p className="text-2xl font-bold">N/A</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -613,7 +613,3 @@ a.link-animated:hover::before {
     transform: scaleX(1);
     transform-origin: left;
 }
-/* Masquer le SiteHeader "Starter Kit" sur les pages blog */
-body:has(.blog-layout) header[role="banner"] {
-    display: none !important;
-}

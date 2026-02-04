@@ -1,12 +1,9 @@
 /**
  * Layout pour la landing page
  *
- * La landing page utilise ses propres composants LandingHeader/LandingFooter
- * au lieu du SiteHeader/SiteFooter standard. Les providers (Auth, Theme)
- * sont dans le root layout.
- *
- * Ce layout est intentionnellement vide car les composants header/footer
- * sont directement dans la page pour plus de controle.
+ * La landing page utilise ses propres composants Header/Footer
+ * directement dans la page pour plus de controle sur le rendu hero.
+ * Les providers (Auth, Theme) sont dans le root layout.
  */
 export default function LandingLayout({
   children,

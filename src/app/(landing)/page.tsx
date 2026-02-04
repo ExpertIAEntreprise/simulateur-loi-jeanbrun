@@ -11,7 +11,7 @@ import FAQWrapper from "@/components/landing/faq-wrapper";
 import BlogWrapper from "@/components/landing/blog-wrapper";
 import WhyInvestWrapper from "@/components/landing/why-invest-wrapper";
 import FooterComponent03 from "@/components/shadcn-studio/blocks/footer-component-03/footer-component-03";
-import type { NavigationSection } from "@/components/shadcn-studio/blocks/menu-navigation";
+import { navigationData } from "@/config/navigation";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
 
@@ -23,33 +23,6 @@ export const metadata: Metadata = {
     canonical: appUrl,
   },
 };
-
-const navigationData: NavigationSection[] = [
-  {
-    title: "Loi Jeanbrun",
-    items: [
-      { title: "Comprendre le dispositif", href: "/loi-jeanbrun" },
-      { title: "Zones eligibles", href: "/villes" },
-      { title: "Programmes neufs", href: "/programmes" },
-    ],
-  },
-  {
-    title: "Simulateur",
-    href: "/simulateur",
-  },
-  {
-    title: "Ressources",
-    items: [
-      { title: "Blog", href: "/blog" },
-      { title: "Barometre", href: "/barometre" },
-      { title: "FAQ", href: "/#faq" },
-    ],
-  },
-  {
-    title: "Accompagnement",
-    href: "/a-propos",
-  },
-];
 
 /**
  * Landing Page - Simulateur Loi Jeanbrun

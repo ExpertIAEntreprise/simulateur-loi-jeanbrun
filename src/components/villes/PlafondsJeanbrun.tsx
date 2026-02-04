@@ -15,6 +15,10 @@ import type { ZoneFiscale } from "@/types/ville";
 
 interface PlafondsJeanbrunProps {
   zoneFiscale: ZoneFiscale;
+  /** Plafond loyer specifique a la ville (si renseigne dans EspoCRM) */
+  plafondLoyerVille?: number | null;
+  /** Plafond prix specifique a la ville (si renseigne dans EspoCRM) */
+  plafondPrixVille?: number | null;
 }
 
 /**
@@ -56,8 +60,10 @@ function formatPrice(value: number): string {
  * Tableau des plafonds de loyer Loi Jeanbrun par zone fiscale
  * Met en evidence la zone de la ville selectionnee
  */
-export function PlafondsJeanbrun({ zoneFiscale }: PlafondsJeanbrunProps) {
+export function PlafondsJeanbrun({ zoneFiscale, plafondLoyerVille, plafondPrixVille }: PlafondsJeanbrunProps) {
   const zones: ZoneFiscale[] = ["A_BIS", "A", "B1", "B2", "C"];
+  const hasVillePlafonds = (plafondLoyerVille !== null && plafondLoyerVille !== undefined) ||
+    (plafondPrixVille !== null && plafondPrixVille !== undefined);
 
   return (
     <Card>
@@ -139,6 +145,27 @@ export function PlafondsJeanbrun({ zoneFiscale }: PlafondsJeanbrunProps) {
         <p className="text-muted-foreground mt-4 text-xs">
           * Plafonds PLF 2026. Le taux de reduction fiscale augmente avec la baisse du loyer pratique.
         </p>
+
+        {/* Plafonds specifiques a la ville (si renseignes) */}
+        {hasVillePlafonds && (
+          <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-4">
+            <p className="mb-2 text-sm font-semibold">Plafonds specifiques a cette ville</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {plafondLoyerVille !== null && plafondLoyerVille !== undefined && (
+                <div>
+                  <span className="text-xs text-muted-foreground">Plafond loyer</span>
+                  <p className="text-lg font-bold text-primary">{formatPrice(plafondLoyerVille)}/m2/mois</p>
+                </div>
+              )}
+              {plafondPrixVille !== null && plafondPrixVille !== undefined && (
+                <div>
+                  <span className="text-xs text-muted-foreground">Plafond prix</span>
+                  <p className="text-lg font-bold text-primary">{formatPrice(plafondPrixVille)}/m2</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

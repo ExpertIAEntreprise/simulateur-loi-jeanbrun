@@ -22,6 +22,7 @@ import { ArgumentsInvestissement } from "@/components/villes/ArgumentsInvestisse
 import { BarometreSidebar } from "@/components/villes/BarometreSidebar";
 import { Breadcrumb, getBreadcrumbJsonLdForMetadata } from "@/components/villes/Breadcrumb";
 import { ContenuEditorial } from "@/components/villes/ContenuEditorial";
+import { CTAVille } from "@/components/villes/cta-ville";
 import { DonneesMarche } from "@/components/villes/DonneesMarche";
 import { FaqVille, getFaqJsonLdForMetadata } from "@/components/villes/FaqVille";
 import { LienMetropoleParent } from "@/components/villes/LienMetropoleParent";
@@ -302,7 +303,11 @@ function MetropoleLayout({
           <DonneesMarche ville={ville} />
 
           {/* Plafonds Jeanbrun */}
-          <PlafondsJeanbrun zoneFiscale="B1" />
+          <PlafondsJeanbrun
+            zoneFiscale={(ville.zoneFiscale ?? "B1") as ZoneFiscale}
+            plafondLoyerVille={ville.plafondLoyerJeanbrun}
+            plafondPrixVille={ville.plafondPrixJeanbrun}
+          />
 
           {/* Programmes neufs */}
           <ProgrammesList programmes={programmes} maxItems={6} />
@@ -463,7 +468,11 @@ function PeripheriqueLayout({
           <DonneesMarche ville={ville} />
 
           {/* Plafonds Jeanbrun */}
-          <PlafondsJeanbrun zoneFiscale="B1" />
+          <PlafondsJeanbrun
+            zoneFiscale={(ville.zoneFiscale ?? "B1") as ZoneFiscale}
+            plafondLoyerVille={ville.plafondLoyerJeanbrun}
+            plafondPrixVille={ville.plafondPrixJeanbrun}
+          />
 
           {/* Programmes neufs */}
           <ProgrammesList
@@ -566,6 +575,12 @@ export default async function VillePage({ params }: PageParams) {
           villesProches={villesProches}
         />
       )}
+
+      <CTAVille
+        villeNom={ville.name}
+        villeSlug={ville.slug}
+        zoneFiscale={ville.zoneFiscale}
+      />
     </main>
   );
 }

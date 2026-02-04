@@ -1,10 +1,11 @@
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import Header from "@/components/shadcn-studio/blocks/hero-section-18/header";
+import FooterComponent03 from "@/components/shadcn-studio/blocks/footer-component-03/footer-component-03";
+import { navigationData } from "@/config/navigation";
 
 /**
  * Layout pour les pages de l'application
  *
- * Inclut SiteHeader et SiteFooter pour les pages standard.
+ * Utilise le meme Header/Footer que la landing page pour une experience coherente.
  * Les providers (Auth, Theme) sont dans le root layout.
  */
 export default function AppLayout({
@@ -14,9 +15,9 @@ export default function AppLayout({
 }>) {
   return (
     <>
-      <SiteHeader />
-      <main id="main-content">{children}</main>
-      <SiteFooter />
+      <Header navigationData={navigationData} />
+      <main id="main-content" className="pt-16">{children}</main>
+      <FooterComponent03 />
     </>
   );
 }

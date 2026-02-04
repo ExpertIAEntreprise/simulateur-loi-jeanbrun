@@ -19,6 +19,7 @@ import type { ZoneFiscale } from "@/types/ville";
 import { BarometreResume } from "./BarometreResume";
 import { Breadcrumb } from "./Breadcrumb";
 import { ContenuEditorial } from "./ContenuEditorial";
+import { DonneesInsee } from "./DonneesInsee";
 import { DonneesMarche } from "./DonneesMarche";
 import { FaqVille } from "./FaqVille";
 import { HistoriquePrix, type HistoriquePrixDataPoint } from "./HistoriquePrix";
@@ -253,6 +254,9 @@ export function MetropoleLayout({
             <div className="grid gap-6 lg:grid-cols-2">
               <DonneesMarche ville={ville} />
               <HistoriquePrix data={historiquePrix} />
+            </div>
+            <div className="mt-6">
+              <DonneesInsee ville={ville} />
             </div>
           </section>
 

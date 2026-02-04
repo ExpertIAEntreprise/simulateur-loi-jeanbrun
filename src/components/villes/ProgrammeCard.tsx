@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Building2, Calendar, MapPin, Maximize2 } from "lucide-react";
+import { Building2, Calendar, MapPin, Maximize2, Layers } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -73,12 +73,17 @@ export function ProgrammeCard({
     name,
     cPromoteur,
     cPrixMin,
+    cPrixMax,
+    cPrixM2Moyen,
     cSurfaceMin,
     cSurfaceMax,
     cDateLivraison,
     cImagePrincipale,
     cImageAlt,
+    cNbLotsTotal,
     cNbLotsDisponibles,
+    cTypesLots,
+    cAdresse,
     cVilleName,
     cCodePostal,
   } = programme;
@@ -86,10 +91,30 @@ export function ProgrammeCard({
   const hasImage = cImagePrincipale !== null && cImagePrincipale !== "";
   const hasSurface = cSurfaceMin !== null || cSurfaceMax !== null;
   const hasPrice = cPrixMin !== null;
+  const hasPriceRange = cPrixMin !== null && cPrixMax !== null;
   const hasDeliveryDate = cDateLivraison !== null && cDateLivraison !== "";
-  const hasAvailableLots =
-    cNbLotsDisponibles !== null && cNbLotsDisponibles > 0;
   const hasLocation = cVilleName !== undefined || cCodePostal !== null;
+
+  // Parse types de lots
+  const typesLots: string[] = (() => {
+    if (!cTypesLots) return [];
+    try {
+      return JSON.parse(cTypesLots) as string[];
+    } catch {
+      return [];
+    }
+  })();
+
+  // Lots texte (5/12 lots disponibles)
+  const lotsText = (() => {
+    if (cNbLotsDisponibles !== null && cNbLotsTotal !== null && cNbLotsTotal > 0) {
+      return `${cNbLotsDisponibles}/${cNbLotsTotal} lots disponibles`;
+    }
+    if (cNbLotsDisponibles !== null && cNbLotsDisponibles > 0) {
+      return `${cNbLotsDisponibles} lot${cNbLotsDisponibles > 1 ? "s" : ""} disponible${cNbLotsDisponibles > 1 ? "s" : ""}`;
+    }
+    return null;
+  })();
 
   // Build surface text
   const surfaceText = (() => {
@@ -163,11 +188,10 @@ export function ProgrammeCard({
         )}
 
         {/* Available lots badge overlay */}
-        {hasAvailableLots && (
+        {lotsText !== null && (
           <div className="absolute right-3 top-3">
             <Badge className="bg-green-600 text-white hover:bg-green-600">
-              {cNbLotsDisponibles} lot{cNbLotsDisponibles > 1 ? "s" : ""}{" "}
-              disponible{cNbLotsDisponibles > 1 ? "s" : ""}
+              {lotsText}
             </Badge>
           </div>
         )}
@@ -186,13 +210,30 @@ export function ProgrammeCard({
             <span>{locationText}</span>
           </CardDescription>
         )}
+
+        {/* Adresse */}
+        {cAdresse !== null && cAdresse !== "" && (
+          <CardDescription className="flex items-center gap-1.5 text-xs">
+            <MapPin className="size-3 shrink-0" aria-hidden="true" />
+            <span>{cAdresse}</span>
+          </CardDescription>
+        )}
       </CardHeader>
 
       <CardContent className="space-y-3 pt-0">
         {/* Price */}
         {hasPrice && (
-          <div className="text-lg font-semibold text-primary">
-            À partir de {formatPrice(cPrixMin)}
+          <div>
+            <div className="text-lg font-semibold text-primary">
+              {hasPriceRange && cPrixMax > cPrixMin
+                ? `${formatPrice(cPrixMin)} - ${formatPrice(cPrixMax)}`
+                : `A partir de ${formatPrice(cPrixMin)}`}
+            </div>
+            {cPrixM2Moyen !== null && (
+              <p className="text-xs text-muted-foreground">
+                soit ~{formatPrice(cPrixM2Moyen)}/m2
+              </p>
+            )}
           </div>
         )}
 
@@ -214,6 +255,18 @@ export function ProgrammeCard({
             </div>
           )}
         </div>
+
+        {/* Types de lots */}
+        {typesLots.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Layers className="size-3.5 text-muted-foreground" aria-hidden="true" />
+            {typesLots.map((type) => (
+              <Badge key={type} variant="outline" className="text-xs">
+                {type}
+              </Badge>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

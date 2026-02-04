@@ -21,6 +21,7 @@ import { BarometreSidebar } from "./BarometreSidebar";
 import { Breadcrumb } from "./Breadcrumb";
 import { CarteVille } from "./CarteVille";
 import { ContenuEditorial } from "./ContenuEditorial";
+import { DonneesInsee } from "./DonneesInsee";
 import { FaqVille } from "./FaqVille";
 import { LienMetropoleParent } from "./LienMetropoleParent";
 import { ProgrammesList } from "./ProgrammesList";
@@ -338,6 +339,9 @@ export function PeripheriqueLayout({
 
               {/* Donnees rapides */}
               <QuickDataCard ville={ville} />
+
+              {/* Donnees INSEE */}
+              <DonneesInsee ville={ville} />
 
               {/* Carte de la ville */}
               <CarteVille
