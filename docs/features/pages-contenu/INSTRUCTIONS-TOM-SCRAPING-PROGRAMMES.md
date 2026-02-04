@@ -359,10 +359,69 @@ Une fois que Tom a enrichi au moins 20+ programmes :
 
 ---
 
-## 8. VERIFICATION FINALE
+## 8. FAQ - REPONSES AUX QUESTIONS TOM (4 fevrier 2026)
+
+### Q1. Qui cree lotsDetails dans EspoCRM ?
+**FAIT.** Le champ `lotsDetails` (type text) a ete cree sur CJeanbrunProgramme le 4 fevrier 2026 via metadata Docker + rebuild. Il est pret a recevoir du JSON stringify.
+
+### Q2. Upload images sur R2 - acces ?
+**FAIT.** Les credentials R2 S3-compatible ont ete ajoutes dans :
+- `/home/moltbot/.openclaw/workspace/.env`
+- `/home/moltbot/.openclaw/openclaw.json` (env + sandbox docker env)
+
+Variables disponibles :
+- `R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` : credentials S3
+- `R2_ENDPOINT` : `https://5d4ee01059ff36bd168e883a8057fe8c.r2.cloudflarestorage.com`
+- `R2_PUBLIC_DOMAIN` : `pub-e2440c233e004aa1b0bea8d0bd8a67f3.r2.dev`
+
+**Bucket name a determiner** : lister les buckets via l'API S3 avec ces credentials pour identifier le nom exact du bucket associe au domaine public `pub-e2440c233e004aa1b0bea8d0bd8a67f3.r2.dev`. Convention d'upload : `programmes/{slug}/{image-name}.webp`
+
+### Q3. Priorite d'execution ?
+**Option B : test sur 10 programmes d'abord.**
+Choisir 10 programmes varies :
+- 2-3 dans des grandes villes (Lyon, Toulouse, Nantes)
+- 1-2 a Paris (arrondissement)
+- 1 a Marseille (arrondissement)
+- 2-3 dans des villes moyennes
+- 1 avec prixMin = 0 (a corriger)
+
+### Q4. Programmes invalides (404) ?
+- Mettre `statut` = `epuise`
+- Generer le slug si manquant : `{nom-programme}-{ville}` (convention slugify)
+- **Pas de description minimale** - on ne fabrique pas de fausses donnees
+- Le programme reste en base mais invisible cote UI (filtre `statut=disponible`)
+
+### Q5. lotsDetails vide ?
+**`null`** (pas `"[]"`).
+Si aucun detail de lots disponible sur la page Nexity, le champ reste `null`.
+Le code gere les champs null avec des fallbacks.
+
+### Q6. Geocodage - quand ?
+**Phase 1 avec le reste.** L'API Adresse (`api-adresse.data.gouv.fr`) est gratuite, rapide, sans rate limit strict.
+Workflow : scraper adresse → geocoder dans la foulee → sauvegarder lat/lon.
+
+### Q7. Images - combien max ?
+- `imagePrincipale` : 1 obligatoire
+- `images` (array supplementaire) : **max 5**
+- Privilegier : facade, interieur type, plan de masse, vue aerienne, amenagement
+- Pas besoin des 15 photos Nexity, ca coute du stockage R2 pour rien
+- Format obligatoire : WebP
+
+### Q8. Rate limiting Nexity ?
+**2 secondes entre chaque page Nexity.** Pas plus agressif.
+Pour EspoCRM : 1 requete/seconde comme documente section 4.
+
+### Q9. Timezone ?
+**Europe/Paris confirme.** Toutes les dates et timestamps.
+
+---
+
+## 9. VERIFICATION FINALE
 
 Le plan est complet quand :
-- [ ] Champ `lotsDetails` cree dans EspoCRM
+- [x] Champ `lotsDetails` cree dans EspoCRM (FAIT 4 fev 2026)
+- [x] Credentials R2 disponibles sur Boldbot (FAIT 4 fev 2026)
+- [ ] Batch test 10 programmes reussi
 - [ ] Tom a enrichi les 153 programmes (ou marque `epuise` les invalides)
 - [ ] Chaque programme actif a : description, imagePrincipale, typesLots, prixMin>0, nbLotsTotal
 - [ ] Images hebergees sur R2 (pas d'URLs Nexity directes)
