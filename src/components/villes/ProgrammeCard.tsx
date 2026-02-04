@@ -88,12 +88,12 @@ export function ProgrammeCard({
     cCodePostal,
   } = programme;
 
-  const hasImage = cImagePrincipale !== null && cImagePrincipale !== "";
-  const hasSurface = cSurfaceMin !== null || cSurfaceMax !== null;
-  const hasPrice = cPrixMin !== null;
-  const hasPriceRange = cPrixMin !== null && cPrixMax !== null;
-  const hasDeliveryDate = cDateLivraison !== null && cDateLivraison !== "";
-  const hasLocation = cVilleName !== undefined || cCodePostal !== null;
+  const hasImage = cImagePrincipale != null && cImagePrincipale !== "";
+  const hasSurface = cSurfaceMin != null || cSurfaceMax != null;
+  const hasPrice = cPrixMin != null;
+  const hasPriceRange = cPrixMin != null && cPrixMax != null;
+  const hasDeliveryDate = cDateLivraison != null && cDateLivraison !== "";
+  const hasLocation = cVilleName != null || cCodePostal != null;
 
   // Parse types de lots
   const typesLots: string[] = (() => {
@@ -107,10 +107,10 @@ export function ProgrammeCard({
 
   // Lots texte (5/12 lots disponibles)
   const lotsText = (() => {
-    if (cNbLotsDisponibles !== null && cNbLotsTotal !== null && cNbLotsTotal > 0) {
+    if (cNbLotsDisponibles != null && cNbLotsTotal != null && cNbLotsTotal > 0) {
       return `${cNbLotsDisponibles}/${cNbLotsTotal} lots disponibles`;
     }
-    if (cNbLotsDisponibles !== null && cNbLotsDisponibles > 0) {
+    if (cNbLotsDisponibles != null && cNbLotsDisponibles > 0) {
       return `${cNbLotsDisponibles} lot${cNbLotsDisponibles > 1 ? "s" : ""} disponible${cNbLotsDisponibles > 1 ? "s" : ""}`;
     }
     return null;
@@ -118,16 +118,16 @@ export function ProgrammeCard({
 
   // Build surface text
   const surfaceText = (() => {
-    if (cSurfaceMin !== null && cSurfaceMax !== null) {
+    if (cSurfaceMin != null && cSurfaceMax != null) {
       if (cSurfaceMin === cSurfaceMax) {
         return `${cSurfaceMin} m²`;
       }
       return `De ${cSurfaceMin} à ${cSurfaceMax} m²`;
     }
-    if (cSurfaceMin !== null) {
+    if (cSurfaceMin != null) {
       return `À partir de ${cSurfaceMin} m²`;
     }
-    if (cSurfaceMax !== null) {
+    if (cSurfaceMax != null) {
       return `Jusqu'à ${cSurfaceMax} m²`;
     }
     return null;
@@ -135,13 +135,13 @@ export function ProgrammeCard({
 
   // Build location text
   const locationText = (() => {
-    if (cVilleName !== undefined && cCodePostal !== null) {
+    if (cVilleName != null && cCodePostal != null) {
       return `${cVilleName} (${cCodePostal})`;
     }
-    if (cVilleName !== undefined) {
+    if (cVilleName != null) {
       return cVilleName;
     }
-    if (cCodePostal !== null) {
+    if (cCodePostal != null) {
       return cCodePostal;
     }
     return null;
@@ -179,7 +179,7 @@ export function ProgrammeCard({
         )}
 
         {/* Promoter badge overlay */}
-        {cPromoteur !== null && cPromoteur !== "" && (
+        {cPromoteur != null && cPromoteur !== "" && (
           <div className="absolute left-3 top-3">
             <Badge variant="secondary" className="bg-white/90 text-foreground">
               {cPromoteur}
@@ -212,7 +212,7 @@ export function ProgrammeCard({
         )}
 
         {/* Adresse */}
-        {cAdresse !== null && cAdresse !== "" && (
+        {cAdresse != null && cAdresse !== "" && (
           <CardDescription className="flex items-center gap-1.5 text-xs">
             <MapPin className="size-3 shrink-0" aria-hidden="true" />
             <span>{cAdresse}</span>
@@ -229,7 +229,7 @@ export function ProgrammeCard({
                 ? `${formatPrice(cPrixMin)} - ${formatPrice(cPrixMax)}`
                 : `A partir de ${formatPrice(cPrixMin)}`}
             </div>
-            {cPrixM2Moyen !== null && (
+            {cPrixM2Moyen != null && (
               <p className="text-xs text-muted-foreground">
                 soit ~{formatPrice(cPrixM2Moyen)}/m2
               </p>

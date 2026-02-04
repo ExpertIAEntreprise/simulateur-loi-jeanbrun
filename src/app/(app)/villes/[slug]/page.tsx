@@ -124,8 +124,7 @@ export async function generateMetadata({
     };
   }
 
-  // Zone fiscale par defaut B1 (la plus courante)
-  const zoneFiscale = "B1";
+  const zoneFiscale = ville.zoneFiscale ?? "B1";
   const zoneLabel = ZONE_LABELS[zoneFiscale] ?? zoneFiscale;
   const plafond = PLAFONDS_LOYER[zoneFiscale] ?? 0;
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
@@ -281,7 +280,7 @@ function MetropoleLayout({
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Investissement locatif loi Jeanbrun a {ville.name}
             </h1>
-            <ZoneBadge zone="B1" />
+            <ZoneBadge zone={ville.zoneFiscale ?? "B1"} />
           </div>
 
           {ville.regionName && (
@@ -340,7 +339,7 @@ function MetropoleLayout({
             <SimulateurPreRempli
               villeNom={ville.name}
               villeSlug={ville.slug}
-              zoneFiscale="B1"
+              zoneFiscale={(ville.zoneFiscale ?? "B1") as ZoneFiscale}
             />
 
             {/* Barometre si disponible (avec lien vers page barometre) */}
@@ -431,7 +430,7 @@ function PeripheriqueLayout({
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Investissement locatif loi Jeanbrun a {ville.name}
             </h1>
-            <ZoneBadge zone="B1" />
+            <ZoneBadge zone={ville.zoneFiscale ?? "B1"} />
           </div>
 
           {ville.regionName && (
@@ -501,7 +500,7 @@ function PeripheriqueLayout({
             <SimulateurPreRempli
               villeNom={ville.name}
               villeSlug={ville.slug}
-              zoneFiscale="B1"
+              zoneFiscale={(ville.zoneFiscale ?? "B1") as ZoneFiscale}
             />
 
             {/* Barometre sidebar (PERIPHERIQUES: plus visible, avec lien) */}

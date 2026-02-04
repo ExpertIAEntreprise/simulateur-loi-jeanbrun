@@ -91,8 +91,51 @@
 | `src/components/site-header.tsx` | SUPPRIME |
 | `src/components/site-footer.tsx` | SUPPRIME |
 
+### Etape 8 : Bugfixes post-test Vercel - FAIT
+
+**8a. ProgrammeCard NaN/undefined**
+- Remplace tous les checks `!== null` par `!= null` (couvre null ET undefined)
+- Les donnees EspoCRM retournent `undefined` pour champs absents, pas `null`
+- Corrige: prix NaN, surface "undefined m2", location vide
+
+**8b. Zone fiscale hardcodee**
+- `generateMetadata`: remplace `const zoneFiscale = "B1"` par `ville.zoneFiscale ?? "B1"`
+- MetropoleLayout/PeripheriqueLayout: ZoneBadge et SimulateurPreRempli utilisent `ville.zoneFiscale`
+- Avant: sidebar "Zone B1" mais CTA "Zone A" sur Lyon
+
+**8c. Villes de la region (sidebar)**
+- Ajout methode `getVillesByDepartementId()` dans le client EspoCRM
+- `getVillesProches()`: fallback par departement quand regionId est null
+- Avant: affichait Abbeville, Agde... (alphabetique) au lieu de villes proches
+
+## Fichiers modifies
+
+| Fichier | Action |
+|---------|--------|
+| `src/config/navigation.ts` | CREE |
+| `src/app/(app)/layout.tsx` | MODIFIE |
+| `src/app/(landing)/page.tsx` | MODIFIE |
+| `src/app/(landing)/layout.tsx` | MODIFIE (commentaire) |
+| `src/app/globals.css` | MODIFIE (nettoyage) |
+| `src/components/villes/DonneesMarche.tsx` | MODIFIE |
+| `src/components/villes/BarometreSidebar.tsx` | MODIFIE |
+| `src/components/villes/ProgrammeCard.tsx` | MODIFIE (null checks) |
+| `src/components/villes/PlafondsJeanbrun.tsx` | MODIFIE |
+| `src/components/villes/MetropoleLayout.tsx` | MODIFIE |
+| `src/components/villes/PeripheriqueLayout.tsx` | MODIFIE |
+| `src/app/(app)/villes/[slug]/page.tsx` | MODIFIE (zone dynamique) |
+| `src/components/villes/cta-ville.tsx` | CREE |
+| `src/app/(app)/accessibilite/page.tsx` | CREE |
+| `src/app/(app)/programmes/page.tsx` | CREE |
+| `src/components/site-header.tsx` | SUPPRIME |
+| `src/components/site-footer.tsx` | SUPPRIME |
+| `src/lib/espocrm/client.ts` | MODIFIE (villes proches + dept) |
+
 ## Verification
 
 - Build CI passe sans erreur (pnpm build:ci OK)
+- TypeScript compile sans erreur (tsc --noEmit OK)
 - Pages /accessibilite et /programmes generees
 - Navigation coherente entre landing et pages app
+- Zone fiscale dynamique sur toutes les pages villes
+- ProgrammeCard robuste face aux champs undefined d'EspoCRM

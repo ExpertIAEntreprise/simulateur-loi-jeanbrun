@@ -601,8 +601,38 @@ export class EspoCRMClient {
   }
 
   /**
+   * Récupère les villes d'un département (hors ville exclue)
+   */
+  async getVillesByDepartementId(
+    departementId: string,
+    excludeSlug?: string,
+    options?: PaginationOptions
+  ): Promise<EspoListResponse<EspoVille>> {
+    const params: Record<string, string | number> = {
+      maxSize: options?.limit ?? 10,
+      offset: options?.offset ?? 0,
+      orderBy: "prixM2Moyen",
+      order: "desc",
+    };
+
+    const whereParams = this.buildWhereParams({ departementId: departementId });
+    Object.assign(params, whereParams);
+
+    if (excludeSlug) {
+      const whereIndex = Object.keys(whereParams).length / 3;
+      params[`where[${whereIndex}][type]`] = "notEquals";
+      params[`where[${whereIndex}][attribute]`] = "slug";
+      params[`where[${whereIndex}][value]`] = excludeSlug;
+    }
+
+    const url = this.buildUrl("/CJeanbrunVille", params);
+
+    return this.fetchWithRetry<EspoListResponse<EspoVille>>(url);
+  }
+
+  /**
    * Récupère les villes proches pour le maillage interne
-   * Priorise les villes de la même région, puis les métropoles
+   * Priorise les villes de la même région, puis du même département, puis les métropoles
    */
   async getVillesProches(
     ville: EspoVille,
@@ -627,10 +657,24 @@ export class EspoCRMClient {
         ville.slug,
         { limit: limit }
       );
-      return villesRegion.list;
+      if (villesRegion.list.length > 0) {
+        return villesRegion.list;
+      }
     }
 
-    // Fallback: retourner les métropoles les plus populaires
+    // Fallback par département si regionId absent ou vide
+    if (ville.departementId) {
+      const villesDept = await this.getVillesByDepartementId(
+        ville.departementId,
+        ville.slug,
+        { limit: limit }
+      );
+      if (villesDept.list.length > 0) {
+        return villesDept.list;
+      }
+    }
+
+    // Dernier fallback: métropoles triées par population
     const metropoles = await this.getMetropoles({ limit: limit + 1 });
     return metropoles.list
       .filter((v) => v.slug !== ville.slug)
