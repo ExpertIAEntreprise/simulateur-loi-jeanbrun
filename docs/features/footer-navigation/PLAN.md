@@ -139,3 +139,87 @@
 - Navigation coherente entre landing et pages app
 - Zone fiscale dynamique sur toutes les pages villes
 - ProgrammeCard robuste face aux champs undefined d'EspoCRM
+
+---
+
+## Etape 9 : Bugs restants identifies (A FAIRE - prochaine session)
+
+### 9a. CRITIQUE - Mapping champs EspoCRM → ProgrammeCard
+
+**Probleme:** La page /programmes affiche 153 programmes mais AUCUNE donnee (pas de prix, pas de surface, pas d'image, pas de ville, pas de promoteur). Seul le `name` apparait.
+
+**Cause racine:** Desynchronisation entre les noms de champs EspoCRM et le type TypeScript `EspoProgramme`.
+
+- L'entite EspoCRM `CJeanbrunProgramme` stocke les champs SANS prefixe "c" : `prixMin`, `promoteur`, `adresse`, `dateLivraison`, etc.
+  (voir `docs/technical/PLAN-MOLTBOT-SCRAPING-PROGRAMMES.md` ligne 126-152)
+- Mais le type TypeScript `EspoProgramme` dans `src/lib/espocrm/types.ts` attend les champs AVEC prefixe "c" : `cPrixMin`, `cPromoteur`, `cAdresse`, `cDateLivraison`, etc.
+  (voir `src/lib/espocrm/types.ts` lignes 127-158)
+- L'API EspoCRM retourne les noms de champs tels qu'ils sont dans l'entite (sans "c")
+- Resultat : tous les champs sont `undefined` → masques par le fix != null
+
+**Action:** Verifier les noms de champs reels retournes par l'API EspoCRM :
+```bash
+curl -s "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunProgramme?maxSize=1" \
+  -H "X-Api-Key: $ESPOCRM_API_KEY" | jq '.list[0] | keys'
+```
+Puis aligner le type `EspoProgramme` ou ajouter un mapping dans `client.ts`.
+
+**Fichiers concernes:**
+- `src/lib/espocrm/types.ts` (type EspoProgramme)
+- `src/lib/espocrm/client.ts` (methode getProgrammes, mapping response)
+- `src/components/villes/ProgrammeCard.tsx` (destructuration des champs)
+
+### 9b. CRITIQUE - Pages villes en 404 (Paris, Marseille, Boulogne-Billancourt)
+
+**Probleme:** Plusieurs villes majeures listees dans le footer retournent 404 :
+- /villes/paris → 404
+- /villes/marseille → 404
+- /villes/boulogne-billancourt → 404
+
+Les pages qui fonctionnent: /villes/lyon, /villes/nantes
+
+**Cause probable:** `generateStaticParams()` appelle `client.getAllVilleSlugs()` au build time. Si EspoCRM ne retourne pas ces slugs (entite manquante, slug different, ou erreur API au build), les pages ne sont pas generees.
+
+**Action:**
+1. Verifier les slugs dans EspoCRM :
+```bash
+curl -s "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille?where[0][type]=equals&where[0][attribute]=name&where[0][value]=Paris&maxSize=1" \
+  -H "X-Api-Key: $ESPOCRM_API_KEY" | jq '.list[0].slug'
+```
+2. Comparer avec les liens du footer dans `src/config/navigation.ts`
+3. Ajouter les villes manquantes dans EspoCRM ou corriger les slugs
+
+### 9c. MOYEN - Sidebar "Villes de la region" toujours alphabetique
+
+**Probleme:** Meme apres le fix departementId, la sidebar affiche Abbeville, Agde, Albert sur Lyon et Nantes. Le cache ISR (1h) peut expliquer partiellement, mais il est probable que `regionId` ET `departementId` soient tous les deux null dans EspoCRM pour ces villes.
+
+**Action:**
+1. Verifier les donnees EspoCRM pour Lyon :
+```bash
+curl -s "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille?where[0][type]=equals&where[0][attribute]=slug&where[0][value]=lyon&maxSize=1" \
+  -H "X-Api-Key: $ESPOCRM_API_KEY" | jq '.list[0] | {regionId, departementId, regionName, departementName}'
+```
+2. Si null: enrichir les villes EspoCRM avec regionId/departementId
+3. Sinon: attendre expiration cache ISR et re-tester
+
+### 9d. MINEUR - 4 erreurs lint pre-existantes
+
+**Fichiers:**
+- `src/app/simulateur/avance/error.tsx` : `<a>` au lieu de `<Link />`
+- `src/app/simulateur/resultat/error.tsx` : `<a>` au lieu de `<Link />`
+- 2 fichiers avec setState synchrone dans un effet
+
+**Action:** Corriger pour passer `pnpm check` a 0 erreurs.
+
+### 9e. MINEUR - Preload images inutiles sur pages app
+
+**Probleme:** ~10 images de la landing sont preloadees sur les pages app (warnings console).
+
+**Action:** Verifier si le preload vient du layout partage ou des metadata. Limiter le preload aux images reellement utilisees par page.
+
+## Priorite prochaine session
+
+1. **9a** en premier (mapping champs programmes) → impact maximal, 153 programmes vides
+2. **9b** ensuite (404 villes majeures) → Paris, Marseille, Boulogne dans le footer mais 404
+3. **9c** si les donnees EspoCRM sont corrigeables rapidement
+4. **9d** et **9e** en bonus si le temps le permet
