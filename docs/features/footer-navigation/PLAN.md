@@ -316,65 +316,27 @@ Note: le code dans `src/lib/espocrm/index.ts` accepte `ESPOCRM_URL` OU `ESPOCRM_
 
 ## Prochaines etapes (Etape 12)
 
-### 12a. MOYEN - Recreer entites metropoles Paris/Marseille dans EspoCRM
+### 12a. FAIT - Recreer entites metropoles Paris/Marseille dans EspoCRM
 
-**Contexte:** Les arrondissements (20 Paris + 16 Marseille) ont un `metropoleParentId` qui pointe vers des enregistrements supprimes. Grace au fix 11b, les pages s'affichent mais sans le composant `LienMetropoleParent` (lien "Retour vers Lyon" par exemple).
+**Contexte:** Les arrondissements (20 Paris + 16 Marseille) avaient un `metropoleParentId` pointant vers des enregistrements supprimes. Paris et Marseille n'existaient pas en tant que ville unique car Tom avait scrape par arrondissement (codes postaux distincts).
 
-**Actions a faire via l'API EspoCRM:**
+**Corrections appliquees (4 fevrier 2026):**
 
-1. Creer une entite `CJeanbrunVille` "Paris" :
-   ```bash
-   curl -X POST "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille" \
-     -H "X-Api-Key: $ESPOCRM_API_KEY" -H "Content-Type: application/json" \
-     -d '{
-       "name": "Paris",
-       "slug": "paris",
-       "isMetropole": true,
-       "zoneFiscale": "A_BIS",
-       "codeInsee": "75056",
-       "codePostal": "75000",
-       "population": 2161000,
-       "latitude": 48.8566,
-       "longitude": 2.3522
-     }'
-   ```
-   → Noter l'ID retourne (ex: `NEW_PARIS_ID`)
+1. **Cree metropole Paris** : ID `698387baacfc39909`, slug=`paris`, zone=`A_BIS`, isMetropole=true, pop=2 161 000
+2. **Cree metropole Marseille** : ID `698386c61b3fcaaf5`, slug=`marseille`, zone=`A`, isMetropole=true, pop=873 076
+3. **Rattache 20 arrondissements Paris** (paris-1 a paris-20) → metropoleParentId = Paris
+4. **Rattache 16 arrondissements Marseille** (marseille-1 a marseille-16) → metropoleParentId = Marseille
+5. **Corrige zoneFiscale** : 61 villes Ile-de-France avaient `A_bis` (minuscule) au lieu de `A_BIS` (enum correct). Toutes corrigees.
+6. **Diagnostic orphelins** : 46 parent IDs uniques verifies, 2 orphelins trouves (ancien Paris + ancien Marseille), 0 orphelin restant.
 
-2. Idem pour "Marseille" :
-   ```bash
-   curl -X POST "..." -d '{
-     "name": "Marseille",
-     "slug": "marseille",
-     "isMetropole": true,
-     "zoneFiscale": "A",
-     "codeInsee": "13055",
-     "codePostal": "13000",
-     "population": 873076,
-     "latitude": 43.2965,
-     "longitude": 5.3698
-   }'
-   ```
+**Resultat:**
+- Total villes EspoCRM : 311 → **313** (+Paris, +Marseille)
+- Parents orphelins : 2 → **0**
+- Aucune modification de code, uniquement donnees EspoCRM
 
-3. Mettre a jour les 20 arrondissements Paris :
-   ```bash
-   # Pour chaque arrondissement (paris-1 a paris-20)
-   curl -X PUT "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille/$ARRONDISSEMENT_ID" \
-     -H "X-Api-Key: $ESPOCRM_API_KEY" -H "Content-Type: application/json" \
-     -d '{"metropoleParentId": "$NEW_PARIS_ID"}'
-   ```
+**Note technique:** L'enum `zoneFiscale` dans EspoCRM accepte `A_BIS` (majuscules) en creation mais stockait `A_bis` pour les anciennes entrees. La recherche EspoCRM est case-insensitive mais le code TypeScript attend `A_BIS`.
 
-4. Idem pour les 16 arrondissements Marseille.
-
-5. Verifier les autres villes peripheriques: certaines peuvent aussi avoir un `metropoleParentId` orphelin.
-   ```bash
-   # Lister toutes les villes avec un metropoleParentId
-   # Pour chaque parent ID, verifier qu'il existe (GET /CJeanbrunVille/$ID)
-   # Si 404 → parent orphelin a corriger
-   ```
-
-**Fichiers concernes:** Aucune modification de code. Uniquement des donnees EspoCRM.
-
-**Verification:** Apres correction, les pages arrondissements doivent afficher le lien "Voir la metropole Paris" (composant `LienMetropoleParent` dans `PeripheriqueLayout`).
+**Verification requise:** Redeploy Vercel (sans build cache) pour que `/villes/paris` et `/villes/marseille` soient generes, et que les arrondissements affichent le lien "Voir la metropole".
 
 ### 12b. CRITIQUE - Strategie scraping programmes
 
