@@ -357,7 +357,7 @@ export class EspoCRMClient {
         ? this.getVillesPeripheriques(ville.id, { limit: 8 })
         : Promise.resolve({ total: 0, list: [] }),
       ville.metropoleParentId
-        ? this.getVilleById(ville.metropoleParentId)
+        ? this.getVilleById(ville.metropoleParentId).catch(() => null)
         : Promise.resolve(null),
       this.getVillesProches(ville, 6),
     ]);

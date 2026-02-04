@@ -182,6 +182,155 @@
 - `TMICalculator.tsx` : setState synchrone → `requestAnimationFrame`
 - Resultat : 0 erreurs lint (225 warnings pre-existants)
 
-### 9e. MINEUR - Preload images - NON REPRODUIT
+### 9e. MINEUR - Preload images - CONFIRME (non corrige)
 
-Aucune source code identifiee pour le preload d'images landing sur pages app. Pas de `<link rel="preload">` dans les layouts partages. Probablement transitoire.
+10 images de la landing preloadees sur les pages app (warnings console). Confirme via DevTools.
+Images concernees : loi-jeanbrun-2026.webp, couple-investisseur, fonctionnement-investissement, conditions-location, herve-voirin.avif, blog images, cdn.shadcnstudio.com/image-14.
+Pas de `<link rel="preload">` explicite dans les layouts. Probablement genere par Next.js Image `priority` dans les composants landing charges via un layout partage.
+
+---
+
+## Etape 10 : Verification DevTools Vercel - PROBLEMES IDENTIFIES
+
+### 10a. Page /programmes - PARTIELLEMENT CORRIGE
+
+**Etat:** Les prix et villes s'affichent desormais (mapping 9a OK).
+
+**Problemes restants:**
+- Prix "0 € - 1 064 000 €" → certains programmes ont `prixMin: 0` ou `null` traite comme 0
+- Aucune image (toutes les cards montrent l'icone placeholder)
+- Certaines villes manquantes sur les cards (2e programme "280 prado" sans ville)
+- 153 programmes affiches sans pagination
+- Donnees globalement tres incompletes (pas de promoteur, pas de surface, pas de types lots...)
+
+**Conclusion:** Le mapping code est correct mais les DONNEES EspoCRM sont lacunaires. Il faut rescraper les programmes avec des donnees completes.
+
+### 10b. Pages arrondissements Paris/Marseille - 404 PERSISTENT
+
+**Tests DevTools:**
+- `/villes/paris-15` → 404
+- `/villes/paris-10` → 404
+- `/villes/paris-7` → 404
+- `/villes/marseille-8` → 404
+- `/villes/cannes` → OK (ISR on-demand fonctionne)
+- `/villes/aix-en-provence` → OK
+- `/villes/lyon` → OK
+- `/villes/nantes` → OK
+
+**Diagnostic:**
+- Les slugs `paris-15`, `marseille-8` etc. EXISTENT dans EspoCRM (verifie via curl)
+- L'API repond 200 pour ces slugs via les 2 URLs (crm.agent-ia.com et espocrm.expert-ia-entreprise.fr)
+- Pas de middleware custom dans le projet
+- `dynamicParams` non defini (default: true en Next.js App Router)
+- Pas de conflit de routage (seuls fichiers sous villes/ : page.tsx et [slug]/page.tsx)
+
+**Cause racine probable:** Les arrondissements ont ete ajoutes dans EspoCRM APRES un deploiement precedent. Un visiteur ou bot a tente d'acceder a `/villes/paris-15` → Vercel a genere un 404 via ISR → ce 404 a ete cache. La purge "Data Cache" Vercel ne purge PAS le cache ISR des pages 404.
+
+**Solution:** Faire un **Redeploy complet** depuis le dashboard Vercel en DECOCHANT "Redeploy with existing Build Cache". Cela forcera :
+1. Un nouveau `generateStaticParams()` qui inclura les 311 villes (y compris arrondissements)
+2. La purge de tous les 404 caches
+
+### 10c. Sidebar "Villes de la region" - CORRIGE
+
+**Verifie via DevTools:**
+- Lyon affiche maintenant "Cannes (Zone A), Marseille 7eme (Zone A), Antibes (Zone A)" au lieu de "Abbeville, Agde, Albert"
+- Nantes affiche les memes villes Zone A (car regionId null, fallback zoneFiscale)
+- Aix-en-Provence affiche aussi Cannes, Marseille 7eme, Antibes (meme zone A)
+
+Le fallback par `zoneFiscale` fonctionne correctement.
+
+### 10d. Donnees EspoCRM - ETAT ACTUEL
+
+**Villes (311 total):**
+- 20 arrondissements Paris (paris-1 a paris-20)
+- 16 arrondissements Marseille (marseille-1 a marseille-16)
+- ~275 autres villes
+- `regionId` et `departementId` sont NULL pour la plupart des villes
+- `population`, `revenuMedian`, `evolutionPrix1An`, `nbTransactions12Mois` souvent NULL
+
+**Programmes (153 total):**
+- Seuls champs remplis: `name`, `prixMin`, `prixMax`, `villeId`, `villeName`, `zoneFiscale`, `statut`, `sourceApi`
+- Champs vides: `promoteur`, `adresse`, `imagePrincipale`, `prixM2Moyen`, `nbLotsTotal`, `nbLotsDisponibles`, `typesLots`, `dateLivraison`, `latitude`, `longitude`
+- Source unique: "nexity" (via scraping)
+- `prixMin` parfois 0 (donnee incorrecte)
+
+**Barometres:**
+- Non verifie en detail, probablement lacunaires aussi
+
+---
+
+## Etape 11 : Fix metropoleParentId orphelin - FAIT
+
+### 11a. CRITIQUE - Diagnostic 404 arrondissements Paris/Marseille - FAIT
+
+**Cause racine identifiee:**
+Les arrondissements (paris-15, marseille-8, etc.) ont un `metropoleParentId` qui pointe vers des enregistrements **supprimes** d'EspoCRM.
+
+| Ville | metropoleParentId | Statut API |
+|-------|-------------------|------------|
+| paris-15 | `697c88ab8a5c86ca3` | **404 - supprime** |
+| marseille-8 | `697c88ac371df0759` | **404 - supprime** |
+
+**Chaine de cause a effet:**
+1. `getVilleBySlugEnriched('paris-15')` trouve la ville OK
+2. `getVilleById(metropoleParentId)` appelle EspoCRM → 404
+3. `EspoCRMError` lancee (erreur 4xx, pas de retry)
+4. Le catch dans la page appelle `notFound()` → page 404 mise en cache ISR
+5. Lyon/Nantes marchent car `isMetropole=true` → pas de requete parent
+
+**Villes impactees:** Tous les arrondissements Paris (20) + Marseille (16) + potentiellement d'autres villes peripheriques dont le parent a ete supprime.
+
+### 11b. Fix resilience getVilleBySlugEnriched - FAIT
+
+**Correction dans `src/lib/espocrm/client.ts` ligne 360:**
+
+Avant:
+```typescript
+ville.metropoleParentId
+  ? this.getVilleById(ville.metropoleParentId)
+  : Promise.resolve(null),
+```
+
+Apres:
+```typescript
+ville.metropoleParentId
+  ? this.getVilleById(ville.metropoleParentId).catch(() => null)
+  : Promise.resolve(null),
+```
+
+Si le parent metropole n'existe plus dans EspoCRM, la page s'affiche avec `metropoleParent = null` au lieu de crasher en 404. Le composant `LienMetropoleParent` n'est simplement pas affiche.
+
+### 11c. Configuration Vercel verifiee - OK
+
+Variables d'environnement presentes dans Vercel:
+- `ESPOCRM_API_KEY` ✅ (All Environments)
+- `POSTGRES_URL` ✅ (Production)
+- `BETTER_AUTH_SECRET` ✅ (Production)
+- `BETTER_AUTH_URL` ✅ (Production)
+- `NEXT_PUBLIC_APP_URL` ✅ (Production)
+- `ESPOCRM_BASE_URL` ❌ Absente mais defaut OK dans le code
+
+Note: le code dans `src/lib/espocrm/index.ts` accepte `ESPOCRM_URL` OU `ESPOCRM_BASE_URL` avec fallback vers `https://espocrm.expert-ia-entreprise.fr/api/v1`.
+
+---
+
+## Prochaines etapes (Etape 12)
+
+### 12a. MOYEN - Recreer entites metropoles Paris/Marseille dans EspoCRM
+Les arrondissements affichent la page mais sans lien vers la metropole parent.
+Action: creer "Paris" et "Marseille" comme CJeanbrunVille isMetropole=true, puis mettre a jour les metropoleParentId des arrondissements.
+
+### 12b. CRITIQUE - Strategie scraping programmes
+Les 153 programmes actuels sont quasi vides. Il faut definir :
+1. Quelles donnees exactes on veut sur une fiche programme
+2. Quelles sources scraper (Nexity seul ne suffit pas)
+3. Comment enrichir les programmes existants
+4. Frequence de re-scraping
+
+### 12c. MOYEN - Enrichissement villes EspoCRM
+- Remplir regionId/departementId pour toutes les villes
+- Remplir population, revenuMedian, evolutionPrix1An
+- Ajouter contenuEditorial, photoVille pour le SEO
+
+### 12d. MINEUR - Preload images landing
+Identifier le composant qui cause le preload et le limiter au layout landing
