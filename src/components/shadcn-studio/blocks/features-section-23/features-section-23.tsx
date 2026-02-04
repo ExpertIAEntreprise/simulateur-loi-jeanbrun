@@ -29,15 +29,36 @@ const Features = ({ features }: { features: Process[] }) => {
               Les 4 piliers de l'investissement Loi Jeanbrun
             </MotionPreset>
             <MotionPreset
-              component='p'
-              className='text-muted-foreground text-xl'
               fade
               blur
               slide={{ direction: 'down', offset: 50 }}
               delay={0.3}
               transition={{ duration: 0.5 }}
             >
-              Un dispositif unique qui combine défiscalisation, protection familiale, préparation retraite et revenus fonciers optimisés. Découvrez pourquoi investir dans l'immobilier neuf n'a jamais été aussi avantageux.
+              <p className='text-muted-foreground text-base sm:text-lg'>
+                Un dispositif unique qui combine :
+              </p>
+              <ul className='text-muted-foreground mt-3 space-y-1.5 text-base sm:text-lg'>
+                <li className='flex items-start gap-2'>
+                  <span className='mt-1.5 size-1.5 shrink-0 rounded-full bg-[#1e3a5f]' />
+                  Défiscalisation
+                </li>
+                <li className='flex items-start gap-2'>
+                  <span className='mt-1.5 size-1.5 shrink-0 rounded-full bg-[#1e3a5f]' />
+                  Protection familiale
+                </li>
+                <li className='flex items-start gap-2'>
+                  <span className='mt-1.5 size-1.5 shrink-0 rounded-full bg-[#1e3a5f]' />
+                  Préparation retraite
+                </li>
+                <li className='flex items-start gap-2'>
+                  <span className='mt-1.5 size-1.5 shrink-0 rounded-full bg-[#1e3a5f]' />
+                  Revenus fonciers optimisés
+                </li>
+              </ul>
+              <p className='text-muted-foreground mt-3 text-base sm:text-lg'>
+                Découvrez pourquoi investir dans l&apos;immobilier neuf n&apos;a jamais été aussi avantageux.
+              </p>
             </MotionPreset>
 
           </div>

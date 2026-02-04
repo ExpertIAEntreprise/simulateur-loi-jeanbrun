@@ -5,7 +5,7 @@ import Features from '@/components/shadcn-studio/blocks/features-section-27/feat
 
 const featuresData = [
   {
-    name: 'Le dispositif',
+    name: 'Dispositif',
     value: 'dispositif',
     image: '/loi-jeanbrun-dispositif-fiscal-salon.webp',
     icon: <BadgePercentIcon />,

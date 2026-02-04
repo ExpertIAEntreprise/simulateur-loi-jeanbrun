@@ -26,7 +26,7 @@ const Features = ({ tabs }: { tabs: Tab }) => {
   const [activeTab, setActiveTab] = useState(tabs[0]?.value || 'sales')
 
   return (
-    <section className='py-8 sm:py-16 lg:py-24'>
+    <section className='pt-2 pb-8 sm:py-16 lg:py-24'>
       <div className='border-y'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
@@ -48,17 +48,17 @@ const Features = ({ tabs }: { tabs: Tab }) => {
                   </TabsContent>
                 ))}
                 {/* Tab Triggers */}
-                <TabsList className='*:not-last:border-r-border mt-8 h-max w-full justify-start divide-x rounded-none border-t bg-transparent p-0'>
+                <TabsList className='*:not-last:border-r-border mt-8 h-auto min-h-20 w-full justify-start divide-x rounded-none border-t bg-transparent p-0'>
                   {tabs.map(tab => (
                     <TabsTrigger
                       key={tab.value}
                       value={tab.value}
-                      className='data-[state=active]:bg-muted data-[state=active]:[&>span:first-child]:bg-primary data-[state=active]:[&>span:first-child]:text-primary-foreground [&>span:first-child]:text-primary [&>span:first-child]:bg-primary/10 data-[state=active]:text-primary dark:data-[state=active]:text-primary dark:data-[state=active]:bg-muted basis-1/3 gap-x-4 gap-y-3 rounded-none font-normal data-[state=active]:shadow-none max-sm:flex-col max-sm:justify-start max-sm:py-4 sm:h-18'
+                      className='data-[state=active]:bg-muted data-[state=active]:[&>span:first-child]:bg-primary data-[state=active]:[&>span:first-child]:text-primary-foreground [&>span:first-child]:text-primary [&>span:first-child]:bg-primary/10 data-[state=active]:text-primary dark:data-[state=active]:text-primary dark:data-[state=active]:bg-muted basis-1/3 gap-x-2 gap-y-1 overflow-hidden rounded-none px-2 font-normal data-[state=active]:shadow-none max-sm:flex-col max-sm:items-center max-sm:justify-center max-sm:py-3 sm:h-18'
                     >
                       <span className='flex size-7 shrink-0 items-center justify-center rounded-md [&>svg]:size-4'>
                         {tab.icon}
                       </span>
-                      <span className='text-base text-wrap lg:text-xl'>{tab.name}</span>
+                      <span className='text-xs text-wrap sm:text-base lg:text-xl'>{tab.name}</span>
                     </TabsTrigger>
                   ))}
                 </TabsList>

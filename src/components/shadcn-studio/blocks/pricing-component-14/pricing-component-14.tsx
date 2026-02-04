@@ -20,10 +20,10 @@ type Plan = {
 const Pricing = ({ plans }: { plans: Plan }) => {
   return (
     <section className='bg-muted px-4 py-12 sm:px-6 lg:px-8 lg:py-24'>
-      <header className='mx-auto mb-12 text-center lg:mb-24'>
+      <header className='mx-auto mb-8 max-w-7xl text-left sm:mb-12 lg:mb-24 lg:text-center'>
         <p className='text-primary text-sm font-medium tracking-wide uppercase'>NOS FORMULES</p>
-        <h2 className='text-foreground mt-4 text-4xl font-semibold'>Simulez gratuitement ou bénéficiez d'un accompagnement expert</h2>
-        <p className='text-muted-foreground mt-4 text-xl'>
+        <h2 className='text-foreground mt-4 text-2xl font-semibold md:text-3xl lg:text-4xl'>Simulez gratuitement ou bénéficiez d&apos;un accompagnement expert</h2>
+        <p className='text-muted-foreground mt-4 text-base sm:text-lg'>
           Démarrez avec notre simulateur gratuit, ou optez pour un accompagnement personnalisé avec notre expert certifié - remboursé à 100% si vous investissez.
         </p>
       </header>
@@ -44,11 +44,11 @@ const Pricing = ({ plans }: { plans: Plan }) => {
                     <span className='text-xs font-semibold text-white'>{plan.badge}</span>
                   </div>
                 )}
-                <h3 className={cn('mb-2 text-3xl font-semibold', { 'text-primary-foreground': plan.isPro })}>
+                <h3 className={cn('mb-2 text-2xl font-semibold sm:text-3xl', { 'text-primary-foreground': plan.isPro })}>
                   {plan.name}
                 </h3>
                 <div className='flex gap-1'>
-                  <span className={cn('text-5xl font-bold', { 'text-primary-foreground': plan.isPro })}>
+                  <span className={cn('text-4xl font-bold sm:text-5xl', { 'text-primary-foreground': plan.isPro })}>
                     <NumberTicker startValue={0} value={plan.price} />
                   </span>
                   {plan.suffix && (

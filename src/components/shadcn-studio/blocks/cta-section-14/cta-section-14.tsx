@@ -32,16 +32,8 @@ const CTA = () => {
                   </h2>
 
                   <p className='text-base leading-relaxed opacity-90 md:text-xl'>
-                    Le plafond de déficit foncier imputable sur le revenu global <strong>DOUBLE</strong>, passant de 10 700 € à <strong>21 400 € par an</strong> jusqu&apos;au 31 décembre 2027.
+                    Le plafond de déficit foncier imputable sur le revenu global <strong>DOUBLE</strong>, passant de 10 700 € à <strong>21 400 € par an</strong> jusqu&apos;au 31 décembre 2027. Cet avantage est réservé à <strong>l&apos;immobilier ancien avec travaux de rénovation énergétique</strong> (non applicable au neuf).
                   </p>
-
-                  <div>
-                    <MatterButton size='lg'>
-                      <span className='sm:hidden'>Simuler mon avantage</span>
-                      <span className='hidden sm:inline'>Simulez gratuitement votre avantage fiscal personnalisé</span>
-                      <ArrowRightIcon className='h-4 w-4 -rotate-45' />
-                    </MatterButton>
-                  </div>
                 </div>
 
                 {/* Right Column - Image */}
@@ -52,6 +44,15 @@ const CTA = () => {
                     className='w-full object-cover transition-transform duration-300 group-hover:scale-105 max-lg:mx-auto max-lg:max-w-full max-lg:px-4'
                   />
                 </div>
+              </div>
+
+              {/* Button below image, centered */}
+              <div className='flex justify-center pb-6 pt-4'>
+                <MatterButton size='lg'>
+                  <span className='sm:hidden'>Simuler mon avantage</span>
+                  <span className='hidden sm:inline'>Simulez gratuitement votre avantage fiscal personnalisé</span>
+                  <ArrowRightIcon className='h-4 w-4 -rotate-45' />
+                </MatterButton>
               </div>
             </CardContent>
           </Card>

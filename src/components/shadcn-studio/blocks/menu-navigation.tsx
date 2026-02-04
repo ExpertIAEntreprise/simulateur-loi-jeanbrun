@@ -39,7 +39,7 @@ type MenuNavigationProps = {
 const MenuNavigation = ({ navigationData, className }: MenuNavigationProps) => {
   return (
     <NavigationMenu viewport={false} className={className}>
-      <NavigationMenuList className='flex-wrap justify-start gap-0'>
+      <NavigationMenuList className='flex-wrap justify-center gap-1 lg:gap-2'>
         {navigationData.map(navItem => {
           if (navItem.href) {
             // Root link item

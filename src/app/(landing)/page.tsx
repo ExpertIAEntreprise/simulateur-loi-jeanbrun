@@ -10,7 +10,7 @@ import PricingWrapper from "@/components/landing/pricing-wrapper";
 import FAQWrapper from "@/components/landing/faq-wrapper";
 import BlogWrapper from "@/components/landing/blog-wrapper";
 import WhyInvestWrapper from "@/components/landing/why-invest-wrapper";
-import { SiteFooter } from "@/components/site-footer";
+import FooterComponent03 from "@/components/shadcn-studio/blocks/footer-component-03/footer-component-03";
 import type { NavigationSection } from "@/components/shadcn-studio/blocks/menu-navigation";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
@@ -26,32 +26,28 @@ export const metadata: Metadata = {
 
 const navigationData: NavigationSection[] = [
   {
-    title: "Comprendre le dispositif",
-    href: "#dispositif",
-  },
-  {
-    title: "Zones éligibles",
-    href: "#zones",
-  },
-  {
-    title: "Programmes",
-    href: "#programmes",
-  },
-  {
-    title: "Guide investisseur",
-    href: "#guide",
-  },
-  {
-    title: "Fiscalité",
-    href: "#fiscalite",
-  },
-  {
-    title: "Actualités",
-    href: "#actualites",
+    title: "Loi Jeanbrun",
+    items: [
+      { title: "Comprendre le dispositif", href: "/loi-jeanbrun" },
+      { title: "Zones eligibles", href: "/villes" },
+      { title: "Programmes neufs", href: "/programmes" },
+    ],
   },
   {
     title: "Simulateur",
     href: "/simulateur",
+  },
+  {
+    title: "Ressources",
+    items: [
+      { title: "Blog", href: "/blog" },
+      { title: "Barometre", href: "/barometre" },
+      { title: "FAQ", href: "/#faq" },
+    ],
+  },
+  {
+    title: "Accompagnement",
+    href: "/a-propos",
   },
 ];
 
@@ -71,17 +67,17 @@ export default function LandingPage() {
       </main>
     </div>
 
-    {/* 1. Features Section - Bénéfices Loi Jeanbrun */}
+    {/* 1. Features Section - Qu'est-ce que la loi Jeanbrun */}
     <FeaturesWrapper />
 
-    {/* 2. Expert Section - Crédibilité */}
-    <CTASection07 />
-
-    {/* 3. Why Invest - Les 4 piliers */}
+    {/* 2. Why Invest - Les 4 piliers */}
     <WhyInvestWrapper />
 
-    {/* 4. Personas Section - Ciblage */}
+    {/* 3. Personas Section - Simulations chiffrées */}
     <PersonasSection />
+
+    {/* 4. Expert Section - Crédibilité */}
+    <CTASection07 />
 
     {/* 5. Testimonials - Social Proof */}
     <TestimonialsWrapperNew />
@@ -99,7 +95,7 @@ export default function LandingPage() {
     <BlogWrapper />
 
     {/* 10. Footer */}
-    <SiteFooter />
+    <FooterComponent03 />
   </>
   );
 }

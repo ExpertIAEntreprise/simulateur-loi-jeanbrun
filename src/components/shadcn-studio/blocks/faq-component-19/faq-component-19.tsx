@@ -58,12 +58,14 @@ const FAQ = ({ faqItems }: FAQComponentProps) => {
                     </p>
                   </div>
 
-                  <PrimarySwipeButton size='lg' asChild className='group has-[>svg]:px-6'>
-                    <a href='#'>
-                      Prendre rendez-vous
-                      <ArrowRightIcon className='size-5 rotate-310 transition-transform duration-200' />
-                    </a>
-                  </PrimarySwipeButton>
+                  <div className='flex justify-center'>
+                    <PrimarySwipeButton size='lg' asChild className='group has-[>svg]:px-6'>
+                      <a href='#'>
+                        Prendre rendez-vous
+                        <ArrowRightIcon className='size-5 rotate-310 transition-transform duration-200' />
+                      </a>
+                    </PrimarySwipeButton>
+                  </div>
                 </CardContent>
               </Card>
             </MotionPreset>
@@ -71,7 +73,7 @@ const FAQ = ({ faqItems }: FAQComponentProps) => {
 
           {/* Right Section - FAQ Accordion */}
           <MotionPreset fade slide={{ direction: 'down', offset: 50 }} delay={0.3} transition={{ duration: 0.7 }}>
-            <Accordion type='single' collapsible className='space-y-5' defaultValue='item-0'>
+            <Accordion type='single' collapsible className='space-y-5'>
               {faqItems.map((item, index) => (
                 <MotionPreset
                   key={index}

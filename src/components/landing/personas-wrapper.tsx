@@ -1,58 +1,79 @@
-import { ProportionsIcon, ShieldCheckIcon, ChartSplineIcon, CloudUploadIcon } from 'lucide-react'
+import { UserIcon, BriefcaseIcon, BuildingIcon, UsersIcon } from 'lucide-react'
 
 import Features from '@/components/shadcn-studio/blocks/features-section-09/features-section-09'
 
 const tabsData = [
   {
-    name: 'Upload Files',
-    icon: CloudUploadIcon,
-    value: 'upload-files',
+    name: 'Primo-accédant',
+    icon: UserIcon,
+    value: 'primo-accedant',
     content: {
-      buttonIcon: CloudUploadIcon,
-      title: 'Upload files Easy-peasy',
+      buttonIcon: UserIcon,
+      title: 'Studio T1 neuf à Lyon - TMI 30%',
       description:
-        'Effortlessly upload your files using our intuitive drag-and-drop interface or by simply clicking to select files. Enjoy a secure, fast upload process with real-time progress indicators and automatic file type validation for a seamless experience.',
-      image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-6.png',
-      documentationLink: '#'
+        'Investissement : 150 000 € | Studio 35 m² en zone A\n\n' +
+        '• Amortissement annuel : 4 200 €\n' +
+        '• Loyer perçu : 9 000 €/an\n' +
+        '• Charges + intérêts : 4 300 €/an\n' +
+        '• Économie d\'impôt : 1 260 €/an\n\n' +
+        'Économie totale sur 9 ans : 11 340 €',
+      image: '/loi-jeanbrun-dispositif-fiscal-salon.webp',
+      documentationLink: '/simulateur'
     }
   },
   {
-    name: 'Email Notifications',
-    icon: ProportionsIcon,
-    value: 'email-notifications',
+    name: 'Cadre supérieur',
+    icon: BriefcaseIcon,
+    value: 'cadre-superieur',
     content: {
-      buttonIcon: ProportionsIcon,
-      title: 'Email Notification Super simple!',
+      buttonIcon: BriefcaseIcon,
+      title: 'T2 neuf à Bordeaux - TMI 41%',
       description:
-        'You can easily upload your files through our user-friendly drag-and-drop feature or by clicking to choose files. Experience a secure and speedy upload process with real-time progress updates and automatic validation of file types for a smooth experience.',
-      image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-15.png',
-      documentationLink: '#'
+        'Investissement : 250 000 € | T2 de 45 m² en zone B1\n\n' +
+        '• Amortissement annuel : 8 000 € (plafonné)\n' +
+        '• Loyer perçu : 11 000 €/an\n' +
+        '• Déficit foncier créé : 4 700 €/an\n' +
+        '• Économie d\'impôt : 5 207 €/an\n\n' +
+        'Économie totale sur 9 ans : 46 863 €',
+      image: '/loi-jeanbrun-fonctionnement-investissement.webp',
+      documentationLink: '/simulateur'
     }
   },
   {
-    name: 'Field Validations',
-    icon: ShieldCheckIcon,
-    value: 'field-validations',
+    name: 'Patrimoine établi',
+    icon: BuildingIcon,
+    value: 'patrimoine-etabli',
     content: {
-      buttonIcon: ShieldCheckIcon,
-      title: 'Validation Alert Please check all fields!',
+      buttonIcon: BuildingIcon,
+      title: 'T3 ancien rénové à Toulouse - TMI 45%',
       description:
-        'You can easily upload your files through our user-friendly drag-and-drop feature or by clicking to choose files. Experience a secure and speedy upload process with real-time progress updates and automatic validation of file types for a smooth experience.',
-      image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-10.png',
-      documentationLink: '#'
+        'Investissement : 260 000 € (180k + 80k travaux) | T3 de 65 m²\n\n' +
+        '• Amortissement annuel : 8 320 €\n' +
+        '• Loyer perçu : 10 500 €/an\n' +
+        '• Déficit foncier créé : 7 320 €/an\n' +
+        '• Économie d\'impôt : 7 038 €/an\n\n' +
+        'Économie totale sur 9 ans : 63 342 €',
+      image: '/loi-jeanbrun-conditions-location.webp',
+      documentationLink: '/simulateur'
     }
   },
   {
-    name: 'Auto Responses',
-    icon: ChartSplineIcon,
-    value: 'auto-responses',
+    name: 'Couple avec enfants',
+    icon: UsersIcon,
+    value: 'couple-enfants',
     content: {
-      buttonIcon: ChartSplineIcon,
-      title: 'Check fields for accuracy!',
+      buttonIcon: UsersIcon,
+      title: 'T2 neuf à Villeurbanne - Cas réel',
       description:
-        'Thank you for reaching out! You can quickly upload your files using our simple drag-and-drop feature or by selecting files with a click. Enjoy a fast and secure upload process with real-time progress updates and automatic file type validation for a hassle-free experience.',
-      image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-9.png',
-      documentationLink: '#'
+        'Couple, 2 enfants, revenus 6 500 €/mois net\n' +
+        'Investissement : 195 000 € | T2 de 42 m²\n\n' +
+        '• Mensualité crédit : 1 095 €/mois\n' +
+        '• Loyer perçu : 750 €/mois\n' +
+        '• Réduction fiscale Jeanbrun : 397 €/mois\n' +
+        '• Effort réel mensuel : 33 €\n\n' +
+        'Économie totale sur 9 ans : 39 000 €',
+      image: '/loi-jeanbrun-dispositif-fiscal-salon.webp',
+      documentationLink: '/simulateur'
     }
   }
 ]

@@ -19,53 +19,10 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
   return (
     <section className='py-8 sm:py-16 lg:py-24'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-        {/* Header */}
-        <div className='mb-8 grid grid-cols-1 gap-8 sm:mb-12 sm:gap-12 md:grid-cols-2 lg:mb-24 lg:gap-16'>
-          <div className='space-y-4'>
-            <p className='text-primary text-sm font-medium uppercase'>Blog Loi Jeanbrun</p>
-            <h2 className='text-2xl font-semibold md:text-3xl lg:text-4xl'>
-              Votre veille fiscale et immobilière
-            </h2>
-            <p className='text-muted-foreground text-xl'>
-              Analyses, conseils et actualités pour optimiser votre investissement locatif et réduire vos impôts.
-            </p>
-            <Button className='group rounded-lg text-base has-[>svg]:px-6' size='lg' asChild>
-              <a href='/blog'>
-                Découvrir tous les articles
-                <ArrowRightIcon className='transition-transform duration-200 group-hover:translate-x-0.5' />
-              </a>
-            </Button>
-          </div>
-
-          {/* Newsletter Card */}
-          <Card className='h-fit shadow-none'>
-            <CardHeader className='flex gap-4'>
-              <Avatar className='size-11.5'>
-                <AvatarFallback className='bg-primary/10 text-primary'>
-                  <MailIcon className='size-7.5' />
-                </AvatarFallback>
-              </Avatar>
-              <div className='flex flex-col gap-0.5'>
-                <CardTitle className='text-lg'>Restez informé</CardTitle>
-                <CardDescription className='text-lg'>
-                  Les meilleures opportunités d&apos;investissement Loi Jeanbrun directement dans votre boîte mail.
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className='border-primary flex items-center gap-2.5 rounded-xl border-2 px-3 py-2'>
-                <Input
-                  type='email'
-                  placeholder='Votre email'
-                  className='h-10 border-0 !bg-transparent shadow-none focus-visible:ring-0'
-                />
-                <Button size='lg' className='rounded-lg text-base'>
-                  M&apos;inscrire
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Blog Title */}
+        <h2 className='text-3xl font-semibold text-center mb-8 sm:mb-12 md:text-4xl lg:text-5xl'>
+          Blog <span className='text-primary'>Loi Jeanbrun</span>
+        </h2>
 
         {/* Blog Grid */}
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
@@ -105,6 +62,53 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
               </Card>
             </a>
           ))}
+        </div>
+
+        {/* Header + Newsletter - below articles */}
+        <div className='mt-8 grid grid-cols-1 gap-8 sm:mt-12 sm:gap-12 md:grid-cols-2 lg:mt-24 lg:gap-16'>
+          <div className='space-y-4'>
+            <h3 className='text-2xl font-semibold md:text-3xl'>
+              Votre veille fiscale et immobilière
+            </h3>
+            <p className='text-muted-foreground text-xl'>
+              Analyses, conseils et actualités pour optimiser votre investissement locatif et réduire vos impôts.
+            </p>
+            <Button className='group rounded-lg text-base has-[>svg]:px-6' size='lg' asChild>
+              <a href='/blog'>
+                Découvrir tous les articles
+                <ArrowRightIcon className='transition-transform duration-200 group-hover:translate-x-0.5' />
+              </a>
+            </Button>
+          </div>
+
+          {/* Newsletter Card */}
+          <Card className='h-fit shadow-none'>
+            <CardHeader className='flex gap-4'>
+              <Avatar className='size-11.5'>
+                <AvatarFallback className='bg-primary/10 text-primary'>
+                  <MailIcon className='size-7.5' />
+                </AvatarFallback>
+              </Avatar>
+              <div className='flex flex-col gap-0.5'>
+                <CardTitle className='text-lg'>Restez informé</CardTitle>
+                <CardDescription className='text-lg'>
+                  Les meilleures opportunités d&apos;investissement Loi Jeanbrun directement dans votre boîte mail.
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className='border-primary flex items-center gap-2.5 rounded-xl border-2 px-3 py-2'>
+                <Input
+                  type='email'
+                  placeholder='Votre email'
+                  className='h-10 border-0 !bg-transparent shadow-none focus-visible:ring-0'
+                />
+                <Button size='lg' className='rounded-lg text-base'>
+                  M&apos;inscrire
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

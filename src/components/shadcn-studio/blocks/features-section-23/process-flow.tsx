@@ -54,11 +54,11 @@ const ProcessFlow = ({ initialProcess }: { initialProcess: Process[] }) => {
         >
           <Card className='bg-muted shadow-none'>
             <CardContent className='space-y-6'>
-              <div className='text-primary [&>svg]:size-18.5 [&>svg]:stroke-1'>{item.icon}</div>
+              <div className='text-primary [&>svg]:size-10 [&>svg]:stroke-1 sm:[&>svg]:size-14'>{item.icon}</div>
 
-              <div className='space-y-3'>
-                <h3 className='text-3xl font-medium'>{item.title}</h3>
-                <p className='text-muted-foreground text-lg'>{item.description}</p>
+              <div className='space-y-2 sm:space-y-3'>
+                <h3 className='text-xl font-medium sm:text-2xl'>{item.title}</h3>
+                <p className='text-muted-foreground text-sm sm:text-base'>{item.description}</p>
               </div>
             </CardContent>
           </Card>
