@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Calendar, Clock } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,7 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
 import { BlogFilters } from './blog-filters'
 import { getAllPostsMeta } from '@/lib/blog'
 import type { Metadata } from 'next'
@@ -63,16 +64,15 @@ const CATEGORIES = [
   { id: 'all', label: 'Tous les articles' },
   { id: 'loi-jeanbrun', label: 'Loi Jeanbrun' },
   { id: 'investissement', label: 'Investissement' },
-  { id: 'fiscalite', label: 'Fiscalité' },
+  { id: 'fiscalite', label: 'Fiscalite' },
   { id: 'guides', label: 'Guides' },
 ] as const
 
-// Fonctions utilitaires - Utilise les vrais articles MDX
+// Fonctions utilitaires
 function getAllPosts(): BlogPost[] {
   return getAllPostsMeta()
 }
 
-// Formater la date en francais
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
   return new Intl.DateTimeFormat('fr-FR', {
@@ -82,81 +82,118 @@ function formatDate(dateString: string): string {
   }).format(date)
 }
 
-// Composant carte article
-function ArticleCard({ post, featured = false }: { post: BlogPost; featured?: boolean }) {
-  return (
-    <Card
-      className={cn(
-        'group overflow-hidden transition-all duration-300 hover:shadow-lg',
-        featured && 'md:col-span-2 md:flex md:flex-row'
-      )}
-    >
-      {/* Image */}
-      <div
-        className={cn(
-          'relative aspect-video overflow-hidden bg-muted',
-          featured && 'md:aspect-auto md:w-1/2'
-        )}
-      >
-        <Image
-          src={post.image ?? '/images/blog/default.webp'}
-          alt={post.imageAlt ?? post.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes={featured ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'}
-        />
-        {post.featured && (
-          <Badge className="absolute left-4 top-4 bg-primary/90">A la une</Badge>
-        )}
-      </div>
+function getAuthorInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
 
-      {/* Content */}
-      <div className={cn('flex flex-col', featured && 'md:w-1/2')}>
-        <CardHeader>
-          <div className="mb-2 flex items-center gap-4 text-sm text-muted-foreground">
-            <Badge variant="secondary">{post.category}</Badge>
-            <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" aria-hidden="true" />
+// Article vedette - Grande carte avec image
+function FeaturedCard({ post }: { post: BlogPost }) {
+  return (
+    <Card className="shadow-none">
+      <CardContent>
+        <Link href={`/blog/${post.slug}`}>
+          <Image
+            src={post.image ?? '/images/blog/default.webp'}
+            alt={post.imageAlt ?? post.title}
+            width={800}
+            height={400}
+            className="max-h-76 w-full rounded-lg object-cover"
+          />
+        </Link>
+      </CardContent>
+      <CardHeader className="gap-3">
+        <div className="flex items-center gap-2 py-1">
+          <span className="text-base font-semibold">{post.author.name}</span>
+          <span className="text-muted-foreground">
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
+          </span>
+        </div>
+        <CardTitle className="text-3xl font-medium">
+          <Link href={`/blog/${post.slug}`} className="hover:text-primary transition-colors">
+            {post.title}
+          </Link>
+        </CardTitle>
+        <CardDescription className="line-clamp-3 text-base">
+          {post.description}{' '}
+          <Link
+            href={`/blog/${post.slug}`}
+            className="text-card-foreground inline text-sm font-medium"
+          >
+            Lire la suite
+          </Link>
+        </CardDescription>
+      </CardHeader>
+      <CardFooter>
+        <Link href={`/blog/${post.slug}`} className="flex items-center gap-2">
+          <Avatar>
+            {post.author.avatar ? (
+              <AvatarImage
+                src={post.author.avatar}
+                alt={post.author.name}
+                className="size-8 rounded-full"
+              />
+            ) : null}
+            <AvatarFallback className="rounded-full text-xs">
+              {getAuthorInitials(post.author.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="font-medium">{post.author.name}</span>
+            {post.author.bio ? (
+              <span className="text-muted-foreground text-xs">{post.author.bio}</span>
+            ) : null}
+          </div>
+        </Link>
+      </CardFooter>
+    </Card>
+  )
+}
+
+// Item de liste horizontale (texte + miniature)
+function BlogListItem({
+  post,
+  showSeparator,
+}: {
+  post: BlogPost
+  showSeparator: boolean
+}) {
+  return (
+    <div className="space-y-6">
+      <Link
+        href={`/blog/${post.slug}`}
+        className="flex items-center justify-between gap-6 max-sm:flex-wrap"
+      >
+        <div className="min-w-0 flex-1">
+          <div className="mb-1.5 flex items-center gap-2 py-1">
+            <span className="font-medium">{post.author.name}</span>
+            <span className="text-muted-foreground">
               <time dateTime={post.date}>{formatDate(post.date)}</time>
             </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-4 w-4" aria-hidden="true" />
-              {post.readingTime} min
-            </span>
           </div>
-          <CardTitle
-            className={cn(
-              'line-clamp-2 transition-colors group-hover:text-primary',
-              featured ? 'text-2xl md:text-3xl' : 'text-xl'
-            )}
-          >
-            <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-          </CardTitle>
-          <CardDescription className={cn('line-clamp-3', featured && 'text-base')}>
-            {post.description}
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="flex-1">
+          <h3 className="mb-3 text-xl font-medium line-clamp-2">{post.title}</h3>
           <div className="flex flex-wrap gap-2">
             {post.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                #{tag}
+              <Badge key={tag} variant="outline">
+                {tag}
               </Badge>
             ))}
           </div>
-        </CardContent>
-
-        <CardFooter>
-          <Button asChild variant="ghost" className="group/btn p-0">
-            <Link href={`/blog/${post.slug}`}>
-              Lire l&apos;article
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-            </Link>
-          </Button>
-        </CardFooter>
-      </div>
-    </Card>
+        </div>
+        <Image
+          src={post.image ?? '/images/blog/default.webp'}
+          alt={post.imageAlt ?? post.title}
+          width={168}
+          height={152}
+          className="h-38 w-42 shrink-0 rounded-lg object-cover"
+        />
+      </Link>
+      {showSeparator && <Separator />}
+    </div>
   )
 }
 
@@ -181,7 +218,7 @@ function BlogJsonLd({ posts }: { posts: BlogPost[] }) {
       datePublished: post.date,
       author: {
         '@type': 'Person',
-        name: post.author,
+        name: post.author.name,
       },
       url: `${BASE_URL}/blog/${post.slug}`,
     })),
@@ -205,7 +242,6 @@ export default async function BlogPage({
   const selectedCategory = params.category ?? 'all'
   const currentPage = parseInt(params.page ?? '1', 10)
 
-  // TODO: Remplacer par getAllPosts() de src/lib/blog.ts quand disponible
   const allPosts = getAllPosts()
 
   // Filtrer par categorie
@@ -214,26 +250,18 @@ export default async function BlogPage({
       ? allPosts
       : allPosts.filter((post) => post.category === selectedCategory)
 
-  // Articles mis en avant (max 2)
-  const featuredPosts =
-    currentPage === 1 && selectedCategory === 'all'
-      ? filteredPosts.filter((post) => post.featured).slice(0, 2)
-      : []
+  // Page 1 + categorie "all" : le 1er article = vedette, les suivants = liste
+  const showFeatured = currentPage === 1 && selectedCategory === 'all'
+  const featuredPost = showFeatured ? filteredPosts[0] : undefined
+  const sidebarPosts = showFeatured ? filteredPosts.slice(1, 4) : []
 
-  // IDs des articles affichés dans la section "A la une"
-  const featuredSlugs = new Set(featuredPosts.map((post) => post.slug))
-
-  // Articles pagines (sans ceux déjà affichés en featured)
-  const regularPosts =
-    currentPage === 1 && selectedCategory === 'all'
-      ? filteredPosts.filter((post) => !featuredSlugs.has(post.slug))
-      : filteredPosts
+  // Articles restants (apres vedette + sidebar)
+  const remainingPosts = showFeatured ? filteredPosts.slice(4) : filteredPosts
 
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE
-  const paginatedPosts = regularPosts.slice(startIndex, startIndex + POSTS_PER_PAGE)
+  const paginatedPosts = remainingPosts.slice(startIndex, startIndex + POSTS_PER_PAGE)
 
-  // Total pages
-  const totalPages = Math.ceil(regularPosts.length / POSTS_PER_PAGE)
+  const totalPages = Math.ceil(remainingPosts.length / POSTS_PER_PAGE)
 
   return (
     <>
@@ -254,45 +282,62 @@ export default async function BlogPage({
           </p>
         </header>
 
-        {/* Filtres categories - Client Component */}
+        {/* Filtres categories */}
         <BlogFilters
           categories={CATEGORIES}
           selectedCategory={selectedCategory}
         />
 
-        {/* Articles a la une (page 1 seulement, categorie "all") */}
-        {featuredPosts.length > 0 && (
-          <section aria-labelledby="featured-title" className="mb-12">
-            <h2 id="featured-title" className="mb-6 text-2xl font-semibold">
-              A la une
-            </h2>
-            <div className="grid gap-6 md:grid-cols-2">
-              {featuredPosts.map((post) => (
-                <ArticleCard key={post.slug} post={post} featured />
-              ))}
+        {/* Section vedette (page 1, categorie "all") */}
+        {featuredPost != null && (
+          <section aria-label="Article vedette" className="mb-12 mt-8">
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
+              {/* Colonne gauche : article vedette */}
+              <FeaturedCard post={featuredPost} />
+
+              {/* Colonne droite : 3 articles en liste */}
+              {sidebarPosts.length > 0 && (
+                <div className="space-y-6">
+                  {sidebarPosts.map((post, index) => (
+                    <BlogListItem
+                      key={post.slug}
+                      post={post}
+                      showSeparator={index < sidebarPosts.length - 1}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}
 
-        {/* Liste des articles */}
-        <section aria-labelledby="articles-title">
-          <h2 id="articles-title" className="mb-6 text-2xl font-semibold">
-            {selectedCategory === 'all' ? 'Tous les articles' : `Articles ${selectedCategory}`}
-          </h2>
+        {/* Articles restants en liste pleine largeur */}
+        <section aria-labelledby="articles-title" className="mt-8">
+          {!showFeatured && (
+            <h2 id="articles-title" className="mb-6 text-2xl font-semibold">
+              {selectedCategory === 'all' ? 'Tous les articles' : `Articles ${selectedCategory}`}
+            </h2>
+          )}
 
           {paginatedPosts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {paginatedPosts.map((post) => (
-                <ArticleCard key={post.slug} post={post} />
+            <div className="space-y-6">
+              {paginatedPosts.map((post, index) => (
+                <BlogListItem
+                  key={post.slug}
+                  post={post}
+                  showSeparator={index < paginatedPosts.length - 1}
+                />
               ))}
             </div>
           ) : (
-            <div className="py-12 text-center text-muted-foreground">
-              <p>Aucun article trouve dans cette categorie.</p>
-              <Button asChild variant="link" className="mt-2">
-                <Link href="/blog">Voir tous les articles</Link>
-              </Button>
-            </div>
+            !showFeatured && (
+              <div className="py-12 text-center text-muted-foreground">
+                <p>Aucun article trouve dans cette categorie.</p>
+                <Button asChild variant="link" className="mt-2">
+                  <Link href="/blog">Voir tous les articles</Link>
+                </Button>
+              </div>
+            )
           )}
         </section>
 
