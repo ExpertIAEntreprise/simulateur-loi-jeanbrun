@@ -1,7 +1,7 @@
 # Checklist - Simulateur Loi Jeanbrun
 
-**Version:** 2.0
-**Dernière mise à jour:** 30 janvier 2026
+**Version:** 2.1
+**Dernière mise à jour:** 4 février 2026
 **Audit:** Conformité PRD/REQUIREMENTS validée
 
 ---
@@ -13,7 +13,7 @@
 | **Sprint 1** | Infrastructure | ✅ Terminé | 100% |
 | **Sprint 2** | Moteur de calcul | ✅ Terminé | 100% |
 | **Sprint 3** | Interface simulateur | ⬜ À faire | 0% |
-| **Sprint 4** | Pages SEO | ⬜ À faire | 0% |
+| **Sprint 4** | Pages SEO + Contenu | ✅ Terminé | 95% |
 | **Sprint 5** | Monétisation | ⬜ À faire | 0% |
 | **Sprint 6** | Deploy & Tests | ⬜ À faire | 0% |
 
@@ -120,31 +120,73 @@
 
 ---
 
-## Sprint 4 — Pages SEO
+## Sprint 4 — Pages SEO + Contenu ✅ TERMINÉ (95%)
 
-**Dates:** 17-28 Mars 2026
-**Objectif:** 50 pages villes indexables avec programmes
+**Dates:** 17 Janvier - 4 Février 2026
+**Objectif:** Pages villes, programmes, blog, contenu SEO
 
-### Features
+### Features Pages Villes ✅
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Template `/villes/[slug]` | ⬜ À faire | SSG avec generateStaticParams |
-| Composant DonneesMarche | ⬜ À faire | Prix m², loyers, tendances |
-| Composant PlafondsJeanbrun | ⬜ À faire | Loyers, prix par zone |
-| Composant ProgrammesList | ⬜ À faire | Top 3 programmes par ville |
-| Composant SimulateurPreRempli | ⬜ À faire | CTA vers simulateur |
-| Import données DVF | ⬜ À faire | Prix ventes par commune |
-| Import données loyers | ⬜ À faire | Observatoire loyers |
-| Metadata SEO dynamiques | ⬜ À faire | Title, description, OG |
-| Sitemap.xml | ⬜ À faire | 50 URLs villes |
+| Template `/villes/[slug]` | ✅ Terminé | ISR 1h, 382 pages (52 metropoles + 330 peripheriques) |
+| Composant DonneesMarche | ✅ Terminé | Prix m², DVF, tendances via barometre |
+| Composant PlafondsJeanbrun | ✅ Terminé | Loyers, prix par zone fiscale |
+| Composant ProgrammesList | ✅ Terminé | Programmes neufs par ville depuis EspoCRM |
+| Composant SimulateurPreRempli | ✅ Terminé | CTA sidebar vers simulateur |
+| Composant VillesProches | ✅ Terminé | Maillage SEO inter-villes |
+| Composant CTAVille | ✅ Terminé | CTA en bas de page |
+| Metadata SEO dynamiques | ✅ Terminé | Title, description, OG par ville |
+| Sitemap.xml | ✅ Terminé | Toutes pages villes + blog + contenu |
+
+### Features Pages Contenu ✅
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Page `/loi-jeanbrun` | ✅ Terminé | Guide complet, FAQ, JSON-LD |
+| Page `/a-propos` | ✅ Terminé | Profil expert, Calendly, JSON-LD |
+| Blog `/blog` + 10 articles | ✅ Terminé | MDX, 16 466 mots, categories |
+| Barometre `/barometre` | ✅ Terminé | Données mensuelles par ville |
+| Page `/programmes` | ✅ Terminé | Liste programmes EspoCRM |
+| Page `/accessibilite` | ✅ Terminé | Declaration RGAA |
+
+### Features Navigation/Layout ✅
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Header Shadcn Studio unifié | ✅ Terminé | Navigation dropdowns, responsive |
+| Footer 03 unifié (5 colonnes) | ✅ Terminé | Newsletter, villes SEO, legal |
+| Layout `(app)` avec header/footer | ✅ Terminé | Toutes pages internes |
+| Nettoyage composants obsolètes | ✅ Terminé | LandingHeader/Footer supprimés |
+
+### Features EspoCRM Jeanbrun ✅
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Entités CJeanbrunVille (313) | ✅ Terminé | 52 metropoles + 261 peripheriques |
+| Entités CJeanbrunProgramme (153) | ✅ Terminé | Source Nexity |
+| Champ lotsDetails | ✅ Terminé | Type text, JSON stringify (4 fev 2026) |
+| Arrondissements Paris (20) | ✅ Terminé | Avec metropoleParentId |
+| Arrondissements Marseille (16) | ✅ Terminé | Avec metropoleParentId |
+| Client API EspoCRM | ✅ Terminé | `src/lib/espocrm/` |
+
+### Restant (5%) - En attente enrichissement Tom
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Enrichissement 153 programmes | 🟡 En cours | Tom scrape Nexity (batch 10 test) |
+| Adapter ProgrammeCard (lotsDetails) | ⬜ Bloqué | Attente données enrichies |
+| Pagination/filtres programmes | ⬜ Bloqué | Attente données enrichies |
+| Page detail `/programmes/[slug]` | ⬜ Optionnel | Apres enrichissement |
 
 ### Validation Sprint 4
 
-- [ ] 50 pages générées en SSG
-- [ ] Données marché affichées
-- [ ] Programmes neufs depuis EspoCRM
-- [ ] Lighthouse SEO > 90
+- [x] 382 pages villes générées (ISR)
+- [x] Données marché affichées (DVF + barometre)
+- [x] Programmes neufs depuis EspoCRM
+- [x] Header/Footer unifié sur toutes les pages
+- [ ] Lighthouse SEO > 90 (à tester en production)
+- [ ] Enrichissement programmes complet (Tom)
 
 ---
 
@@ -206,18 +248,19 @@
 
 ---
 
-## Tâches externes (Moltbot)
+## Tâches externes (Tom / Moltbot)
 
 | Tâche | Status | Responsable |
 |-------|--------|-------------|
 | Créer entité CJeanbrunVille | ✅ Terminé | Admin EspoCRM |
 | Créer entité CJeanbrunProgramme | ✅ Terminé | Admin EspoCRM |
-| Importer 51 villes (A_bis, A, B1) | ✅ Terminé | Admin EspoCRM |
-| Générer API key jeanbrun | ✅ Terminé | Admin EspoCRM |
-| SSH VPS CardImmo configuré | ✅ Terminé (30/01) | Claude + Moltbot |
-| Créer skill Moltbot scraping | ✅ Terminé | Moltbot |
-| Premier scraping test (Liberty - Nancy) | ✅ Terminé (30/01) | Moltbot |
-| Scraping 51 villes complet | 🟡 En cours | Moltbot |
+| Importer 313 villes + arrondissements | ✅ Terminé | Admin EspoCRM |
+| Importer 153 programmes Nexity | ✅ Terminé | Admin EspoCRM |
+| Créer champ lotsDetails | ✅ Terminé (04/02) | Claude |
+| Credentials R2 sur Boldbot | ✅ Terminé (04/02) | Claude |
+| Instructions scraping Tom | ✅ Terminé (04/02) | Claude |
+| Batch test 10 programmes | 🟡 En cours | Tom |
+| Enrichissement 153 programmes | ⬜ À faire | Tom |
 
 ---
 
@@ -281,4 +324,4 @@ src/
 
 ---
 
-*Dernière mise à jour : 30 janvier 2026 - Audit conformité PRD*
+*Dernière mise à jour : 4 février 2026 - Sprint 4 terminé, nettoyage composants obsolètes*

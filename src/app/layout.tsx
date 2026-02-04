@@ -73,8 +73,8 @@ export const metadata: Metadata = {
  * et les providers globaux (Auth, Theme, Toaster).
  *
  * Les headers/footers sont geres par:
- * - (landing)/layout.tsx - Landing page avec LandingHeader/LandingFooter
- * - Routes standards - Utilisent le wrapper dans chaque page ou (app) layout
+ * - (landing)/page.tsx - Landing page avec Header Shadcn + Footer 03
+ * - (app)/layout.tsx - Pages internes avec Header Shadcn + Footer 03
  */
 export default function RootLayout({
   children,
