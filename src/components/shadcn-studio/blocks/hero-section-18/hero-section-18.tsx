@@ -19,10 +19,10 @@ const HeroSection = () => {
       <div className='absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-transparent' />
 
       {/* Cadre blanc avec bouton rouge + texte - aligné avec le contenu en bas */}
-      <div className='relative z-10 mt-auto w-full px-4 sm:px-6 lg:absolute lg:bottom-[320px] lg:left-1/2 lg:max-w-7xl lg:-translate-x-1/2 lg:px-8'>
+      <div className='relative z-10 mt-auto w-full px-4 sm:px-6 lg:absolute lg:bottom-[180px] lg:left-1/2 lg:max-w-7xl lg:-translate-x-1/2 lg:px-8'>
         <div className='flex w-full gap-0 max-lg:flex-col max-lg:gap-4'>
           {/* Rectangle principal (2/3) avec cercle rouge */}
-          <div className='flex w-full items-center gap-8 max-lg:p-4 lg:rounded-l-xl lg:rounded-r-none lg:bg-white/65 lg:p-8 lg:shadow-lg lg:backdrop-blur-sm'>
+          <div className='flex w-full items-center gap-8 max-lg:p-4 lg:w-2/3 lg:rounded-l-xl lg:rounded-r-none lg:bg-white/65 lg:p-8 lg:shadow-lg lg:backdrop-blur-sm'>
             {/* Texte titre + sous-titre */}
             <div className='flex-1'>
               <h1 className='text-4xl font-bold text-[#1e3a5f] sm:text-3xl md:text-4xl lg:text-[2.75rem]'>
@@ -113,7 +113,7 @@ const HeroSection = () => {
       </div>
 
       {/* NOUVELLE Barre du bas - 4 tuiles objectifs (desktop uniquement) */}
-      <div className='relative z-10 mt-4 hidden w-full px-4 sm:px-6 lg:absolute lg:bottom-[185px] lg:left-1/2 lg:block lg:max-w-7xl lg:-translate-x-1/2 lg:px-8'>
+      <div className='relative z-10 mt-4 hidden w-full px-4 sm:px-6 lg:absolute lg:bottom-[45px] lg:left-1/2 lg:block lg:max-w-7xl lg:-translate-x-1/2 lg:px-8'>
         <div className='flex w-full flex-col overflow-hidden rounded-xl lg:flex-row'>
           {/* 3 tuiles blanches (2/3) */}
           <div className='grid w-full grid-cols-1 sm:grid-cols-3 lg:w-2/3'>

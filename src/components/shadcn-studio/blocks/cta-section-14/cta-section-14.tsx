@@ -34,6 +34,14 @@ const CTA = () => {
                   <p className='text-base leading-relaxed opacity-90 md:text-xl'>
                     Le plafond de déficit foncier imputable sur le revenu global <strong>DOUBLE</strong>, passant de 10 700 € à <strong>21 400 € par an</strong> jusqu&apos;au 31 décembre 2027. Cet avantage est réservé à <strong>l&apos;immobilier ancien avec travaux de rénovation énergétique</strong> (non applicable au neuf).
                   </p>
+
+                  {/* Button - desktop: sous le texte */}
+                  <div className='hidden pt-2 lg:block'>
+                    <MatterButton size='lg'>
+                      <span>Simulez gratuitement votre avantage fiscal personnalisé</span>
+                      <ArrowRightIcon className='h-4 w-4 -rotate-45' />
+                    </MatterButton>
+                  </div>
                 </div>
 
                 {/* Right Column - Image */}
@@ -46,8 +54,8 @@ const CTA = () => {
                 </div>
               </div>
 
-              {/* Button below image, centered */}
-              <div className='flex justify-center pb-6 pt-4'>
+              {/* Button - mobile: centré en dessous */}
+              <div className='flex justify-center pb-6 pt-4 lg:hidden'>
                 <MatterButton size='lg'>
                   <span className='sm:hidden'>Simuler mon avantage</span>
                   <span className='hidden sm:inline'>Simulez gratuitement votre avantage fiscal personnalisé</span>
