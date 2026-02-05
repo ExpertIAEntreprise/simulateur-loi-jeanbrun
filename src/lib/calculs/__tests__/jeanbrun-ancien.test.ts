@@ -7,14 +7,13 @@
  * - Condition: travaux >= 30% du prix d'achat
  * - Base amortissement: 80% du prix total (achat + travaux)
  * - Duree engagement: 9 ans obligatoire
- * - Plafond unique: 10 700 EUR/an
- * - Niveaux de loyer:
- *   - Intermediaire: 3.0%, plafond 10 700 EUR/an
- *   - Social: 3.5%, plafond 10 700 EUR/an
- *   - Tres social: 4.0%, plafond 10 700 EUR/an
+ * - Plafonds alignes sur le neuf (Art. 31-1-j CGI):
+ *   - Intermediaire: 3.0%, plafond 8 000 EUR/an
+ *   - Social: 3.5%, plafond 10 000 EUR/an
+ *   - Tres social: 4.0%, plafond 12 000 EUR/an
  *
- * @version 1.0
- * @date 30 janvier 2026
+ * @version 1.1
+ * @date 5 fevrier 2026
  */
 
 import { describe, it, expect } from "vitest";
@@ -185,7 +184,7 @@ describe("calculerJeanbrunAncien", () => {
       // Prix total = 150 000 + 45 000 = 195 000 EUR
       // Base = 195 000 * 0.8 = 156 000 EUR
       // Amortissement brut = 156 000 * 0.03 = 4 680 EUR
-      // Amortissement net = 4 680 EUR (< plafond 10 700)
+      // Amortissement net = 4 680 EUR (< plafond 8 000)
       const input: JeanbrunAncienInput = {
         prixAchat: 150000,
         montantTravaux: 45000,
@@ -277,14 +276,14 @@ describe("calculerJeanbrunAncien", () => {
     });
   });
 
-  describe("plafonnement a 10 700 EUR", () => {
-    it("applique le plafond pour un bien couteux niveau intermediaire", () => {
+  describe("plafonnement par niveau (8 000 / 10 000 / 12 000 EUR)", () => {
+    it("applique le plafond 8 000 pour intermediaire", () => {
       // Prix achat 400 000 EUR
       // Travaux 150 000 EUR (37.5% > 30%)
       // Prix total = 550 000 EUR
       // Base = 550 000 * 0.8 = 440 000 EUR
       // Amortissement brut = 440 000 * 0.03 = 13 200 EUR
-      // Amortissement net = 10 700 EUR (plafond)
+      // Amortissement net = 8 000 EUR (plafond intermediaire)
       const input: JeanbrunAncienInput = {
         prixAchat: 400000,
         montantTravaux: 150000,
@@ -298,18 +297,41 @@ describe("calculerJeanbrunAncien", () => {
         expect(result.prixTotal).toBe(550000);
         expect(result.baseAmortissement).toBe(440000);
         expect(result.amortissementBrut).toBe(13200);
-        expect(result.amortissementNet).toBe(10700);
+        expect(result.amortissementNet).toBe(8000);
         expect(result.plafondApplique).toBe(true);
       }
     });
 
-    it("applique le plafond pour niveau tres social", () => {
+    it("applique le plafond 10 000 pour social", () => {
+      // Prix achat 300 000 EUR
+      // Travaux 100 000 EUR (33% > 30%)
+      // Prix total = 400 000 EUR
+      // Base = 400 000 * 0.8 = 320 000 EUR
+      // Amortissement brut = 320 000 * 0.035 = 11 200 EUR
+      // Amortissement net = 10 000 EUR (plafond social)
+      const input: JeanbrunAncienInput = {
+        prixAchat: 300000,
+        montantTravaux: 100000,
+        niveauLoyer: "social",
+      };
+
+      const result = calculerJeanbrunAncien(input);
+
+      expect(result.eligible).toBe(true);
+      if (result.eligible) {
+        expect(result.amortissementBrut).toBe(11200);
+        expect(result.amortissementNet).toBe(10000);
+        expect(result.plafondApplique).toBe(true);
+      }
+    });
+
+    it("applique le plafond 12 000 pour tres social", () => {
       // Prix achat 300 000 EUR
       // Travaux 100 000 EUR (33% > 30%)
       // Prix total = 400 000 EUR
       // Base = 400 000 * 0.8 = 320 000 EUR
       // Amortissement brut = 320 000 * 0.04 = 12 800 EUR
-      // Amortissement net = 10 700 EUR (plafond)
+      // Amortissement net = 12 000 EUR (plafond tres social)
       const input: JeanbrunAncienInput = {
         prixAchat: 300000,
         montantTravaux: 100000,
@@ -321,7 +343,7 @@ describe("calculerJeanbrunAncien", () => {
       expect(result.eligible).toBe(true);
       if (result.eligible) {
         expect(result.amortissementBrut).toBe(12800);
-        expect(result.amortissementNet).toBe(10700);
+        expect(result.amortissementNet).toBe(12000);
         expect(result.plafondApplique).toBe(true);
       }
     });
@@ -331,7 +353,7 @@ describe("calculerJeanbrunAncien", () => {
       // Travaux 60 000 EUR (30%)
       // Prix total = 260 000 EUR
       // Base = 260 000 * 0.8 = 208 000 EUR
-      // Amortissement brut = 208 000 * 0.035 = 7 280 EUR (< 10 700)
+      // Amortissement brut = 208 000 * 0.035 = 7 280 EUR (< 10 000 social)
       const input: JeanbrunAncienInput = {
         prixAchat: 200000,
         montantTravaux: 60000,

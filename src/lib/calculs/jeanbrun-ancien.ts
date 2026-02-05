@@ -10,14 +10,13 @@
  * - Condition: travaux >= 30% du prix d'achat
  * - Base amortissement: 80% du prix total (achat + travaux)
  * - Duree engagement: 9 ans obligatoire
- * - Plafond unique: 10 700 EUR/an
- * - Niveaux de loyer:
- *   - Intermediaire: 3.0%, plafond 10 700 EUR/an
- *   - Social: 3.5%, plafond 10 700 EUR/an
- *   - Tres social: 4.0%, plafond 10 700 EUR/an
+ * - Plafonds alignes sur le neuf (Art. 31-1-j CGI):
+ *   - Intermediaire: 3.0%, plafond 8 000 EUR/an
+ *   - Social: 3.5%, plafond 10 000 EUR/an
+ *   - Tres social: 4.0%, plafond 12 000 EUR/an
  *
- * @version 1.0
- * @date 30 janvier 2026
+ * @version 1.1
+ * @date 5 fevrier 2026
  */
 
 import { JEANBRUN_ANCIEN } from "./constants";
@@ -87,7 +86,7 @@ export function verifierEligibiliteTravaux(
  *    - Prix total = prixAchat + montantTravaux
  *    - Base = prixTotal * 0.8
  *    - Amortissement brut = base * taux du niveau
- *    - Amortissement net = min(brut, 10 700)
+ *    - Amortissement net = min(brut, plafond du niveau)
  *
  * @param input - Prix d'achat, montant travaux et niveau de loyer
  * @returns Resultat avec eligibilite et calculs si eligible
@@ -128,7 +127,7 @@ export function calculerJeanbrunAncien(
   // Calcul de l'amortissement brut
   const amortissementBrut = Math.round(baseAmortissement * taux);
 
-  // Application du plafond unique (10 700 EUR)
+  // Application du plafond par niveau (8 000 / 10 000 / 12 000 EUR)
   const plafondApplique = amortissementBrut > plafond;
   const amortissementNet = plafondApplique ? plafond : amortissementBrut;
 

@@ -33,112 +33,112 @@ import type {
 describe("calculerLoyerEstime", () => {
   describe("zone A_BIS - niveau intermediaire", () => {
     it("devrait calculer le loyer pour 50m2 en zone A_BIS", () => {
-      // Plafond A_BIS intermediaire: 18.89 EUR/m2
+      // Plafond A_BIS intermediaire: 19.51 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: min(0.7 + 19/50, 1.2) = min(1.08, 1.2) = 1.08
-      // Loyer plafond = 50 * 18.89 * 1.08 = 1020.06 EUR/mois
+      // Loyer plafond = 50 * 19.51 * 1.08 = 1053.54 EUR/mois
       const loyer = calculerLoyerEstime(50, "A_BIS", "intermediaire");
 
-      expect(loyer).toBeCloseTo(1020, 0);
+      expect(loyer).toBeCloseTo(1054, 0);
     });
 
     it("devrait calculer le loyer pour 30m2 en zone A_BIS (coefficient maximal)", () => {
       // Coefficient surface: min(0.7 + 19/30, 1.2) = min(1.333, 1.2) = 1.2 (plafonne)
-      // Loyer plafond = 30 * 18.89 * 1.2 = 680.04 EUR/mois
+      // Loyer plafond = 30 * 19.51 * 1.2 = 702.36 EUR/mois
       const loyer = calculerLoyerEstime(30, "A_BIS", "intermediaire");
 
-      expect(loyer).toBeCloseTo(680, 0);
+      expect(loyer).toBeCloseTo(702, 0);
     });
 
     it("devrait calculer le loyer pour 100m2 en zone A_BIS (grand logement)", () => {
       // Coefficient surface: min(0.7 + 19/100, 1.2) = min(0.89, 1.2) = 0.89
-      // Loyer plafond = 100 * 18.89 * 0.89 = 1681.21 EUR/mois
+      // Loyer plafond = 100 * 19.51 * 0.89 = 1736.39 EUR/mois
       const loyer = calculerLoyerEstime(100, "A_BIS", "intermediaire");
 
-      expect(loyer).toBeCloseTo(1681, 0);
+      expect(loyer).toBeCloseTo(1736, 0);
     });
   });
 
   describe("zone A - niveau intermediaire", () => {
     it("devrait calculer le loyer pour 50m2 en zone A", () => {
-      // Plafond A intermediaire: 14.03 EUR/m2
+      // Plafond A intermediaire: 14.49 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: min(0.7 + 19/50, 1.2) = 1.08
-      // Loyer plafond = 50 * 14.03 * 1.08 = 757.62 EUR/mois
+      // Loyer plafond = 50 * 14.49 * 1.08 = 782.46 EUR/mois
       const loyer = calculerLoyerEstime(50, "A", "intermediaire");
 
-      expect(loyer).toBeCloseTo(758, 0);
+      expect(loyer).toBeCloseTo(782, 0);
     });
   });
 
   describe("zone B1 - niveau intermediaire", () => {
     it("devrait calculer le loyer pour 50m2 en zone B1", () => {
-      // Plafond B1 intermediaire: 11.31 EUR/m2
+      // Plafond B1 intermediaire: 11.68 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: 1.08
-      // Loyer plafond = 50 * 11.31 * 1.08 = 610.74 EUR/mois
+      // Loyer plafond = 50 * 11.68 * 1.08 = 630.72 EUR/mois
       const loyer = calculerLoyerEstime(50, "B1", "intermediaire");
 
-      expect(loyer).toBeCloseTo(611, 0);
+      expect(loyer).toBeCloseTo(631, 0);
     });
   });
 
   describe("zone B2 - niveau intermediaire", () => {
     it("devrait calculer le loyer pour 50m2 en zone B2", () => {
-      // Plafond B2 intermediaire: 9.83 EUR/m2
+      // Plafond B2 intermediaire: 10.15 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: 1.08
-      // Loyer plafond = 50 * 9.83 * 1.08 = 530.82 EUR/mois
+      // Loyer plafond = 50 * 10.15 * 1.08 = 548.10 EUR/mois
       const loyer = calculerLoyerEstime(50, "B2", "intermediaire");
 
-      expect(loyer).toBeCloseTo(531, 0);
+      expect(loyer).toBeCloseTo(548, 0);
     });
   });
 
   describe("zone C - niveau intermediaire", () => {
     it("devrait calculer le loyer pour 50m2 en zone C", () => {
-      // Plafond C intermediaire: 9.83 EUR/m2 (meme que B2)
+      // Plafond C intermediaire: 10.15 EUR/m2 (meme que B2)
       // Coefficient surface: 1.08
-      // Loyer plafond = 50 * 9.83 * 1.08 = 530.82 EUR/mois
+      // Loyer plafond = 50 * 10.15 * 1.08 = 548.10 EUR/mois
       const loyer = calculerLoyerEstime(50, "C", "intermediaire");
 
-      expect(loyer).toBeCloseTo(531, 0);
+      expect(loyer).toBeCloseTo(548, 0);
     });
   });
 
   describe("niveau social", () => {
     it("devrait calculer le loyer social pour 50m2 en zone A", () => {
-      // Plafond A social: 11.22 EUR/m2
+      // Plafond A social: 10.17 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: 1.08
-      // Loyer plafond = 50 * 11.22 * 1.08 = 605.88 EUR/mois
+      // Loyer plafond = 50 * 10.17 * 1.08 = 549.18 EUR/mois
       const loyer = calculerLoyerEstime(50, "A", "social");
 
-      expect(loyer).toBeCloseTo(606, 0);
+      expect(loyer).toBeCloseTo(549, 0);
     });
 
     it("devrait calculer le loyer social pour 50m2 en zone B1", () => {
-      // Plafond B1 social: 9.05 EUR/m2
+      // Plafond B1 social: 8.20 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: 1.08
-      // Loyer plafond = 50 * 9.05 * 1.08 = 488.70 EUR/mois
+      // Loyer plafond = 50 * 8.20 * 1.08 = 442.80 EUR/mois
       const loyer = calculerLoyerEstime(50, "B1", "social");
 
-      expect(loyer).toBeCloseTo(489, 0);
+      expect(loyer).toBeCloseTo(443, 0);
     });
   });
 
   describe("niveau tres_social", () => {
     it("devrait calculer le loyer tres social pour 50m2 en zone A", () => {
-      // Plafond A tres_social: 8.98 EUR/m2
+      // Plafond A tres_social: 8.12 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: 1.08
-      // Loyer plafond = 50 * 8.98 * 1.08 = 484.92 EUR/mois
+      // Loyer plafond = 50 * 8.12 * 1.08 = 438.48 EUR/mois
       const loyer = calculerLoyerEstime(50, "A", "tres_social");
 
-      expect(loyer).toBeCloseTo(485, 0);
+      expect(loyer).toBeCloseTo(438, 0);
     });
 
     it("devrait calculer le loyer tres social pour 50m2 en zone B1", () => {
-      // Plafond B1 tres_social: 7.24 EUR/m2
+      // Plafond B1 tres_social: 6.55 EUR/m2 (Arrete ministeriel 27/09/2024)
       // Coefficient surface: 1.08
-      // Loyer plafond = 50 * 7.24 * 1.08 = 390.96 EUR/mois
+      // Loyer plafond = 50 * 6.55 * 1.08 = 353.70 EUR/mois
       const loyer = calculerLoyerEstime(50, "B1", "tres_social");
 
-      expect(loyer).toBeCloseTo(391, 0);
+      expect(loyer).toBeCloseTo(354, 0);
     });
   });
 
@@ -146,17 +146,17 @@ describe("calculerLoyerEstime", () => {
     it("devrait plafonner le coefficient a 1.2 pour les petites surfaces", () => {
       // 20m2: coefficient = min(0.7 + 19/20, 1.2) = min(1.65, 1.2) = 1.2
       const loyer20m2 = calculerLoyerEstime(20, "B1", "intermediaire");
-      // Loyer = 20 * 11.31 * 1.2 = 271.44 EUR
+      // Loyer = 20 * 11.68 * 1.2 = 280.32 EUR
 
-      expect(loyer20m2).toBeCloseTo(271, 0);
+      expect(loyer20m2).toBeCloseTo(280, 0);
     });
 
     it("devrait appliquer le coefficient correctement pour les grandes surfaces", () => {
       // 150m2: coefficient = min(0.7 + 19/150, 1.2) = min(0.8267, 1.2) = 0.8267
       const loyer150m2 = calculerLoyerEstime(150, "B1", "intermediaire");
-      // Loyer = 150 * 11.31 * 0.8267 = 1402.24 EUR
+      // Loyer = 150 * 11.68 * 0.8267 = 1448.35 EUR
 
-      expect(loyer150m2).toBeCloseTo(1402, 0);
+      expect(loyer150m2).toBeCloseTo(1448, 0);
     });
   });
 

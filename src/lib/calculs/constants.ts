@@ -93,10 +93,11 @@ export const JEANBRUN_NEUF = {
  * Parametres Jeanbrun pour l'immobilier ANCIEN
  * Condition: travaux >= 30% du prix d'achat
  * Base = 80% du prix total (achat + travaux)
+ * Plafonds identiques au neuf par niveau de loyer (Art. 31-1-j CGI)
  *
- * @source PLF 2026 - Dispositif Jeanbrun Article 199 novovicies bis CGI
+ * @source PLF 2026 - Dispositif Jeanbrun Art. 31-1-j du CGI
  * @fiscalYear 2026-2028 (periode d'application)
- * @lastUpdated 30 janvier 2026
+ * @lastUpdated 5 fevrier 2026
  */
 export const JEANBRUN_ANCIEN = {
   /** Pourcentage du prix excluant le terrain */
@@ -105,13 +106,11 @@ export const JEANBRUN_ANCIEN = {
   seuilTravaux: 0.3,
   /** Durée d'engagement obligatoire en années */
   dureeEngagement: 9,
-  /** Plafond unique pour l'ancien */
-  plafondUnique: 10700,
-  /** Taux selon niveau de loyer */
+  /** Taux et plafonds selon niveau de loyer (alignes sur le neuf) */
   niveaux: {
-    intermediaire: { taux: 0.03, plafond: 10700 },
-    social: { taux: 0.035, plafond: 10700 },
-    tres_social: { taux: 0.04, plafond: 10700 },
+    intermediaire: { taux: 0.03, plafond: 8000 },
+    social: { taux: 0.035, plafond: 10000 },
+    tres_social: { taux: 0.04, plafond: 12000 },
   },
 } as const;
 
@@ -122,15 +121,24 @@ export const JEANBRUN_ANCIEN = {
 /**
  * Plafonds du deficit foncier imputable sur le revenu global
  *
+ * IMPORTANT: Le plafond bonifie (21 400 EUR) est une disposition GENERALE
+ * pour travaux de renovation energetique (passoires DPE F/G vers A-D).
+ * Il n'est PAS specifique au dispositif Jeanbrun.
+ * Pour Jeanbrun, le plafond de deficit foncier reste 10 700 EUR/an (Art. 31-1-i/j CGI).
+ *
  * @source BOFiP RF - Deficit foncier (BOI-RFPI-BASE-30-20)
- * @source LF 2023 art. 5 pour le plafond bonifie (travaux energetiques)
+ * @source LF 2023 art. 5 pour le plafond bonifie (travaux energetiques passoires)
  * @fiscalYear 2026 (application jusqu'au 31/12/2027 pour bonifie)
- * @lastUpdated 30 janvier 2026
+ * @lastUpdated 5 fevrier 2026
  */
 export const DEFICIT_FONCIER = {
-  /** Plafond standard de droit commun */
+  /** Plafond standard de droit commun (applicable a Jeanbrun) */
   plafondStandard: 10700,
-  /** Plafond bonifié pour travaux énergétiques (jusqu'au 31/12/2027) */
+  /**
+   * Plafond bonifie pour travaux energetiques sur passoires thermiques
+   * Conditions: DPE F/G avant travaux -> DPE A/B/C/D apres travaux
+   * NON lie a Jeanbrun: regime general Art. 156-I-3 CGI
+   */
   plafondBonifie: 21400,
   /** Date limite d'application du plafond bonifié */
   dateLimiteBonification: new Date("2027-12-31"),
@@ -144,19 +152,20 @@ export const DEFICIT_FONCIER = {
 
 /**
  * Plafonds de loyer en EUR/m2/mois selon zone et niveau
- * Base sur les plafonds Loc'Avantages (indicatifs, a confirmer par decret)
+ * Valeurs issues de l'Arrete ministeriel du 27 septembre 2024
+ * (bareme Pinel 2026 / locatif conventionne)
  *
- * @source Loc'Avantages - Plafonds de loyer 2024 (base indicative)
- * @source Arrete du 1er aout 2014 modifie (zonage A/B/C)
- * @fiscalYear 2026 (a confirmer par decret d'application Jeanbrun)
- * @lastUpdated 30 janvier 2026
+ * @source Arrete ministeriel du 27 septembre 2024
+ * @source Bareme Pinel 2026 (zones A bis, A, B1, B2, C)
+ * @fiscalYear 2026
+ * @lastUpdated 5 fevrier 2026
  */
 export const PLAFONDS_LOYERS_M2 = {
-  A_BIS: { intermediaire: 18.89, social: 15.11, tres_social: 12.09 },
-  A: { intermediaire: 14.03, social: 11.22, tres_social: 8.98 },
-  B1: { intermediaire: 11.31, social: 9.05, tres_social: 7.24 },
-  B2: { intermediaire: 9.83, social: 7.86, tres_social: 6.29 },
-  C: { intermediaire: 9.83, social: 7.86, tres_social: 6.29 },
+  A_BIS: { intermediaire: 19.51, social: 13.68, tres_social: 10.93 },
+  A: { intermediaire: 14.49, social: 10.17, tres_social: 8.12 },
+  B1: { intermediaire: 11.68, social: 8.20, tres_social: 6.55 },
+  B2: { intermediaire: 10.15, social: 7.12, tres_social: 5.69 },
+  C: { intermediaire: 10.15, social: 6.15, tres_social: 4.91 },
 } as const;
 
 /**

@@ -467,19 +467,61 @@ feat(calculs): add orchestrator and API endpoint (Phase 6)
 
 ---
 
-*Dernière mise à jour : 30 janvier 2026 (Phase 7 complétée - TOUTES les tâches terminées, incluant Long Terme)*
+*Dernière mise à jour : 5 fevrier 2026 (Phase 8 - Corrections Audit Tom)*
 
-## Résumé Final
+## Phase 8: Corrections Audit Tom (5 fevrier 2026)
 
-| Phase | Tâches | Statut |
+### Contexte
+Audit realise par Tom (OpenClaw) le 4 fevrier 2026 sur les formules du simulateur.
+**Taux de conformite pre-audit:** 88% - **Post-audit:** 100%
+
+### Corrections Appliquees
+
+- [x] **8.1** [CRITIQUE] Corriger plafonds JEANBRUN_ANCIEN
+  - **Avant:** Plafond unique 10 700 EUR pour tous les niveaux (FAUX)
+  - **Apres:** Plafonds par niveau alignes sur le neuf (Art. 31-1-j CGI):
+    - Intermediaire: 8 000 EUR
+    - Social: 10 000 EUR
+    - Tres social: 12 000 EUR
+  - **Fichiers:** `constants.ts`, `jeanbrun-ancien.ts`, `__tests__/jeanbrun-ancien.test.ts`
+
+- [x] **8.2** [CRITIQUE] Mettre a jour PLAFONDS_LOYERS_M2
+  - **Avant:** Valeurs indicatives Loc'Avantages (source non officielle)
+  - **Apres:** Valeurs Arrete ministeriel du 27 septembre 2024 (bareme Pinel 2026)
+  - **Exemple zone A_BIS intermediaire:** 18.89 -> 19.51 EUR/m2
+  - **Fichiers:** `constants.ts`, `__tests__/orchestrateur.test.ts`
+
+- [x] **8.3** [MOYEN] Clarifier deficit foncier bonifie 21 400 EUR
+  - Le plafond 21 400 EUR est un regime GENERAL (LF 2023 art. 5) pour travaux energetiques (passoires DPE F/G -> A-D)
+  - Il n'est PAS specifique a Jeanbrun (plafond Jeanbrun = 10 700 EUR)
+  - **Fichier:** `constants.ts` (commentaires enrichis)
+
+- [x] **8.4** [MINEUR] Ameliorer commentaires deficit LMNP
+  - Precise que le deficit LMNP est reportable uniquement sur BIC LMNP futurs (10 ans)
+  - Ne compense pas salaires, pensions ou revenus fonciers
+  - **Fichier:** `lmnp.ts`
+
+- [x] **8.5** Mettre a jour tous les tests impactes (orchestrateur + jeanbrun-ancien)
+
+### Validation Phase 8
+```bash
+pnpm test -- --run  # 760 tests passent, 0 echec
+```
+
+---
+
+## Resume Final
+
+| Phase | Taches | Statut |
 |-------|--------|--------|
-| Phase 1 | Setup + Constantes | ✅ Terminée |
-| Phase 2 | IR + TMI | ✅ Terminée |
-| Phase 3 | Jeanbrun Neuf/Ancien | ✅ Terminée |
-| Phase 4 | Déficit Foncier + Crédit | ✅ Terminée |
-| Phase 5 | Plus-Value + LMNP + Rendements | ✅ Terminée |
-| Phase 6 | Orchestrateur + API | ✅ Terminée |
-| Phase 7 | Corrections Post-Revue | ✅ Terminée |
-| Long Terme | Versioning + Flags + Module Interface + Benchmarks | ✅ Terminée |
+| Phase 1 | Setup + Constantes | ✅ Terminee |
+| Phase 2 | IR + TMI | ✅ Terminee |
+| Phase 3 | Jeanbrun Neuf/Ancien | ✅ Terminee |
+| Phase 4 | Deficit Foncier + Credit | ✅ Terminee |
+| Phase 5 | Plus-Value + LMNP + Rendements | ✅ Terminee |
+| Phase 6 | Orchestrateur + API | ✅ Terminee |
+| Phase 7 | Corrections Post-Revue | ✅ Terminee |
+| Long Terme | Versioning + Flags + Module Interface + Benchmarks | ✅ Terminee |
+| Phase 8 | Corrections Audit Tom (5/02/2026) | ✅ Terminee |
 
-**Total:** 449 tests passent, coverage 98%+, build OK
+**Total:** 760 tests passent, coverage 98%+, build OK

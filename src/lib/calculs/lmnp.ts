@@ -223,8 +223,12 @@ export function calculerLMNPReel(input: LMNPInput): LMNPResult {
     deficitReportable = Math.abs(resultatAvantAmortissement);
   }
 
-  // L'amortissement ne peut pas creer de deficit
+  // L'amortissement ne peut pas creer de deficit (Art. 39 C CGI)
   // Il est limite au resultat positif avant amortissement
+  // Le deficit LMNP (charges > recettes, hors amortissement) :
+  // - N'est PAS imputable sur le revenu global (contrairement au LMP)
+  // - Est reportable uniquement sur les benefices BIC LMNP futurs pendant 10 ans
+  // - Ne peut pas compenser d'autres revenus (salaires, pensions, fonciers, etc.)
   const amortissementEffectif =
     resultatAvantAmortissement > 0
       ? Math.min(amortissementTheorique, resultatAvantAmortissement)
