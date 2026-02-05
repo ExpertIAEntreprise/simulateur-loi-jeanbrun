@@ -129,6 +129,7 @@ export interface EspoBarometreFilters {
 export interface EspoProgramme {
   id: string;
   name: string; // Nom du programme
+  description: string | null; // Description du programme (remplie par scraping)
   promoteur: string | null; // Nom du promoteur
   adresse: string | null; // Adresse
   codePostal: string | null; // Code postal

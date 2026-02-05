@@ -45,7 +45,20 @@ export const metadata: Metadata = {
 };
 
 /**
- * Recupere tous les programmes depuis EspoCRM
+ * Verifie si un programme a ete enrichi (images scrapees)
+ */
+function isEnrichedProgramme(programme: EspoProgramme): boolean {
+  if (!programme.images) return false;
+  try {
+    const parsed: unknown = JSON.parse(programme.images);
+    return Array.isArray(parsed) && parsed.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Recupere les programmes enrichis depuis EspoCRM
  */
 async function fetchProgrammes(): Promise<{
   programmes: EspoProgramme[];
@@ -61,7 +74,9 @@ async function fetchProgrammes(): Promise<{
       { actif: true },
       { limit: 200, offset: 0 }
     );
-    return { programmes: result.list, total: result.total };
+    // Filter to only show enriched programmes (with scraped images)
+    const enriched = result.list.filter(isEnrichedProgramme);
+    return { programmes: enriched, total: enriched.length };
   } catch (error) {
     console.error("Erreur chargement programmes:", error);
     return { programmes: [], total: 0 };

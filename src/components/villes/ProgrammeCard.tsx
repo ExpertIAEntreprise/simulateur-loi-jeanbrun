@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Building2, Calendar, MapPin, Maximize2, Layers } from "lucide-react";
+import Link from "next/link";
+import { Building2, Calendar, ExternalLink, MapPin, Maximize2, Layers } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -41,7 +42,7 @@ function formatDeliveryDate(dateString: string | null | undefined): string {
 
   // Vérifier si la date est valide
   if (isNaN(date.getTime())) {
-    return "Date non communiquée";
+    return dateString; // Return raw text if not a parseable ISO date
   }
 
   return new Intl.DateTimeFormat("fr-FR", {
@@ -71,6 +72,7 @@ export function ProgrammeCard({
 }: ProgrammeCardProps) {
   const {
     name,
+    description,
     promoteur,
     prixMin,
     prixMax,
@@ -83,12 +85,27 @@ export function ProgrammeCard({
     nbLotsTotal,
     nbLotsDisponibles,
     typesLots: typesLotsRaw,
-    adresse,
     villeName,
     codePostal,
+    images: imagesRaw,
   } = programme;
 
-  const hasImage = imagePrincipale != null && imagePrincipale !== "";
+  // Resolve image: use imagePrincipale, fallback to first image from images JSON array
+  const resolvedImage = (() => {
+    if (imagePrincipale != null && imagePrincipale !== "") return imagePrincipale;
+    if (!imagesRaw) return null;
+    try {
+      const parsed: unknown = JSON.parse(imagesRaw);
+      if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === "string") {
+        return parsed[0] as string;
+      }
+    } catch {
+      // ignore parse errors
+    }
+    return null;
+  })();
+
+  const hasImage = resolvedImage != null && resolvedImage !== "";
   const hasSurface = surfaceMin != null || surfaceMax != null;
   const hasPrice = prixMin != null;
   const hasPriceRange = prixMin != null && prixMax != null;
@@ -147,7 +164,7 @@ export function ProgrammeCard({
     return null;
   })();
 
-  return (
+  const cardContent = (
     <Card
       className={cn(
         "group flex h-full flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg",
@@ -156,9 +173,9 @@ export function ProgrammeCard({
     >
       {/* Image */}
       <div className="relative aspect-video overflow-hidden bg-muted">
-        {hasImage ? (
+        {hasImage && resolvedImage != null ? (
           <Image
-            src={imagePrincipale}
+            src={resolvedImage}
             alt={imageAlt ?? `Programme immobilier ${name}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -178,23 +195,28 @@ export function ProgrammeCard({
           </div>
         )}
 
-        {/* Promoter badge overlay */}
-        {promoteur != null && promoteur !== "" && (
+        {/* Promoter/Source badge overlay */}
+        {(promoteur != null && promoteur !== "") || (programme.sourceApi != null && programme.sourceApi !== "") ? (
           <div className="absolute left-3 top-3">
-            <Badge variant="secondary" className="bg-white/90 text-foreground">
-              {promoteur}
+            <Badge variant="secondary" className="bg-white/90 text-foreground capitalize">
+              {promoteur != null && promoteur !== "" ? promoteur : programme.sourceApi}
             </Badge>
           </div>
-        )}
+        ) : null}
 
-        {/* Available lots badge overlay */}
-        {lotsText !== null && (
-          <div className="absolute right-3 top-3">
+        {/* Zone fiscale + lots badges overlay */}
+        <div className="absolute right-3 top-3 flex flex-col gap-1.5">
+          {programme.zoneFiscale != null && programme.zoneFiscale !== "" && (
+            <Badge className="bg-blue-600 text-white hover:bg-blue-600">
+              Zone {programme.zoneFiscale}
+            </Badge>
+          )}
+          {lotsText !== null && (
             <Badge className="bg-green-600 text-white hover:bg-green-600">
               {lotsText}
             </Badge>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <CardHeader className="flex-1 space-y-2 pb-3">
@@ -211,12 +233,11 @@ export function ProgrammeCard({
           </CardDescription>
         )}
 
-        {/* Adresse */}
-        {adresse != null && adresse !== "" && (
-          <CardDescription className="flex items-center gap-1.5 text-xs">
-            <MapPin className="size-3 shrink-0" aria-hidden="true" />
-            <span>{adresse}</span>
-          </CardDescription>
+        {/* Description */}
+        {description != null && description !== "" && (
+          <p className="line-clamp-2 text-sm text-muted-foreground">
+            {description}
+          </p>
         )}
       </CardHeader>
 
@@ -267,7 +288,30 @@ export function ProgrammeCard({
             ))}
           </div>
         )}
+
+        {/* External link indicator */}
+        {programme.urlExterne != null && programme.urlExterne !== "" && (
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
+            <span>Voir sur le site du promoteur</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
+
+  if (programme.urlExterne != null && programme.urlExterne !== "") {
+    return (
+      <Link
+        href={programme.urlExterne}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }
