@@ -127,6 +127,14 @@ interface LeadRecord {
   telephone: string | null;
   consentPromoter: boolean;
   consentBroker: boolean;
+  unsubscribeToken: string | null;
+}
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://simulateur-loi-jeanbrun.vercel.app";
+
+function buildUnsubscribeFooter(unsubscribeToken: string | null): string {
+  if (!unsubscribeToken) return "";
+  return `<p style="font-size:12px;color:#999;margin-top:12px;">Pour gerer vos preferences ou vous desinscrire : <a href="${APP_URL}/desinscription?token=${escapeHtml(unsubscribeToken)}" style="color:#6b7280;">Cliquez ici</a></p>`;
 }
 
 async function dispatchToPromoter(
@@ -169,7 +177,7 @@ async function dispatchToPromoter(
     const emailSent = await sendEmail({
       to: matchedPromoter.contactEmail,
       subject: `[Nouveau Lead] ${payload.leadPrenom} ${payload.leadNom} - Zone ${payload.zone}`,
-      htmlContent: buildPromoterEmailHtml(payload, matchedPromoter.contactName),
+      htmlContent: buildPromoterEmailHtml(payload, matchedPromoter.contactName, lead.unsubscribeToken),
     });
 
     if (!emailSent) {
@@ -248,7 +256,7 @@ async function dispatchToBroker(
     const emailSent = await sendEmail({
       to: matchedBroker.contactEmail,
       subject: `[Nouveau Lead Financement] ${payload.leadPrenom} ${payload.leadNom} - Zone ${payload.zone}`,
-      htmlContent: buildBrokerEmailHtml(payload, matchedBroker.contactName),
+      htmlContent: buildBrokerEmailHtml(payload, matchedBroker.contactName, lead.unsubscribeToken),
     });
 
     if (!emailSent) {
@@ -297,7 +305,7 @@ async function sendProspectConfirmationEmail(
     const emailSent = await sendEmail({
       to: payload.prospectEmail,
       subject: "Votre simulation Loi Jeanbrun - Confirmation",
-      htmlContent: buildProspectConfirmationHtml(payload),
+      htmlContent: buildProspectConfirmationHtml(payload, lead.unsubscribeToken),
     });
 
     if (!emailSent) {
@@ -339,7 +347,8 @@ const EMAIL_STYLES = `
 
 function buildPromoterEmailHtml(
   payload: PromoterNotificationPayload,
-  contactName: string
+  contactName: string,
+  unsubscribeToken: string | null = null
 ): string {
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -373,6 +382,7 @@ function buildPromoterEmailHtml(
 
     <div class="footer">
       <p>Ce lead a ete genere par le Simulateur Loi Jeanbrun. Le prospect a expressement consenti a etre contacte par un promoteur immobilier.</p>
+      ${buildUnsubscribeFooter(unsubscribeToken)}
       <p>&copy; ${new Date().getFullYear()} Simulateur Loi Jeanbrun</p>
     </div>
   </div>
@@ -383,7 +393,8 @@ function buildPromoterEmailHtml(
 
 function buildBrokerEmailHtml(
   payload: BrokerNotificationPayload,
-  contactName: string
+  contactName: string,
+  unsubscribeToken: string | null = null
 ): string {
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -418,6 +429,7 @@ function buildBrokerEmailHtml(
 
     <div class="footer">
       <p>Ce lead a ete genere par le Simulateur Loi Jeanbrun. Le prospect a expressement consenti a etre contacte par un courtier en credit.</p>
+      ${buildUnsubscribeFooter(unsubscribeToken)}
       <p>&copy; ${new Date().getFullYear()} Simulateur Loi Jeanbrun</p>
     </div>
   </div>
@@ -427,7 +439,8 @@ function buildBrokerEmailHtml(
 }
 
 function buildProspectConfirmationHtml(
-  payload: ProspectConfirmationPayload
+  payload: ProspectConfirmationPayload,
+  unsubscribeToken: string | null = null
 ): string {
   const partnerLines: string[] = [];
   if (payload.consentPromoter) {
@@ -465,7 +478,8 @@ function buildProspectConfirmationHtml(
     <p>Si vous avez des questions, n'hesitez pas a repondre a cet email.</p>
 
     <div class="footer">
-      <p>Conformement au RGPD, vous pouvez a tout moment retirer votre consentement en nous contactant.</p>
+      <p>Conformement au RGPD, vous pouvez a tout moment retirer votre consentement.</p>
+      ${buildUnsubscribeFooter(unsubscribeToken)}
       <p>&copy; ${new Date().getFullYear()} Simulateur Loi Jeanbrun</p>
     </div>
   </div>

@@ -15,6 +15,7 @@ import {
   checkRateLimit,
   getClientIP,
 } from "@/lib/rate-limit";
+import { verifyAdminAuth } from "@/lib/admin-auth";
 import { db, eq } from "@repo/database";
 import { leads, promoters, brokers } from "@repo/database/schema";
 
@@ -28,6 +29,17 @@ const adminDetailRateLimiter = createRateLimiter(100);
 // ---------------------------------------------------------------------------
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// ---------------------------------------------------------------------------
+// Valid status transitions (P1-01)
+// ---------------------------------------------------------------------------
+const VALID_TRANSITIONS: Record<string, string[]> = {
+  new: ["dispatched", "lost"],
+  dispatched: ["contacted", "lost"],
+  contacted: ["converted", "lost"],
+  converted: [],
+  lost: ["new"],
+};
 
 // ---------------------------------------------------------------------------
 // PATCH validation schema
@@ -196,9 +208,9 @@ export async function PATCH(
     const body: unknown = await request.json();
     const data = leadUpdateSchema.parse(body);
 
-    // 5. Check lead exists
+    // 5. Check lead exists and fetch current status
     const [existingLead] = await db
-      .select({ id: leads.id })
+      .select({ id: leads.id, status: leads.status })
       .from(leads)
       .where(eq(leads.id, id))
       .limit(1);
@@ -208,6 +220,20 @@ export async function PATCH(
         { success: false, message: "Lead non trouve" },
         { status: 404 }
       );
+    }
+
+    // 5.5 Validate status transition
+    if (data.status !== undefined) {
+      const allowed = VALID_TRANSITIONS[existingLead.status] ?? [];
+      if (!allowed.includes(data.status)) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `Transition de statut invalide: ${existingLead.status} -> ${data.status}. Transitions autorisees: ${allowed.join(", ") || "aucune"}`,
+          },
+          { status: 422 }
+        );
+      }
     }
 
     // 6. Build update payload (immutable - create new object)
@@ -288,35 +314,3 @@ export async function PATCH(
   }
 }
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/**
- * Verify ADMIN_API_TOKEN bearer token.
- * Returns a 401 NextResponse if invalid, or null if valid.
- */
-function verifyAdminAuth(request: NextRequest): NextResponse | null {
-  const adminToken = process.env.ADMIN_API_TOKEN;
-
-  if (!adminToken) {
-    console.error("[Admin Auth] ADMIN_API_TOKEN is not configured");
-    return NextResponse.json(
-      { success: false, message: "Configuration serveur manquante" },
-      { status: 500 }
-    );
-  }
-
-  const authHeader = request.headers.get("authorization");
-  if (
-    !authHeader?.startsWith("Bearer ") ||
-    authHeader.slice(7) !== adminToken
-  ) {
-    return NextResponse.json(
-      { success: false, message: "Non autorise" },
-      { status: 401 }
-    );
-  }
-
-  return null;
-}

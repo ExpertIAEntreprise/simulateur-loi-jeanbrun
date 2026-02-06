@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 6 terminee + Audit P0 corrige (PRET POUR PRODUCTION)
+> **Statut :** 🟢 Phase 6 terminee + Audit P0+P1 corriges (PRET POUR PRODUCTION)
 
 ---
 
@@ -381,9 +381,51 @@ Audit multi-agents (8 domaines) suivi de la correction des 7 items P0 (critiques
 ### Migration DB requise
 
 ```bash
-pnpm db:generate  # Generer migration pour unsubscribe_token
+pnpm db:generate  # Generer migration pour unsubscribe_token + ip_address + user_agent + index composite
 pnpm db:migrate   # Appliquer en production
 ```
+
+---
+
+## Audit & Correctifs P1 ✅ TERMINE
+
+> **Date :** 6 fevrier 2026
+> **Ref :** [AUDIT-CORRECTIFS.md](./AUDIT-CORRECTIFS.md)
+
+Corrections de securite, schema DB et conformite RGPD (7 items P1).
+
+### Correctifs appliques
+
+- [x] **P1-01 : Validation transitions statut lead**
+  - Ajout de `VALID_TRANSITIONS` map dans `api/leads/[id]/route.ts`
+  - Retourne 422 si transition invalide (ex: `converted` → `new`)
+- [x] **P1-02 : Extraire verifyAdminAuth + timing-safe**
+  - Creation de `src/lib/admin-auth.ts` avec `crypto.timingSafeEqual`
+  - Import dans les 2 routes API (`api/leads/route.ts` et `api/leads/[id]/route.ts`)
+  - Suppression des fonctions dupliquees vulnerables (comparaison `===`)
+- [x] **P1-03 : Rate limit mismatch documentation**
+  - Correction du JSDoc : `5 req/heure` → `5 req/minute` (aligne sur le code)
+- [x] **P1-04 : Index composite manquant pour dashboard**
+  - Ajout de `leads_platform_status_created_idx` dans `schema.ts`
+- [x] **P1-05 : Bug Zod v4 dans validation.ts**
+  - Correction de `z.email()` → `z.string().email()` dans `packages/leads/src/validation.ts`
+- [x] **P1-06 : IP et user-agent non stockes (preuve consentement)**
+  - Ajout des colonnes `ip_address` (varchar 45) et `user_agent` (text) dans table leads
+  - Extraction et stockage de `x-real-ip`/`x-forwarded-for` et `user-agent` dans POST `/api/leads`
+- [x] **P1-07 : Liens de desinscription dans les emails**
+  - Ajout de `buildUnsubscribeFooter()` dans `lead-dispatch.ts`
+  - Lien de desinscription dans les 3 templates (promoteur, courtier, prospect)
+
+### Fichiers modifies
+
+| Fichier | Correctifs |
+|---------|-----------|
+| `packages/database/src/schema.ts` | P1-04, P1-06 |
+| `packages/leads/src/validation.ts` | P1-05 |
+| `apps/jeanbrun/src/lib/admin-auth.ts` | P1-02 (nouveau) |
+| `apps/jeanbrun/src/app/api/leads/route.ts` | P1-02, P1-03, P1-06 |
+| `apps/jeanbrun/src/app/api/leads/[id]/route.ts` | P1-01, P1-02 |
+| `apps/jeanbrun/src/lib/lead-dispatch.ts` | P1-07 |
 
 ---
 
@@ -399,6 +441,7 @@ pnpm db:migrate   # Appliquer en production
 - [x] RGPD : politique de confidentialite mise a jour, consentements libres, desinscription operationnelle
 - [x] Dashboard admin leads fonctionnel
 - [x] Audit P0 corrige (7/7 items critiques resolus)
+- [x] Audit P1 corrige (7/7 items hauts resolus)
 
 ---
 
@@ -449,4 +492,4 @@ Visiteur → Simulation gratuite → Teaser resultats
 
 ---
 
-*Derniere mise a jour : 6 fevrier 2026 (Audit P0 corrige — PRET POUR PRODUCTION)*
+*Derniere mise a jour : 6 fevrier 2026 (Audit P0+P1 corriges — PRET POUR PRODUCTION)*

@@ -4,7 +4,7 @@
  * POST /api/leads - Main lead capture endpoint (public, rate-limited)
  * GET  /api/leads - Admin lead listing with filters (bearer auth)
  *
- * @security POST: Rate limited to 5 requests per IP per hour (via Upstash Redis)
+ * @security POST: Rate limited to 5 requests per IP per minute (via Upstash Redis)
  * @security POST: All consents are optional per RGPD Art. 7(4)
  * @security POST: French phone number format enforced
  * @security GET: Bearer token auth via ADMIN_API_TOKEN
@@ -19,6 +19,7 @@ import {
   checkRateLimit,
   getClientIP,
 } from "@/lib/rate-limit";
+import { verifyAdminAuth } from "@/lib/admin-auth";
 import { db, and, eq, gte, lte, desc, sql } from "@repo/database";
 import { leads } from "@repo/database/schema";
 import { calculateLeadScore } from "@repo/leads";
@@ -96,7 +97,12 @@ export async function POST(request: NextRequest) {
       hasDownPayment: !!simulationData?.apport,
     });
 
-    // 4. Insert lead into database
+    // 4. Insert lead into database (with IP and user-agent for RGPD consent proof)
+    const clientIp = request.headers.get("x-real-ip")
+      ?? request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      ?? null;
+    const clientUserAgent = request.headers.get("user-agent") ?? null;
+
     const [lead] = await db
       .insert(leads)
       .values({
@@ -117,6 +123,8 @@ export async function POST(request: NextRequest) {
         utmSource: data.utmSource ?? null,
         utmMedium: data.utmMedium ?? null,
         utmCampaign: data.utmCampaign ?? null,
+        ipAddress: clientIp,
+        userAgent: clientUserAgent,
       })
       .returning({ id: leads.id, score: leads.score });
 
@@ -324,28 +332,3 @@ function toNumberOrUndefined(value: unknown): number | undefined {
   return Number.isFinite(num) ? num : undefined;
 }
 
-/**
- * Verify ADMIN_API_TOKEN bearer token.
- * Returns a 401 NextResponse if invalid, or null if valid.
- */
-function verifyAdminAuth(request: NextRequest): NextResponse | null {
-  const adminToken = process.env.ADMIN_API_TOKEN;
-
-  if (!adminToken) {
-    console.error("[Admin Auth] ADMIN_API_TOKEN is not configured");
-    return NextResponse.json(
-      { success: false, message: "Configuration serveur manquante" },
-      { status: 500 }
-    );
-  }
-
-  const authHeader = request.headers.get("authorization");
-  if (!authHeader?.startsWith("Bearer ") || authHeader.slice(7) !== adminToken) {
-    return NextResponse.json(
-      { success: false, message: "Non autorise" },
-      { status: 401 }
-    );
-  }
-
-  return null;
-}

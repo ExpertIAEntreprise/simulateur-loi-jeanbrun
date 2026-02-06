@@ -340,6 +340,8 @@ export const leads = pgTable(
     revenueBroker: numeric("revenue_broker", { precision: 10, scale: 2 }),
     userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
     simulationId: uuid("simulation_id").references(() => simulations.id, { onDelete: "set null" }),
+    ipAddress: varchar("ip_address", { length: 45 }),
+    userAgent: text("user_agent"),
     espoId: text("espo_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
@@ -356,6 +358,7 @@ export const leads = pgTable(
     index("leads_simulation_id_idx").on(table.simulationId),
     index("leads_promoter_id_idx").on(table.promoterId),
     index("leads_broker_id_idx").on(table.brokerId),
+    index("leads_platform_status_created_idx").on(table.platform, table.status, table.createdAt),
   ]
 );
 
