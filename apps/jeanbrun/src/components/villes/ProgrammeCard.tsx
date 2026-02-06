@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, Calendar, MapPin, Maximize2, Layers } from "lucide-react";
+import { Building2, Calendar, Gift, MapPin, Maximize2, Layers } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { EspoProgramme } from "@/lib/espocrm/types";
+import { parseSpecialOffers, getSpecialOffersLabels } from "@/lib/espocrm/types";
 import { cn } from "@/lib/utils";
 
 interface ProgrammeCardProps {
@@ -89,6 +90,10 @@ export function ProgrammeCard({
     codePostal,
     images: imagesRaw,
   } = programme;
+
+  // Offres speciales
+  const specialOffers = parseSpecialOffers(programme);
+  const offersLabels = getSpecialOffersLabels(specialOffers);
 
   // Known CMS base URLs for relative image paths from scraped promoters
   const CMS_ORIGINS: Record<string, string> = {
@@ -307,6 +312,22 @@ export function ProgrammeCard({
             {typesLots.map((type) => (
               <Badge key={type} variant="outline" className="text-xs">
                 {type}
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        {/* Offres speciales */}
+        {offersLabels.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Gift className="size-3.5 text-amber-600" aria-hidden="true" />
+            {offersLabels.map((label) => (
+              <Badge
+                key={label}
+                variant="secondary"
+                className="border-amber-200 bg-amber-50 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200"
+              >
+                {label}
               </Badge>
             ))}
           </div>

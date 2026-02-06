@@ -1,0 +1,1 @@
+ALTER TABLE "programmes" ADD COLUMN "special_offers" jsonb;

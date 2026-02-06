@@ -64,7 +64,7 @@ async function fetchProgrammes(): Promise<{
 
     while (hasMore) {
       const result = await client.getProgrammes(
-        { actif: true },
+        { actif: true, authorized: true },
         { limit, offset }
       );
       allProgrammes.push(...result.list);

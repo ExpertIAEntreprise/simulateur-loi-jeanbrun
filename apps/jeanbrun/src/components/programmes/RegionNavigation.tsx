@@ -67,7 +67,7 @@ async function fetchAllProgrammes(): Promise<EspoProgramme[]> {
   let hasMore = true;
 
   while (hasMore) {
-    const response = await client.getProgrammes(undefined, { limit, offset });
+    const response = await client.getProgrammes({ authorized: true }, { limit, offset });
     all.push(...response.list);
     hasMore = response.list.length >= limit;
     offset += limit;

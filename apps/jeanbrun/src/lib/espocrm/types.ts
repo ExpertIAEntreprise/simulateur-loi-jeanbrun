@@ -172,6 +172,11 @@ export interface EspoProgramme {
   statut: string | null; // Ex: "disponible", "en_commercialisation"
   zoneFiscale: string | null; // Zone fiscale (A_BIS, A, B1, B2, C)
   eligibleJeanbrun: boolean | null; // Éligible à la loi Jeanbrun
+  eligiblePtz: boolean | null; // Éligible au PTZ
+  authorized: boolean | null; // Programme autorisé pour affichage public (convention signée)
+
+  // Offres spéciales (JSONB)
+  specialOffers: string | null; // JSON object d'offres spéciales
 
   // URLs et identifiants externes
   slug: string | null; // Slug URL
@@ -247,6 +252,7 @@ export interface EspoProgrammeFilters {
   departement?: string;
   promoteur?: string;
   actif?: boolean;
+  authorized?: boolean;
   prixMin?: number;
   prixMax?: number;
 }
@@ -351,6 +357,9 @@ export function fromEspoProgramme(espo: EspoProgramme) {
     typesLots: parseJsonField<string[]>(espo.typesLots, []),
     zoneFiscale: espo.zoneFiscale,
     eligibleJeanbrun: espo.eligibleJeanbrun,
+    eligiblePtz: espo.eligiblePtz,
+    authorized: espo.authorized,
+    specialOffers: parseJsonField<Record<string, unknown> | null>(espo.specialOffers, null),
     slug: espo.slug,
     urlExterne: espo.urlExterne,
     sourceApi: espo.sourceApi,
@@ -422,6 +431,39 @@ export function getVilleFaq(ville: EspoVille): EspoFaqItem[] {
  */
 export function parseLots(programme: EspoProgramme): Lot[] {
   return parseJsonField<Lot[]>(programme.lotsDetails, []);
+}
+
+/**
+ * Offres spéciales d'un programme
+ */
+export interface SpecialOffers {
+  fraisNotaireOfferts?: boolean;
+  remiseCommerciale?: string; // Ex: "5%", "10 000€"
+  cuisineEquipee?: boolean;
+  parkingOffert?: boolean;
+  fraisDossierOfferts?: boolean;
+  [key: string]: unknown;
+}
+
+/**
+ * Parse les offres spéciales d'un programme
+ */
+export function parseSpecialOffers(programme: EspoProgramme): SpecialOffers | null {
+  return parseJsonField<SpecialOffers | null>(programme.specialOffers, null);
+}
+
+/**
+ * Retourne les labels des offres spéciales pour affichage
+ */
+export function getSpecialOffersLabels(offers: SpecialOffers | null): string[] {
+  if (!offers) return [];
+  const labels: string[] = [];
+  if (offers.fraisNotaireOfferts) labels.push("Frais de notaire offerts");
+  if (offers.remiseCommerciale) labels.push(`Remise ${offers.remiseCommerciale}`);
+  if (offers.cuisineEquipee) labels.push("Cuisine equipee offerte");
+  if (offers.parkingOffert) labels.push("Parking offert");
+  if (offers.fraisDossierOfferts) labels.push("Frais de dossier offerts");
+  return labels;
 }
 
 /**

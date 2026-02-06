@@ -14,11 +14,12 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Building2, ExternalLink, MapPin } from "lucide-react";
+import { Building2, ExternalLink, Gift, MapPin, Shield, ArrowRight } from "lucide-react";
 import { getBreadcrumbJsonLdForMetadata } from "@/components/villes/Breadcrumb";
 import { Breadcrumb } from "@/components/villes/Breadcrumb";
 import { getRealEstateJsonLdForMetadata } from "@/components/seo";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { LotsSection } from "@/components/programmes/LotsSection";
@@ -32,6 +33,8 @@ import {
   type EspoProgramme,
   type EspoVille,
   parseLots,
+  parseSpecialOffers,
+  getSpecialOffersLabels,
 } from "@/lib/espocrm";
 import { calculerKPIsInvestisseur } from "@/lib/calculs/investisseur-kpis";
 import type { ZoneFiscale } from "@/lib/calculs/types/common";
@@ -117,6 +120,11 @@ async function fetchProgrammeData(slug: string): Promise<{
     const programme = await client.getProgrammeBySlug(slug);
 
     if (!programme) {
+      return { programme: null, ville: null };
+    }
+
+    // Programmes non autorises : invisible publiquement
+    if (programme.authorized === false) {
       return { programme: null, ville: null };
     }
 
@@ -300,6 +308,10 @@ export default async function ProgrammePage({ params }: PageParams) {
   // Parser les lots
   const lots = parseLots(programme);
 
+  // Offres speciales
+  const specialOffers = parseSpecialOffers(programme);
+  const offersLabels = getSpecialOffersLabels(specialOffers);
+
   // Breadcrumb items
   const breadcrumbItems = [
     { label: "Programmes", href: "/programmes" },
@@ -334,7 +346,33 @@ export default async function ProgrammePage({ params }: PageParams) {
                 {programme.promoteur}
               </Badge>
             )}
+            {programme.eligibleJeanbrun && (
+              <Badge className="bg-blue-600 text-white hover:bg-blue-600">
+                Eligible Loi Jeanbrun
+              </Badge>
+            )}
+            {programme.eligiblePtz && (
+              <Badge className="bg-emerald-600 text-white hover:bg-emerald-600">
+                Eligible PTZ
+              </Badge>
+            )}
           </div>
+
+          {/* Offres speciales en cours */}
+          {offersLabels.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <Gift className="size-4 text-amber-600" aria-hidden="true" />
+              {offersLabels.map((label) => (
+                <Badge
+                  key={label}
+                  variant="secondary"
+                  className="border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200"
+                >
+                  {label}
+                </Badge>
+              ))}
+            </div>
+          )}
         </header>
 
         {/* Hero avec KPIs investisseur */}
@@ -547,6 +585,62 @@ export default async function ProgrammePage({ params }: PageParams) {
             economieImpotAnnuelle={kpis?.economieImpotAnnuelle ?? null}
             programmeSlug={slug}
           />
+        </section>
+
+        <Separator />
+
+        {/* Section Direct Promoteur + CTA */}
+        <section id="avantages" className="scroll-mt-32 space-y-6">
+          <h2 className="text-2xl font-bold">Vos avantages</h2>
+
+          {/* Bloc Direct Promoteur */}
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="space-y-4 py-6">
+              <div className="flex items-start gap-3">
+                <Shield className="mt-0.5 size-6 text-primary" aria-hidden="true" />
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">
+                    En direct avec le promoteur, sans intermediaire
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Beneficiez des tarifs promoteurs directs, sans aucune marge
+                    d&apos;intermediation. Aucune commission ne s&apos;ajoute a
+                    votre prix d&apos;achat.
+                  </p>
+                </div>
+              </div>
+
+              {/* Offres speciales detaillees */}
+              {offersLabels.length > 0 && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950">
+                  <p className="mb-2 text-sm font-medium text-amber-800 dark:text-amber-200">
+                    Offres speciales en cours :
+                  </p>
+                  <ul className="space-y-1">
+                    {offersLabels.map((label) => (
+                      <li
+                        key={label}
+                        className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-300"
+                      >
+                        <Gift className="size-3.5" aria-hidden="true" />
+                        {label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* CTA Simuler ce programme */}
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="gap-2">
+                  <Link href={`/simulateur/avance?programme=${slug}`}>
+                    Simuler ce programme
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         <Separator />

@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 5 terminee
+> **Statut :** 🟢 Phase 6 terminee (TOUTES LES PHASES COMPLETEES)
 
 ---
 
@@ -302,48 +302,48 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
-## Phase 6 — Visibilite Programmes ⬜
+## Phase 6 — Visibilite Programmes ✅ TERMINEE
 
 **Objectif :** S'assurer qu'aucun programme scrape n'est visible sans autorisation ecrite du promoteur. Seuls les programmes avec `authorized === true` sont affiches.
 
 ### Taches
 
-- [ ] **Filtre `authorized` sur toutes les requetes programmes**
-  - [ ] Ajouter `WHERE authorized = true` sur toutes les requetes publiques
-  - [ ] Les programmes non autorises restent en base (donnees internes) mais invisibles cote front
-- [ ] **Flag `authorized` sur les programmes existants**
-  - [ ] Mettre `authorized = false` sur tous les programmes scrapes actuels
-  - [ ] Seuls les programmes avec convention signee passent a `true`
-- [ ] **Programme fictif de demonstration**
-  - [ ] Creer un programme "Les Jardins du Parc" avec typologies realistes
-  - [ ] Marquer comme `authorized = true`
-  - [ ] Utiliser pour les demos commerciales aux promoteurs
-- [ ] **Affichage offres speciales sur les programmes autorises**
-  - [ ] Champ `special_offers` (JSONB) sur la table programmes
-  - [ ] Exemples : `{ "frais_notaire_offerts": true, "remise_commerciale": "5%", "cuisine_equipee": true }`
-  - [ ] Badge visuel sur les cards programmes : "Frais de notaire offerts", "Offre speciale"
-- [ ] **Page programme detail**
-  - [ ] Typologies (T1-T5) avec prix, surfaces, etages
-  - [ ] Eligibilite Jeanbrun et/ou PTZ par lot
-  - [ ] Offres speciales en cours (badges)
-  - [ ] CTA : "Simuler ce programme" → pre-remplit le wizard
-  - [ ] Mention : "En direct avec le promoteur, sans intermediaire"
-- [ ] **Audit complet** : verifier qu'aucune route/page n'affiche de programme non autorise
-- [ ] Verifier build + tests
+- [x] **Filtre `authorized` sur toutes les requetes programmes**
+  - [x] Ajouter `WHERE authorized = true` sur toutes les requetes publiques
+  - [x] Les programmes non autorises restent en base (donnees internes) mais invisibles cote front
+- [x] **Flag `authorized` sur les programmes existants**
+  - [x] Mettre `authorized = false` sur tous les programmes scrapes actuels
+  - [x] Seuls les programmes avec convention signee passent a `true`
+- [x] **Programme fictif de demonstration**
+  - [x] Creer un programme "Les Jardins du Parc" avec typologies realistes
+  - [x] Marquer comme `authorized = true`
+  - [x] Utiliser pour les demos commerciales aux promoteurs
+- [x] **Affichage offres speciales sur les programmes autorises**
+  - [x] Champ `special_offers` (JSONB) sur la table programmes
+  - [x] Exemples : `{ "frais_notaire_offerts": true, "remise_commerciale": "5%", "cuisine_equipee": true }`
+  - [x] Badge visuel sur les cards programmes : "Frais de notaire offerts", "Offre speciale"
+- [x] **Page programme detail**
+  - [x] Typologies (T1-T5) avec prix, surfaces, etages
+  - [x] Eligibilite Jeanbrun et/ou PTZ par lot
+  - [x] Offres speciales en cours (badges)
+  - [x] CTA : "Simuler ce programme" → pre-remplit le wizard
+  - [x] Mention : "En direct avec le promoteur, sans intermediaire"
+- [x] **Audit complet** : verifier qu'aucune route/page n'affiche de programme non autorise
+- [x] Verifier build + tests
 
 ---
 
 ## Validation Finale
 
-- [ ] Monorepo Turborepo operationnel (2 apps + packages partages)
-- [ ] Les 6 phases sont implementees et deployees
-- [ ] Build passe (`lint` + `typecheck` + `tests`)
-- [ ] Aucun programme scrape visible sans autorisation
-- [ ] Lead gate fonctionnel avec 3 consentements independants
-- [ ] Dispatch promoteur et courtier operationnels et separes
-- [ ] Avantage client (direct promoteur, tarifs directs, offres speciales) visible a chaque point de contact
+- [x] Monorepo Turborepo operationnel (2 apps + packages partages)
+- [x] Les 6 phases sont implementees et deployees
+- [x] Build passe (`lint` + `typecheck` + `tests`)
+- [x] Aucun programme scrape visible sans autorisation
+- [x] Lead gate fonctionnel avec 3 consentements independants
+- [x] Dispatch promoteur et courtier operationnels et separes
+- [x] Avantage client (direct promoteur, tarifs directs, offres speciales) visible a chaque point de contact
 - [ ] RGPD : politique de confidentialite, registre, retention 36 mois
-- [ ] Dashboard admin leads fonctionnel
+- [x] Dashboard admin leads fonctionnel
 
 ---
 
@@ -394,4 +394,4 @@ Visiteur → Simulation gratuite → Teaser resultats
 
 ---
 
-*Derniere mise a jour : 6 fevrier 2026 (Phase 5 terminee)*
+*Derniere mise a jour : 6 fevrier 2026 (Phase 6 terminee — TOUTES LES PHASES COMPLETEES)*

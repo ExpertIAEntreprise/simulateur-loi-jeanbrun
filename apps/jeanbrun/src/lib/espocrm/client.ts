@@ -351,7 +351,7 @@ export class EspoCRMClient {
 
     // Récupérer en parallèle: programmes, baromètre, villes liées, villes proches
     const [programmesResponse, barometre, villesLiees, metropoleParent, villesProches] = await Promise.all([
-      this.getProgrammes({ villeId: ville.id, actif: true }, { limit: 10 }),
+      this.getProgrammes({ villeId: ville.id, actif: true, authorized: true }, { limit: 10 }),
       this.getLatestBarometre(ville.id),
       ville.isMetropole
         ? this.getVillesPeripheriques(ville.id, { limit: 8 })
@@ -415,6 +415,7 @@ export class EspoCRMClient {
       const whereParams = this.buildWhereParams({
         villeId: filters.villeId,
         promoteur: filters.promoteur,
+        authorized: filters.authorized,
         // actif n'existe pas, utiliser statut si necessaire
       });
 
@@ -469,7 +470,7 @@ export class EspoCRMClient {
     let hasMore = true;
 
     while (hasMore) {
-      const response = await this.getProgrammes(undefined, { limit, offset });
+      const response = await this.getProgrammes({ authorized: true }, { limit, offset });
       for (const p of response.list) {
         if (p.slug) {
           slugs.push(p.slug);

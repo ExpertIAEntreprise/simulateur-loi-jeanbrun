@@ -257,6 +257,7 @@ export const programmes = pgTable(
     eligibleJeanbrun: boolean("eligible_jeanbrun").default(false).notNull(),
     eligiblePtz: boolean("eligible_ptz").default(false).notNull(),
     authorized: boolean("authorized").default(false).notNull(),
+    specialOffers: jsonb("special_offers"),
     actif: boolean("actif").default(true).notNull(),
     espoId: text("espo_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
