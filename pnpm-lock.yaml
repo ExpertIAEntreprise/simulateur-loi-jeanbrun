@@ -11,13 +11,6 @@ overrides:
 importers:
 
   .:
-    dependencies:
-      dotenv:
-        specifier: ^17.2.3
-        version: 17.2.4
-      pg:
-        specifier: ^8.17.2
-        version: 8.18.0
     devDependencies:
       next:
         specifier: 16.1.6
@@ -28,9 +21,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.6.14
         version: 0.6.14(prettier@3.8.1)
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
       turbo:
         specifier: latest
         version: 2.8.3
