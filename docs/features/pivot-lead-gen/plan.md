@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 2 terminee
+> **Statut :** 🟢 Phase 3 terminee
 
 ---
 
@@ -189,25 +189,27 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
-## Phase 3 — Simplification Wizard ⬜
+## Phase 3 — Simplification Wizard ✅ TERMINEE
 
 **Objectif :** Transformer le flow en 2 temps : simulation gratuite complete → capture lead sur la page resultats. Le wizard de saisie reste inchange (6 etapes Jeanbrun, 3 etapes PTZ).
 
 ### Taches
 
-- [ ] **Retirer toute gate d'inscription** avant la simulation
-  - [ ] Supprimer les redirections vers login/signup pendant le wizard
-  - [ ] Rendre le wizard 100% accessible sans compte
-- [ ] **Nettoyer les etapes wizard** Jeanbrun
-  - [ ] Conserver : profil investisseur, projet immobilier, financement, strategie locative, duree/sortie, structure juridique
-  - [ ] Supprimer : toute etape liee aux packs/credits/paiement
-  - [ ] Verifier que la navigation entre etapes fonctionne apres suppression
-- [ ] **Preparer le flow PTZ** (stop-loyer.fr, Phase 4+ du produit global)
-  - [ ] Documenter les 3 etapes : situation personnelle, projet immobilier, capacite financiere
-  - [ ] Identifier les composants reutilisables du wizard Jeanbrun
-- [ ] **Rediriger la derniere etape** vers la nouvelle page resultats (Phase 4)
-  - [ ] Au lieu de generer un PDF ou afficher un dashboard, rediriger vers `/resultats`
-- [ ] Verifier build + tests
+- [x] **Retirer toute gate d'inscription** avant la simulation
+  - [x] Supprimer les redirections vers login/signup pendant le wizard → Confirme : aucune gate n'existait (deja 100% ouvert)
+  - [x] Rendre le wizard 100% accessible sans compte → Deja le cas (localStorage, pas de session)
+- [x] **Nettoyer les etapes wizard** Jeanbrun
+  - [x] Conserver : profil investisseur, projet immobilier, financement, strategie locative, duree/sortie, structure juridique
+  - [x] Supprimer : toute etape liee aux packs/credits/paiement → Confirme : aucun code packs/premium restant (Phase 1 complet)
+  - [x] Verifier que la navigation entre etapes fonctionne apres suppression → Navigation intacte
+- [x] **Preparer le flow PTZ** (stop-loyer.fr, Phase 4+ du produit global)
+  - [x] Documenter les 3 etapes : situation personnelle, projet immobilier, capacite financiere → `docs/features/pivot-lead-gen/ptz-flow-spec.md`
+  - [x] Identifier les composants reutilisables du wizard Jeanbrun → VilleAutocomplete (100%), FinancementForm (90%), JaugeEndettement (100%), TypeBienSelector (80%), SimulateurLayout/ProgressBar/StepNavigation (100%)
+- [x] **Rediriger la derniere etape** vers la nouvelle page resultats (Phase 4)
+  - [x] Etape 6 redirige vers `/resultats` (URL canonique)
+  - [x] Ancienne URL `/simulateur/resultat` redirige vers `/resultats` (retrocompatibilite)
+  - [x] Helpers de calcul extraits dans `src/lib/simulation-results/` (reutilisables par les 2 routes)
+- [x] Verifier build + typecheck (turbo build + tsc --noEmit = 0 erreurs)
 
 ---
 

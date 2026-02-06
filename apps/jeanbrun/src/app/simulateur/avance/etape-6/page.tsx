@@ -39,8 +39,8 @@ export default function Etape6Page() {
   }
 
   const handleNext = () => {
-    // Rediriger vers la page de resultats
-    router.push("/simulateur/resultat")
+    // Rediriger vers la page de resultats (URL canonique)
+    router.push("/resultats")
   }
 
   const handleStructureChange = (value: WizardStep6["structure"]) => {

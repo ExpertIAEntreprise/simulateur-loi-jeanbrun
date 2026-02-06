@@ -1,7 +1,7 @@
 /**
- * Client component pour la page resultats (ancienne URL)
- * Redirige vers l'URL canonique /resultats
- * @module simulateur/resultat/resultat-client
+ * Client component principal pour la page resultats
+ * URL canonique : /resultats/[id]
+ * @module resultats/resultat-client
  */
 
 "use client";
@@ -12,7 +12,6 @@ import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import { ArrowLeft, Share2 } from "lucide-react";
 
-// Static imports for lightweight components
 import {
   SyntheseCard,
   TableauAnnuel,
@@ -23,7 +22,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Imports from shared lib
 import type { WizardState, SimulationResults } from "@/lib/simulation-results/types";
 import { loadWizardState } from "@/lib/simulation-results/load-wizard-state";
 import { isValidWizardState } from "@/lib/simulation-results/validate-state";
@@ -63,13 +61,12 @@ const ComparatifLMNP = dynamic(
 
 export function ResultatClient() {
   const router = useRouter();
-  // Lazy initialization from localStorage (runs once on mount)
   const [wizardState] = useState<WizardState | null>(() => loadWizardState());
   const [results, setResults] = useState<SimulationResults | null>(null);
   const hasInitialized = useRef(false);
   const [isPending, startTransition] = useTransition();
 
-  // Calculate results on mount (separate from state initialization)
+  // Calculate results on mount
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
@@ -103,7 +100,7 @@ export function ResultatClient() {
     }
   };
 
-  // Loading state (during calculation)
+  // Loading state
   if (isPending) {
     return <ResultatLoadingSkeleton />;
   }
