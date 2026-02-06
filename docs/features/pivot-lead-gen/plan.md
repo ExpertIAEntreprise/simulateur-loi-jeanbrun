@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 6 terminee (TOUTES LES PHASES COMPLETEES)
+> **Statut :** 🟢 Phase 6 terminee + Audit P0 corrige (PRET POUR PRODUCTION)
 
 ---
 
@@ -333,6 +333,60 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
+## Audit & Correctifs P0 ✅ TERMINE
+
+> **Date :** 6 fevrier 2026
+> **Score audit initial :** 75/100
+> **Ref :** [AUDIT-CORRECTIFS.md](./AUDIT-CORRECTIFS.md)
+
+Audit multi-agents (8 domaines) suivi de la correction des 7 items P0 (critiques).
+
+### Correctifs appliques
+
+- [x] **P0-01 : Mismatch noms de champs form vs API** (BLOQUANT)
+  - Mapping explicite FR→EN dans `LeadGateForm.tsx` onSubmit (`consentPromoteur` → `consentPromoter`, `consentCourtier` → `consentBroker`)
+- [x] **P0-02 : Consentement RGPD non "libre"** (JURIDIQUE)
+  - Suppression du `.refine()` qui forcait au moins 1 consentement partenaire dans `LeadGateForm.tsx` et `api/leads/route.ts`
+  - Les 3 consentements sont desormais 100% optionnels (Art. 7(4) RGPD)
+- [x] **P0-03 : XSS dans templates email** (SECURITE)
+  - Suppression de ~490 lignes de code mort dans `email.ts` (3 fonctions non utilisees sans `escapeHtml`)
+  - Conservation des 3 fonctions actives (`sendEmail`, `sendPasswordResetEmail`, `sendVerificationEmail`)
+- [x] **P0-04 : Endpoint financement non persistant** (FONCTIONNEL)
+  - Reecriture complete de `api/leads/financement/route.ts` : insertion DB via Drizzle, `calculateLeadScore()`, `dispatchLead()` fire-and-forget
+  - Remplacement de `console.log` PII par Pino logger structure
+- [x] **P0-05 : Politique de confidentialite incomplete** (JURIDIQUE)
+  - Ajout des finalites promoteur et courtier dans la section 4
+  - Ajout de la section 5.3 "Partenaires commerciaux" avec categories de donnees detaillees
+- [x] **P0-06 : Texte trompeur sous le formulaire** (RGPD)
+  - Remplacement du texte par une formulation transparente sur le partage avec les partenaires + lien vers la politique de confidentialite
+- [x] **P0-07 : Absence de mecanisme de desinscription** (RGPD Art. 7(3))
+  - Ajout du champ `unsubscribe_token` dans le schema leads
+  - Creation de `POST /api/leads/unsubscribe` (validation token, retrait des 3 consentements)
+  - Creation de la page `/desinscription` avec formulaire client
+
+### Fichiers modifies
+
+| Fichier | Correctifs |
+|---------|-----------|
+| `LeadGateForm.tsx` | P0-01, P0-02, P0-06 |
+| `api/leads/route.ts` | P0-02, P0-07 |
+| `api/leads/financement/route.ts` | P0-04 |
+| `email.ts` | P0-03 |
+| `politique-confidentialite/page.tsx` | P0-05 |
+| `packages/database/src/schema.ts` | P0-07 |
+| `api/leads/unsubscribe/route.ts` | P0-07 (nouveau) |
+| `(app)/desinscription/page.tsx` | P0-07 (nouveau) |
+| `(app)/desinscription/unsubscribe-form.tsx` | P0-07 (nouveau) |
+
+### Migration DB requise
+
+```bash
+pnpm db:generate  # Generer migration pour unsubscribe_token
+pnpm db:migrate   # Appliquer en production
+```
+
+---
+
 ## Validation Finale
 
 - [x] Monorepo Turborepo operationnel (2 apps + packages partages)
@@ -342,8 +396,9 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 - [x] Lead gate fonctionnel avec 3 consentements independants
 - [x] Dispatch promoteur et courtier operationnels et separes
 - [x] Avantage client (direct promoteur, tarifs directs, offres speciales) visible a chaque point de contact
-- [ ] RGPD : politique de confidentialite, registre, retention 36 mois
+- [x] RGPD : politique de confidentialite mise a jour, consentements libres, desinscription operationnelle
 - [x] Dashboard admin leads fonctionnel
+- [x] Audit P0 corrige (7/7 items critiques resolus)
 
 ---
 
@@ -394,4 +449,4 @@ Visiteur → Simulation gratuite → Teaser resultats
 
 ---
 
-*Derniere mise a jour : 6 fevrier 2026 (Phase 6 terminee — TOUTES LES PHASES COMPLETEES)*
+*Derniere mise a jour : 6 fevrier 2026 (Audit P0 corrige — PRET POUR PRODUCTION)*

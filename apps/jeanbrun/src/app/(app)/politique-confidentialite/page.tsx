@@ -119,6 +119,14 @@ export default function PolitiqueConfidentialitePage() {
                     <td className="p-2">Consentement</td>
                   </tr>
                   <tr className="border-b border-border">
+                    <td className="p-2">Mise en relation avec un promoteur immobilier</td>
+                    <td className="p-2">Consentement</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-2">Mise en relation avec un courtier en credit</td>
+                    <td className="p-2">Consentement</td>
+                  </tr>
+                  <tr className="border-b border-border">
                     <td className="p-2">Sécurité et prévention de la fraude</td>
                     <td className="p-2">Intérêt légitime</td>
                   </tr>
@@ -152,7 +160,26 @@ export default function PolitiqueConfidentialitePage() {
               <li><strong>Mailjet</strong> (France) - Envoi d&apos;emails transactionnels</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mb-3 mt-6">5.3. Transferts hors UE</h3>
+            <h3 className="text-xl font-semibold mb-3 mt-6">5.3. Partenaires commerciaux</h3>
+            <p className="mb-4">
+              Sous reserve de votre consentement explicite et specifique, vos donnees peuvent etre transmises aux partenaires suivants :
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>
+                <strong>Promoteurs immobiliers partenaires</strong> - Donnees transmises : nom, prenom, email, telephone, zone geographique souhaitee, budget, tranche marginale d&apos;imposition, economie fiscale estimee, rendement net. Base legale : consentement explicite (checkbox distincte).
+              </li>
+              <li>
+                <strong>Courtiers en credit partenaires</strong> - Donnees transmises : nom, prenom, email, telephone, revenu mensuel net, apport disponible, budget projet, capacite d&apos;emprunt estimee, taux d&apos;endettement. Base legale : consentement explicite (checkbox distincte).
+              </li>
+            </ul>
+            <p className="mt-4">
+              Vous pouvez retirer votre consentement a tout moment via la page{" "}
+              <a href="/desinscription" className="text-primary hover:underline">desinscription</a>{" "}
+              ou en nous contactant a{" "}
+              <a href="mailto:dpo@expert-ia-entreprise.fr" className="text-primary hover:underline">dpo@expert-ia-entreprise.fr</a>.
+            </p>
+
+            <h3 className="text-xl font-semibold mb-3 mt-6">5.4. Transferts hors UE</h3>
             <p className="mb-4">
               Certains de nos prestataires sont situés aux États-Unis. Les transferts de données vers ces pays sont encadrés par :
             </p>
@@ -162,7 +189,7 @@ export default function PolitiqueConfidentialitePage() {
               <li>Des garanties appropriées conformément à l&apos;article 46 du RGPD</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mb-3 mt-6">5.4. Autorités légales</h3>
+            <h3 className="text-xl font-semibold mb-3 mt-6">5.5. Autorités légales</h3>
             <p>
               Vos données peuvent être communiquées aux autorités compétentes sur réquisition judiciaire ou dans le cadre d&apos;obligations légales (administration fiscale, URSSAF, etc.).
             </p>

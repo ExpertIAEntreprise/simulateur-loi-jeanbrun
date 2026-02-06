@@ -5,12 +5,13 @@
  * GET  /api/leads - Admin lead listing with filters (bearer auth)
  *
  * @security POST: Rate limited to 5 requests per IP per hour (via Upstash Redis)
- * @security POST: At least one consent (promoter or broker) required
+ * @security POST: All consents are optional per RGPD Art. 7(4)
  * @security POST: French phone number format enforced
  * @security GET: Bearer token auth via ADMIN_API_TOKEN
  * @security GET: Rate limited to 100 requests per minute
  */
 
+import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import {
@@ -38,35 +39,29 @@ const FRENCH_PHONE_REGEX = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
 // ---------------------------------------------------------------------------
 // Zod validation schema (POST)
 // ---------------------------------------------------------------------------
-const leadCaptureSchema = z
-  .object({
-    email: z.string().email("Email invalide"),
-    telephone: z
-      .string()
-      .regex(FRENCH_PHONE_REGEX, "Numero de telephone francais invalide"),
-    prenom: z.string().min(2, "Prenom requis (min 2 caracteres)"),
-    nom: z.string().min(2, "Nom requis (min 2 caracteres)"),
+const leadCaptureSchema = z.object({
+  email: z.string().email("Email invalide"),
+  telephone: z
+    .string()
+    .regex(FRENCH_PHONE_REGEX, "Numero de telephone francais invalide"),
+  prenom: z.string().min(2, "Prenom requis (min 2 caracteres)"),
+  nom: z.string().min(2, "Nom requis (min 2 caracteres)"),
 
-    // Consents (RGPD)
-    consentPromoter: z.boolean(),
-    consentBroker: z.boolean(),
-    consentNewsletter: z.boolean(),
+  // Consents (RGPD) - all optional per RGPD Art. 7(4)
+  consentPromoter: z.boolean(),
+  consentBroker: z.boolean(),
+  consentNewsletter: z.boolean(),
 
-    // Simulation snapshot (stored as JSONB)
-    simulationData: z.record(z.string(), z.unknown()).optional(),
+  // Simulation snapshot (stored as JSONB)
+  simulationData: z.record(z.string(), z.unknown()).optional(),
 
-    // Platform & tracking
-    platform: z.enum(["jeanbrun", "stop-loyer"]).default("jeanbrun"),
-    sourcePage: z.string().optional(),
-    utmSource: z.string().max(255).optional(),
-    utmMedium: z.string().max(255).optional(),
-    utmCampaign: z.string().max(255).optional(),
-  })
-  .refine((data) => data.consentPromoter || data.consentBroker, {
-    message:
-      "Au moins un consentement (promoteur ou courtier) est requis pour traiter votre demande.",
-    path: ["consentPromoter"],
-  });
+  // Platform & tracking
+  platform: z.enum(["jeanbrun", "stop-loyer"]).default("jeanbrun"),
+  sourcePage: z.string().optional(),
+  utmSource: z.string().max(255).optional(),
+  utmMedium: z.string().max(255).optional(),
+  utmCampaign: z.string().max(255).optional(),
+});
 
 // ---------------------------------------------------------------------------
 // POST /api/leads
@@ -114,6 +109,7 @@ export async function POST(request: NextRequest) {
         consentBroker: data.consentBroker,
         consentNewsletter: data.consentNewsletter,
         consentDate: new Date(),
+        unsubscribeToken: crypto.randomBytes(32).toString("hex"),
         simulationData: simulationData ?? null,
         score: leadScore.total,
         status: "new",

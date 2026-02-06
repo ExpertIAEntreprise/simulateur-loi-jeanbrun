@@ -13,25 +13,20 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
 // Schema de validation du formulaire
-const leadGateSchema = z
-  .object({
-    email: z.string().email("Email invalide"),
-    telephone: z
-      .string()
-      .regex(
-        /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
-        "Numéro de téléphone invalide"
-      ),
-    prenom: z.string().min(2, "Prénom requis (min 2 caractères)"),
-    nom: z.string().min(2, "Nom requis (min 2 caractères)"),
-    consentPromoteur: z.boolean(),
-    consentCourtier: z.boolean(),
-    consentNewsletter: z.boolean(),
-  })
-  .refine(
-    (data) => data.consentPromoteur || data.consentCourtier,
-    "Vous devez accepter au moins un des deux consentements (promoteur ou courtier)"
-  );
+const leadGateSchema = z.object({
+  email: z.string().email("Email invalide"),
+  telephone: z
+    .string()
+    .regex(
+      /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
+      "Numéro de téléphone invalide"
+    ),
+  prenom: z.string().min(2, "Prénom requis (min 2 caractères)"),
+  nom: z.string().min(2, "Nom requis (min 2 caractères)"),
+  consentPromoteur: z.boolean(),
+  consentCourtier: z.boolean(),
+  consentNewsletter: z.boolean(),
+});
 
 type LeadGateFormData = z.infer<typeof leadGateSchema>;
 
@@ -53,7 +48,7 @@ interface LeadGateFormProps {
  * - Courtier (financement personnalisé)
  * - Newsletter (conseils investissement)
  *
- * Au moins un des deux premiers consentements est requis pour soumettre.
+ * Les trois consentements sont 100% optionnels (RGPD Art. 7.4).
  * Les données sont envoyées à POST /api/leads avec simulationData en JSONB.
  */
 export function LeadGateForm({
@@ -100,7 +95,13 @@ export function LeadGateForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...data,
+          email: data.email,
+          telephone: data.telephone,
+          prenom: data.prenom,
+          nom: data.nom,
+          consentPromoter: data.consentPromoteur,
+          consentBroker: data.consentCourtier,
+          consentNewsletter: data.consentNewsletter,
           simulationData,
         }),
       });
@@ -319,10 +320,7 @@ export function LeadGateForm({
           <div className="space-y-4">
             <p className="text-sm font-medium text-muted-foreground">
               Je souhaite recevoir{" "}
-              <span className="text-foreground">
-                (au moins 1 des 2 premiers requis)
-              </span>{" "}
-              :
+              <span className="text-foreground">(optionnel)</span> :
             </p>
 
             <div className="space-y-3">
@@ -455,10 +453,19 @@ export function LeadGateForm({
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            🔒 Vos données sont sécurisées et utilisées uniquement pour vous
-            envoyer le rapport.
+            Vos donnees sont securisees. Selon vos choix ci-dessus, elles
+            peuvent etre transmises a nos partenaires. Consultez notre{" "}
+            <a
+              href="/politique-confidentialite"
+              className="underline hover:text-foreground"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              politique de confidentialite
+            </a>
+            .
             <br />
-            Aucun engagement • Service 100% gratuit
+            Aucun engagement - Service 100% gratuit
           </p>
         </form>
       </CardContent>

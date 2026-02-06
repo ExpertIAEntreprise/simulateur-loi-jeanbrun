@@ -325,6 +325,7 @@ export const leads = pgTable(
     consentBroker: boolean("consent_broker").default(false).notNull(),
     consentNewsletter: boolean("consent_newsletter").default(false).notNull(),
     consentDate: timestamp("consent_date"),
+    unsubscribeToken: varchar("unsubscribe_token", { length: 64 }),
     simulationData: jsonb("simulation_data"),
     score: integer("score"),
     status: leadStatusEnum("status").default("new").notNull(),

@@ -1,30 +1,47 @@
 /**
  * API Route: Lead Financement / Courtier
  *
- * Capture les leads financement pour transmission au courtier partenaire.
- * Stocke le lead et peut déclencher un webhook/email vers le courtier.
+ * Captures financing leads and dispatches them to partner brokers.
+ * Persists the lead in the `leads` table (sourcePage = "financement")
+ * and triggers async dispatch (email to matching broker).
  *
  * POST /api/leads/financement
+ *
+ * @security Rate limited to 5 requests per IP per minute
+ * @security consentementCourtier: z.literal(true) enforced at validation
+ * @security PII is never logged (Pino redact config in logger.ts)
  */
 
-import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import {
-  simulationRateLimiter,
+  createRateLimiter,
   checkRateLimit,
   getClientIP,
 } from "@/lib/rate-limit";
+import { db } from "@repo/database";
+import { leads } from "@repo/database/schema";
+import { calculateLeadScore } from "@repo/leads";
+import { dispatchLead } from "@/lib/lead-dispatch";
+import { createLogger } from "@/lib/logger";
 
-// Schema de validation
+// ---------------------------------------------------------------------------
+// Logger & rate limiter
+// ---------------------------------------------------------------------------
+const log = createLogger("lead-financement");
+const financementRateLimiter = createRateLimiter(5);
+
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
 const leadFinancementSchema = z.object({
-  // Coordonnées
+  // Coordonnees
   prenom: z.string().min(2),
   nom: z.string().min(2),
   email: z.string().email(),
   telephone: z.string().min(10),
 
-  // Données simulation
+  // Simulation financiere
   simulationId: z.string().optional().nullable(),
   revenuMensuel: z.number().positive(),
   montantProjet: z.number().positive(),
@@ -39,109 +56,128 @@ const leadFinancementSchema = z.object({
   // Consentements
   consentementRgpd: z.literal(true),
   consentementCourtier: z.literal(true),
+
+  // UTM tracking (optional)
+  utmSource: z.string().max(255).optional(),
+  utmMedium: z.string().max(255).optional(),
+  utmCampaign: z.string().max(255).optional(),
 });
 
+// ---------------------------------------------------------------------------
+// POST /api/leads/financement
+// ---------------------------------------------------------------------------
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting: 5 requests per minute per IP (stricter for lead capture)
+    // 1. Rate limiting
     const ip = getClientIP(request);
-    const rateLimitResponse = await checkRateLimit(simulationRateLimiter, ip);
+    const rateLimitResponse = await checkRateLimit(financementRateLimiter, ip);
     if (rateLimitResponse) return rateLimitResponse;
 
-    // Parse et validation du body
-    const body = await request.json();
+    // 2. Parse and validate request body
+    const body: unknown = await request.json();
     const data = leadFinancementSchema.parse(body);
 
-    // Récupérer l'IP et User-Agent pour tracking
-    const headersList = await headers();
-    const forwardedFor = headersList.get("x-forwarded-for");
-    const userAgent = headersList.get("user-agent");
-
-    // Construction du lead
-    const leadData = {
-      ...data,
-      statut: "nouveau",
-      dateConsentement: new Date().toISOString(),
-      ip: forwardedFor?.split(",")[0]?.trim() || "unknown",
-      userAgent: userAgent || "unknown",
-      source: "simulateur_jeanbrun",
-      createdAt: new Date().toISOString(),
+    // 3. Build simulation data snapshot (financial fields as JSONB)
+    const simulationData: Record<string, unknown> = {
+      simulationId: data.simulationId ?? null,
+      revenuMensuel: data.revenuMensuel,
+      montantProjet: data.montantProjet,
+      apport: data.apport,
+      montantEmprunt: data.montantEmprunt,
+      dureeEmpruntMois: data.dureeEmpruntMois,
+      tauxEndettement: data.tauxEndettement,
+      mensualiteEstimee: data.mensualiteEstimee,
+      villeProjet: data.villeProjet ?? null,
+      typeBien: data.typeBien ?? null,
     };
 
-    // TODO: Stocker le lead en base (Drizzle)
-    // const savedLead = await db.insert(leadsFinancement).values(lead).returning();
-
-    // TODO: Envoyer notification au courtier partenaire
-    // Options:
-    // 1. Webhook vers le CRM du courtier
-    // 2. Email via Mailjet/SendGrid
-    // 3. Notification Slack/Discord
-    // 4. Sync vers EspoCRM puis workflow n8n
-
-    // Pour l'instant, on log et on simule le succès
-    console.log("[Lead Financement]", {
-      email: leadData.email,
-      montantEmprunt: leadData.montantEmprunt,
-      tauxEndettement: `${(data.tauxEndettement * 100).toFixed(1)}%`,
-      timestamp: leadData.createdAt,
+    // 4. Calculate lead score
+    const leadScore = calculateLeadScore({
+      hasEmail: true,
+      hasPhone: !!data.telephone,
+      hasName: !!(data.prenom && data.nom),
+      hasSimulationData: true,
+      consentPromoter: false,
+      consentBroker: true,
+      investmentAmount: data.montantProjet,
+      monthlyIncome: data.revenuMensuel,
+      hasDownPayment: data.apport > 0,
     });
 
-    // Exemple d'envoi webhook courtier (à décommenter et configurer)
-    // if (process.env.WEBHOOK_COURTIER_URL) {
-    //   await fetch(process.env.WEBHOOK_COURTIER_URL, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Authorization": `Bearer ${process.env.WEBHOOK_COURTIER_TOKEN}`
-    //     },
-    //     body: JSON.stringify(lead),
-    //   });
-    // }
+    // 5. Insert lead into database
+    const [lead] = await db
+      .insert(leads)
+      .values({
+        platform: "jeanbrun",
+        sourcePage: "financement",
+        email: data.email,
+        telephone: data.telephone,
+        prenom: data.prenom,
+        nom: data.nom,
+        consentBroker: true,
+        consentPromoter: false,
+        consentNewsletter: false,
+        consentDate: new Date(),
+        simulationData,
+        score: leadScore.total,
+        status: "new",
+        utmSource: data.utmSource ?? null,
+        utmMedium: data.utmMedium ?? null,
+        utmCampaign: data.utmCampaign ?? null,
+      })
+      .returning({ id: leads.id, score: leads.score });
 
-    // Exemple d'envoi vers EspoCRM (à décommenter)
-    // if (process.env.ESPOCRM_API_KEY) {
-    //   await fetch(`${process.env.ESPOCRM_URL}/api/v1/CLeadFinancement`, {
-    //     method: "POST",
-    //     headers: {
-    //       "X-Api-Key": process.env.ESPOCRM_API_KEY,
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       firstName: data.prenom,
-    //       lastName: data.nom,
-    //       emailAddress: data.email,
-    //       phoneNumber: data.telephone,
-    //       cMontantEmprunt: data.montantEmprunt,
-    //       cTauxEndettement: data.tauxEndettement,
-    //       cMensualite: data.mensualiteEstimee,
-    //       cVilleProjet: data.villeProjet,
-    //       cTypeBien: data.typeBien,
-    //       cSource: "Simulateur Jeanbrun",
-    //       status: "New",
-    //     }),
-    //   });
-    // }
+    log.info(
+      { leadId: lead?.id, score: lead?.score },
+      "Financement lead created"
+    );
 
+    // 6. Dispatch lead asynchronously (fire-and-forget)
+    if (lead?.id) {
+      dispatchLead(lead.id).catch((err) => {
+        log.error({ err, leadId: lead.id }, "Lead dispatch error");
+      });
+    }
+
+    // 7. Return success
     return NextResponse.json(
       {
         success: true,
-        message: "Votre demande a été transmise à notre courtier partenaire.",
+        data: { id: lead?.id, score: lead?.score },
+        message:
+          "Votre demande a ete transmise a notre courtier partenaire.",
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("[Lead Financement Error]", error);
-
+    // Validation errors -> 400
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
           success: false,
-          message: "Données invalides",
-          errors: error.issues,
+          message: "Donnees invalides",
+          errors: error.issues.map((issue) => ({
+            field: issue.path.join("."),
+            message: issue.message,
+          })),
         },
         { status: 400 }
       );
     }
+
+    // JSON parse errors -> 400
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Corps de la requete invalide (JSON attendu)",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Everything else -> 500 (do not leak internal details)
+    log.error({ err: error }, "Unexpected error in lead financement route");
 
     return NextResponse.json(
       {
