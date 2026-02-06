@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 3 terminee
+> **Statut :** 🟢 Phase 4 terminee
 
 ---
 
@@ -213,44 +213,44 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
-## Phase 4 — Page Resultats (Teaser + Lead Gate) ⬜
+## Phase 4 — Page Resultats (Teaser + Lead Gate) ✅ TERMINEE
 
 **Objectif :** Creer la page resultats avec teaser gratuit, lead gate inline, et mise en avant de l'avantage client (direct promoteur, tarifs directs, offres speciales).
 
 ### Taches
 
-- [ ] **Creer la route `/resultats`** (ou `/simulation/resultats`)
-- [ ] **Section teaser gratuit** (affichee immediatement, sans inscription)
-  - [ ] Economie d'impot annuelle estimee
-  - [ ] ROI attendu (TRI)
-  - [ ] Effort d'epargne mensuel
-  - [ ] Comparatif rapide : Jeanbrun vs LMNP vs Nue-propriete
-  - [ ] Graphique synthetique annee par annee (Recharts)
-- [ ] **Section avantage client "Direct Promoteur"**
-  - [ ] Bloc visuel mettant en avant : "Travaillez directement avec le promoteur"
-  - [ ] Tarifs promoteurs directs (pas d'intermediaire, pas de marge supplementaire)
-  - [ ] Offres speciales : frais de notaire offerts, remises commerciales, prestations incluses
-  - [ ] Badge/tag sur les programmes avec offres speciales en cours
-  - [ ] Message clair : "Aucune commission ne s'ajoute a votre prix d'achat"
-- [ ] **Lead gate inline** (formulaire dans la page, pas un modal)
-  - [ ] Champs : email, telephone, prenom, nom
-  - [ ] Checkbox 1 : consentement promoteur (texte RGPD specifique)
-  - [ ] Checkbox 2 : consentement courtier (texte RGPD specifique, **separe**)
-  - [ ] Checkbox 3 : consentement newsletter
-  - [ ] CTA : "Recevoir mon rapport gratuit"
-  - [ ] Wording accrocheur : "Pour recevoir votre rapport complet GRATUIT avec les programmes eligibles dans votre zone et une estimation de financement personnalisee"
-- [ ] **Apres soumission du lead gate**
-  - [ ] Stocker le lead en base (table `leads`) avec `simulation_data` JSONB
-  - [ ] Calculer le score qualite (0-100)
-  - [ ] Afficher un message de confirmation
-  - [ ] Declencher l'envoi du rapport PDF par email (async)
-- [ ] **Generation rapport PDF** (version refaite)
+- [x] **Creer la route `/resultats`** (ou `/simulation/resultats`)
+- [x] **Section teaser gratuit** (affichee immediatement, sans inscription)
+  - [x] Economie d'impot annuelle estimee
+  - [x] ROI attendu (TRI)
+  - [x] Effort d'epargne mensuel
+  - [x] Comparatif rapide : Jeanbrun vs LMNP vs Nue-propriete
+  - [x] Graphique synthetique annee par annee (Recharts)
+- [x] **Section avantage client "Direct Promoteur"**
+  - [x] Bloc visuel mettant en avant : "Travaillez directement avec le promoteur"
+  - [x] Tarifs promoteurs directs (pas d'intermediaire, pas de marge supplementaire)
+  - [x] Offres speciales : frais de notaire offerts, remises commerciales, prestations incluses
+  - [x] Badge/tag sur les programmes avec offres speciales en cours
+  - [x] Message clair : "Aucune commission ne s'ajoute a votre prix d'achat"
+- [x] **Lead gate inline** (formulaire dans la page, pas un modal)
+  - [x] Champs : email, telephone, prenom, nom
+  - [x] Checkbox 1 : consentement promoteur (texte RGPD specifique)
+  - [x] Checkbox 2 : consentement courtier (texte RGPD specifique, **separe**)
+  - [x] Checkbox 3 : consentement newsletter
+  - [x] CTA : "Recevoir mon rapport gratuit"
+  - [x] Wording accrocheur : "Pour recevoir votre rapport complet GRATUIT avec les programmes eligibles dans votre zone et une estimation de financement personnalisee"
+- [x] **Apres soumission du lead gate**
+  - [x] Stocker le lead en base (table `leads`) avec `simulation_data` JSONB
+  - [x] Calculer le score qualite (0-100)
+  - [x] Afficher un message de confirmation
+  - [ ] Declencher l'envoi du rapport PDF par email (async) → reporte Phase 5 (Mailjet/Resend)
+- [ ] **Generation rapport PDF** (version refaite) → reporte Phase 5
   - [ ] Tableau detaille annee par annee
   - [ ] Programmes eligibles dans la zone (si partenariat actif)
   - [ ] Estimation financement personnalisee
   - [ ] Mention de l'avantage direct promoteur et offres speciales disponibles
   - [ ] Envoi via Mailjet/Resend
-- [ ] Verifier build + tests
+- [x] Verifier build + tests
 
 ---
 

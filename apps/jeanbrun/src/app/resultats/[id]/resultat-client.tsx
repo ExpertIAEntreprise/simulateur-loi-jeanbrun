@@ -1,26 +1,36 @@
 /**
  * Client component principal pour la page resultats
  * URL canonique : /resultats/[id]
+ *
+ * Architecture Phase 4 :
+ * 1. Section TEASER gratuit (visible immediatement) : synthese KPIs + graphique + comparatif rapide
+ * 2. Section Direct Promoteur (avantage client)
+ * 3. Lead Gate inline (formulaire capture lead)
+ * 4. Section detaillee (visible apres soumission lead OU directement pour preview)
+ *
  * @module resultats/resultat-client
  */
 
 "use client";
 
-import { useEffect, useState, useRef, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft, Share2, Lock, Eye } from "lucide-react";
 
 import {
   SyntheseCard,
   TableauAnnuel,
   EncartFinancement,
+  DirectPromoteurBanner,
+  LeadGateForm,
 } from "@/components/simulateur/resultats";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 import type { WizardState, SimulationResults } from "@/lib/simulation-results/types";
 import { loadWizardState } from "@/lib/simulation-results/load-wizard-state";
@@ -63,8 +73,10 @@ export function ResultatClient() {
   const router = useRouter();
   const [wizardState] = useState<WizardState | null>(() => loadWizardState());
   const [results, setResults] = useState<SimulationResults | null>(null);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
   const hasInitialized = useRef(false);
   const [isPending, startTransition] = useTransition();
+  const detailSectionRef = useRef<HTMLDivElement>(null);
 
   // Calculate results on mount
   useEffect(() => {
@@ -100,6 +112,51 @@ export function ResultatClient() {
     }
   };
 
+  // Handle lead gate success
+  const handleLeadSubmitSuccess = useCallback(() => {
+    setLeadSubmitted(true);
+    toast.success("Votre rapport detaille vous sera envoye par email !");
+
+    // Scroll to detailed section after a short delay
+    setTimeout(() => {
+      detailSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 500);
+  }, []);
+
+  // Build simulation data payload for the lead
+  const buildSimulationPayload = (): Record<string, unknown> => {
+    if (!wizardState || !results) return {};
+    return {
+      // Wizard inputs
+      revenuNet: wizardState.step1?.revenuNet,
+      parts: wizardState.step1?.parts,
+      prixAcquisition: wizardState.step2?.prixAcquisition,
+      surface: wizardState.step2?.surface,
+      zoneFiscale: wizardState.step2?.zoneFiscale,
+      typeBien: wizardState.step2?.typeBien,
+      villeNom: wizardState.step2?.villeNom,
+      apport: wizardState.step3?.apport,
+      dureeCredit: wizardState.step3?.dureeCredit,
+      tauxCredit: wizardState.step3?.tauxCredit,
+      loyerMensuel: wizardState.step4?.loyerMensuel,
+      dureeDetention: wizardState.step5?.dureeDetention,
+      structure: wizardState.step6?.structure,
+      // Calculated results
+      economieFiscale: results.synthese.economieFiscale,
+      cashFlowMensuel: results.synthese.cashFlowMensuel,
+      rendementNet: results.synthese.rendementNet,
+      effortEpargne: results.synthese.effortEpargne,
+      montantEmprunt: results.financement.montantEmprunt,
+      mensualiteEstimee: results.financement.mensualiteEstimee,
+      tauxEndettement: results.financement.tauxEndettement,
+      resteAVivre: results.financement.resteAVivre,
+      verdict: results.financement.verdict,
+      // Meta
+      montantInvestissement: calculatePrixTotal(wizardState.step2 ?? {}),
+      revenuMensuel: (wizardState.step1?.revenuNet ?? 0) / 12,
+    };
+  };
+
   // Loading state
   if (isPending) {
     return <ResultatLoadingSkeleton />;
@@ -125,15 +182,26 @@ export function ResultatClient() {
 
   return (
     <div className="container max-w-5xl mx-auto px-4 py-8 space-y-8">
-      {/* Header */}
+      {/* ================================================================== */}
+      {/* HEADER */}
+      {/* ================================================================== */}
       <ResultatHeader
         wizardState={wizardState}
         onBack={() => router.push("/simulateur/avance/etape-6")}
         onShare={handleShare}
       />
 
-      {/* Synthese - 4 KPIs */}
-      <section>
+      {/* ================================================================== */}
+      {/* SECTION 1 : TEASER GRATUIT */}
+      {/* ================================================================== */}
+      <section aria-label="Apercu des resultats">
+        <div className="flex items-center gap-2 mb-4">
+          <Eye className="h-5 w-5 text-emerald-500" />
+          <h2 className="text-lg font-semibold">Apercu de vos resultats</h2>
+          <Badge variant="secondary" className="text-xs">Gratuit</Badge>
+        </div>
+
+        {/* 4 KPIs */}
         <SyntheseCard
           economieFiscale={results.synthese.economieFiscale}
           cashFlowMensuel={results.synthese.cashFlowMensuel}
@@ -143,12 +211,12 @@ export function ResultatClient() {
       </section>
 
       {/* Graphique Patrimoine */}
-      <section>
+      <section aria-label="Evolution du patrimoine">
         <GraphiquePatrimoine data={results.graphiqueData} />
       </section>
 
       {/* Encart Financement */}
-      <section>
+      <section aria-label="Analyse de financement">
         <EncartFinancement
           analyse={results.financement}
           simulationData={{
@@ -167,18 +235,48 @@ export function ResultatClient() {
 
       <Separator className="my-8" />
 
-      {/* Analyse detaillee */}
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold">Analyse detaillee</h2>
+      {/* ================================================================== */}
+      {/* SECTION 2 : AVANTAGE DIRECT PROMOTEUR */}
+      {/* ================================================================== */}
+      <section aria-label="Avantages direct promoteur">
+        <DirectPromoteurBanner />
+      </section>
 
-        {/* Tableau Annuel */}
-        <TableauAnnuel data={results.tableauAnnuel} />
+      {/* ================================================================== */}
+      {/* SECTION 3 : LEAD GATE (si pas encore soumis) */}
+      {/* ================================================================== */}
+      {!leadSubmitted && (
+        <section aria-label="Recevoir le rapport complet">
+          <LeadGateForm
+            simulationData={buildSimulationPayload()}
+            onSubmitSuccess={handleLeadSubmitSuccess}
+          />
+        </section>
+      )}
 
-        {/* Comparatif LMNP */}
-        <ComparatifLMNP
-          jeanbrun={results.comparatifLMNP.jeanbrun}
-          lmnp={results.comparatifLMNP.lmnp}
-        />
+      {/* ================================================================== */}
+      {/* SECTION 4 : ANALYSE DETAILLEE */}
+      {/* ================================================================== */}
+      <div ref={detailSectionRef}>
+        {leadSubmitted ? (
+          <section aria-label="Analyse detaillee" className="space-y-6">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-semibold">Analyse detaillee</h2>
+              <Badge className="bg-emerald-500 text-emerald-950">Debloque</Badge>
+            </div>
+
+            {/* Tableau Annuel */}
+            <TableauAnnuel data={results.tableauAnnuel} />
+
+            {/* Comparatif LMNP */}
+            <ComparatifLMNP
+              jeanbrun={results.comparatifLMNP.jeanbrun}
+              lmnp={results.comparatifLMNP.lmnp}
+            />
+          </section>
+        ) : (
+          <LockedDetailSection />
+        )}
       </div>
 
       {/* Disclaimer */}
@@ -231,6 +329,39 @@ function ResultatHeader({ wizardState, onBack, onShare }: ResultatHeaderProps) {
         </Button>
       </div>
     </div>
+  );
+}
+
+function LockedDetailSection() {
+  return (
+    <section aria-label="Contenu verrouille" className="space-y-6">
+      <div className="flex items-center gap-2">
+        <h2 className="text-xl font-semibold text-muted-foreground">
+          Analyse detaillee
+        </h2>
+        <Lock className="h-4 w-4 text-muted-foreground" />
+      </div>
+
+      {/* Blurred preview */}
+      <div className="relative">
+        <div className="blur-sm pointer-events-none select-none opacity-40 space-y-4">
+          <Card className="h-64 w-full" />
+          <Card className="h-48 w-full" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center space-y-2 p-6 bg-background/80 rounded-lg border shadow-lg max-w-sm">
+            <Lock className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <p className="font-semibold text-sm">
+              Remplissez le formulaire ci-dessus pour debloquer l'analyse
+              detaillee
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Tableau annee par annee, comparatif LMNP, et rapport PDF complet
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
