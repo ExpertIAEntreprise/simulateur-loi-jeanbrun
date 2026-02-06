@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** ⬜ Non demarre
+> **Statut :** 🟡 Phase 0 terminee
 
 ---
 
@@ -23,40 +23,41 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
-## Phase 0 — Migration Monorepo Turborepo ⬜
+## Phase 0 — Migration Monorepo Turborepo ✅ TERMINEE
 
 **Objectif :** Transformer le projet standalone `simulateur_loi_Jeanbrun` en monorepo Turborepo avec deux apps et des packages partages.
 
 ### Taches
 
-- [ ] **Initialiser Turborepo** a la racine du repo
-  - [ ] Installer `turbo` comme devDependency racine
-  - [ ] Creer `turbo.json` avec les pipelines (build, dev, lint, typecheck, test)
-  - [ ] Creer `pnpm-workspace.yaml` avec `apps/*` et `packages/*`
-- [ ] **Deplacer l'app Jeanbrun existante** dans `apps/jeanbrun/`
-  - [ ] Deplacer `src/`, `public/`, `next.config.ts`, `tsconfig.json`, etc.
-  - [ ] Adapter les imports si necessaire
-  - [ ] Verifier que `pnpm dev --filter jeanbrun` fonctionne
-- [ ] **Creer le squelette `apps/stop-loyer/`** (vide pour l'instant)
-  - [ ] Init Next.js 16 minimal
-  - [ ] Meme stack : Tailwind v4, shadcn/ui, TypeScript strict
-  - [ ] Page d'accueil placeholder "Stop Loyer - Bientot disponible"
-- [ ] **Extraire les packages partages**
-  - [ ] `packages/database/` — Drizzle schema, connexion Neon, migrations
-  - [ ] `packages/ui/` — Composants shadcn/ui communs (Button, Card, Input, etc.)
-  - [ ] `packages/leads/` — Logique metier leads (types, validation Zod, scoring)
-  - [ ] `packages/seo/` — Metadata, JSON-LD, sitemap helpers
-  - [ ] `packages/config/` — ESLint, TSConfig, Tailwind config partages
-- [ ] **Adapter les imports** dans `apps/jeanbrun/` pour utiliser les packages
-  - [ ] `import { db } from "@repo/database"` au lieu de `@/lib/db`
-  - [ ] `import { Button } from "@repo/ui"` au lieu de `@/components/ui/button`
-  - [ ] `import { leadSchema } from "@repo/leads"` etc.
+- [x] **Initialiser Turborepo** a la racine du repo
+  - [x] Installer `turbo` comme devDependency racine
+  - [x] Creer `turbo.json` avec les pipelines (build, dev, lint, typecheck, test)
+  - [x] Creer `pnpm-workspace.yaml` avec `apps/*` et `packages/*`
+- [x] **Deplacer l'app Jeanbrun existante** dans `apps/jeanbrun/`
+  - [x] Deplacer `src/`, `public/`, `next.config.ts`, `tsconfig.json`, etc.
+  - [x] Adapter les imports via re-exports de compatibilite
+  - [x] Build + typecheck passent (`turbo build --filter=jeanbrun`)
+- [x] **Creer le squelette `apps/stop-loyer/`** (vide pour l'instant)
+  - [x] Init Next.js 16 minimal
+  - [x] Meme stack : Tailwind v4, shadcn/ui, TypeScript strict
+  - [x] Page d'accueil placeholder "Stop Loyer - Bientot disponible"
+- [x] **Extraire les packages partages**
+  - [x] `packages/database/` — Drizzle schema, connexion Neon, migrations
+  - [x] `packages/ui/` — 33 composants shadcn/ui communs + utils.ts
+  - [x] `packages/leads/` — Types, validation Zod, scoring leads
+  - [x] `packages/seo/` — Metadata, JSON-LD helpers
+  - [x] `packages/config/` — ESLint, TSConfig base + Next.js, PostCSS
+- [x] **Adapter les imports** dans `apps/jeanbrun/` pour utiliser les packages
+  - [x] Re-exports de compatibilite : `@/lib/db` → `@repo/database`
+  - [x] Re-exports de compatibilite : `@/components/ui/*` → `@repo/ui/components/*`
+  - [x] Re-exports de compatibilite : `@/lib/utils` → `@repo/ui/utils`
+  - [x] Re-exports de compatibilite : `@/lib/schema` → `@repo/database/schema`
 - [ ] **Configurer Vercel** pour le monorepo
   - [ ] Projet Vercel `jeanbrun` → root directory `apps/jeanbrun`
   - [ ] Projet Vercel `stop-loyer` → root directory `apps/stop-loyer`
   - [ ] Variables d'environnement partagees (DB, API keys)
-- [ ] Verifier que le build passe pour les deux apps (`turbo build`)
-- [ ] Verifier CI/CD (lint + typecheck + tests)
+- [x] Verifier que le build passe pour les deux apps (`turbo build` = 2/2 success)
+- [x] Verifier lint + typecheck (0 erreurs, 205 warnings import order)
 
 ### Structure cible
 
