@@ -90,23 +90,35 @@ export function ProgrammeCard({
     images: imagesRaw,
   } = programme;
 
+  // Known CMS base URLs for relative image paths from scraped promoters
+  const CMS_ORIGINS: Record<string, string> = {
+    bouygues: "https://www.bouygues-immobilier.com",
+    icade: "https://www.icade-immobilier.com",
+  };
+
   // Resolve image: use imagePrincipale, fallback to first image from images JSON array
-  // Sanitize: reject local paths with query strings (CMS URLs like /sites/default/files/...?itok=xxx)
   const resolvedImage = (() => {
-    const sanitize = (url: string): string | null => {
+    const resolve = (url: string): string | null => {
       if (url.startsWith("http://") || url.startsWith("https://")) return url;
-      if (url.startsWith("/") && !url.includes("?")) return url;
+      // Relative CMS path: prefix with origin based on sourceApi
+      if (url.startsWith("/")) {
+        const origin =
+          programme.sourceApi != null
+            ? CMS_ORIGINS[programme.sourceApi.toLowerCase()]
+            : undefined;
+        if (origin != null) return `${origin}${url}`;
+      }
       return null;
     };
     if (imagePrincipale != null && imagePrincipale !== "") {
-      const s = sanitize(imagePrincipale);
+      const s = resolve(imagePrincipale);
       if (s) return s;
     }
     if (!imagesRaw) return null;
     try {
       const parsed: unknown = JSON.parse(imagesRaw);
       if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === "string") {
-        return sanitize(parsed[0] as string);
+        return resolve(parsed[0] as string);
       }
     } catch {
       // ignore parse errors
@@ -242,8 +254,10 @@ export function ProgrammeCard({
           </CardDescription>
         )}
 
-        {/* Description */}
-        {description != null && description !== "" && (
+        {/* Description - skip region-list placeholders from scraping */}
+        {description != null &&
+          description !== "" &&
+          !description.includes("Toutes les régions") && (
           <p className="line-clamp-2 text-sm text-muted-foreground">
             {description}
           </p>

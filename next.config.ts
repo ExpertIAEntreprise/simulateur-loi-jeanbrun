@@ -33,6 +33,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "pub-e2440c233e004aa1b0bea8d0bd8a67f3.r2.dev",
       },
+      {
+        protocol: "https",
+        hostname: "www.bouygues-immobilier.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.icade-immobilier.com",
+      },
     ],
     // Optimize image loading
     formats: ["image/avif", "image/webp"],
