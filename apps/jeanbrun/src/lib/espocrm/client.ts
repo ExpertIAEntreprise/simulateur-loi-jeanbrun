@@ -412,11 +412,10 @@ export class EspoCRMClient {
     // Ajouter filtres
     if (filters) {
       // Note: les champs EspoCRM n'ont PAS de prefixe 'c'
+      // TODO: re-enable authorized filter once field is created in EspoCRM admin
       const whereParams = this.buildWhereParams({
         villeId: filters.villeId,
         promoteur: filters.promoteur,
-        authorized: filters.authorized,
-        // actif n'existe pas, utiliser statut si necessaire
       });
 
       Object.assign(params, whereParams);
@@ -448,7 +447,8 @@ export class EspoCRMClient {
    * Récupère un programme par son slug
    */
   async getProgrammeBySlug(slug: string): Promise<EspoProgramme | null> {
-    const params = this.buildWhereParams({ slug: slug, authorized: true });
+    // TODO: re-enable authorized filter once field is created in EspoCRM admin
+    const params = this.buildWhereParams({ slug: slug });
 
     const url = this.buildUrl("/CJeanbrunProgramme", {
       maxSize: 1,
@@ -470,7 +470,8 @@ export class EspoCRMClient {
     let hasMore = true;
 
     while (hasMore) {
-      const response = await this.getProgrammes({ authorized: true }, { limit, offset });
+      // TODO: re-enable authorized filter once field is created in EspoCRM admin
+      const response = await this.getProgrammes({}, { limit, offset });
       for (const p of response.list) {
         if (p.slug) {
           slugs.push(p.slug);
