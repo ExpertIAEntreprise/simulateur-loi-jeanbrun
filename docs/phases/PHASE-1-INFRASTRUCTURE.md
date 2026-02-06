@@ -103,7 +103,7 @@ POSTGRES_URL=postgresql://...@ep-xxx.neon.tech/neondb?sslmode=require
 BETTER_AUTH_SECRET=xxx
 BETTER_AUTH_URL=https://simulateur-loi-jeanbrun.vercel.app
 NEXT_PUBLIC_APP_URL=https://simulateur-loi-jeanbrun.vercel.app
-ESPOCRM_API_KEY=1a97a8b3ca73fd5f1cdfed6c4f5341ec
+ESPOCRM_API_KEY=${ESPOCRM_API_KEY}
 ```
 
 ### À ajouter plus tard (Sprint 5)

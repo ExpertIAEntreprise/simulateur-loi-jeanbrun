@@ -61,7 +61,7 @@
 ### Variable d'environnement
 
 ```env
-ESPOCRM_API_KEY=1a97a8b3ca73fd5f1cdfed6c4f5341ec
+ESPOCRM_API_KEY=${ESPOCRM_API_KEY}
 ESPOCRM_API_URL=https://espocrm.expert-ia-entreprise.fr/api/v1
 ```
 

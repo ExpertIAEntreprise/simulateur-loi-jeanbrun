@@ -869,7 +869,7 @@ Le problème fondamental est que **l'entité EspoCRM CJeanbrunVille a été cré
 
 #### 6.3.1 Ajouter champs à EspoCRM (via API)
 
-**Clé API EspoCRM:** `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+**Clé API EspoCRM:** `${ESPOCRM_API_KEY}`
 **Base URL:** `https://espocrm.expert-ia-entreprise.fr`
 
 **Option A: Via Interface Admin**
@@ -881,7 +881,7 @@ Le problème fondamental est que **l'entité EspoCRM CJeanbrunVille a été cré
 
 ```bash
 # Variables
-API_KEY="1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+API_KEY="${ESPOCRM_API_KEY}"
 BASE_URL="https://espocrm.expert-ia-entreprise.fr/api/v1"
 
 # 1. Ajouter champ zoneFiscale (Enum)

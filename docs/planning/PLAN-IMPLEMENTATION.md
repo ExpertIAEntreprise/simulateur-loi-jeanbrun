@@ -26,7 +26,7 @@
 - [x] `BETTER_AUTH_URL`
 - [x] `NEXT_PUBLIC_APP_URL`
 - [ ] `STRIPE_SECRET_KEY` (Sprint 5)
-- [x] `ESPOCRM_API_KEY` → `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+- [x] `ESPOCRM_API_KEY` → `${ESPOCRM_API_KEY}`
 
 ### Entités EspoCRM Jeanbrun (séparées de CardImmo)
 

@@ -40,7 +40,7 @@
 |-----------|--------|
 | **URL API** | `https://espocrm.expert-ia-entreprise.fr/api/v1` |
 | **Méthode auth** | API Key (header `X-Api-Key`) |
-| **API Key** | `1a97a8b3ca73fd5f1cdfed6c4f5341ec` |
+| **API Key** | `${ESPOCRM_API_KEY}` |
 | **Interface Admin** | `https://espocrm.expert-ia-entreprise.fr` |
 
 ### Entités disponibles
@@ -56,15 +56,15 @@
 ```bash
 # Lister les villes
 curl -X GET "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille?maxSize=100" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}"
 
 # Lister les programmes
 curl -X GET "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunProgramme?maxSize=200" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}"
 
 # Créer un baromètre
 curl -X POST "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunBarometre" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec" \
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{
     "villeId": "ID_VILLE",
@@ -79,7 +79,7 @@ curl -X POST "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunBarometre"
 
 # Mettre à jour une ville (photo)
 curl -X PUT "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille/ID_VILLE" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec" \
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{
     "photoVille": "https://cdn.../loi-jeanbrun-lyon.webp",

@@ -255,7 +255,7 @@ POST https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille
 ### Headers
 
 ```
-X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec
+X-Api-Key: ${ESPOCRM_API_KEY}
 Content-Type: application/json
 ```
 
@@ -289,7 +289,7 @@ Content-Type: application/json
 
 ```bash
 curl -X GET "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille?where[0][type]=equals&where[0][attribute]=name&where[0][value]=Lyon" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec" | jq '.list[0].id'
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}" | jq '.list[0].id'
 ```
 
 ---
@@ -392,7 +392,7 @@ UPDATE c_jeanbrun_ville SET is_metropole = 1 WHERE id IN (SELECT id FROM c_jeanb
 Ou via API pour chaque ville :
 ```bash
 curl -X PUT "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille/[ID]" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec" \
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{"isMetropole": true}'
 ```

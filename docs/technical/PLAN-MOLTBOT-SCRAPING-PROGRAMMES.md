@@ -172,7 +172,7 @@ Entité custom créée dans EspoCRM:
 
 4. **API configurée**
    - Utilisateur: `cardimmo_integration`
-   - Clé API: `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+   - Clé API: `${ESPOCRM_API_KEY}`
    - Permissions: CJeanbrunVille, CJeanbrunProgramme (create, read, edit, delete)
 
 ### Phase 2: Skill Moltbot (À FAIRE - VPS Moltbot)
@@ -196,7 +196,7 @@ Scraper les programmes immobiliers neufs depuis diverses sources et les envoyer 
 
 ### Credentials (à configurer dans env)
 - GATEWAY_TOKEN: 4002e4d70d3a76432f47aa636cb67c306a708a6e7eb15c60a6d992fa566558e9
-- ESPOCRM_API_KEY: 1a97a8b3ca73fd5f1cdfed6c4f5341ec
+- ESPOCRM_API_KEY: ${ESPOCRM_API_KEY}
 
 ## Sources supportées
 
@@ -368,13 +368,13 @@ const scrapeNexityVille = async (ville: string) => {
 - [x] Entité CJeanbrunVille créée dans EspoCRM
 - [x] Entité CJeanbrunProgramme créée dans EspoCRM
 - [x] 50 villes prioritaires importées
-- [x] Clé API générée: `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+- [x] Clé API générée: `${ESPOCRM_API_KEY}`
 - [ ] Gateway endpoints ajoutés (optionnel)
 
 ### VPS Moltbot (72.60.176.228)
 
 - [ ] Skill `programme-scraper` créé
-- [ ] Variable d'env: `ESPOCRM_API_KEY=1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+- [ ] Variable d'env: `ESPOCRM_API_KEY=${ESPOCRM_API_KEY}`
 - [ ] Test manuel réussi sur 1 ville
 - [ ] Test batch réussi sur 5 villes
 - [ ] Cron quotidien configuré
@@ -412,7 +412,7 @@ const scrapeNexityVille = async (ville: string) => {
 ```bash
 # VPS CardImmo - Stats EspoCRM
 curl -s "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunProgramme?maxSize=1" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec" | jq '.total'
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}" | jq '.total'
 
 # VPS Moltbot - Logs du cron
 docker compose -f /root/moltbot/docker-compose.yml exec moltbot-gateway \

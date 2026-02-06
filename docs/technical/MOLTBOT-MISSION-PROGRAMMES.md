@@ -29,7 +29,7 @@ Le Simulateur Loi Jeanbrun est une plateforme de simulation fiscale pour la loi 
 
 ```
 GATEWAY_TOKEN: 4002e4d70d3a76432f47aa636cb67c306a708a6e7eb15c60a6d992fa566558e9
-ESPOCRM_API_KEY: 1a97a8b3ca73fd5f1cdfed6c4f5341ec
+ESPOCRM_API_KEY: ${ESPOCRM_API_KEY}
 ```
 
 ---
@@ -43,12 +43,12 @@ Les prérequis sont maintenant configurés:
 - [x] Entité `CJeanbrunVille` existe dans EspoCRM
 - [x] Entité `CJeanbrunProgramme` existe dans EspoCRM
 - [x] 50 villes prioritaires importées (zones A_bis, A, B1)
-- [x] Clé API configurée: `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+- [x] Clé API configurée: `${ESPOCRM_API_KEY}`
 
 **Commande de test:**
 ```bash
 curl -s "https://espocrm.expert-ia-entreprise.fr/api/v1/CJeanbrunVille?maxSize=5" \
-  -H "X-Api-Key: 1a97a8b3ca73fd5f1cdfed6c4f5341ec" | jq '.total'
+  -H "X-Api-Key: ${ESPOCRM_API_KEY}" | jq '.total'
 # Retourne: 50
 ```
 
@@ -297,7 +297,7 @@ Les prérequis sont maintenant configurés:
 
 3. **50 villes importées** avec zones fiscales (A_bis, A, B1)
 
-4. **Clé API:** `1a97a8b3ca73fd5f1cdfed6c4f5341ec`
+4. **Clé API:** `${ESPOCRM_API_KEY}`
    - Utilisateur: `cardimmo_integration`
    - Accès: CJeanbrunVille, CJeanbrunProgramme (create, read, edit, delete)
 

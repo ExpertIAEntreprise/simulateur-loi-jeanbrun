@@ -211,7 +211,7 @@ import time
 from typing import Optional, Dict, Any
 
 ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
-ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+ESPOCRM_API_KEY = "${ESPOCRM_API_KEY}"
 GEO_API_URL = "https://geo.api.gouv.fr"
 
 def geocode_ville(nom_ville: str) -> Optional[Dict[str, Any]]:
@@ -314,7 +314,7 @@ from typing import Dict, List, Optional
 from statistics import median, mean
 
 ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
-ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+ESPOCRM_API_KEY = "${ESPOCRM_API_KEY}"
 
 # API DVF CEREMA (flux ouvert, pas de clé requise)
 DVF_API_URL = "https://api-datafoncier.cerema.fr/dvf_opendata/geomutations"
@@ -493,7 +493,7 @@ import time
 from typing import Dict, Optional
 
 ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
-ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+ESPOCRM_API_KEY = "${ESPOCRM_API_KEY}"
 
 # API INSEE (pas de clé pour données ouvertes)
 INSEE_GEO_URL = "https://geo.api.gouv.fr/communes"
@@ -637,7 +637,7 @@ logger = logging.getLogger(__name__)
 # Configuration
 FIRECRAWL_URL = "http://127.0.0.1:3003/v1"
 ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
-ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+ESPOCRM_API_KEY = "${ESPOCRM_API_KEY}"
 
 # Délai entre requêtes par promoteur (secondes)
 RATE_LIMIT_DELAY = 5
@@ -980,7 +980,7 @@ from typing import Dict, List, Optional
 import os
 
 ESPOCRM_URL = "https://espocrm.expert-ia-entreprise.fr/api/v1"
-ESPOCRM_API_KEY = "1a97a8b3ca73fd5f1cdfed6c4f5341ec"
+ESPOCRM_API_KEY = "${ESPOCRM_API_KEY}"
 
 # OpenRouter pour génération IA
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
