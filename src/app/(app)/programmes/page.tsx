@@ -6,15 +6,15 @@
  */
 
 import { Building2 } from "lucide-react";
-import type { Metadata } from "next";
+import { ProgrammesListing } from "@/components/programmes/ProgrammesListing";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ProgrammeCard } from "@/components/villes/ProgrammeCard";
 import {
   getEspoCRMClient,
   isEspoCRMAvailable,
   type EspoProgramme,
 } from "@/lib/espocrm";
+import type { Metadata } from "next";
 
 export const revalidate = 3600;
 
@@ -45,20 +45,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Verifie si un programme a ete enrichi (images scrapees)
- */
-function isEnrichedProgramme(programme: EspoProgramme): boolean {
-  if (!programme.images) return false;
-  try {
-    const parsed: unknown = JSON.parse(programme.images);
-    return Array.isArray(parsed) && parsed.length > 0;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Recupere les programmes enrichis depuis EspoCRM
+ * Recupere tous les programmes actifs depuis EspoCRM
  */
 async function fetchProgrammes(): Promise<{
   programmes: EspoProgramme[];
@@ -72,11 +59,9 @@ async function fetchProgrammes(): Promise<{
     const client = getEspoCRMClient();
     const result = await client.getProgrammes(
       { actif: true },
-      { limit: 200, offset: 0 }
+      { limit: 500, offset: 0 }
     );
-    // Filter to only show enriched programmes (with scraped images)
-    const enriched = result.list.filter(isEnrichedProgramme);
-    return { programmes: enriched, total: enriched.length };
+    return { programmes: result.list, total: result.total };
   } catch (error) {
     console.error("Erreur chargement programmes:", error);
     return { programmes: [], total: 0 };
@@ -150,17 +135,9 @@ export default async function ProgrammesPage() {
           </div>
         </header>
 
-        {/* Liste des programmes */}
+        {/* Liste des programmes avec filtres et pagination */}
         {programmes.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {programmes.map((programme, index) => (
-              <ProgrammeCard
-                key={programme.id}
-                programme={programme}
-                priority={index < 3}
-              />
-            ))}
-          </div>
+          <ProgrammesListing programmes={programmes} />
         ) : (
           <Card className="mx-auto max-w-lg">
             <CardContent className="flex flex-col items-center gap-4 py-12 text-center">

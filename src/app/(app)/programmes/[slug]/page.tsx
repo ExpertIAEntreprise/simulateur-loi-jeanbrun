@@ -21,9 +21,12 @@ import { getRealEstateJsonLdForMetadata } from "@/components/seo";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ProgrammeHero } from "@/components/programmes/ProgrammeHero";
-import { StickyNavigation } from "@/components/programmes/StickyNavigation";
 import { LotsSection } from "@/components/programmes/LotsSection";
+import { ProgrammeHero } from "@/components/programmes/ProgrammeHero";
+import { RegionNavigation } from "@/components/programmes/RegionNavigation";
+import { SectionFinancement } from "@/components/programmes/SectionFinancement";
+import { SectionFiscalite } from "@/components/programmes/SectionFiscalite";
+import { StickyNavigation } from "@/components/programmes/StickyNavigation";
 import {
   getEspoCRMClient,
   type EspoProgramme,
@@ -31,6 +34,7 @@ import {
   parseLots,
 } from "@/lib/espocrm";
 import { calculerKPIsInvestisseur } from "@/lib/calculs/investisseur-kpis";
+import type { ZoneFiscale } from "@/lib/calculs/types/common";
 import type { Metadata } from "next";
 
 /**
@@ -82,6 +86,23 @@ function formatDeliveryDate(dateString: string | null | undefined): string {
     month: "long",
     year: "numeric",
   }).format(date);
+}
+
+/**
+ * Estime la surface moyenne du programme pour les calculs
+ */
+function estimerSurfaceMoyenne(programme: EspoProgramme): number {
+  const { surfaceMin, surfaceMax, prixMin, prixM2Moyen } = programme;
+
+  if (surfaceMin != null && surfaceMax != null) {
+    return Math.round((surfaceMin + surfaceMax) / 2);
+  }
+  if (surfaceMin != null) return surfaceMin;
+  if (surfaceMax != null) return surfaceMax;
+  if (prixMin != null && prixM2Moyen != null && prixM2Moyen > 0) {
+    return Math.round(prixMin / prixM2Moyen);
+  }
+  return 45; // defaut T2
 }
 
 /**
@@ -495,40 +516,48 @@ export default async function ProgrammePage({ params }: PageParams) {
 
         <Separator />
 
-        {/* Section Financement (placeholder pour Phase 6) */}
+        {/* Section Financement (Phase 6) */}
         <section id="financement" className="scroll-mt-32 space-y-6">
           <h2 className="text-2xl font-bold">Financement</h2>
-          <Card>
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground">
-                Le simulateur de financement interactif sera disponible
-                prochainement.
-              </p>
-            </CardContent>
-          </Card>
+          {programme.prixMin != null ? (
+            <SectionFinancement
+              prixMin={programme.prixMin}
+              zoneFiscale={zoneFiscale as ZoneFiscale}
+              surfaceMoyenne={estimerSurfaceMoyenne(programme)}
+            />
+          ) : (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <p className="text-muted-foreground">
+                  Informations de prix non disponibles pour ce programme.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </section>
 
         <Separator />
 
-        {/* Section Fiscalite (placeholder pour Phase 6) */}
+        {/* Section Fiscalite (Phase 6) */}
         <section id="fiscalite" className="scroll-mt-32 space-y-6">
           <h2 className="text-2xl font-bold">Fiscalite - Loi Jeanbrun</h2>
-          <Card>
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground">
-                Les details fiscaux et le DPE seront disponibles prochainement.
-              </p>
-            </CardContent>
-          </Card>
+          <SectionFiscalite
+            zoneFiscale={zoneFiscale}
+            prixMin={programme.prixMin ?? null}
+            economieImpotAnnuelle={kpis?.economieImpotAnnuelle ?? null}
+            programmeSlug={slug}
+          />
         </section>
 
         <Separator />
 
-        {/* Section Ville (placeholder pour Phase 7) */}
+        {/* Section Ville (Phase 7 : navigation region) */}
         <section id="ville" className="scroll-mt-32 space-y-6">
           <h2 className="text-2xl font-bold">
             {villeName ? `Investir a ${villeName}` : "Localisation"}
           </h2>
+
+          {/* Card ville du programme courant */}
           {villeName && villeSlug ? (
             <Card>
               <CardContent className="py-6">
@@ -554,6 +583,9 @@ export default async function ProgrammePage({ params }: PageParams) {
               </CardContent>
             </Card>
           )}
+
+          {/* Navigation par region (accordeons) */}
+          <RegionNavigation />
         </section>
       </div>
     </main>

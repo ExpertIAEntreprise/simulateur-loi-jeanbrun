@@ -2,7 +2,7 @@
 
 **Feature:** page-programme
 **Effort:** 8 phases
-**Statut:** Phase 5 terminee, Phase 6 a faire
+**Statut:** TOUTES LES PHASES TERMINEES (1-8)
 
 ---
 
@@ -217,26 +217,26 @@
 
 ---
 
-## Phase 6 : Section Financement + Section Fiscalite [ ]
+## Phase 6 : Section Financement + Section Fiscalite [DONE]
 
 ### Taches
 
-- [ ] 6.1 Creer `src/components/programmes/SectionFinancement.tsx` (client component) :
+- [x] 6.1 Creer `src/components/programmes/SectionFinancement.tsx` (client component) :
   - Bloc statique "Cout total" : prix appart, frais notaire (~3%), total
   - Sliders interactifs : duree (15-25 ans), taux (2.5-5.0%), apport (0-30%)
   - Resultats temps reel : mensualite, loyer estime, **effort mensuel = mensualite - loyer**
   - Utilise `calculerMensualiteCredit()` et `calculerLoyerEstime()` de Phase 1
   - Formules 100% client-side (pas d'API call)
-- [ ] 6.2 Creer `src/components/programmes/SectionFiscalite.tsx` (server component) :
+- [x] 6.2 Creer `src/components/programmes/SectionFiscalite.tsx` (server component) :
   - Texte explication Loi Jeanbrun (contenu statique)
   - Conditions eligibilite en icones (logement neuf, zone eligible, location 9 ans, plafonds)
   - Avantages chiffres : economie frais notaire, 0 travaux, charges reduites, economie impot
   - Lien CTA "Calculer mon economie exacte" -> `/simulateur/avance`
-- [ ] 6.3 Creer `src/components/programmes/DPEBadge.tsx` (server component) :
+- [x] 6.3 Creer `src/components/programmes/DPEBadge.tsx` (server component) :
   - Echelle visuelle A-G (barre horizontale coloree)
   - Badge vert sur A ou B (tous neufs)
   - Texte "DPE vise : A - Performance energetique maximale"
-- [ ] 6.4 Integrer dans `page.tsx` (sections ancrees `#financement` et `#fiscalite`)
+- [x] 6.4 Integrer dans `page.tsx` (sections ancrees `#financement` et `#fiscalite`)
 
 ### Fichiers crees
 
@@ -260,24 +260,24 @@
 
 ### Validation
 
-- [ ] Sliders modifient les resultats en temps reel
-- [ ] Effort mensuel = mensualite - loyer (coherent)
-- [ ] Fiscalite affiche les 4 conditions + avantages chiffres
-- [ ] DPE affiche echelle A-G avec highlight sur A ou B
-- [ ] `pnpm typecheck` passe
+- [x] Sliders modifient les resultats en temps reel
+- [x] Effort mensuel = mensualite - loyer (coherent)
+- [x] Fiscalite affiche les 4 conditions + avantages chiffres
+- [x] DPE affiche echelle A-G avec highlight sur A ou B
+- [x] `pnpm typecheck` passe
 
 ---
 
-## Phase 7 : Navigation par region [ ]
+## Phase 7 : Navigation par region [DONE]
 
 ### Taches
 
-- [ ] 7.1 Creer `src/components/programmes/RegionNavigation.tsx`
-- [ ] 7.2 Recuperer toutes les villes ayant des programmes (via getProgrammes ou getVilles)
-- [ ] 7.3 Deduire departement (2 premiers chiffres CP) et region (mapping statique Phase 1)
-- [ ] 7.4 Grouper : region > departement > villes avec nb programmes
-- [ ] 7.5 Accordeon par region, sous-accordeon par departement, liens villes
-- [ ] 7.6 Integrer en bas de `page.tsx` (section ancree `#ville`)
+- [x] 7.1 Creer `src/components/programmes/RegionNavigation.tsx`
+- [x] 7.2 Recuperer toutes les villes ayant des programmes (via getProgrammes ou getVilles)
+- [x] 7.3 Deduire departement (2 premiers chiffres CP) et region (mapping statique Phase 1)
+- [x] 7.4 Grouper : region > departement > villes avec nb programmes
+- [x] 7.5 Accordeon par region, sous-accordeon par departement, liens villes
+- [x] 7.6 Integrer en bas de `page.tsx` (section ancree `#ville`)
 
 ### Fichiers crees
 
@@ -293,40 +293,47 @@
 
 ### Validation
 
-- [ ] Regions affichees avec compteurs corrects
-- [ ] Cliquer sur une ville redirige vers `/villes/{slug}`
-- [ ] `pnpm typecheck` passe
+- [x] Regions affichees avec compteurs corrects
+- [x] Cliquer sur une ville redirige vers `/villes/{slug}`
+- [x] `pnpm typecheck` passe
 
 ---
 
-## Phase 8 : Adaptation ProgrammeCard + listing [ ]
+## Phase 8 : Adaptation ProgrammeCard + listing [DONE]
 
 ### Taches
 
-- [ ] 8.1 Modifier `src/components/villes/ProgrammeCard.tsx` : lien vers `/programmes/{slug}` au lieu de `urlExterne`
-- [ ] 8.2 Modifier `src/app/(app)/programmes/page.tsx` : retirer filtre `isEnrichedProgramme`
-- [ ] 8.3 Ajouter filtres simples (select ville, zone fiscale) sur la page listing
-- [ ] 8.4 Ajouter pagination si > 24 programmes
+- [x] 8.1 Modifier `src/components/villes/ProgrammeCard.tsx` : lien vers `/programmes/{slug}` au lieu de `urlExterne`
+- [x] 8.2 Modifier `src/app/(app)/programmes/page.tsx` : retirer filtre `isEnrichedProgramme`
+- [x] 8.3 Ajouter filtres simples (select ville, zone fiscale) sur la page listing
+- [x] 8.4 Ajouter pagination si > 24 programmes
 
 ### Fichiers modifies
 
 | Fichier | Modification |
 |---------|-------------|
-| `src/components/villes/ProgrammeCard.tsx` | Lien interne `/programmes/{slug}` + conditionnel fallback `urlExterne` si pas de slug |
-| `src/app/(app)/programmes/page.tsx` | Retirer `isEnrichedProgramme`, ajouter filtres, pagination |
+| `src/components/villes/ProgrammeCard.tsx` | Lien interne `/programmes/{slug}` si slug dispo, fallback `urlExterne`, suppression indicateur "Voir sur le site du promoteur" |
+| `src/app/(app)/programmes/page.tsx` | Retirer `isEnrichedProgramme`, fetch 500 programmes, utilise ProgrammesListing client component |
+
+### Fichiers crees
+
+| Fichier | Type |
+|---------|------|
+| `src/components/programmes/ProgrammesListing.tsx` | Client Component (~220 lignes) - Filtres ville/zone + pagination 24/page |
 
 ### Validation
 
-- [ ] Cards pointent vers page detail
-- [ ] Page listing montre tous les programmes (pas seulement ceux avec images)
-- [ ] Filtres fonctionnent
-- [ ] `pnpm typecheck` et `pnpm lint` passent
+- [x] Cards pointent vers page detail (`/programmes/{slug}`)
+- [x] Page listing montre tous les programmes (pas seulement ceux avec images)
+- [x] Filtres fonctionnent (Select ville, Select zone fiscale, bouton reset)
+- [x] Pagination 24 programmes/page avec scroll-to-top
+- [x] `pnpm typecheck` et `pnpm lint` passent
 
 ---
 
 ## Recapitulatif des fichiers
 
-### Nouveaux fichiers (17)
+### Nouveaux fichiers (18)
 
 | Fichier | Type | Phase |
 |---------|------|-------|
@@ -347,6 +354,7 @@
 | `src/components/programmes/SectionFiscalite.tsx` | Server Component | 6 |
 | `src/components/programmes/DPEBadge.tsx` | Server Component | 6 |
 | `src/components/programmes/RegionNavigation.tsx` | Server Component | 7 |
+| `src/components/programmes/ProgrammesListing.tsx` | Client Component | 8 |
 
 ### Fichiers modifies (4)
 

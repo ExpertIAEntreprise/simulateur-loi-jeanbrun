@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, Calendar, ExternalLink, MapPin, Maximize2, Layers } from "lucide-react";
+import { Building2, Calendar, MapPin, Maximize2, Layers } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -298,16 +298,18 @@ export function ProgrammeCard({
           </div>
         )}
 
-        {/* External link indicator */}
-        {programme.urlExterne != null && programme.urlExterne !== "" && (
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
-            <span>Voir sur le site du promoteur</span>
-          </div>
-        )}
       </CardContent>
     </Card>
   );
+
+  // Lien interne si slug disponible, sinon fallback urlExterne
+  if (programme.slug != null && programme.slug !== "") {
+    return (
+      <Link href={`/programmes/${programme.slug}`} className="block">
+        {cardContent}
+      </Link>
+    );
+  }
 
   if (programme.urlExterne != null && programme.urlExterne !== "") {
     return (
