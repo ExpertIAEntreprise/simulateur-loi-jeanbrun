@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { db, desc, eq, and, gte, lte, count } from "@repo/database";
+import { db, desc, asc, eq, and, or, gte, lte, count, ilike } from "@repo/database";
 import { leads } from "@repo/database/schema";
 import type { Lead, Promoter, Broker } from "@repo/database/schema";
 import {
@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatsCards } from "./stats-cards";
 import { LeadsFilters } from "./filters";
+import { ExportButton } from "./export-button";
 import { Pagination } from "./pagination";
 
 export const metadata = {
@@ -28,11 +29,14 @@ export const metadata = {
 // ---------------------------------------------------------------------------
 
 interface SearchParams {
+  readonly search?: string;
   readonly platform?: string;
   readonly status?: string;
   readonly dateFrom?: string;
   readonly dateTo?: string;
   readonly scoreMin?: string;
+  readonly sortBy?: string;
+  readonly sortOrder?: string;
   readonly page?: string;
   readonly limit?: string;
 }
@@ -169,8 +173,29 @@ async function getLeads(searchParams: SearchParams): Promise<{
     }
   }
 
+  // Search by name or email
+  if (searchParams.search && searchParams.search.trim().length >= 2) {
+    const searchTerm = `%${searchParams.search.trim()}%`;
+    conditions.push(
+      or(
+        ilike(leads.email, searchTerm),
+        ilike(leads.prenom, searchTerm),
+        ilike(leads.nom, searchTerm)
+      )!
+    );
+  }
+
   const whereClause =
     conditions.length > 0 ? and(...conditions) : undefined;
+
+  // Determine sort column and direction
+  const sortBy = searchParams.sortBy ?? "";
+  const sortColumn =
+    sortBy === "score" ? leads.score
+    : sortBy === "email" ? leads.email
+    : sortBy === "status" ? leads.status
+    : leads.createdAt;
+  const orderDirection = searchParams.sortOrder === "asc" ? asc : desc;
 
   // Run count and data queries in parallel
   const [countResult, leadsResult] = await Promise.all([
@@ -188,7 +213,7 @@ async function getLeads(searchParams: SearchParams): Promise<{
           columns: { id: true, name: true },
         },
       },
-      orderBy: [desc(leads.createdAt)],
+      orderBy: [orderDirection(sortColumn)],
       limit,
       offset,
     }),
@@ -252,12 +277,18 @@ export default async function AdminLeadsPage(props: {
         <StatsCards />
       </Suspense>
 
-      {/* Filters */}
+      {/* Filters + Export */}
       <Card className="py-4">
-        <CardContent>
+        <CardContent className="flex flex-col gap-4">
           <Suspense>
             <LeadsFilters />
           </Suspense>
+          <div className="flex items-center justify-between border-t pt-3">
+            <span className="text-xs text-muted-foreground">
+              {total} lead{total !== 1 ? "s" : ""} trouve{total !== 1 ? "s" : ""}
+            </span>
+            <ExportButton />
+          </div>
         </CardContent>
       </Card>
 

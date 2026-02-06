@@ -14,7 +14,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import { ArrowLeft, Share2, Lock, Eye } from "lucide-react";
@@ -71,9 +71,14 @@ const ComparatifLMNP = dynamic(
 
 export function ResultatClient() {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
+  const simulationId = params.id;
   const [wizardState] = useState<WizardState | null>(() => loadWizardState());
   const [results, setResults] = useState<SimulationResults | null>(null);
-  const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const [leadSubmitted, setLeadSubmitted] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(`lead_submitted_${simulationId}`) === "true";
+  });
   const hasInitialized = useRef(false);
   const [isPending, startTransition] = useTransition();
   const detailSectionRef = useRef<HTMLDivElement>(null);
@@ -115,6 +120,11 @@ export function ResultatClient() {
   // Handle lead gate success
   const handleLeadSubmitSuccess = useCallback(() => {
     setLeadSubmitted(true);
+    try {
+      localStorage.setItem(`lead_submitted_${simulationId}`, "true");
+    } catch {
+      // localStorage may be full or disabled
+    }
     toast.success("Votre rapport detaille vous sera envoye par email !");
 
     // Scroll to detailed section after a short delay

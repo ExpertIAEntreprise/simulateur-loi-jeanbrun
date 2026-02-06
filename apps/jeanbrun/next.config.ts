@@ -54,6 +54,9 @@ const nextConfig: NextConfig = {
   // Enable compression
   compress: true,
 
+  // Enable React Compiler (eliminates need for manual useMemo/useCallback)
+  reactCompiler: true,
+
   // Optimize bundle
   experimental: {
     optimizePackageImports: [

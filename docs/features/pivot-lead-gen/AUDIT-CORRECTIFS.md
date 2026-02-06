@@ -196,70 +196,70 @@
 
 ---
 
-## P2 — MOYENNES (Correction sous 30 jours)
+## P2 — MOYENNES ✅ CORRIGEES (6 fev 2026)
 
-### P2-01 : Migration `middleware.ts` vers `proxy.ts` (Next.js 16)
+### P2-01 : Migration `middleware.ts` vers `proxy.ts` (Next.js 16) ✅ DEJA CONFORME
 
 - **Impact :** Breaking change Next.js 16 — `middleware.ts` est deprecie.
 - **Correction :** Si un fichier `middleware.ts` existe a la racine de l'app, le renommer en `proxy.ts` et renommer l'export `middleware` en `proxy`.
 - **Verification prealable :** `ls apps/jeanbrun/src/middleware.ts apps/jeanbrun/middleware.ts 2>/dev/null`
 - **Effort :** 30min
 
-### P2-02 : Verifier `params` async dans toutes les pages dynamiques
+### P2-02 : Verifier `params` async dans toutes les pages dynamiques ✅ DEJA CONFORME
 
 - **Impact :** Breaking change Next.js 16 — `params` et `searchParams` doivent etre `await`ed.
 - **Correction :** Grep `params` dans tous les `page.tsx` et `route.ts` avec segments dynamiques `[...]`. Ajouter `await` si manquant.
 - **Commande :** `grep -rn "params\." apps/jeanbrun/src/app/ --include="*.tsx" --include="*.ts" | grep -v "await"`
 - **Effort :** 1h
 
-### P2-03 : Activer React Compiler
+### P2-03 : Activer React Compiler ✅ CORRIGE
 
 - **Fichier :** `apps/jeanbrun/next.config.ts`
 - **Correction :** Ajouter `reactCompiler: true` dans la config Next.js. Elimine le besoin de `useMemo`/`useCallback` manuels.
 - **Effort :** 5min + verification build
 
-### P2-04 : `transpilePackages` manquant dans stop-loyer
+### P2-04 : `transpilePackages` manquant dans stop-loyer ✅ N/A (app inexistante)
 
 - **Fichier :** `apps/stop-loyer/next.config.ts`
 - **Correction :** Ajouter `transpilePackages: ["@repo/ui", "@repo/database", "@repo/leads", "@repo/seo"]`
 - **Effort :** 5min
 
-### P2-05 : Detection doublons leads
+### P2-05 : Detection doublons leads ✅ CORRIGE
 
 - **Fichier :** `apps/jeanbrun/src/app/api/leads/route.ts`
 - **Probleme :** Meme email peut soumettre plusieurs fois = leads en double + emails multiples aux partenaires.
 - **Correction :** Avant insert, verifier si un lead avec le meme `email + platform` existe dans les 5 dernieres minutes. Si oui, retourner le lead existant au lieu d'en creer un nouveau.
 - **Effort :** 1h
 
-### P2-06 : `simulationData` non-type (accepts any JSON)
+### P2-06 : `simulationData` non-type (accepts any JSON) ✅ CORRIGE
 
 - **Fichier :** `apps/jeanbrun/src/app/api/leads/route.ts`
 - **Probleme :** `z.record(z.string(), z.unknown())` accepte n'importe quoi.
 - **Correction :** Definir un schema Zod pour les champs attendus de `simulationData` (revenuNet, prixAcquisition, zoneFiscale, dureeCredit, loyerMensuel, etc.). Accepter les champs inconnus avec `.passthrough()` pour la compatibilite.
 - **Effort :** 1h
 
-### P2-07 : `/api/leads/programme-contact` ne persiste pas localement
+### P2-07 : `/api/leads/programme-contact` ne persiste pas localement ✅ CORRIGE
 
 - **Fichier :** `apps/jeanbrun/src/app/api/leads/programme-contact/route.ts`
 - **Probleme :** Cree le lead dans EspoCRM mais pas dans la table `leads` locale. Invisible dans le dashboard admin.
 - **Correction :** Inserer egalement dans la table `leads` (meme pattern que POST `/api/leads`).
 - **Effort :** 1h
 
-### P2-08 : Table `consent_audit_log` manquante
+### P2-08 : Table `consent_audit_log` manquante ✅ CORRIGE
 
 - **Fichier :** `packages/database/src/schema.ts`
 - **Probleme :** Si un lead est supprime, sa preuve de consentement disparait.
 - **Correction :** Creer une table `consentAuditLog` avec : `id`, `leadId`, `email`, `ipAddress`, `userAgent`, `consentFormVersion`, `consentPromoter`, `consentBroker`, `consentNewsletter`, `action` (granted/revoked), `createdAt`. Cette table ne doit JAMAIS etre purgee avant 5 ans (recommandation CNIL).
 - **Effort :** 1h
 
-### P2-09 : Etat `leadSubmitted` pas persiste (refresh = re-soumission)
+### P2-09 : Etat `leadSubmitted` pas persiste (refresh = re-soumission) ✅ CORRIGE
 
 - **Fichier :** `apps/jeanbrun/src/app/resultats/[id]/resultat-client.tsx`
 - **Probleme :** `useState(false)` reset a chaque refresh. Le prospect revoit le formulaire et peut re-soumettre.
 - **Correction :** Stocker `leadSubmitted` dans `localStorage` avec cle `lead_submitted_${simulationId}`. Initialiser le state depuis localStorage.
 - **Effort :** 30min
 
-### P2-10 : Dashboard admin incomplet (70%)
+### P2-10 : Dashboard admin incomplet (70%) ✅ CORRIGE (partiel)
 
 - **Fichiers :** `apps/jeanbrun/src/app/admin/`
 - **Fonctionnalites manquantes :**
@@ -271,7 +271,7 @@
   - Tri des colonnes (actuellement fixe: `createdAt DESC`)
 - **Effort :** 8-12h (peut etre split en sous-taches)
 
-### P2-11 : Retention automatique 36 mois
+### P2-11 : Retention automatique 36 mois ✅ CORRIGE
 
 - **Probleme :** La politique annonce 36 mois mais aucun mecanisme technique.
 - **Correction :** Creer un script schedulable (cron ou API route) :

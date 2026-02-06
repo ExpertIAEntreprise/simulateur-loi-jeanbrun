@@ -34,6 +34,7 @@ export function LeadsFilters() {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
+  const currentSearch = searchParams.get("search") ?? "";
   const currentPlatform = searchParams.get("platform") ?? "all";
   const currentStatus = searchParams.get("status") ?? "all";
   const currentDateFrom = searchParams.get("dateFrom") ?? "";
@@ -67,6 +68,7 @@ export function LeadsFilters() {
   }, [router, pathname]);
 
   const hasActiveFilters =
+    currentSearch !== "" ||
     currentPlatform !== "all" ||
     currentStatus !== "all" ||
     currentDateFrom !== "" ||
@@ -75,6 +77,18 @@ export function LeadsFilters() {
 
   return (
     <div className="flex flex-wrap items-end gap-4">
+      <div className="flex flex-col gap-1.5">
+        <Label className="text-xs text-muted-foreground">Recherche</Label>
+        <Input
+          type="text"
+          placeholder="Nom, email..."
+          value={currentSearch}
+          onChange={(e) => updateFilters("search", e.target.value)}
+          className="w-[200px]"
+          aria-label="Rechercher par nom ou email"
+        />
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <Label className="text-xs text-muted-foreground">Plateforme</Label>
         <Select

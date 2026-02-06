@@ -46,6 +46,11 @@ export const platformEnum = pgEnum("platform", [
   "stop-loyer"
 ]);
 
+export const consentActionEnum = pgEnum("consent_action", [
+  "granted",
+  "revoked"
+]);
+
 export const leadStatusEnum = pgEnum("lead_status", [
   "new",
   "dispatched",
@@ -362,6 +367,32 @@ export const leads = pgTable(
   ]
 );
 
+/**
+ * Table consent_audit_log - Preuve de consentement RGPD (retention 5 ans minimum CNIL)
+ * Cette table ne doit JAMAIS etre purgee avant 5 ans.
+ */
+export const consentAuditLog = pgTable(
+  "consent_audit_log",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    leadId: uuid("lead_id"),
+    email: text("email").notNull(),
+    ipAddress: varchar("ip_address", { length: 45 }),
+    userAgent: text("user_agent"),
+    consentFormVersion: varchar("consent_form_version", { length: 20 }).default("1.0").notNull(),
+    consentPromoter: boolean("consent_promoter").default(false).notNull(),
+    consentBroker: boolean("consent_broker").default(false).notNull(),
+    consentNewsletter: boolean("consent_newsletter").default(false).notNull(),
+    action: consentActionEnum("action").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("consent_audit_log_lead_id_idx").on(table.leadId),
+    index("consent_audit_log_email_idx").on(table.email),
+    index("consent_audit_log_created_at_idx").on(table.createdAt),
+  ]
+);
+
 // ============================================================================
 // RELATIONS
 // ============================================================================
@@ -458,6 +489,9 @@ export type NewPromoter = InferInsertModel<typeof promoters>;
 
 export type Broker = InferSelectModel<typeof brokers>;
 export type NewBroker = InferInsertModel<typeof brokers>;
+
+export type ConsentAuditLog = InferSelectModel<typeof consentAuditLog>;
+export type NewConsentAuditLog = InferInsertModel<typeof consentAuditLog>;
 
 export type User = InferSelectModel<typeof user>;
 export type NewUser = InferInsertModel<typeof user>;

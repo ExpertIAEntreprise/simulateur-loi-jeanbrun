@@ -21,7 +21,7 @@ import {
 } from "@/lib/rate-limit";
 import { verifyAdminAuth } from "@/lib/admin-auth";
 import { db, and, eq, gte, lte, desc, sql } from "@repo/database";
-import { leads } from "@repo/database/schema";
+import { leads, consentAuditLog } from "@repo/database/schema";
 import { calculateLeadScore } from "@repo/leads";
 import { dispatchLead } from "@/lib/lead-dispatch";
 
@@ -54,7 +54,33 @@ const leadCaptureSchema = z.object({
   consentNewsletter: z.boolean(),
 
   // Simulation snapshot (stored as JSONB)
-  simulationData: z.record(z.string(), z.unknown()).optional(),
+  // Matches buildSimulationPayload() from resultat-client.tsx
+  simulationData: z.object({
+    revenuNet: z.number().optional(),
+    parts: z.number().optional(),
+    prixAcquisition: z.number().optional(),
+    surface: z.number().optional(),
+    zoneFiscale: z.string().optional(),
+    typeBien: z.string().optional(),
+    villeNom: z.string().optional(),
+    apport: z.number().optional(),
+    dureeCredit: z.number().optional(),
+    tauxCredit: z.number().optional(),
+    loyerMensuel: z.number().optional(),
+    dureeDetention: z.number().optional(),
+    structure: z.string().optional(),
+    economieFiscale: z.number().optional(),
+    cashFlowMensuel: z.number().optional(),
+    rendementNet: z.number().optional(),
+    effortEpargne: z.number().optional(),
+    montantEmprunt: z.number().optional(),
+    mensualiteEstimee: z.number().optional(),
+    tauxEndettement: z.number().optional(),
+    resteAVivre: z.number().optional(),
+    verdict: z.string().optional(),
+    montantInvestissement: z.number().optional(),
+    revenuMensuel: z.number().optional(),
+  }).passthrough().optional(),
 
   // Platform & tracking
   platform: z.enum(["jeanbrun", "stop-loyer"]).default("jeanbrun"),
@@ -97,6 +123,31 @@ export async function POST(request: NextRequest) {
       hasDownPayment: !!simulationData?.apport,
     });
 
+    // 3.5 Duplicate detection: check if same email + platform in last 5 minutes
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    const [existingLead] = await db
+      .select({ id: leads.id, score: leads.score })
+      .from(leads)
+      .where(
+        and(
+          eq(leads.email, data.email),
+          eq(leads.platform, data.platform),
+          gte(leads.createdAt, fiveMinutesAgo)
+        )
+      )
+      .limit(1);
+
+    if (existingLead) {
+      return NextResponse.json(
+        {
+          success: true,
+          data: { id: existingLead.id, score: existingLead.score },
+          message: "Lead deja enregistre",
+        },
+        { status: 200 }
+      );
+    }
+
     // 4. Insert lead into database (with IP and user-agent for RGPD consent proof)
     const clientIp = request.headers.get("x-real-ip")
       ?? request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
@@ -128,7 +179,25 @@ export async function POST(request: NextRequest) {
       })
       .returning({ id: leads.id, score: leads.score });
 
-    // 4.5 Dispatch lead asynchronously (fire-and-forget)
+    // 4.5 Log consent in audit trail (RGPD proof - retained 5 years)
+    if (lead?.id) {
+      db.insert(consentAuditLog)
+        .values({
+          leadId: lead.id,
+          email: data.email,
+          ipAddress: clientIp,
+          userAgent: clientUserAgent,
+          consentPromoter: data.consentPromoter,
+          consentBroker: data.consentBroker,
+          consentNewsletter: data.consentNewsletter,
+          action: "granted",
+        })
+        .catch((err) => {
+          console.error("[Consent Audit] Error:", err);
+        });
+    }
+
+    // 4.6 Dispatch lead asynchronously (fire-and-forget)
     // Do NOT await - dispatch happens in background
     if (lead?.id) {
       dispatchLead(lead.id).catch((err) => {

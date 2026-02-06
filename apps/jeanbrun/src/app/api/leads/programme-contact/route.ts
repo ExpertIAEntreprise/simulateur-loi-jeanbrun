@@ -9,6 +9,7 @@
  * @see Phase 5 du plan page-programme
  */
 
+import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import {
@@ -17,6 +18,9 @@ import {
   getClientIP,
 } from "@/lib/rate-limit";
 import { getEspoCRMClient, toEspoLead } from "@/lib/espocrm";
+import { db } from "@repo/database";
+import { leads } from "@repo/database/schema";
+import { calculateLeadScore } from "@repo/leads";
 
 /**
  * Schema de validation du body
@@ -73,6 +77,54 @@ export async function POST(request: NextRequest) {
       .filter(Boolean)
       .join("\n");
 
+    // Persist lead locally in database
+    const clientIp = request.headers.get("x-real-ip")
+      ?? request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      ?? null;
+    const clientUserAgent = request.headers.get("user-agent") ?? null;
+
+    const leadScore = calculateLeadScore({
+      hasEmail: true,
+      hasPhone: true,
+      hasName: true,
+      hasSimulationData: false,
+      consentPromoter: true,
+      consentBroker: false,
+    });
+
+    const simulationData = {
+      programmeName: data.programmeName,
+      programmeSlug: data.programmeSlug,
+      villeName: data.villeName,
+      lotType: data.lotType ?? null,
+      lotSurface: data.lotSurface ?? null,
+      lotPrix: data.lotPrix ?? null,
+      lotEtage: data.lotEtage ?? null,
+      message: data.message,
+    };
+
+    const [localLead] = await db
+      .insert(leads)
+      .values({
+        platform: "jeanbrun",
+        email: data.email,
+        telephone: data.telephone,
+        prenom: data.prenom,
+        nom: data.nom,
+        consentPromoter: true,
+        consentBroker: false,
+        consentNewsletter: false,
+        consentDate: new Date(),
+        unsubscribeToken: crypto.randomBytes(32).toString("hex"),
+        simulationData,
+        score: leadScore.total,
+        status: "new",
+        sourcePage: `programme-contact/${data.programmeSlug}`,
+        ipAddress: clientIp,
+        userAgent: clientUserAgent,
+      })
+      .returning({ id: leads.id });
+
     // Creer le lead dans EspoCRM
     const espoLead = toEspoLead({
       email: data.email,
@@ -91,13 +143,14 @@ export async function POST(request: NextRequest) {
       await client.createLead(espoLead);
     } catch (espoError) {
       // Log l'erreur EspoCRM mais ne pas bloquer la reponse
-      // Le lead est capture, on pourra le retraiter plus tard
+      // Le lead est capture localement, on pourra retraiter l'envoi EspoCRM plus tard
       console.error("[Lead Programme Contact] EspoCRM error:", espoError);
     }
 
     return NextResponse.json(
       {
         success: true,
+        data: { id: localLead?.id },
         message: "Votre demande a ete envoyee.",
       },
       { status: 201 }

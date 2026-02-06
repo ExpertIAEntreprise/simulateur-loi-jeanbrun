@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 6 terminee + Audit P0+P1 corriges (PRET POUR PRODUCTION)
+> **Statut :** 🟢 Phase 6 terminee + Audit P0+P1+P2 corriges (PRET POUR PRODUCTION)
 
 ---
 
@@ -429,6 +429,52 @@ Corrections de securite, schema DB et conformite RGPD (7 items P1).
 
 ---
 
+## Audit & Correctifs P2 ✅ TERMINE
+
+> **Date :** 6 fevrier 2026
+> **Ref :** [AUDIT-CORRECTIFS.md](./AUDIT-CORRECTIFS.md)
+
+Ameliorations moyennes (Next.js 16, deduplication, schema DB, dashboard admin).
+
+### Correctifs appliques
+
+- [x] **P2-01 : Migration middleware.ts vers proxy.ts** — Deja conforme (proxy.ts existe)
+- [x] **P2-02 : Verifier params async pages dynamiques** — Deja conforme (tous les params sont `Promise<>` + `await`)
+- [x] **P2-03 : Activer React Compiler** — Ajout `reactCompiler: true` dans `next.config.ts`
+- [x] **P2-04 : transpilePackages stop-loyer** — N/A (app stop-loyer n'existe pas encore)
+- [x] **P2-05 : Detection doublons leads** — Verification email+platform dans les 5 dernieres minutes avant insert
+- [x] **P2-06 : simulationData type** — Remplacement de `z.record(z.string(), z.unknown())` par schema Zod strict (23 champs types + `.passthrough()`)
+- [x] **P2-07 : programme-contact persistence locale** — Insert dans table leads locale en plus d'EspoCRM
+- [x] **P2-08 : Table consent_audit_log** — Nouvelle table RGPD pour tracer les consentements (retention 5 ans CNIL), enum `consent_action`, insertion automatique a la creation de lead
+- [x] **P2-09 : Etat leadSubmitted persiste** — Stockage dans `localStorage` avec cle `lead_submitted_${simulationId}`, initialisation au mount
+- [x] **P2-10 : Dashboard admin ameliore** — Recherche nom/email (`ilike`), tri colonnes serveur (createdAt, score, email, status), export CSV (`/api/leads/export`), compteur resultats
+- [x] **P2-11 : Retention automatique 36 mois** — Route `POST /api/leads/retention` (admin) : copie consentements dans audit log puis anonymisation des leads expires
+
+### Fichiers modifies
+
+| Fichier | Correctifs |
+|---------|-----------|
+| `apps/jeanbrun/next.config.ts` | P2-03 |
+| `apps/jeanbrun/src/app/resultats/[id]/resultat-client.tsx` | P2-09 |
+| `apps/jeanbrun/src/app/api/leads/route.ts` | P2-05, P2-06, P2-08 |
+| `apps/jeanbrun/src/app/api/leads/programme-contact/route.ts` | P2-07 |
+| `apps/jeanbrun/src/app/api/leads/retention/route.ts` | P2-11 (nouveau) |
+| `apps/jeanbrun/src/app/api/leads/export/route.ts` | P2-10 (nouveau) |
+| `apps/jeanbrun/src/app/admin/leads/page.tsx` | P2-10 |
+| `apps/jeanbrun/src/app/admin/leads/filters.tsx` | P2-10 |
+| `apps/jeanbrun/src/app/admin/leads/export-button.tsx` | P2-10 (nouveau) |
+| `packages/database/src/schema.ts` | P2-08 |
+| `packages/database/src/index.ts` | P2-10 (exports ne, ilike) |
+
+### Migration DB requise
+
+```bash
+pnpm db:generate  # Generer migration pour consent_audit_log + consent_action enum
+pnpm db:migrate   # Appliquer en production
+```
+
+---
+
 ## Validation Finale
 
 - [x] Monorepo Turborepo operationnel (2 apps + packages partages)
@@ -442,6 +488,7 @@ Corrections de securite, schema DB et conformite RGPD (7 items P1).
 - [x] Dashboard admin leads fonctionnel
 - [x] Audit P0 corrige (7/7 items critiques resolus)
 - [x] Audit P1 corrige (7/7 items hauts resolus)
+- [x] Audit P2 corrige (11/11 items moyens resolus)
 
 ---
 
@@ -492,4 +539,4 @@ Visiteur → Simulation gratuite → Teaser resultats
 
 ---
 
-*Derniere mise a jour : 6 fevrier 2026 (Audit P0+P1 corriges — PRET POUR PRODUCTION)*
+*Derniere mise a jour : 6 fevrier 2026 (Audit P0+P1+P2 corriges — PRET POUR PRODUCTION)*
