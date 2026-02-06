@@ -91,13 +91,22 @@ export function ProgrammeCard({
   } = programme;
 
   // Resolve image: use imagePrincipale, fallback to first image from images JSON array
+  // Sanitize: reject local paths with query strings (CMS URLs like /sites/default/files/...?itok=xxx)
   const resolvedImage = (() => {
-    if (imagePrincipale != null && imagePrincipale !== "") return imagePrincipale;
+    const sanitize = (url: string): string | null => {
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+      if (url.startsWith("/") && !url.includes("?")) return url;
+      return null;
+    };
+    if (imagePrincipale != null && imagePrincipale !== "") {
+      const s = sanitize(imagePrincipale);
+      if (s) return s;
+    }
     if (!imagesRaw) return null;
     try {
       const parsed: unknown = JSON.parse(imagesRaw);
       if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === "string") {
-        return parsed[0] as string;
+        return sanitize(parsed[0] as string);
       }
     } catch {
       // ignore parse errors

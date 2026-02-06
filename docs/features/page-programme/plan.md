@@ -2,11 +2,11 @@
 
 **Feature:** page-programme
 **Effort:** 8 phases
-**Statut:** Phase 1 en cours
+**Statut:** Phase 4 terminee, Phase 5 a faire
 
 ---
 
-## Phase 1 : Types + parsing + sheet.tsx + KPI helpers [EN COURS]
+## Phase 1 : Types + parsing + sheet.tsx + KPI helpers [DONE]
 
 ### Taches
 
@@ -15,11 +15,11 @@
 - [x] 1.3 Ajouter champ `lotsDetails: string | null` a `EspoProgramme`
 - [x] 1.4 Ajouter helper `parseLots(programme: EspoProgramme): Lot[]` (utilise `parseJsonField` existant)
 - [x] 1.5 Ajouter `getProgrammeBySlug(slug)` + `getAllProgrammeSlugs()` dans `src/lib/espocrm/client.ts`
-- [ ] 1.6 Creer `src/lib/geo/regions-mapping.ts` (mapping 101 departements -> 18 regions)
-- [ ] 1.7 Creer `src/lib/calculs/investisseur-kpis.ts` : fonctions serveur pour KPIs hero
+- [x] 1.6 Creer `src/lib/geo/regions-mapping.ts` (mapping 101 departements -> 18 regions)
+- [x] 1.7 Creer `src/lib/calculs/investisseur-kpis.ts` : fonctions serveur pour KPIs hero
   - `calculerKPIsInvestisseur(programme, ville)` -> { loyerEstimeMensuel, economieImpotAnnuelle, effortMensuelEstime, mensualiteCredit }
   - Utilise `calculerLoyerEstime()` existant + formule amortissement simple + TMI 30% par defaut
-- [ ] 1.8 Creer `src/lib/calculs/financement.ts` : formules pures pour section Financement
+- [x] 1.8 Creer `src/lib/calculs/financement.ts` : formules pures pour section Financement
   - `calculerMensualiteCredit(montant, taux, dureeAnnees)` -> mensualite
   - `calculerFraisNotaireNeuf(prix)` -> ~3% du prix
   - `calculerEffortMensuel(mensualite, loyerEstime)` -> effort
@@ -43,9 +43,9 @@
 
 ### Validation
 
-- [ ] `pnpm typecheck` passe
-- [ ] `parseLots()` parse correctement le JSON d'un programme EspoCRM
-- [ ] `calculerKPIsInvestisseur()` retourne des valeurs coherentes pour un programme test
+- [x] `pnpm typecheck` passe
+- [x] `parseLots()` parse correctement le JSON d'un programme EspoCRM
+- [x] `calculerKPIsInvestisseur()` retourne des valeurs coherentes pour un programme test
 
 ### References code existant
 
@@ -56,25 +56,25 @@
 
 ---
 
-## Phase 2 : Page `/programmes/[slug]` + Hero KPIs investisseur + Navigation sticky [ ]
+## Phase 2 : Page `/programmes/[slug]` + Hero KPIs investisseur + Navigation sticky [DONE]
 
 ### Taches
 
-- [ ] 2.1 Creer `src/app/(app)/programmes/[slug]/page.tsx`
-- [ ] 2.2 Implementer `generateMetadata()` (titre, description, OpenGraph)
-- [ ] 2.3 Implementer `generateStaticParams()` pour ISR
-- [ ] 2.4 Creer `src/components/programmes/ProgrammeHero.tsx` :
+- [x] 2.1 Creer `src/app/(app)/programmes/[slug]/page.tsx`
+- [x] 2.2 Implementer `generateMetadata()` (titre, description, OpenGraph)
+- [x] 2.3 Implementer `generateStaticParams()` pour ISR
+- [x] 2.4 Creer `src/components/programmes/ProgrammeHero.tsx` :
   - Image principale (Next.js Image)
   - **Sidebar KPIs investisseur** : loyer estime, economie impot/an, effort mensuel, zone, dispositif, livraison
   - CTA "Contactez-nous" + CTA "Simuler" (scroll)
   - Utilise `calculerKPIsInvestisseur()` de Phase 1 (server-side)
-- [ ] 2.5 Creer `src/components/programmes/StickyNavigation.tsx` :
+- [x] 2.5 Creer `src/components/programmes/StickyNavigation.tsx` :
   - Barre d'onglets fixee en haut au scroll (position: sticky)
   - Onglets : Caracteristiques / Lots / Financement / Fiscalite / Ville
   - Highlight actif basee sur IntersectionObserver
-- [ ] 2.6 Sections statiques : breadcrumb, description, promoteur (nom + lien)
-- [ ] 2.7 JSON-LD schema.org `RealEstateListing`
-- [ ] 2.8 404 si slug inconnu (`notFound()`)
+- [x] 2.6 Sections statiques : breadcrumb, description, promoteur (nom + lien)
+- [x] 2.7 JSON-LD schema.org `RealEstateListing`
+- [x] 2.8 404 si slug inconnu (`notFound()`)
 
 ### Fichiers crees
 
@@ -94,31 +94,32 @@
 
 ### Validation
 
-- [ ] `/programmes/[slug-existant]` affiche la page avec hero + KPIs + description + navigation sticky
-- [ ] KPIs affichent des valeurs coherentes (loyer ~500-800 EUR pour un T2 zone A)
-- [ ] Navigation sticky suit le scroll et highlight la section active
-- [ ] `/programmes/slug-inexistant` retourne 404
-- [ ] `pnpm typecheck` et `pnpm lint` passent
+- [x] `/programmes/[slug-existant]` affiche la page avec hero + KPIs + description + navigation sticky
+- [x] KPIs affichent des valeurs coherentes (loyer ~500-800 EUR pour un T2 zone A)
+- [x] Navigation sticky suit le scroll et highlight la section active
+- [x] `/programmes/slug-inexistant` retourne 404
+- [x] `pnpm typecheck` et `pnpm lint` passent
 
 ---
 
-## Phase 3 : LotsTable (client component) [ ]
+## Phase 3 : LotsTable (client component) [DONE]
 
 ### Taches
 
-- [ ] 3.1 Creer `src/components/programmes/LotsTable.tsx`
-- [ ] 3.2 Tableau desktop : colonnes Type, Surface, Etage, Prix, Prestations, Actions
-- [ ] 3.3 Tri par colonne (state local `useState` pour sortKey + sortDir)
-- [ ] 3.4 Mobile responsive : cards empilees (breakpoint `sm:`)
-- [ ] 3.5 Compteur "X lots disponibles" en header
-- [ ] 3.6 Boutons "Simuler" et "Infos" (callback props `onSimuler(lot)` et `onContact(lot)`)
-- [ ] 3.7 Integrer dans `page.tsx` Phase 2 (section ancree `#lots`)
+- [x] 3.1 Creer `src/components/programmes/LotsTable.tsx`
+- [x] 3.2 Tableau desktop : colonnes Type, Surface, Etage, Prix, Prestations, Actions
+- [x] 3.3 Tri par colonne (state local `useState` pour sortKey + sortDir)
+- [x] 3.4 Mobile responsive : cards empilees (breakpoint `sm:`)
+- [x] 3.5 Compteur "X lots disponibles" en header
+- [x] 3.6 Boutons "Simuler" et "Infos" (callback props `onSimuler(lot)` et `onContact(lot)`)
+- [x] 3.7 Integrer dans `page.tsx` Phase 2 (section ancree `#lots`)
 
 ### Fichiers crees
 
 | Fichier | Type |
 |---------|------|
 | `src/components/programmes/LotsTable.tsx` | Client Component (~200 lignes) |
+| `src/components/programmes/LotsSection.tsx` | Client Component wrapper (~30 lignes) |
 
 ### Composants UI reutilises
 
@@ -129,25 +130,25 @@
 
 ### Validation
 
-- [ ] Lots affiches avec prix formates en EUR
-- [ ] Tri par colonne fonctionne
-- [ ] Responsive : tableau desktop, cards mobile
-- [ ] `pnpm typecheck` passe
+- [x] Lots affiches avec prix formates en EUR
+- [x] Tri par colonne fonctionne
+- [x] Responsive : tableau desktop, cards mobile
+- [x] `pnpm typecheck` passe
 
 ---
 
-## Phase 4 : SimulateurLotDrawer (client component) [ ]
+## Phase 4 : SimulateurLotDrawer (client component) [DONE]
 
 ### Taches
 
-- [ ] 4.1 Creer `src/components/programmes/SimulateurLotDrawer.tsx`
-- [ ] 4.2 Donnees pre-remplies du lot (non editables) : type, surface, prix, etage, zone fiscale
-- [ ] 4.3 Formulaire : revenu net imposable (input number), situation familiale (select), nb parts (select)
-- [ ] 4.4 Calcul instantane via `orchestrerSimulation()` appele cote client
-- [ ] 4.5 Affichage resultats : TMI, economie annuelle, economie 9 ans, rendement brut, cash-flow mensuel
-- [ ] 4.6 CTA "Simulation complete" -> lien vers wizard pre-rempli
-- [ ] 4.7 CTA "Recevoir l'analyse" -> ouvre modal contact (Phase 5)
-- [ ] 4.8 Integrer dans `page.tsx` (callback `onSimuler` de LotsTable)
+- [x] 4.1 Creer `src/components/programmes/SimulateurLotDrawer.tsx`
+- [x] 4.2 Donnees pre-remplies du lot (non editables) : type, surface, prix, etage, zone fiscale
+- [x] 4.3 Formulaire : revenu net imposable (input number), situation familiale (select), nb parts (select)
+- [x] 4.4 Calcul instantane via `orchestrerSimulation()` appele cote client
+- [x] 4.5 Affichage resultats : TMI, economie annuelle, economie 9 ans, rendement brut, cash-flow mensuel
+- [x] 4.6 CTA "Simulation complete" -> lien vers wizard pre-rempli
+- [x] 4.7 CTA "Recevoir l'analyse" -> ouvre modal contact (Phase 5)
+- [x] 4.8 Integrer dans `page.tsx` (callback `onSimuler` de LotsTable)
 
 ### Fichiers crees
 
@@ -173,10 +174,10 @@
 
 ### Validation
 
-- [ ] Drawer s'ouvre avec donnees du lot pre-remplies
-- [ ] Saisir revenu 50000, celibataire, 1 part -> affiche economie impot coherente
-- [ ] Champs vides = pas de calcul affiche
-- [ ] `pnpm typecheck` passe
+- [x] Drawer s'ouvre avec donnees du lot pre-remplies
+- [x] Saisir revenu 50000, celibataire, 1 part -> affiche economie impot coherente
+- [x] Champs vides = pas de calcul affiche
+- [x] `pnpm typecheck` passe
 
 ---
 
