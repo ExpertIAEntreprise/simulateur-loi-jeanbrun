@@ -57,11 +57,26 @@ async function fetchProgrammes(): Promise<{
 
   try {
     const client = getEspoCRMClient();
-    const result = await client.getProgrammes(
-      { actif: true },
-      { limit: 500, offset: 0 }
-    );
-    return { programmes: result.list, total: result.total };
+    const allProgrammes: EspoProgramme[] = [];
+    let offset = 0;
+    const limit = 200; // EspoCRM maxSize limit
+    let hasMore = true;
+
+    while (hasMore) {
+      const result = await client.getProgrammes(
+        { actif: true },
+        { limit, offset }
+      );
+      allProgrammes.push(...result.list);
+
+      if (result.list.length < limit) {
+        hasMore = false;
+      } else {
+        offset += limit;
+      }
+    }
+
+    return { programmes: allProgrammes, total: allProgrammes.length };
   } catch (error) {
     console.error("Erreur chargement programmes:", error);
     return { programmes: [], total: 0 };
