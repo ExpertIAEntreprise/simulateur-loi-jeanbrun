@@ -487,6 +487,7 @@ export default async function ProgrammePage({ params }: PageParams) {
           <LotsSection
             lots={lots}
             programmeName={programme.name}
+            programmeSlug={slug}
             villeName={villeName}
             zoneFiscale={zoneFiscale as import("@/lib/calculs/types/common").ZoneFiscale}
           />

@@ -2,7 +2,7 @@
 
 **Feature:** page-programme
 **Effort:** 8 phases
-**Statut:** Phase 4 terminee, Phase 5 a faire
+**Statut:** Phase 5 terminee, Phase 6 a faire
 
 ---
 
@@ -181,17 +181,17 @@
 
 ---
 
-## Phase 5 : ContactProgrammeModal + API route [ ]
+## Phase 5 : ContactProgrammeModal + API route [DONE]
 
 ### Taches
 
-- [ ] 5.1 Creer `src/components/programmes/ContactProgrammeModal.tsx`
-- [ ] 5.2 Formulaire avec validation Zod : nom, prenom, email, tel, message, checkbox RGPD
-- [ ] 5.3 Message pre-rempli : "Je suis interesse par le lot {type} {surface}m2 du programme {name}"
-- [ ] 5.4 Creer `src/app/api/leads/programme-contact/route.ts`
-- [ ] 5.5 API route : validation Zod + creation lead EspoCRM (cSource: "simulateur-jeanbrun")
-- [ ] 5.6 Toast confirmation via `sonner`
-- [ ] 5.7 Integrer dans `page.tsx` (callback `onContact` de LotsTable + CTA hero)
+- [x] 5.1 Creer `src/components/programmes/ContactProgrammeModal.tsx`
+- [x] 5.2 Formulaire avec validation Zod : nom, prenom, email, tel, message, checkbox RGPD
+- [x] 5.3 Message pre-rempli : "Je suis interesse par le lot {type} {surface}m2 du programme {name}"
+- [x] 5.4 Creer `src/app/api/leads/programme-contact/route.ts`
+- [x] 5.5 API route : validation Zod + creation lead EspoCRM (cSource: "simulateur-jeanbrun")
+- [x] 5.6 Toast confirmation via `sonner`
+- [x] 5.7 Integrer dans `page.tsx` (callback `onContact` de LotsTable + CTA hero)
 
 ### Fichiers crees
 
@@ -210,10 +210,10 @@
 
 ### Validation
 
-- [ ] Modal s'ouvre avec message pre-rempli
-- [ ] Validation Zod bloque si champs requis vides
-- [ ] Submit reussi = toast + lead cree dans EspoCRM (verifiable via curl)
-- [ ] `pnpm typecheck` passe
+- [x] Modal s'ouvre avec message pre-rempli
+- [x] Validation Zod bloque si champs requis vides
+- [x] Submit reussi = toast + lead cree dans EspoCRM (verifiable via curl)
+- [x] `pnpm typecheck` passe
 
 ---
 
