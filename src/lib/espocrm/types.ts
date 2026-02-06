@@ -122,6 +122,19 @@ export interface EspoBarometreFilters {
 }
 
 /**
+ * Lot individuel d'un programme immobilier
+ * Parsé depuis le champ lotsDetails (JSON string)
+ */
+export interface Lot {
+  type: string; // Ex: "T1", "T2", "T3", "T4", "T5"
+  surface: number; // Surface en m²
+  etage: number | null; // Numéro d'étage (null si non renseigné)
+  prix: number; // Prix en euros
+  prestations: string | null; // Ex: "Balcon", "Terrasse", "Parking"
+  numero: string | null; // Numéro du lot (ex: "A101")
+}
+
+/**
  * Programme immobilier EspoCRM (entité CJeanbrunProgramme)
  *
  * Note: Les noms de champs correspondent à l'API EspoCRM (sans préfixe c)
@@ -165,6 +178,9 @@ export interface EspoProgramme {
   urlExterne: string | null; // URL vers le site du promoteur
   sourceApi: string | null; // Source de l'API (ex: "nexity")
   idExterne: string | null; // ID externe du programme
+
+  // Lots détaillés (JSON string)
+  lotsDetails: string | null; // JSON array de Lot[]
 
   // Informations complémentaires
   isLocal: boolean | null; // Programme local
@@ -398,6 +414,14 @@ export function getVilleFaq(ville: EspoVille): EspoFaqItem[] {
   if (!ville.faqItems) return [];
   if (ville.faqItems === "Array") return [];
   return parseJsonField<EspoFaqItem[]>(ville.faqItems, []);
+}
+
+/**
+ * Parse les lots détaillés d'un programme
+ * Retourne un tableau vide si le champ est null, vide ou invalide
+ */
+export function parseLots(programme: EspoProgramme): Lot[] {
+  return parseJsonField<Lot[]>(programme.lotsDetails, []);
 }
 
 /**

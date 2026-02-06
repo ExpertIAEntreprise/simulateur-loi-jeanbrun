@@ -444,6 +444,49 @@ export class EspoCRMClient {
   }
 
   /**
+   * Récupère un programme par son slug
+   */
+  async getProgrammeBySlug(slug: string): Promise<EspoProgramme | null> {
+    const params = this.buildWhereParams({ slug: slug });
+
+    const url = this.buildUrl("/CJeanbrunProgramme", {
+      maxSize: 1,
+      ...params,
+    });
+
+    const response = await this.fetchWithRetry<EspoListResponse<EspoProgramme>>(url);
+
+    return response.list[0] ?? null;
+  }
+
+  /**
+   * Récupère tous les slugs de programmes pour generateStaticParams()
+   */
+  async getAllProgrammeSlugs(): Promise<string[]> {
+    const slugs: string[] = [];
+    let offset = 0;
+    const limit = 100;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await this.getProgrammes(undefined, { limit, offset });
+      for (const p of response.list) {
+        if (p.slug) {
+          slugs.push(p.slug);
+        }
+      }
+
+      if (response.list.length < limit) {
+        hasMore = false;
+      } else {
+        offset += limit;
+      }
+    }
+
+    return slugs;
+  }
+
+  /**
    * Récupère un programme par ID
    */
   async getProgrammeById(id: string): Promise<EspoProgramme> {

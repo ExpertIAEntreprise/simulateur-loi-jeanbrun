@@ -21,6 +21,7 @@ export type {
   EspoProgrammeAvecVille,
   EspoFaqItem,
   EspoArgumentInvestissement,
+  Lot,
 } from "./types";
 export {
   toEspoLead,
@@ -29,6 +30,7 @@ export {
   fromEspoBarometre,
   fromEspoVilleEnriched,
   parseJsonField,
+  parseLots,
   getVilleArguments,
   getVilleFaq,
 } from "./types";
