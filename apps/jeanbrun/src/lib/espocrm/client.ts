@@ -448,7 +448,7 @@ export class EspoCRMClient {
    * Récupère un programme par son slug
    */
   async getProgrammeBySlug(slug: string): Promise<EspoProgramme | null> {
-    const params = this.buildWhereParams({ slug: slug });
+    const params = this.buildWhereParams({ slug: slug, authorized: true });
 
     const url = this.buildUrl("/CJeanbrunProgramme", {
       maxSize: 1,
