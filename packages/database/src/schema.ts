@@ -11,7 +11,7 @@ import {
   date,
   jsonb,
   pgEnum,
-  uniqueIndex
+  numeric
 } from "drizzle-orm/pg-core";
 
 // IMPORTANT! ID fields should ALWAYS use UUID types, EXCEPT the BetterAuth tables.
@@ -41,15 +41,28 @@ export const niveauLoyerEnum = pgEnum("niveau_loyer", [
   "bas"
 ]);
 
-export const leadStatutEnum = pgEnum("lead_statut", [
-  "nouveau",
-  "contacte",
-  "qualifie",
-  "prospect_chaud",
-  "perdu",
-  "converti"
+export const platformEnum = pgEnum("platform", [
+  "jeanbrun",
+  "stop-loyer"
 ]);
 
+export const leadStatusEnum = pgEnum("lead_status", [
+  "new",
+  "dispatched",
+  "contacted",
+  "converted",
+  "lost"
+]);
+
+export const pricingModelEnum = pgEnum("pricing_model", [
+  "per_lead",
+  "commission",
+  "hybrid"
+]);
+
+// ============================================================================
+// BETTER AUTH TABLES (Text IDs - Required by Better Auth)
+// ============================================================================
 
 export const user = pgTable(
   "user",
@@ -130,11 +143,11 @@ export const verification = pgTable("verification", {
 });
 
 // ============================================================================
-// BUSINESS TABLES (Simulateur Loi Jeanbrun)
+// BUSINESS TABLES
 // ============================================================================
 
 /**
- * Table villes - Données marché immobilier par commune
+ * Table villes - Donnees marche immobilier par commune
  */
 export const villes = pgTable(
   "villes",
@@ -147,11 +160,11 @@ export const villes = pgTable(
     zoneFiscale: zoneFiscaleEnum("zone_fiscale").notNull(),
     tensionLocative: tensionLocativeEnum("tension_locative"),
     niveauLoyer: niveauLoyerEnum("niveau_loyer"),
-    prixM2Moyen: integer("prix_m2_moyen"), // Prix en centimes
-    loyerM2Moyen: integer("loyer_m2_moyen"), // Loyer mensuel en centimes
+    prixM2Moyen: integer("prix_m2_moyen"),
+    loyerM2Moyen: integer("loyer_m2_moyen"),
     populationCommune: integer("population_commune"),
     slug: text("slug").notNull().unique(),
-    espoId: text("espo_id"), // ID dans EspoCRM
+    espoId: text("espo_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -167,6 +180,60 @@ export const villes = pgTable(
 );
 
 /**
+ * Table promoters - Promoteurs immobiliers partenaires
+ */
+export const promoters = pgTable(
+  "promoters",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: text("name").notNull(),
+    contactName: text("contact_name").notNull(),
+    contactEmail: text("contact_email").notNull(),
+    contactPhone: varchar("contact_phone", { length: 20 }),
+    conventionSignedAt: date("convention_signed_at"),
+    pricingModel: pricingModelEnum("pricing_model").notNull(),
+    pricePerLead: numeric("price_per_lead", { precision: 10, scale: 2 }),
+    commissionRate: numeric("commission_rate", { precision: 5, scale: 2 }),
+    zones: text("zones").array().notNull().default([]),
+    active: boolean("active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("promoters_active_idx").on(table.active),
+  ]
+);
+
+/**
+ * Table brokers - Courtiers en credit partenaires
+ */
+export const brokers = pgTable(
+  "brokers",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: text("name").notNull(),
+    contactName: text("contact_name").notNull(),
+    contactEmail: text("contact_email").notNull(),
+    contactPhone: varchar("contact_phone", { length: 20 }),
+    contractSignedAt: date("contract_signed_at"),
+    pricePerLead: numeric("price_per_lead", { precision: 10, scale: 2 }).notNull(),
+    zones: text("zones").array().notNull().default([]),
+    active: boolean("active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("brokers_active_idx").on(table.active),
+  ]
+);
+
+/**
  * Table programmes - Programmes immobiliers neufs
  */
 export const programmes = pgTable(
@@ -176,17 +243,22 @@ export const programmes = pgTable(
     villeId: uuid("ville_id")
       .notNull()
       .references(() => villes.id, { onDelete: "cascade" }),
+    promoterId: uuid("promoter_id")
+      .references(() => promoters.id, { onDelete: "set null" }),
     nom: text("nom").notNull(),
     promoteur: text("promoteur"),
     adresse: text("adresse"),
     codePostal: varchar("code_postal", { length: 5 }),
-    prixMin: integer("prix_min"), // En centimes
-    prixMax: integer("prix_max"), // En centimes
-    surfaceMin: integer("surface_min"), // m² × 100 pour gérer décimales
-    surfaceMax: integer("surface_max"), // m² × 100
+    prixMin: integer("prix_min"),
+    prixMax: integer("prix_max"),
+    surfaceMin: integer("surface_min"),
+    surfaceMax: integer("surface_max"),
     dateLivraison: date("date_livraison"),
+    eligibleJeanbrun: boolean("eligible_jeanbrun").default(false).notNull(),
+    eligiblePtz: boolean("eligible_ptz").default(false).notNull(),
+    authorized: boolean("authorized").default(false).notNull(),
     actif: boolean("actif").default(true).notNull(),
-    espoId: text("espo_id"), // ID EspoCRM
+    espoId: text("espo_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -197,6 +269,8 @@ export const programmes = pgTable(
     index("programmes_ville_id_idx").on(table.villeId),
     index("programmes_actif_idx").on(table.actif),
     index("programmes_ville_actif_idx").on(table.villeId, table.actif),
+    index("programmes_promoter_id_idx").on(table.promoterId),
+    index("programmes_authorized_idx").on(table.authorized),
   ]
 );
 
@@ -210,11 +284,11 @@ export const simulations = pgTable(
     userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
     villeId: uuid("ville_id").references(() => villes.id, { onDelete: "set null" }),
     programmeId: uuid("programme_id").references(() => programmes.id, { onDelete: "set null" }),
-    inputData: jsonb("input_data"), // Données saisies dans le wizard
-    resultats: jsonb("resultats"), // Résultats calculs fiscaux
-    montantInvestissement: integer("montant_investissement"), // En centimes
-    rendementBrut: integer("rendement_brut"), // % × 100 (ex: 5.50% = 550)
-    economieImpots10Ans: integer("economie_impots_10_ans"), // En centimes
+    inputData: jsonb("input_data"),
+    resultats: jsonb("resultats"),
+    montantInvestissement: integer("montant_investissement"),
+    rendementBrut: integer("rendement_brut"),
+    economieImpots10Ans: integer("economie_impots_10_ans"),
     estComplet: boolean("est_complet").default(false).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
@@ -231,24 +305,40 @@ export const simulations = pgTable(
 );
 
 /**
- * Table leads - Prospects découverte patrimoniale
+ * Table leads - Prospects qualifies (generation de leads)
  */
 export const leads = pgTable(
   "leads",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
-    simulationId: uuid("simulation_id").references(() => simulations.id, { onDelete: "set null" }),
+    platform: platformEnum("platform").notNull(),
+    sourcePage: text("source_page"),
+    utmSource: varchar("utm_source", { length: 255 }),
+    utmMedium: varchar("utm_medium", { length: 255 }),
+    utmCampaign: varchar("utm_campaign", { length: 255 }),
     email: text("email").notNull(),
     telephone: varchar("telephone", { length: 20 }),
     prenom: text("prenom"),
     nom: text("nom"),
-    statut: leadStatutEnum("statut").default("nouveau").notNull(),
-    consentementRgpd: boolean("consentement_rgpd").default(false).notNull(),
-    consentementMarketing: boolean("consentement_marketing").default(false).notNull(),
-    dateConsentement: timestamp("date_consentement"),
-    sourceUtm: text("source_utm"), // UTM tracking
-    espoId: text("espo_id"), // ID EspoCRM
+    consentPromoter: boolean("consent_promoter").default(false).notNull(),
+    consentBroker: boolean("consent_broker").default(false).notNull(),
+    consentNewsletter: boolean("consent_newsletter").default(false).notNull(),
+    consentDate: timestamp("consent_date"),
+    simulationData: jsonb("simulation_data"),
+    score: integer("score"),
+    status: leadStatusEnum("status").default("new").notNull(),
+    promoterId: uuid("promoter_id")
+      .references(() => promoters.id, { onDelete: "set null" }),
+    brokerId: uuid("broker_id")
+      .references(() => brokers.id, { onDelete: "set null" }),
+    dispatchedPromoterAt: timestamp("dispatched_promoter_at"),
+    dispatchedBrokerAt: timestamp("dispatched_broker_at"),
+    convertedAt: timestamp("converted_at"),
+    revenuePromoter: numeric("revenue_promoter", { precision: 10, scale: 2 }),
+    revenueBroker: numeric("revenue_broker", { precision: 10, scale: 2 }),
+    userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
+    simulationId: uuid("simulation_id").references(() => simulations.id, { onDelete: "set null" }),
+    espoId: text("espo_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -256,37 +346,14 @@ export const leads = pgTable(
       .notNull(),
   },
   (table) => [
+    index("leads_platform_idx").on(table.platform),
+    index("leads_status_idx").on(table.status),
+    index("leads_created_at_idx").on(table.createdAt),
     index("leads_email_idx").on(table.email),
-    index("leads_statut_idx").on(table.statut),
     index("leads_user_id_idx").on(table.userId),
     index("leads_simulation_id_idx").on(table.simulationId),
-    index("leads_created_at_idx").on(table.createdAt),
-  ]
-);
-
-/**
- * Table quotas - Gestion packs payants utilisateur
- */
-export const quotas = pgTable(
-  "quotas",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    packType: text("pack_type"), // 'decouverte', 'essentiel', 'premium'
-    simulationsRestantes: integer("simulations_restantes").default(0).notNull(),
-    pdfsRestantes: integer("pdfs_restantes").default(0).notNull(),
-    dateExpiration: timestamp("date_expiration"),
-    stripeSubscriptionId: text("stripe_subscription_id"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-      .defaultNow()
-      .$onUpdate(() => /* @__PURE__ */ new Date())
-      .notNull(),
-  },
-  (table) => [
-    uniqueIndex("quotas_user_id_idx").on(table.userId),
+    index("leads_promoter_id_idx").on(table.promoterId),
+    index("leads_broker_id_idx").on(table.brokerId),
   ]
 );
 
@@ -299,23 +366,32 @@ export const villesRelations = relations(villes, ({ many }) => ({
   simulations: many(simulations),
 }));
 
+export const promotersRelations = relations(promoters, ({ many }) => ({
+  programmes: many(programmes),
+  leads: many(leads),
+}));
+
+export const brokersRelations = relations(brokers, ({ many }) => ({
+  leads: many(leads),
+}));
+
 export const programmesRelations = relations(programmes, ({ one, many }) => ({
   ville: one(villes, {
     fields: [programmes.villeId],
     references: [villes.id],
   }),
+  promoter: one(promoters, {
+    fields: [programmes.promoterId],
+    references: [promoters.id],
+  }),
   simulations: many(simulations),
 }));
 
-export const userRelations = relations(user, ({ many, one }) => ({
+export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
   simulations: many(simulations),
   leads: many(leads),
-  quota: one(quotas, {
-    fields: [user.id],
-    references: [quotas.userId],
-  }),
 }));
 
 export const simulationsRelations = relations(simulations, ({ one }) => ({
@@ -346,12 +422,13 @@ export const leadsRelations = relations(leads, ({ one }) => ({
     fields: [leads.simulationId],
     references: [simulations.id],
   }),
-}));
-
-export const quotasRelations = relations(quotas, ({ one }) => ({
-  user: one(user, {
-    fields: [quotas.userId],
-    references: [user.id],
+  promoter: one(promoters, {
+    fields: [leads.promoterId],
+    references: [promoters.id],
+  }),
+  broker: one(brokers, {
+    fields: [leads.brokerId],
+    references: [brokers.id],
   }),
 }));
 
@@ -371,8 +448,11 @@ export type NewSimulation = InferInsertModel<typeof simulations>;
 export type Lead = InferSelectModel<typeof leads>;
 export type NewLead = InferInsertModel<typeof leads>;
 
-export type Quota = InferSelectModel<typeof quotas>;
-export type NewQuota = InferInsertModel<typeof quotas>;
+export type Promoter = InferSelectModel<typeof promoters>;
+export type NewPromoter = InferInsertModel<typeof promoters>;
+
+export type Broker = InferSelectModel<typeof brokers>;
+export type NewBroker = InferInsertModel<typeof brokers>;
 
 export type User = InferSelectModel<typeof user>;
 export type NewUser = InferInsertModel<typeof user>;

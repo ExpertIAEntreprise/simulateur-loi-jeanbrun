@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 1 terminee
+> **Statut :** 🟢 Phase 2 terminee
 
 ---
 
@@ -124,63 +124,68 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
-## Phase 2 — Schema DB (Leads + Partenaires) ⬜
+## Phase 2 — Schema DB (Leads + Partenaires) ✅ TERMINEE
 
 **Objectif :** Creer les tables `leads`, `promoters`, `brokers` et adapter le schema existant (supprimer quotas, ajouter consentements).
 
 ### Taches
 
-- [ ] **Supprimer** les tables/colonnes liees aux quotas et packs
-  - [ ] Table `subscriptions` ou equivalent → supprimer
-  - [ ] Colonnes `quota_*`, `plan_*` sur la table users → supprimer
-- [ ] **Creer table `leads`**
-  - [ ] `id` (UUID, PK)
-  - [ ] `created_at` (timestamp)
-  - [ ] `platform` (enum: `jeanbrun` | `stop-loyer`)
-  - [ ] `source_page`, `utm_source`, `utm_medium`, `utm_campaign` (varchar)
-  - [ ] `email`, `phone`, `first_name`, `last_name` (varchar)
-  - [ ] `consent_promoter` (boolean, default false)
-  - [ ] `consent_broker` (boolean, default false)
-  - [ ] `consent_newsletter` (boolean, default false)
-  - [ ] `consent_date` (timestamp)
-  - [ ] `simulation_data` (JSONB — resultat complet de la simulation)
-  - [ ] `score` (integer 0-100 — qualite du lead)
-  - [ ] `dispatched_promoter_at` (timestamp, nullable)
-  - [ ] `dispatched_broker_at` (timestamp, nullable)
-  - [ ] `promoter_id` (FK → promoters, nullable)
-  - [ ] `broker_id` (FK → brokers, nullable)
-  - [ ] `status` (enum: `new` | `dispatched` | `contacted` | `converted` | `lost`)
-  - [ ] `converted_at` (timestamp, nullable)
-  - [ ] `revenue_promoter`, `revenue_broker` (decimal, nullable)
-- [ ] **Creer table `promoters`**
-  - [ ] `id` (UUID, PK)
-  - [ ] `name`, `contact_name`, `contact_email`, `contact_phone` (varchar)
-  - [ ] `convention_signed_at` (date)
-  - [ ] `pricing_model` (enum: `per_lead` | `commission` | `hybrid`)
-  - [ ] `price_per_lead` (decimal, nullable)
-  - [ ] `commission_rate` (decimal, nullable)
-  - [ ] `zones` (text array — zones geographiques couvertes)
-  - [ ] `active` (boolean, default true)
-- [ ] **Creer table `brokers`**
-  - [ ] `id` (UUID, PK)
-  - [ ] `name`, `contact_name`, `contact_email`, `contact_phone` (varchar)
-  - [ ] `contract_signed_at` (date)
-  - [ ] `price_per_lead` (decimal)
-  - [ ] `zones` (text array)
-  - [ ] `active` (boolean, default true)
-- [ ] **Adapter table `programs`** (existante)
-  - [ ] Ajouter `promoter_id` (FK → promoters)
-  - [ ] Ajouter `eligible_jeanbrun` (boolean)
-  - [ ] Ajouter `eligible_ptz` (boolean)
-  - [ ] Ajouter `authorized` (boolean, default false) — programme visible seulement si true
-- [ ] **Creer les index**
-  - [ ] `idx_leads_platform` (platform)
-  - [ ] `idx_leads_status` (status)
-  - [ ] `idx_leads_created` (created_at DESC)
-  - [ ] `idx_programs_city` (city)
-  - [ ] `idx_programs_zone` (zone)
-- [ ] Generer et appliquer la migration Drizzle
-- [ ] Verifier build + typecheck
+- [x] **Supprimer** les tables/colonnes liees aux quotas et packs
+  - [x] Table `quotas` → supprimee du schema Drizzle
+  - [x] Enum `leadStatutEnum` ancien → remplace par `leadStatusEnum` (en/new model)
+  - [x] Relations `quotasRelations` et `userRelations.quota` → supprimees
+  - [x] Types `Quota`, `NewQuota` → supprimes
+- [x] **Creer table `leads`** (restructuree)
+  - [x] `id` (UUID, PK)
+  - [x] `created_at` (timestamp)
+  - [x] `platform` (enum: `jeanbrun` | `stop-loyer`)
+  - [x] `source_page`, `utm_source`, `utm_medium`, `utm_campaign` (varchar)
+  - [x] `email`, `telephone`, `prenom`, `nom` (varchar)
+  - [x] `consent_promoter` (boolean, default false)
+  - [x] `consent_broker` (boolean, default false)
+  - [x] `consent_newsletter` (boolean, default false)
+  - [x] `consent_date` (timestamp)
+  - [x] `simulation_data` (JSONB — resultat complet de la simulation)
+  - [x] `score` (integer 0-100 — qualite du lead)
+  - [x] `dispatched_promoter_at` (timestamp, nullable)
+  - [x] `dispatched_broker_at` (timestamp, nullable)
+  - [x] `promoter_id` (FK → promoters, nullable)
+  - [x] `broker_id` (FK → brokers, nullable)
+  - [x] `status` (enum: `new` | `dispatched` | `contacted` | `converted` | `lost`)
+  - [x] `converted_at` (timestamp, nullable)
+  - [x] `revenue_promoter`, `revenue_broker` (numeric(10,2), nullable)
+- [x] **Creer table `promoters`**
+  - [x] `id` (UUID, PK)
+  - [x] `name`, `contact_name`, `contact_email`, `contact_phone` (varchar)
+  - [x] `convention_signed_at` (date)
+  - [x] `pricing_model` (enum: `per_lead` | `commission` | `hybrid`)
+  - [x] `price_per_lead` (numeric(10,2), nullable)
+  - [x] `commission_rate` (numeric(5,2), nullable)
+  - [x] `zones` (text array — zones geographiques couvertes)
+  - [x] `active` (boolean, default true)
+- [x] **Creer table `brokers`**
+  - [x] `id` (UUID, PK)
+  - [x] `name`, `contact_name`, `contact_email`, `contact_phone` (varchar)
+  - [x] `contract_signed_at` (date)
+  - [x] `price_per_lead` (numeric(10,2))
+  - [x] `zones` (text array)
+  - [x] `active` (boolean, default true)
+- [x] **Adapter table `programmes`** (existante)
+  - [x] Ajouter `promoter_id` (FK → promoters, set null on delete)
+  - [x] Ajouter `eligible_jeanbrun` (boolean, default false)
+  - [x] Ajouter `eligible_ptz` (boolean, default false)
+  - [x] Ajouter `authorized` (boolean, default false) — programme visible seulement si true
+- [x] **Creer les index**
+  - [x] `leads_platform_idx` (platform)
+  - [x] `leads_status_idx` (status)
+  - [x] `leads_created_at_idx` (created_at)
+  - [x] `leads_email_idx`, `leads_user_id_idx`, `leads_simulation_id_idx`
+  - [x] `leads_promoter_id_idx`, `leads_broker_id_idx`
+  - [x] `programmes_promoter_id_idx`, `programmes_authorized_idx`
+  - [x] `promoters_active_idx`, `brokers_active_idx`
+- [x] Generer migration Drizzle (`0002_quick_karma.sql`)
+- [x] Verifier build + typecheck (2/2 apps success, 0 erreurs TS sur packages impactes)
+- [x] Package `@repo/leads` deja aligne (types, validation, scoring)
 
 ---
 
