@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟢 Phase 4 terminee
+> **Statut :** 🟢 Phase 5 terminee
 
 ---
 
@@ -254,30 +254,30 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
-## Phase 5 — API Leads + Notifications ⬜
+## Phase 5 — API Leads + Notifications ✅ TERMINEE
 
 **Objectif :** Implementer le dispatch automatique des leads vers les promoteurs et courtiers (API + emails de notification separes).
 
 ### Taches
 
-- [ ] **API interne leads**
-  - [ ] `POST /api/leads` — creation lead (depuis le lead gate)
-  - [ ] `GET /api/leads` — liste leads (admin, avec filtres)
-  - [ ] `GET /api/leads/:id` — detail lead
-  - [ ] `PATCH /api/leads/:id` — mise a jour statut
-  - [ ] Validation Zod sur tous les endpoints
-  - [ ] Authentification bearer token
-- [ ] **Dispatch promoteur** (si `consent_promoter === true`)
-  - [ ] Identifier le promoteur cible selon la zone du lead et les programmes actifs
-  - [ ] Envoyer email notification au promoteur avec :
+- [x] **API interne leads**
+  - [x] `POST /api/leads` — creation lead (depuis le lead gate)
+  - [x] `GET /api/leads` — liste leads (admin, avec filtres)
+  - [x] `GET /api/leads/:id` — detail lead
+  - [x] `PATCH /api/leads/:id` — mise a jour statut
+  - [x] Validation Zod sur tous les endpoints
+  - [x] Authentification bearer token
+- [x] **Dispatch promoteur** (si `consent_promoter === true`)
+  - [x] Identifier le promoteur cible selon la zone du lead et les programmes actifs
+  - [x] Envoyer email notification au promoteur avec :
     - Contact prospect (nom, email, telephone)
     - Resume simulation (TMI, budget, zone, ROI calcule)
     - Type de bien recherche
     - Mention : "Le prospect souhaite etre contacte directement pour beneficier de vos tarifs directs et offres en cours"
-  - [ ] Mettre a jour `dispatched_promoter_at` et `promoter_id` sur le lead
-- [ ] **Dispatch courtier** (si `consent_broker === true`, **independant du promoteur**)
-  - [ ] Identifier le courtier cible selon la zone du lead
-  - [ ] Envoyer email notification au courtier avec :
+  - [x] Mettre a jour `dispatched_promoter_at` et `promoter_id` sur le lead
+- [x] **Dispatch courtier** (si `consent_broker === true`, **independant du promoteur**)
+  - [x] Identifier le courtier cible selon la zone du lead
+  - [x] Envoyer email notification au courtier avec :
     - Contact prospect (nom, email, telephone)
     - Revenus mensuels nets du foyer
     - Apport disponible
@@ -285,20 +285,20 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
     - Zone geographique
     - Capacite d'emprunt estimee (Jeanbrun) OU eligibilite PTZ confirmee (Stop-Loyer)
     - Composition du foyer
-  - [ ] Mettre a jour `dispatched_broker_at` et `broker_id` sur le lead
-- [ ] **Templates email distincts**
-  - [ ] Template promoteur : focus projet immobilier + simulation + avantage relation directe
-  - [ ] Template courtier : focus capacite financiere + eligibilite
-  - [ ] Template prospect : rapport PDF + confirmation + mention des partenaires contactes
-- [ ] **Rate limiting**
-  - [ ] Limiter la creation de leads (anti-spam) : 5 leads/IP/heure
-  - [ ] Limiter les appels API admin : 100 req/min
-- [ ] **Dashboard admin** (page interne)
-  - [ ] Liste leads avec colonnes : date, plateforme, nom, email, score, statut, dispatche promoteur, dispatche courtier
-  - [ ] Filtres : plateforme, statut, date range, score min
-  - [ ] Detail lead : historique complet + donnees simulation
-  - [ ] Suivi revenus : CA par promoteur, CA par courtier
-- [ ] Verifier build + tests
+  - [x] Mettre a jour `dispatched_broker_at` et `broker_id` sur le lead
+- [x] **Templates email distincts**
+  - [x] Template promoteur : focus projet immobilier + simulation + avantage relation directe
+  - [x] Template courtier : focus capacite financiere + eligibilite
+  - [x] Template prospect : rapport PDF + confirmation + mention des partenaires contactes
+- [x] **Rate limiting**
+  - [x] Limiter la creation de leads (anti-spam) : 5 leads/IP/heure
+  - [x] Limiter les appels API admin : 100 req/min
+- [x] **Dashboard admin** (page interne)
+  - [x] Liste leads avec colonnes : date, plateforme, nom, email, score, statut, dispatche promoteur, dispatche courtier
+  - [x] Filtres : plateforme, statut, date range, score min
+  - [x] Detail lead : historique complet + donnees simulation
+  - [x] Suivi revenus : CA par promoteur, CA par courtier
+- [x] Verifier build + tests
 
 ---
 
@@ -394,4 +394,4 @@ Visiteur → Simulation gratuite → Teaser resultats
 
 ---
 
-*Derniere mise a jour : 6 fevrier 2026*
+*Derniere mise a jour : 6 fevrier 2026 (Phase 5 terminee)*

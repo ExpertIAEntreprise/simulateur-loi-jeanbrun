@@ -1,15 +1,14 @@
 /**
- * API Route: Lead Capture
+ * API Route: Lead Capture & Admin Listing
  *
- * Main lead capture endpoint for the Jeanbrun simulator and stop-loyer platforms.
- * Validates input, enforces rate limiting, calculates lead score, and stores
- * the lead in Neon PostgreSQL via Drizzle ORM.
+ * POST /api/leads - Main lead capture endpoint (public, rate-limited)
+ * GET  /api/leads - Admin lead listing with filters (bearer auth)
  *
- * POST /api/leads
- *
- * @security Rate limited to 5 requests per IP per hour (via Upstash Redis)
- * @security At least one consent (promoter or broker) required
- * @security French phone number format enforced
+ * @security POST: Rate limited to 5 requests per IP per hour (via Upstash Redis)
+ * @security POST: At least one consent (promoter or broker) required
+ * @security POST: French phone number format enforced
+ * @security GET: Bearer token auth via ADMIN_API_TOKEN
+ * @security GET: Rate limited to 100 requests per minute
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -19,14 +18,16 @@ import {
   checkRateLimit,
   getClientIP,
 } from "@/lib/rate-limit";
-import { db } from "@repo/database";
+import { db, and, eq, gte, lte, desc, sql } from "@repo/database";
 import { leads } from "@repo/database/schema";
 import { calculateLeadScore } from "@repo/leads";
+import { dispatchLead } from "@/lib/lead-dispatch";
 
 // ---------------------------------------------------------------------------
-// Rate limiter: 5 leads per IP per hour (stricter than simulation endpoints)
+// Rate limiters
 // ---------------------------------------------------------------------------
 const leadCaptureRateLimiter = createRateLimiter(5);
+const adminListRateLimiter = createRateLimiter(100);
 
 // ---------------------------------------------------------------------------
 // French phone regex (international +33 or local 0x format)
@@ -35,7 +36,7 @@ const leadCaptureRateLimiter = createRateLimiter(5);
 const FRENCH_PHONE_REGEX = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
 
 // ---------------------------------------------------------------------------
-// Zod validation schema
+// Zod validation schema (POST)
 // ---------------------------------------------------------------------------
 const leadCaptureSchema = z
   .object({
@@ -123,6 +124,14 @@ export async function POST(request: NextRequest) {
       })
       .returning({ id: leads.id, score: leads.score });
 
+    // 4.5 Dispatch lead asynchronously (fire-and-forget)
+    // Do NOT await - dispatch happens in background
+    if (lead?.id) {
+      dispatchLead(lead.id).catch((err) => {
+        console.error("[Lead Dispatch] Error:", err);
+      });
+    }
+
     // 5. Return success
     return NextResponse.json(
       {
@@ -173,6 +182,139 @@ export async function POST(request: NextRequest) {
 }
 
 // ---------------------------------------------------------------------------
+// GET /api/leads (admin list with filters)
+// ---------------------------------------------------------------------------
+export async function GET(request: NextRequest) {
+  try {
+    // 1. Authenticate: check ADMIN_API_TOKEN bearer token
+    const authError = verifyAdminAuth(request);
+    if (authError) return authError;
+
+    // 2. Rate limit: 100 req/min
+    const ip = getClientIP(request);
+    const rateLimitResponse = await checkRateLimit(adminListRateLimiter, ip);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // 3. Parse query params
+    const { searchParams } = new URL(request.url);
+    const platform = searchParams.get("platform");
+    const status = searchParams.get("status");
+    const dateFrom = searchParams.get("dateFrom");
+    const dateTo = searchParams.get("dateTo");
+    const scoreMin = searchParams.get("scoreMin");
+    const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10) || 20)
+    );
+    const offset = (page - 1) * limit;
+
+    // 4. Build filter conditions
+    const conditions = [];
+
+    if (platform === "jeanbrun" || platform === "stop-loyer") {
+      conditions.push(eq(leads.platform, platform));
+    }
+
+    if (
+      status === "new" ||
+      status === "dispatched" ||
+      status === "contacted" ||
+      status === "converted" ||
+      status === "lost"
+    ) {
+      conditions.push(eq(leads.status, status));
+    }
+
+    if (dateFrom) {
+      const fromDate = new Date(dateFrom);
+      if (!isNaN(fromDate.getTime())) {
+        conditions.push(gte(leads.createdAt, fromDate));
+      }
+    }
+
+    if (dateTo) {
+      const toDate = new Date(dateTo);
+      if (!isNaN(toDate.getTime())) {
+        conditions.push(lte(leads.createdAt, toDate));
+      }
+    }
+
+    if (scoreMin) {
+      const minScore = parseInt(scoreMin, 10);
+      if (!isNaN(minScore) && minScore >= 0) {
+        conditions.push(gte(leads.score, minScore));
+      }
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    // 5. Query total count
+    const [countResult] = await db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(leads)
+      .where(whereClause);
+
+    const total = countResult?.total ?? 0;
+
+    // 6. Query paginated leads
+    const results = await db
+      .select({
+        id: leads.id,
+        platform: leads.platform,
+        email: leads.email,
+        telephone: leads.telephone,
+        prenom: leads.prenom,
+        nom: leads.nom,
+        score: leads.score,
+        status: leads.status,
+        consentPromoter: leads.consentPromoter,
+        consentBroker: leads.consentBroker,
+        promoterId: leads.promoterId,
+        brokerId: leads.brokerId,
+        dispatchedPromoterAt: leads.dispatchedPromoterAt,
+        dispatchedBrokerAt: leads.dispatchedBrokerAt,
+        convertedAt: leads.convertedAt,
+        revenuePromoter: leads.revenuePromoter,
+        revenueBroker: leads.revenueBroker,
+        sourcePage: leads.sourcePage,
+        utmSource: leads.utmSource,
+        utmMedium: leads.utmMedium,
+        utmCampaign: leads.utmCampaign,
+        createdAt: leads.createdAt,
+        updatedAt: leads.updatedAt,
+      })
+      .from(leads)
+      .where(whereClause)
+      .orderBy(desc(leads.createdAt))
+      .limit(limit)
+      .offset(offset);
+
+    // 7. Return paginated results
+    return NextResponse.json({
+      success: true,
+      data: results,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    console.error("[Lead List] Unexpected error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Une erreur est survenue lors de la recuperation des leads.",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -184,4 +326,30 @@ function toNumberOrUndefined(value: unknown): number | undefined {
   if (value === undefined || value === null) return undefined;
   const num = Number(value);
   return Number.isFinite(num) ? num : undefined;
+}
+
+/**
+ * Verify ADMIN_API_TOKEN bearer token.
+ * Returns a 401 NextResponse if invalid, or null if valid.
+ */
+function verifyAdminAuth(request: NextRequest): NextResponse | null {
+  const adminToken = process.env.ADMIN_API_TOKEN;
+
+  if (!adminToken) {
+    console.error("[Admin Auth] ADMIN_API_TOKEN is not configured");
+    return NextResponse.json(
+      { success: false, message: "Configuration serveur manquante" },
+      { status: 500 }
+    );
+  }
+
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader?.startsWith("Bearer ") || authHeader.slice(7) !== adminToken) {
+    return NextResponse.json(
+      { success: false, message: "Non autorise" },
+      { status: 401 }
+    );
+  }
+
+  return null;
 }
