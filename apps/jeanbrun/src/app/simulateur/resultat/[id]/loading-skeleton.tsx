@@ -27,7 +27,7 @@ export function ResultatLoadingSkeleton() {
       {/* Financement */}
       <Skeleton className="h-64 w-full" />
 
-      {/* Premium sections */}
+      {/* Detailed sections */}
       <Skeleton className="h-96 w-full" />
       <Skeleton className="h-96 w-full" />
     </div>

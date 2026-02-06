@@ -5,7 +5,6 @@ import {
   Biographie,
   Timeline,
   Temoignages,
-  CalendlyEmbed,
   SocialLinks,
 } from '@/components/profil'
 import { Button } from '@/components/ui/button'
@@ -79,7 +78,7 @@ const localBusinessJsonLd = {
   description:
     'Service de simulation et conseil en defiscalisation immobiliere specialise dans la loi Jeanbrun.',
   url: 'https://simulateur-loi-jeanbrun.vercel.app',
-  priceRange: 'Gratuit - Premium',
+  priceRange: 'Gratuit',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Paris',
@@ -120,9 +119,6 @@ export default function AProposPage() {
 
       {/* Temoignages */}
       <Temoignages />
-
-      {/* Calendly Embed */}
-      <CalendlyEmbed />
 
       {/* Social Links */}
       <SocialLinks />

@@ -22,7 +22,7 @@ export default function ResultatLoading() {
       {/* Financement */}
       <Skeleton className="h-64 w-full bg-muted" />
 
-      {/* Premium sections */}
+      {/* Detailed sections */}
       <Skeleton className="h-96 w-full bg-muted" />
       <Skeleton className="h-96 w-full bg-muted" />
     </div>

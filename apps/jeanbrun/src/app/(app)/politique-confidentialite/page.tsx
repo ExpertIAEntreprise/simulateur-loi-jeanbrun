@@ -77,10 +77,10 @@ export default function PolitiqueConfidentialitePage() {
               <li>Pages consultées et durée de visite</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mb-3 mt-6">3.4. Données de paiement</h3>
+            <h3 className="text-xl font-semibold mb-3 mt-6">3.4. Données de simulation</h3>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Informations de facturation</li>
-              <li>Historique des transactions (les données bancaires sont traitées directement par Stripe et ne sont pas stockées sur nos serveurs)</li>
+              <li>Résultats de simulation fiscale</li>
+              <li>Paramètres de simulation sauvegardés</li>
             </ul>
           </section>
 
@@ -100,10 +100,6 @@ export default function PolitiqueConfidentialitePage() {
                 <tbody>
                   <tr className="border-b border-border">
                     <td className="p-2">Fourniture du service de simulation</td>
-                    <td className="p-2">Exécution du contrat</td>
-                  </tr>
-                  <tr className="border-b border-border">
-                    <td className="p-2">Gestion des abonnements et paiements</td>
                     <td className="p-2">Exécution du contrat</td>
                   </tr>
                   <tr className="border-b border-border">
@@ -152,7 +148,6 @@ export default function PolitiqueConfidentialitePage() {
             <ul className="list-disc pl-6 space-y-2">
               <li><strong>Vercel Inc.</strong> (États-Unis) - Hébergement de l&apos;application</li>
               <li><strong>Neon</strong> (États-Unis) - Hébergement de la base de données PostgreSQL</li>
-              <li><strong>Stripe</strong> (Irlande/États-Unis) - Traitement des paiements</li>
               <li><strong>EspoCRM</strong> (auto-hébergé) - Gestion de la relation client</li>
               <li><strong>Mailjet</strong> (France) - Envoi d&apos;emails transactionnels</li>
             </ul>
@@ -193,11 +188,7 @@ export default function PolitiqueConfidentialitePage() {
                   </tr>
                   <tr className="border-b border-border">
                     <td className="p-2">Données de simulation</td>
-                    <td className="p-2">Durée de l&apos;abonnement + 1 an</td>
-                  </tr>
-                  <tr className="border-b border-border">
-                    <td className="p-2">Données de facturation</td>
-                    <td className="p-2">10 ans (obligation comptable)</td>
+                    <td className="p-2">Durée du compte actif + 1 an</td>
                   </tr>
                   <tr className="border-b border-border">
                     <td className="p-2">Logs de connexion</td>

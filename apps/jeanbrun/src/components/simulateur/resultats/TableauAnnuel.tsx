@@ -1,8 +1,6 @@
 "use client";
 
-import { Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -32,8 +30,6 @@ export interface TableauAnnuelData {
 
 export interface TableauAnnuelProps {
   data: TableauAnnuelData[];
-  isPremium?: boolean;
-  onUnlock?: () => void;
   className?: string;
 }
 
@@ -43,10 +39,10 @@ export interface TableauAnnuelProps {
 
 /**
  * Format a number in French locale with EUR symbol
- * @example formatMontant(123456.78) => "123 456 €"
+ * @example formatMontant(123456.78) => "123 456 EUR"
  */
 function formatMontant(value: number): string {
-  return Math.round(value).toLocaleString("fr-FR") + " €";
+  return Math.round(value).toLocaleString("fr-FR") + " \u20ac";
 }
 
 /**
@@ -91,28 +87,6 @@ function calculateTotals(data: TableauAnnuelData[]): Omit<TableauAnnuelData, "an
 // Sub-components
 // ============================================================================
 
-function PremiumOverlay({ onUnlock }: { onUnlock: (() => void) | undefined }) {
-  return (
-    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg">
-      <div className="flex flex-col items-center gap-4 p-6 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-          <Lock className="h-6 w-6 text-primary" />
-        </div>
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Tableau detaille Premium</h3>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            Debloquez l&apos;acces au tableau annee par annee pour suivre l&apos;evolution de votre
-            investissement sur toute la duree.
-          </p>
-        </div>
-        <Button onClick={onUnlock} size="lg">
-          Debloquer l&apos;acces complet
-        </Button>
-      </div>
-    </div>
-  );
-}
-
 function MontantCell({ value, isNegative }: { value: number; isNegative?: boolean }) {
   const shouldShowNegative = isNegative ?? value < 0;
 
@@ -140,20 +114,13 @@ function MontantCell({ value, isNegative }: { value: number; isNegative?: boolea
  * - Horizontal scroll on mobile
  * - Total row at bottom
  * - Current year row highlighted
- * - Premium gating with blur overlay
  */
 export function TableauAnnuel({
   data,
-  isPremium = false,
-  onUnlock,
   className,
 }: TableauAnnuelProps) {
   const currentYear = getCurrentYear();
   const totals = calculateTotals(data);
-
-  // Show only preview data if not premium (first 3 rows)
-  const displayData = isPremium ? data : data.slice(0, 3);
-  const hasMoreRows = !isPremium && data.length > 3;
 
   return (
     <Card className={cn("relative", className)}>
@@ -164,23 +131,15 @@ export function TableauAnnuel({
           </CardTitle>
           <Badge
             variant="secondary"
-            className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30 text-xs whitespace-nowrap"
+            className="text-xs whitespace-nowrap"
           >
-            Premium
+            {data.length} ans
           </Badge>
         </div>
       </CardHeader>
 
       <CardContent className="relative px-2 sm:px-6">
-        {/* Premium overlay when not subscribed */}
-        {!isPremium && <PremiumOverlay onUnlock={onUnlock} />}
-
-        <div
-          className={cn(
-            "overflow-x-auto rounded-lg border border-border -mx-2 sm:mx-0",
-            !isPremium && "blur-sm select-none pointer-events-none"
-          )}
-        >
+        <div className="overflow-x-auto rounded-lg border border-border -mx-2 sm:mx-0">
           <div className="inline-block min-w-full align-middle">
             <Table>
               <TableHeader className="sticky top-0 z-20 bg-muted/50">
@@ -213,7 +172,7 @@ export function TableauAnnuel({
               </TableHeader>
 
               <TableBody>
-                {displayData.map((row, index) => {
+                {data.map((row, index) => {
                   const isCurrentYear = row.annee === currentYear;
                   const isEvenRow = index % 2 === 0;
 
@@ -264,18 +223,6 @@ export function TableauAnnuel({
                     </TableRow>
                   );
                 })}
-
-                {/* Fade indicator for non-premium users */}
-                {hasMoreRows && (
-                  <TableRow className="hover:bg-transparent">
-                    <TableCell
-                      colSpan={8}
-                      className="text-center text-xs sm:text-sm text-muted-foreground py-3 sm:py-4"
-                    >
-                      ... et {data.length - 3} annees supplementaires
-                    </TableCell>
-                  </TableRow>
-                )}
               </TableBody>
 
               <TableFooter className="bg-muted/50">
@@ -317,7 +264,7 @@ export function TableauAnnuel({
             <span>Annee en cours</span>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <span className="text-destructive font-mono">-1 234 €</span>
+            <span className="text-destructive font-mono">-1 234 \u20ac</span>
             <span>Depense / sortie de tresorerie</span>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 > **Ref :** [requirements.md](./requirements.md)
 > **Date :** 6 fevrier 2026
-> **Statut :** 🟡 Phase 0 terminee
+> **Statut :** 🟢 Phase 1 terminee
 
 ---
 
@@ -52,8 +52,8 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
   - [x] Re-exports de compatibilite : `@/components/ui/*` → `@repo/ui/components/*`
   - [x] Re-exports de compatibilite : `@/lib/utils` → `@repo/ui/utils`
   - [x] Re-exports de compatibilite : `@/lib/schema` → `@repo/database/schema`
-- [ ] **Configurer Vercel** pour le monorepo
-  - [ ] Projet Vercel `jeanbrun` → root directory `apps/jeanbrun`
+- [x] **Configurer Vercel** pour le monorepo
+  - [x] `vercel.json` avec `framework: nextjs`, `buildCommand: pnpm turbo build --filter=jeanbrun`
   - [ ] Projet Vercel `stop-loyer` → root directory `apps/stop-loyer`
   - [ ] Variables d'environnement partagees (DB, API keys)
 - [x] Verifier que le build passe pour les deux apps (`turbo build` = 2/2 success)
@@ -89,47 +89,38 @@ Le pivot se decompose en **7 phases** qui transforment le projet d'un modele pac
 
 ---
 
-## Phase 1 — Nettoyage Code ⬜
+## Phase 1 — Nettoyage Code ✅ TERMINEE
 
 **Objectif :** Supprimer tout le code lie a l'ancien modele economique (packs, paiement, fonctionnalites premium) pour repartir sur une base propre.
 
 ### Taches
 
-- [ ] Supprimer l'integration **Stripe** (checkout, webhooks, customer portal, plans/quotas)
-  - [ ] Retirer `stripe` et `@stripe/stripe-js` des dependances
-  - [ ] Supprimer les routes API `/api/webhooks/stripe/`, `/api/checkout/`
-  - [ ] Supprimer les composants pricing/checkout
-  - [ ] Retirer les variables d'environnement Stripe
-- [ ] Supprimer l'integration **Calendly** (prise de RDV integree)
-  - [ ] Retirer le composant embed Calendly
-  - [ ] Supprimer les references Calendly dans les pages
-- [ ] Supprimer le **Chat IA** (assistant conversationnel)
-  - [ ] Retirer les routes API chat/streaming
-  - [ ] Supprimer les composants chat UI
-  - [ ] Retirer les dependances AI SDK liees au chat
-- [ ] Supprimer la **generation PDF** cote client (sera refaite en Phase 4)
-  - [ ] Retirer la generation PDF inline
-  - [ ] Conserver le moteur de calcul simulation (reutilise)
-- [ ] Supprimer les **etapes 3 a 6** du wizard si elles concernent l'ancien flow premium
-  - [ ] Identifier quelles etapes sont specifiques a l'ancien modele
-  - [ ] Conserver les etapes de saisie simulation (profil, projet, financement, strategie, duree, structure)
-- [ ] Supprimer le systeme de **quotas/credits** utilisateur
-  - [ ] Retirer la logique de decompte simulations
-  - [ ] Retirer les guards/middlewares de verification quota
-- [ ] Verifier que le build passe apres nettoyage (`lint` + `typecheck`)
-
-### Fichiers concernes (a identifier)
-
-```
-src/app/api/webhooks/stripe/    → supprimer
-src/app/api/checkout/           → supprimer
-src/app/api/chat/               → supprimer
-src/components/pricing/         → supprimer
-src/components/chat/            → supprimer
-src/components/calendly/        → supprimer
-src/lib/stripe.*                → supprimer
-src/lib/quotas.*                → supprimer
-```
+- [x] Supprimer l'integration **Stripe** (checkout, webhooks, customer portal, plans/quotas)
+  - [x] Retirer `stripe` et `@stripe/stripe-js` des dependances
+  - [x] Supprimer les references Stripe dans les pages legales (politique-confidentialite, CGV→CGU)
+  - [x] Retirer les mentions Premium/paiement du pricing (plan unique gratuit)
+  - [x] Retirer les mentions Stripe de la FAQ
+- [x] Supprimer l'integration **Calendly** (prise de RDV integree)
+  - [x] Retirer le composant embed CalendlyEmbed et son export
+  - [x] Supprimer les references Calendly dans HeroProfil, Temoignages, a-propos
+- [x] **Chat IA conserve** (decision utilisateur) — AI SDK + OpenRouter maintenus
+- [x] Supprimer la **generation PDF** cote client (sera refaite en Phase 4)
+  - [x] Retirer `@react-pdf/renderer` des dependances
+  - [x] Moteur de calcul simulation conserve (reutilise)
+- [x] **Wizard inchange** — Les 6 etapes sont deja accessibles sans auth ni premium
+  - [x] Aucune etape liee a l'ancien modele premium (verification faite)
+  - [x] Navigation localStorage, pas de gate d'inscription
+- [x] **Quotas/credits inexistants** — Seul le rate limiting DDoS est en place (conserve)
+- [x] Supprimer le **gating premium** sur la page resultats
+  - [x] Retirer `isPremium`, `PremiumOverlay`, blur/lock sur TableauAnnuel et ComparatifLMNP
+  - [x] Retirer `handleUnlock`, `handleExport`, `handleCallbackRequest` de resultat-client.tsx
+  - [x] Tous les resultats affiches sans restriction
+- [x] Mettre a jour les pages legales
+  - [x] CGV → CGU (Conditions Generales d'Utilisation, service gratuit)
+  - [x] Politique de confidentialite : retirer mentions paiement/Stripe/facturation
+  - [x] Footer : CGV → CGU, retirer liens Export PDF/premium
+- [x] Configurer vercel.json pour le monorepo Turborepo
+- [x] Build passe apres nettoyage (`turbo build --filter=jeanbrun` = success)
 
 ---
 

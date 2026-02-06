@@ -12,3 +12,4 @@ export {
 } from "./GraphiquePatrimoine";
 export { TableauAnnuel, type TableauAnnuelProps, type TableauAnnuelData } from "./TableauAnnuel";
 export { ComparatifLMNP, type ComparatifLMNPProps, type RegimeData } from "./ComparatifLMNP";
+

@@ -9,7 +9,7 @@ import { useEffect, useState, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
-import { ArrowLeft, Download, Lock, Phone, Share2 } from "lucide-react";
+import { ArrowLeft, Share2 } from "lucide-react";
 
 // Static imports for lightweight components
 import {
@@ -17,9 +17,8 @@ import {
   TableauAnnuel,
   EncartFinancement,
 } from "@/components/simulateur/resultats";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -66,8 +65,6 @@ export function ResultatClient() {
   // Lazy initialization from localStorage (runs once on mount)
   const [wizardState] = useState<WizardState | null>(() => loadWizardState());
   const [results, setResults] = useState<SimulationResults | null>(null);
-  const [isPremium] = useState(false); // TODO: Check user subscription
-  const [, setShowPremiumModal] = useState(false);
   const hasInitialized = useRef(false);
   const [isPending, startTransition] = useTransition();
 
@@ -91,14 +88,6 @@ export function ResultatClient() {
     }
   }, [wizardState, router]);
 
-  // Handle premium unlock
-  const handleUnlock = () => {
-    setShowPremiumModal(true);
-    toast.info("Fonctionnalite premium", {
-      description: "Paiement Stripe a venir (9,90 EUR)",
-    });
-  };
-
   // Handle share
   const handleShare = () => {
     if (navigator.share) {
@@ -111,20 +100,6 @@ export function ResultatClient() {
       navigator.clipboard.writeText(window.location.href);
       toast.success("Lien copie dans le presse-papiers !");
     }
-  };
-
-  // Handle export (placeholder)
-  const handleExport = () => {
-    toast.info("Export PDF", {
-      description: "Fonctionnalite premium a venir",
-    });
-  };
-
-  // Handle callback request
-  const handleCallbackRequest = () => {
-    toast.info("Demande de rappel", {
-      description: "Formulaire Calendly a venir",
-    });
   };
 
   // Loading state (during calculation)
@@ -157,7 +132,6 @@ export function ResultatClient() {
         wizardState={wizardState}
         onBack={() => router.push("/simulateur/avance/etape-6")}
         onShare={handleShare}
-        onExport={handleExport}
       />
 
       {/* Synthese - 4 KPIs */}
@@ -195,22 +169,22 @@ export function ResultatClient() {
 
       <Separator className="my-8" />
 
-      {/* Premium Sections */}
-      <PremiumSections
-        results={results}
-        isPremium={isPremium}
-        onUnlock={handleUnlock}
-      />
+      {/* Analyse detaillee */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Analyse detaillee</h2>
 
-      {/* CTA Section */}
-      <Separator className="my-8" />
+        {/* Tableau Annuel */}
+        <TableauAnnuel data={results.tableauAnnuel} />
 
-      <CTASection
-        onUnlock={handleUnlock}
-        onCallbackRequest={handleCallbackRequest}
-      />
+        {/* Comparatif LMNP */}
+        <ComparatifLMNP
+          jeanbrun={results.comparatifLMNP.jeanbrun}
+          lmnp={results.comparatifLMNP.lmnp}
+        />
+      </div>
 
       {/* Disclaimer */}
+      <Separator className="my-8" />
       <Disclaimer />
     </div>
   );
@@ -224,10 +198,9 @@ interface ResultatHeaderProps {
   wizardState: WizardState | null;
   onBack: () => void;
   onShare: () => void;
-  onExport: () => void;
 }
 
-function ResultatHeader({ wizardState, onBack, onShare, onExport }: ResultatHeaderProps) {
+function ResultatHeader({ wizardState, onBack, onShare }: ResultatHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
@@ -258,139 +231,7 @@ function ResultatHeader({ wizardState, onBack, onShare, onExport }: ResultatHead
           <Share2 className="h-4 w-4 mr-2" />
           Partager
         </Button>
-        <Button variant="outline" size="sm" onClick={onExport}>
-          <Download className="h-4 w-4 mr-2" />
-          Export PDF
-        </Button>
       </div>
-    </div>
-  );
-}
-
-interface PremiumSectionsProps {
-  results: SimulationResults;
-  isPremium: boolean;
-  onUnlock: () => void;
-}
-
-function PremiumSections({ results, isPremium, onUnlock }: PremiumSectionsProps) {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Analyse detaillee</h2>
-        <Badge
-          variant="secondary"
-          className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30"
-        >
-          Premium
-        </Badge>
-      </div>
-
-      {/* Tableau Annuel */}
-      <TableauAnnuel
-        data={results.tableauAnnuel}
-        isPremium={isPremium}
-        onUnlock={onUnlock}
-      />
-
-      {/* Comparatif LMNP */}
-      <ComparatifLMNP
-        jeanbrun={results.comparatifLMNP.jeanbrun}
-        lmnp={results.comparatifLMNP.lmnp}
-        isPremium={isPremium}
-        onUnlock={onUnlock}
-      />
-    </div>
-  );
-}
-
-interface CTASectionProps {
-  onUnlock: () => void;
-  onCallbackRequest: () => void;
-}
-
-function CTASection({ onUnlock, onCallbackRequest }: CTASectionProps) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* CTA Premium */}
-      <Card className="border-accent bg-gradient-to-br from-accent/10 to-background">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Lock className="h-5 w-5 text-accent" />
-            Debloquer l&apos;analyse complete
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <ul className="space-y-2 text-sm">
-            <li className="flex items-center gap-2">
-              <span className="text-accent">&#x2713;</span>
-              Tableau detaille annee par annee
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-accent">&#x2713;</span>
-              Comparatif complet Jeanbrun vs LMNP
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-accent">&#x2713;</span>
-              Export PDF professionnel
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-accent">&#x2713;</span>
-              Simulation illimitee pendant 30 jours
-            </li>
-          </ul>
-          <Button
-            onClick={onUnlock}
-            className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
-            size="lg"
-          >
-            Debloquer pour 9,90 EUR
-          </Button>
-          <p className="text-xs text-center text-muted-foreground">
-            Paiement securise par Stripe - Satisfait ou rembourse
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* CTA Conseiller */}
-      <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-background">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Phone className="h-5 w-5 text-primary" />
-            Etre rappele par un conseiller
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Un conseiller specialise en investissement locatif vous accompagne pour :
-          </p>
-          <ul className="space-y-2 text-sm">
-            <li className="flex items-center gap-2">
-              <span className="text-primary">&#x2713;</span>
-              Valider votre projet d&apos;investissement
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-primary">&#x2713;</span>
-              Trouver le bien ideal
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-primary">&#x2713;</span>
-              Optimiser votre financement
-            </li>
-          </ul>
-          <Button
-            onClick={onCallbackRequest}
-            variant="outline"
-            className="w-full border-primary text-primary hover:bg-primary/10"
-            size="lg"
-          >
-            Demander un rappel gratuit
-          </Button>
-          <p className="text-xs text-center text-muted-foreground">
-            Reponse sous 24h - Sans engagement
-          </p>
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -1,8 +1,7 @@
 "use client";
 
-import { Award, Lock, Minus, TrendingDown, TrendingUp } from "lucide-react";
+import { Award, Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -24,8 +23,6 @@ export interface RegimeData {
 export interface ComparatifLMNPProps {
   jeanbrun: RegimeData;
   lmnp: RegimeData;
-  isPremium?: boolean;
-  onUnlock?: () => void;
   className?: string;
 }
 
@@ -100,7 +97,7 @@ const COMPLEXITE_SCORES: Record<ComplexiteLevel, number> = {
  * Format a number in French locale with EUR symbol
  */
 function formatMontant(value: number): string {
-  return Math.round(value).toLocaleString("fr-FR") + " €";
+  return Math.round(value).toLocaleString("fr-FR") + " \u20ac";
 }
 
 /**
@@ -179,28 +176,6 @@ function calculateOverallWinner(
 // ============================================================================
 // Sub-components
 // ============================================================================
-
-function PremiumOverlay({ onUnlock }: { onUnlock: (() => void) | undefined }) {
-  return (
-    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg">
-      <div className="flex flex-col items-center gap-4 p-6 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-          <Lock className="h-6 w-6 text-primary" />
-        </div>
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Comparatif Premium</h3>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            Debloquez le comparatif complet entre la Loi Jeanbrun et le LMNP pour faire le meilleur
-            choix pour votre investissement.
-          </p>
-        </div>
-        <Button onClick={onUnlock} size="lg">
-          Debloquer l&apos;acces complet
-        </Button>
-      </div>
-    </div>
-  );
-}
 
 function WinnerIndicator({ winner }: { winner: "jeanbrun" | "lmnp" | "tie" }) {
   if (winner === "tie") {
@@ -352,13 +327,10 @@ function VerdictSection({
  * - Best value highlighted in green
  * - "Recommande" badge on winning column header
  * - Verdict section with explanation
- * - Premium gating with blur overlay
  */
 export function ComparatifLMNP({
   jeanbrun,
   lmnp,
-  isPremium = false,
-  onUnlock,
   className,
 }: ComparatifLMNPProps) {
   const { winner, jeanbrunScore, lmnpScore } = calculateOverallWinner(jeanbrun, lmnp);
@@ -366,89 +338,76 @@ export function ComparatifLMNP({
   return (
     <Card className={cn("relative", className)}>
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Comparatif Jeanbrun vs LMNP</CardTitle>
-          <Badge
-            variant="secondary"
-            className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30"
-          >
-            Premium
-          </Badge>
-        </div>
+        <CardTitle className="text-lg">Comparatif Jeanbrun vs LMNP</CardTitle>
       </CardHeader>
 
-      <CardContent className="relative">
-        {/* Premium overlay when not subscribed */}
-        {!isPremium && <PremiumOverlay onUnlock={onUnlock} />}
-
-        <div className={cn(!isPremium && "blur-sm select-none pointer-events-none")}>
-          {/* Column headers */}
-          <div className="grid grid-cols-[1fr,auto,1fr] gap-4 mb-4">
-            {/* Jeanbrun header */}
-            <div
-              className={cn(
-                "flex flex-col items-center gap-2 p-4 rounded-lg border",
-                winner === "jeanbrun"
-                  ? "border-success bg-success/5"
-                  : "border-border bg-muted/20"
+      <CardContent>
+        {/* Column headers */}
+        <div className="grid grid-cols-[1fr,auto,1fr] gap-4 mb-4">
+          {/* Jeanbrun header */}
+          <div
+            className={cn(
+              "flex flex-col items-center gap-2 p-4 rounded-lg border",
+              winner === "jeanbrun"
+                ? "border-success bg-success/5"
+                : "border-border bg-muted/20"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-foreground">Loi Jeanbrun</span>
+              {winner === "jeanbrun" && (
+                <Badge className="bg-success text-success-foreground border-0">
+                  Recommande
+                </Badge>
               )}
-            >
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-foreground">Loi Jeanbrun</span>
-                {winner === "jeanbrun" && (
-                  <Badge className="bg-success text-success-foreground border-0">
-                    Recommande
-                  </Badge>
-                )}
-              </div>
-              <span className="text-xs text-muted-foreground">PLF 2026</span>
             </div>
-
-            {/* Center spacer */}
-            <div className="flex items-center justify-center">
-              <span className="text-sm font-medium text-muted-foreground">vs</span>
-            </div>
-
-            {/* LMNP header */}
-            <div
-              className={cn(
-                "flex flex-col items-center gap-2 p-4 rounded-lg border",
-                winner === "lmnp"
-                  ? "border-success bg-success/5"
-                  : "border-border bg-muted/20"
-              )}
-            >
-              <div className="flex items-center gap-2">
-                {winner === "lmnp" && (
-                  <Badge className="bg-success text-success-foreground border-0">
-                    Recommande
-                  </Badge>
-                )}
-                <span className="font-semibold text-foreground">LMNP</span>
-              </div>
-              <span className="text-xs text-muted-foreground">Regime actuel</span>
-            </div>
+            <span className="text-xs text-muted-foreground">PLF 2026</span>
           </div>
 
-          {/* Criteria rows */}
-          <div className="rounded-lg border border-border overflow-hidden">
-            {CRITERIA.map((criteria) => (
-              <CriteriaRow
-                key={criteria.key}
-                criteria={criteria}
-                jeanbrunValue={jeanbrun[criteria.key]}
-                lmnpValue={lmnp[criteria.key]}
-              />
-            ))}
+          {/* Center spacer */}
+          <div className="flex items-center justify-center">
+            <span className="text-sm font-medium text-muted-foreground">vs</span>
           </div>
 
-          {/* Verdict */}
-          <VerdictSection
-            winner={winner}
-            jeanbrunScore={jeanbrunScore}
-            lmnpScore={lmnpScore}
-          />
+          {/* LMNP header */}
+          <div
+            className={cn(
+              "flex flex-col items-center gap-2 p-4 rounded-lg border",
+              winner === "lmnp"
+                ? "border-success bg-success/5"
+                : "border-border bg-muted/20"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              {winner === "lmnp" && (
+                <Badge className="bg-success text-success-foreground border-0">
+                  Recommande
+                </Badge>
+              )}
+              <span className="font-semibold text-foreground">LMNP</span>
+            </div>
+            <span className="text-xs text-muted-foreground">Regime actuel</span>
+          </div>
         </div>
+
+        {/* Criteria rows */}
+        <div className="rounded-lg border border-border overflow-hidden">
+          {CRITERIA.map((criteria) => (
+            <CriteriaRow
+              key={criteria.key}
+              criteria={criteria}
+              jeanbrunValue={jeanbrun[criteria.key]}
+              lmnpValue={lmnp[criteria.key]}
+            />
+          ))}
+        </div>
+
+        {/* Verdict */}
+        <VerdictSection
+          winner={winner}
+          jeanbrunScore={jeanbrunScore}
+          lmnpScore={lmnpScore}
+        />
       </CardContent>
     </Card>
   );

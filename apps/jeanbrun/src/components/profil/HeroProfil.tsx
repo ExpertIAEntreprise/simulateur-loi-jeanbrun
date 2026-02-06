@@ -18,7 +18,7 @@ const expertise = [
   {
     icon: Calendar,
     title: "Conseils personnalises",
-    description: "Rendez-vous gratuit sur Calendly",
+    description: "Accompagnement sur-mesure gratuit",
   },
 ] as const
 
@@ -78,8 +78,8 @@ export function HeroProfil({
               {/* CTA Buttons */}
               <div className="flex flex-col items-center gap-4 sm:flex-row md:items-start">
                 <Button asChild size="lg">
-                  <Link href="#calendly">
-                    Prendre rendez-vous
+                  <Link href="#contact">
+                    Prendre contact
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>

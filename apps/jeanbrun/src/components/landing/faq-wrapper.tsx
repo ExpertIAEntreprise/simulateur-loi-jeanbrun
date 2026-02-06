@@ -7,7 +7,7 @@ const faqItems = [
   },
   {
     question: "La simulation est-elle vraiment gratuite ?",
-    answer: "Oui ! La simulation de base est 100% gratuite et sans engagement. Vous obtenez votre estimation fiscale complète sans carte bancaire. Pour aller plus loin avec une analyse personnalisée, un accompagnement expert et l'accès aux programmes éligibles, vous pouvez souscrire à notre offre Premium à 49€ HT."
+    answer: "Oui ! La simulation est 100% gratuite et sans engagement. Vous obtenez votre estimation fiscale complete, le tableau d'amortissement, le comparatif Jeanbrun vs LMNP et le graphique d'evolution du patrimoine. Aucune carte bancaire requise."
   },
   {
     question: "Puis-je être accompagné dans mon projet ?",
@@ -15,7 +15,7 @@ const faqItems = [
   },
   {
     question: "Comment êtes-vous rémunéré ?",
-    answer: "Notre modèle de rémunération est totalement transparent : je suis rémunéré directement par les promoteurs immobiliers partenaires. C'est pourquoi l'analyse Premium à 99€ vous est intégralement remboursée dès que je vous accompagne dans la mise en place de votre projet immobilier. Vous ne payez donc rien au final, tout en bénéficiant d'un accompagnement expert personnalisé."
+    answer: "Notre modele de remuneration est totalement transparent : je suis remunere directement par les promoteurs immobiliers partenaires. Le simulateur et l'accompagnement sont donc entierement gratuits pour vous. Vous beneficiez d'un conseil expert personnalise sans aucun frais."
   },
   {
     question: "Vais-je bénéficier des mêmes avantages commerciaux que si je passais directement par le promoteur ?",

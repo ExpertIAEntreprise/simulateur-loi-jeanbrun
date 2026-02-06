@@ -24,9 +24,8 @@ const footerColumns: readonly FooterColumn[] = [
     title: 'Simulateur',
     links: [
       { label: 'Simulation gratuite', href: '/simulateur' },
-      { label: 'Simulation avancee', href: '/simulateur?plan=premium' },
-      { label: 'Resultats', href: '/dashboard' },
-      { label: 'Export PDF', href: '/dashboard' },
+      { label: 'Simulation avancee', href: '/simulateur/avance' },
+      { label: 'Resultats', href: '/simulateur' },
     ],
   },
   {
@@ -60,7 +59,7 @@ const footerColumns: readonly FooterColumn[] = [
     title: 'Legal',
     links: [
       { label: 'Mentions legales', href: '/mentions-legales' },
-      { label: 'CGV', href: '/cgv' },
+      { label: 'CGU', href: '/cgv' },
       { label: 'Confidentialite', href: '/politique-confidentialite' },
       { label: 'Accessibilite', href: '/accessibilite' },
     ],

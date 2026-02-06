@@ -33,7 +33,7 @@ const defaultTestimonials: Testimonial[] = [
   {
     name: "Jean-Marc R.",
     role: "Cadre superieur",
-    content: "Excellente experience ! Le rendez-vous Calendly m'a permis d'avoir des reponses precises a toutes mes questions. Tres professionnel.",
+    content: "Excellente experience ! L'accompagnement personnalise m'a permis d'avoir des reponses precises a toutes mes questions. Tres professionnel.",
     rating: 5,
   },
 ]

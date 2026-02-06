@@ -16,34 +16,20 @@ const pricingPlans: Plan = [
     name: "Gratuit",
     price: 0,
     suffix: "",
-    description: "Découvrez votre potentiel d'économie fiscale",
+    description: "Simulez votre investissement Loi Jeanbrun sans engagement",
+    badge: "100% gratuit",
     features: [
-      "Simulation fiscale de base",
-      "Calcul de la réduction d'impôt",
-      "Estimation des mensualités",
+      "Simulation fiscale complete",
+      "Calcul de la reduction d'impot",
+      "Estimation des mensualites",
+      "Tableau d'amortissement annuel",
+      "Comparatif Jeanbrun vs LMNP",
+      "Graphique evolution patrimoine",
       "Guide Loi Jeanbrun",
       "Support par email"
     ],
     buttonText: "Commencer gratuitement"
   },
-  {
-    name: "Premium",
-    price: 99,
-    suffix: "€ TTC",
-    description: "Remboursé si accompagnement projet immobilier",
-    badge: "Intégralement remboursé",
-    features: [
-      "Tout du plan Gratuit",
-      "Simulation détaillée personnalisée",
-      "Comparaison avec LMNP et Pinel",
-      "Export PDF professionnel",
-      "Accompagnement téléphonique",
-      "Mise en relation avec des experts",
-      "Accès à plus de 6000 programmes Locaux et Nationaux"
-    ],
-    buttonText: "Démarrer maintenant",
-    isPro: true
-  }
 ];
 
 export default function PricingWrapper() {
